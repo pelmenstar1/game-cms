@@ -1,2 +1,7 @@
 .yarn
 node_modules
+dist
+build
+.react-router
+*.tsbuildinfo
+.eslintcache

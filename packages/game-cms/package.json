@@ -1,0 +1,25 @@
+{
+  "name": "game-cms",
+  "packageManager": "yarn@4.10.3",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": "./dist/bin.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@types/express": "^5",
+    "@types/node": "24.6.2",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "@game-cms/dashboard": "workspace:*",
+    "@game-cms/env": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/types": "workspace:*",
+    "@react-router/express": "7.9.3",
+    "commander": "14.0.1",
+    "express": "5.1.0",
+    "react-router": "7.9.3"
+  }
+}

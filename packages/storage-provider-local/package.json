@@ -1,0 +1,12 @@
+{
+  "name": "@game-cms/storage-provider-local",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@game-cms/types": "workspace:*",
+    "@types/node": "24.6.2",
+    "typescript": "5.9.3"
+  }
+}

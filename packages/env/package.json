@@ -1,0 +1,14 @@
+{
+  "name": "@game-cms/env",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "devDependencies": {
+    "@types/node": "24.6.2",
+    "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "@game-cms/types": "workspace:*"
+  }
+}

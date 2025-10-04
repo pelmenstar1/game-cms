@@ -1,0 +1,19 @@
+{
+  "name": "@game-cms/shared",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "dependencies": {
+    "@types/node": "24.6.2",
+    "typescript": "5.9.3"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./errors": {
+      "import": "./dist/errors/index.js",
+      "types": "./dist/errors/index.d.ts"
+    }
+  }
+}

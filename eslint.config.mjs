@@ -17,6 +17,8 @@ export default defineConfig(
       '*/**/dist/',
       '*/**/vite.config.ts',
       '*/**/.wrangler',
+      '*/**/build',
+      '**/.react-router',
       'node_modules',
       'eslint.config.mts',
       'vitest.config.ts',
@@ -48,6 +50,8 @@ export default defineConfig(
     rules: {
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/prefer-top-level-await': 'off',
+      'unicorn/filename-case': 'off',
+      'react/react-in-jsx-scope': 'off',
     },
   },
   prettier

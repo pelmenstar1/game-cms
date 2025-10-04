@@ -1,5 +1,14 @@
 {
   "references": [
+    { "path": "./demo-app" },
+    { "path": "./packages/game-cms" },
+    { "path": "./packages/types" },
+    { "path": "./packages/dashboard" },
+    { "path": "./packages/api" },
+    { "path": "./packages/storage-provider-local" },
+    { "path": "./packages/storage-provider-s3" },
+    { "path": "./packages/env" },
+    { "path": "./packages/shared" }
   ],
   "include": []
 }

@@ -1,0 +1,17 @@
+{
+  "name": "demo-app",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@game-cms/storage-provider-local": "workspace:*",
+    "@react-router/express": "7.9.3",
+    "game-cms": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "24.6.2",
+    "typescript": "5.9.3"
+  }
+}

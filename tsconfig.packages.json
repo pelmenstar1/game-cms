@@ -1,5 +1,12 @@
 {
   "references": [
+    { "path": "./packages/game-cms" },
+    { "path": "./packages/types" },
+    { "path": "./packages/storage-provider-local" },
+    { "path": "./packages/storage-provider-s3" },
+    { "path": "./packages/api" },
+    { "path": "./packages/env" },
+    { "path": "./packages/shared" }
   ],
   "include": []
 }
