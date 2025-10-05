@@ -1,1 +1,3 @@
-export type StorageProvider = {};
+export type StorageProvider = {
+  _?: number;
+};

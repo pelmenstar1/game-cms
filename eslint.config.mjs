@@ -22,6 +22,8 @@ export default defineConfig(
       'node_modules',
       'eslint.config.mts',
       'vitest.config.ts',
+      'packages/ui/.storybook',
+      'packages/ui/vite.storybook.config.ts',
       'coverage',
     ],
   },

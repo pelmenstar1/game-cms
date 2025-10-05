@@ -48,6 +48,7 @@ export function InfiniteScroll<T extends Element>({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (entry !== undefined && entry.isIntersecting) {
           stableRequestNextPage.current?.();
         }

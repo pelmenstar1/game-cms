@@ -20,5 +20,5 @@
     "composite": true
   },
   "references": [{ "path": "../shared" }],
-  "include": ["./src", "./scripts", "./.storybook"]
+  "include": ["./src", "./scripts"]
 }

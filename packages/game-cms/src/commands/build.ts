@@ -1,5 +1,5 @@
 import process from 'node:process';
 
-export default async function build() {
+export default function build() {
   console.log(process.cwd());
 }
