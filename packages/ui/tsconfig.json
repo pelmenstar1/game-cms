@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "types": ["node"],
+
+    "declaration": true,
+
+    "allowJs": true,
+
+    "strict": true,
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "composite": true
+  },
+  "references": [{ "path": "../shared" }],
+  "include": ["./src", "./.storybook"]
+}

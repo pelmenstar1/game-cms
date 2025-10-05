@@ -1,0 +1,14 @@
+.root {
+  $text-color: var(--color-text-on-background);
+  $text-color-disabled: var(--color-text-on-background-dark);
+
+  position: relative;
+
+  cursor: pointer;
+
+  &-open {
+    .header svg {
+      transform: rotateX(180deg);
+    }
+  }
+}

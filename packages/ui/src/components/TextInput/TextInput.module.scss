@@ -1,0 +1,71 @@
+.root {
+  width: fit-content;
+}
+
+.input {
+  --border-color: var(--color-text-on-background);
+  --border-color-hover: var(--color-text-on-background-dark);
+
+  $border-decl: 2px solid var(--border-color);
+
+  transition: border-color 0.1s linear;
+
+  display: flex;
+  flex-direction: row;
+
+  &-variant-bordered {
+    border: $border-decl;
+
+    &,
+    input {
+      border-radius: 0.5em;
+    }
+  }
+
+  &-variant-underline {
+    border-bottom: $border-decl;
+  }
+
+  &-error {
+    --border-color: var(--color-danger);
+    --border-color-hover: var(--color-danger-dark);
+  }
+
+  &-disabled {
+    border-color: var(--color-text-on-background-dark);
+  }
+
+  input {
+    color: var(--color-text-on-background);
+
+    background: transparent;
+    outline: none;
+    border: none;
+
+    align-self: stretch;
+
+    width: 100%;
+
+    padding: 8px 12px;
+  }
+
+  &:hover,
+  &:focus-within {
+    &:not([data-disabled='true']) {
+      border-color: var(--border-color-hover);
+    }
+  }
+}
+
+.end-content {
+  align-self: stretch;
+
+  margin: 4px;
+}
+
+.error {
+  color: var(--color-danger-dark);
+
+  margin-left: 8px;
+  margin-top: 4px;
+}

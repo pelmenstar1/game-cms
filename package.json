@@ -5,8 +5,9 @@
   "scripts": {
     "lint": "tsx ./scripts/lint.ts",
     "lint:fix": "yarn lint --fix",
-    "prebuild": "yarn tsc --build tsconfig.packages.json --declaration",
-    "prebuild:watch": "yarn prebuild --watch"
+    "typegen": "yarn workspaces foreach --all -p run typegen",
+    "prebuild": "yarn workspace @game-cms/ui build && yarn tsc --build tsconfig.packages.json --declaration",
+    "prebuild:watch": "yarn workspace @game-cms/ui build && yarn tsc --build tsconfig.packages.json --declaration --watch"
   },
   "devDependencies": {
     "@eslint/js": "9.37.0",

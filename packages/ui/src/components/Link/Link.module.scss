@@ -1,0 +1,10 @@
+.root {
+  text-underline-offset: 0.15em;
+  text-underline-position: from-font;
+
+  color: var(--color-text-on-background);
+
+  &-variant-clean {
+    text-decoration: none;
+  }
+}

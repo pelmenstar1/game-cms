@@ -1,0 +1,14 @@
+$mursGothicStyles: (
+  400: 'KeyRegular.otf',
+  500: 'WideMedium.otf',
+  600: 'WideDark.ttf',
+);
+
+@each $weight, $name in $mursGothicStyles {
+  @font-face {
+    font-family: 'Murs Gothic';
+    src: url('/MursGothic-#{$name}');
+    font-weight: $weight;
+    font-style: normal;
+  }
+}

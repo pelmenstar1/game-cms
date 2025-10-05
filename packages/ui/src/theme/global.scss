@@ -1,0 +1,58 @@
+@use './utils' as *;
+@use './fonts' as *;
+
+:root {
+  --color-background: #202021;
+  --color-background-dark: #1b1b1b;
+  --color-background-dark-variant: #2f2f31;
+  --color-text-on-background: #fff;
+  --color-text-on-background-dark: #bfbfbf;
+  --color-primary: #ac37b0;
+  --color-primary-dark: #822f85;
+  --color-text-on-primary: #ffffff;
+  --color-text-on-primary-dark: #c3c3c3;
+  --color-danger: #f00;
+  --color-danger-dark: #d31111;
+  --color-text-on-danger: #fff;
+  --color-text-on-danger-dark: #bfbfbf;
+  --color-accent: #cccf35;
+  --font-murs-gothic: 'Murs Gothic';
+}
+
+html,
+body {
+  @include size(100%);
+
+  background: var(--color-background);
+  color: var(--color-text-on-background);
+}
+
+html * {
+  padding: 0;
+  margin: 0;
+
+  &::-webkit-scrollbar {
+    width: 0.5em;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-background);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0.25em;
+    background: var(--color-background-dark);
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+
+  > main {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+  }
+}

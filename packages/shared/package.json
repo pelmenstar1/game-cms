@@ -14,6 +14,14 @@
     "./errors": {
       "import": "./dist/errors/index.js",
       "types": "./dist/errors/index.d.ts"
+    },
+    "./chrono": {
+      "import": "./dist/chrono/index.js",
+      "types": "./dist/chrono/index.d.ts"
+    },
+    "./string": {
+      "import": "./dist/string/index.js",
+      "types": "./dist/string/index.d.ts"
     }
   }
 }

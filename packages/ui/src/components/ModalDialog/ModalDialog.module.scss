@@ -1,0 +1,76 @@
+@use '../../theme/utils' as *;
+@use '../../theme/breakpoints' as *;
+
+@mixin desktop-view() {
+  @include breakpoint-up('md') {
+    @content;
+  }
+}
+
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  background-color: var(--color-background);
+  box-shadow: 0 0 4px #000;
+
+  width: 100%;
+  height: calc(100% - 16px);
+
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 100;
+
+  @include desktop-view {
+    padding: 16px;
+
+    min-width: 50%;
+    min-height: 50%;
+
+    max-width: 90%;
+    max-height: 90%;
+
+    width: auto;
+    height: auto;
+
+    border-radius: 10px;
+
+    &-tight-layout {
+      min-height: auto;
+    }
+  }
+}
+
+.header {
+  flex-basis: 0;
+  margin-bottom: 16px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.content {
+  flex-grow: 1;
+  overflow-y: scroll;
+}
+
+.footer {
+  flex-basis: 0;
+  display: flex;
+  justify-content: end;
+
+  gap: 0.5em;
+}
+
+.close {
+  @include size(32px);
+
+  margin-left: auto;
+}

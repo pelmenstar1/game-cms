@@ -1,0 +1,14 @@
+@mixin size($value) {
+  width: $value;
+  height: $value;
+}
+
+@mixin px($value) {
+  padding-left: $value;
+  padding-right: $value;
+}
+
+@mixin mx($value) {
+  margin-left: $value;
+  margin-right: $value;
+}

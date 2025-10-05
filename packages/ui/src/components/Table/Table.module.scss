@@ -1,0 +1,24 @@
+.root {
+  $text-color: var(--color-text-on-background);
+  $border: 2px solid $text-color;
+
+  border-collapse: collapse;
+
+  thead tr {
+    border-bottom: $border;
+  }
+
+  tr {
+    &:not(:last-child) {
+      border-bottom: $border;
+    }
+
+    th {
+      padding: 0.5em 0.25em;
+
+      &:not(:last-child) {
+        border-right: $border;
+      }
+    }
+  }
+}

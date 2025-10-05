@@ -1,0 +1,62 @@
+.root {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &-disabled {
+    color: var(--color-text-on-background-dark);
+    cursor: auto;
+    user-select: none;
+  }
+}
+
+.input {
+  $width: 50px;
+  $height: 25px;
+  $circle-size: $height * 0.75;
+  $circle-margin: ($height - $circle-size) * 0.5;
+
+  --checked-background: var(--color-primary);
+
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+
+  background: var(--color-background-dark);
+  border-radius: $height * 0.5;
+  width: $width;
+  height: $height;
+
+  margin-right: 8px;
+
+  &::before {
+    content: '';
+
+    display: block;
+
+    position: absolute;
+
+    top: $circle-margin;
+    left: $circle-margin;
+
+    width: $circle-size;
+    height: $circle-size;
+    border-radius: $circle-size * 0.5;
+
+    background: #1f1f5c;
+
+    transition: all 0.2s linear;
+  }
+
+  &:checked::before {
+    background: var(--checked-background);
+    box-shadow: 0 0 3px var(--checked-background);
+    left: $width - $circle-margin - $circle-size;
+  }
+
+  &:disabled {
+    --checked-background: var(--color-primary-dark);
+
+    cursor: auto;
+  }
+}

@@ -9,6 +9,8 @@ import {
 
 import type { Route } from './+types/root';
 
+import '@game-cms/ui/theme/global';
+
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {

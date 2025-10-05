@@ -1,0 +1,55 @@
+@use 'sass:map';
+@use 'sass:list';
+
+$breakpoints: (
+  xs: 1px,
+  sm: 600px,
+  md: 900px,
+  lg: 1200px,
+  xl: 1536px,
+);
+$breakpoint-list: (0px, 600px, 900px, 1200px, 1536px);
+
+@function get-breakpoint($name) {
+  $value: map.get($breakpoints, $name);
+
+  @if not $value {
+    @error "Given breakpoint does not exist";
+  }
+
+  @return $value;
+}
+
+@function next-breakpoint-value($target-name) {
+  $value: get-breakpoint($target-name);
+  $index: list.index($breakpoint-list, $value);
+
+  @return list.nth($breakpoint-list, $index + 1);
+}
+
+@mixin breakpoint-down($name) {
+  @media (max-width: get-breakpoint($name)) {
+    @content;
+  }
+}
+
+@mixin breakpoint-up($name) {
+  @media (min-width: get-breakpoint($name)) {
+    @content;
+  }
+}
+
+@mixin breakpoint-exact($name) {
+  $min-value: get-breakpoint($name);
+  $max-value: next-breakpoint-value($name);
+
+  @if not $max-value {
+    @include breakpoint-up($min-value) {
+      @content;
+    }
+  } @else {
+    @media (min-width: $min-value) and (max-width: $max-value) {
+      @content;
+    }
+  }
+}

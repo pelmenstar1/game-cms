@@ -1,0 +1,26 @@
+.root {
+  position: absolute;
+
+  top: calc(100% + 2px);
+  left: 0;
+  width: 100%;
+  overflow-y: auto;
+  background: var(--color-background);
+  box-shadow: 1px 1px 4px #000;
+  border-radius: 0 0 8px 8px;
+  z-index: 999;
+  max-height: 50dvh;
+
+  li {
+    transition: background-color 0.1s linear;
+    white-space: wrap;
+    word-break: break-all;
+    padding: 0.5em;
+
+    &:hover,
+    &:focus,
+    &.item-selected {
+      background: var(--color-background-dark);
+    }
+  }
+}

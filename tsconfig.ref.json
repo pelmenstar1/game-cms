@@ -8,7 +8,8 @@
     { "path": "./packages/storage-provider-local" },
     { "path": "./packages/storage-provider-s3" },
     { "path": "./packages/env" },
-    { "path": "./packages/shared" }
+    { "path": "./packages/shared" },
+    { "path": "./packages/ui" }
   ],
   "include": []
 }

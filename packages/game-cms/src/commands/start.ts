@@ -8,6 +8,8 @@ import { loadEnvIfExists } from '@game-cms/shared';
 import { createRequestHandler } from '@react-router/express';
 import { fileURLToPath } from 'node:url';
 import type { ServerBuild } from 'react-router';
+import { statusInline } from '../utils/log.js';
+import chalk from 'chalk';
 
 const COMPILED_CONFIG_PATH = './dist';
 
@@ -67,9 +69,7 @@ async function initEnvFromConfigs() {
   initializeEnv({ config: configMap });
 }
 
-export default async function start() {
-  await initEnvFromConfigs();
-
+async function startServer() {
   const dashboardImportUrl = import.meta.resolve('@game-cms/dashboard');
   const dashboardPath = path.join(
     path.dirname(fileURLToPath(dashboardImportUrl)),
@@ -100,6 +100,16 @@ export default async function start() {
       throw error;
     }
 
-    console.log(`> Server started at http://localhost:${port}`);
+    statusInline(
+      `Server started at ${chalk.magentaBright(`http://localhost:${port}`)}`
+    );
   });
+}
+
+export default async function start() {
+  statusInline('Loading configs');
+  await initEnvFromConfigs();
+
+  statusInline('Server starting...');
+  await startServer();
 }

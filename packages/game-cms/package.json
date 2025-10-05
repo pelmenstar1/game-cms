@@ -18,6 +18,7 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
     "@react-router/express": "7.9.3",
+    "chalk": "5.6.2",
     "commander": "14.0.1",
     "express": "5.1.0",
     "react-router": "7.9.3"

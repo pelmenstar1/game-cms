@@ -1,0 +1,24 @@
+.item {
+  display: block;
+  padding: 1em;
+  border-radius: 0.5em;
+  transition: background-color 0.1s linear;
+
+  &:hover,
+  &:focus {
+    background: var(--color-background-dark-variant);
+  }
+
+  &-selected {
+    box-shadow: 1px 1px 1px #000;
+
+    &,
+    &:hover {
+      background: var(--color-background-dark);
+    }
+  }
+
+  > input {
+    display: none;
+  }
+}

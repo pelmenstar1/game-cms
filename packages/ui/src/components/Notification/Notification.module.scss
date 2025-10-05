@@ -1,0 +1,64 @@
+.root {
+  position: fixed;
+  z-index: 2;
+
+  width: 100%;
+  overflow: hidden;
+
+  left: 0;
+  bottom: 0;
+
+  p {
+    box-sizing: border-box;
+
+    background-color: var(--color-background-dark);
+    border: 2px solid var(--color);
+    box-shadow:
+      0 0 var(--shadow-outer) var(--color),
+      0 0 var(--shadow-inner) var(--color) inset;
+
+    border-radius: 1em;
+
+    padding: 1em;
+    margin: 0.5em;
+
+    animation: 0.2s ease-out 0s push;
+
+    &.text-type-error {
+      --color: var(--color-danger);
+      --shadow-inner: 2px;
+      --shadow-outer: 8px;
+    }
+
+    &.text-type-plain {
+      --color: var(--color-text-on-background-dark);
+      --shadow-inner: 1px;
+      --shadow-outer: 2px;
+    }
+  }
+
+  &-invisible p {
+    transform: translate(0, 150%);
+    animation: 0.25s ease-in 0s pull;
+  }
+}
+
+@keyframes push {
+  from {
+    transform: translate(0, 150%);
+  }
+
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes pull {
+  from {
+    transform: translate(0, 0);
+  }
+
+  to {
+    transform: translate(0, 150%);
+  }
+}

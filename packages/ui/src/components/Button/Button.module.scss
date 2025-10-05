@@ -1,0 +1,123 @@
+@use 'sass:map';
+
+$color-map: (
+  primary: (
+    base: 'primary',
+    hover: 'primary-dark',
+    disabled: 'background-dark',
+    text: (
+      solid: 'text-on-primary',
+      outlined: 'primary',
+      flat: 'text-on-background',
+    ),
+    textDisabled: (
+      solid: 'text-on-background-dark',
+      outlined: 'primary-dark',
+      flat: 'text-on-background-dark',
+    ),
+  ),
+  danger: (
+    base: 'danger',
+    hover: 'danger-dark',
+    disabled: 'background-dark',
+    text: (
+      solid: 'text-on-danger',
+      outlined: 'primary',
+      flat: 'text-on-danger',
+    ),
+    textDisabled: (
+      solid: 'text-on-danger-dark',
+      outlined: 'primary-dark',
+      flat: 'text-on-danger-dark',
+    ),
+  ),
+);
+$variants: ('solid', 'outlined', 'flat');
+
+@function get-color($colors, $names...) {
+  $result: map.get($colors, $names...);
+
+  @return var(--color-#{$result});
+}
+
+@mixin put-variable($colors, $name) {
+  --button-color-#{$name}: #{get-color($colors, $name)};
+}
+
+@mixin simple-variant($name, $property) {
+  &.root-variant-#{$name} {
+    #{$property}: var(--button-color-base);
+
+    &:hover:not([disabled]) {
+      #{$property}: var(--button-color-hover);
+    }
+
+    &:disabled,
+    &[disabled] {
+      #{$property}: var(--button-color-disabled);
+    }
+
+    @content;
+  }
+}
+
+.root {
+  background: none;
+  outline: none;
+
+  border: none;
+  border-radius: 8px;
+
+  transition: all 0.1s linear;
+
+  text-align: center;
+  padding: 10px 16px;
+
+  font-weight: 700 !important;
+
+  @each $color-name, $colors in $color-map {
+    &-color-#{$color-name} {
+      @include put-variable($colors, base);
+      @include put-variable($colors, hover);
+      @include put-variable($colors, disabled);
+
+      @each $variant in $variants {
+        &.root-variant-#{$variant} {
+          color: get-color($colors, text, $variant);
+
+          &:disabled,
+          &[disabled] {
+            color: get-color($colors, textDisabled, $variant);
+          }
+        }
+      }
+    }
+  }
+
+  @include simple-variant('solid', background-color) {
+    box-shadow: 1px 1px 4px #000;
+
+    &:disabled {
+      box-shadow: none;
+    }
+  }
+
+  @include simple-variant('outlined', border-color) {
+    border-width: 2px;
+    border-style: solid;
+  }
+
+  &-variant-flat {
+    &:hover:not(:disabled) {
+      background-color: var(--color-background-dark);
+    }
+  }
+
+  &-variant-flat-inverted {
+    color: #000;
+
+    &:hover:not(:disabled) {
+      background-color: #dcdcdc;
+    }
+  }
+}

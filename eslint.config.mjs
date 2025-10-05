@@ -52,6 +52,9 @@ export default defineConfig(
       'unicorn/prefer-top-level-await': 'off',
       'unicorn/filename-case': 'off',
       'react/react-in-jsx-scope': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      'unicorn/no-null': 'off',
+      'react/prop-types': 'off',
     },
   },
   prettier

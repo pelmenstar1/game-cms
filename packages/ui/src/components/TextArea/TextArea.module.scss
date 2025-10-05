@@ -1,0 +1,45 @@
+.root {
+  border: 2px solid var(--border-color);
+  border-radius: 0.75em;
+
+  background: none;
+  outline: none;
+  resize: none;
+
+  margin: 0;
+  padding: 0.5em;
+
+  &-primary {
+    --border-color: var(--color-text-on-background);
+    color: var(--color-text-on-background);
+  }
+
+  &-inverted-primary {
+    color: #000;
+  }
+}
+
+.autosizer {
+  display: inline-grid;
+  vertical-align: top;
+  align-items: center;
+  position: relative;
+
+  .root {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  &::after {
+    content: attr(data-value) ' ';
+    visibility: hidden;
+    white-space: pre-wrap;
+
+    padding: 0.5em;
+  }
+
+  &::after,
+  .root {
+    grid-area: 1 / 1;
+  }
+}

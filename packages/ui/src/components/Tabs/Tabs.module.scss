@@ -1,0 +1,10 @@
+.tablist {
+  display: flex;
+  gap: 0.25em;
+
+  margin-bottom: 0.5em;
+
+  button[aria-selected='true'] {
+    background: var(--color-background-dark);
+  }
+}
