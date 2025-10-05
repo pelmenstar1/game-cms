@@ -7,7 +7,8 @@
     "lint:fix": "yarn lint --fix",
     "typegen": "yarn workspaces foreach --all -p run typegen",
     "prebuild": "yarn workspace @game-cms/ui build && yarn tsc --build tsconfig.packages.json --declaration",
-    "prebuild:watch": "yarn workspace @game-cms/ui build && yarn tsc --build tsconfig.packages.json --declaration --watch"
+    "prebuild:watch": "yarn workspace @game-cms/ui build && yarn tsc --build tsconfig.packages.json --declaration --watch",
+    "test": "vitest --run"
   },
   "devDependencies": {
     "@eslint/js": "9.37.0",
@@ -24,6 +25,7 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-unicorn": "60.0.0",
+    "playwright": "1.55.1",
     "postcss": "8.5.6",
     "prettier": "3.6.2",
     "react": "19.2.0",
