@@ -43,3 +43,6 @@ export * from './UnderlineIcon';
 export * from './UpDownIcon';
 export * from './UploadIcon';
 export * from './ZoomIcon';
+export * from './HomeIcon';
+export * from './AppsIcon';
+export * from './SettingsIcon';

@@ -1390,6 +1390,7 @@ __metadata:
   resolution: "@game-cms/dashboard@workspace:packages/dashboard"
   dependencies:
     "@game-cms/ui": "workspace:*"
+    "@game-cms/vite-plugins": "workspace:*"
     "@react-router/dev": "npm:7.9.3"
     "@react-router/node": "npm:7.9.3"
     "@types/node": "npm:24.6.2"
@@ -1402,6 +1403,7 @@ __metadata:
     tsx: "npm:4.20.6"
     typescript: "npm:5.9.3"
     vite: "npm:7.1.9"
+    vite-plugin-watch-node-modules: "npm:0.5.0"
     vite-tsconfig-paths: "npm:5.1.4"
   languageName: unknown
   linkType: soft
@@ -1508,12 +1510,23 @@ __metadata:
     copyfiles: "npm:2.4.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
+    react-router: "npm:7.9.3"
     rollup: "npm:4.52.4"
     sass-embedded: "npm:1.93.2"
     storybook: "npm:9.1.10"
     tsx: "npm:4.20.6"
     typescript: "npm:5.9.3"
     vite: "npm:7.1.9"
+  languageName: unknown
+  linkType: soft
+
+"@game-cms/vite-plugins@workspace:*, @game-cms/vite-plugins@workspace:packages/vite-plugins":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/vite-plugins@workspace:packages/vite-plugins"
+  dependencies:
+    chokidar: "npm:4.0.3"
+  peerDependencies:
+    vite: "*"
   languageName: unknown
   linkType: soft
 
@@ -4031,7 +4044,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^4.0.0":
+"chokidar@npm:4.0.3, chokidar@npm:^4.0.0, chokidar@npm:^4.0.3":
   version: 4.0.3
   resolution: "chokidar@npm:4.0.3"
   dependencies:
@@ -5280,7 +5293,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fdir@npm:^6.5.0":
+"fdir@npm:^6.4.4, fdir@npm:^6.5.0":
   version: 6.5.0
   resolution: "fdir@npm:6.5.0"
   peerDependencies:
@@ -9016,6 +9029,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinyglobby@npm:0.2.14":
+  version: 0.2.14
+  resolution: "tinyglobby@npm:0.2.14"
+  dependencies:
+    fdir: "npm:^6.4.4"
+    picomatch: "npm:^4.0.2"
+  checksum: 10c0/f789ed6c924287a9b7d3612056ed0cda67306cd2c80c249fd280cf1504742b12583a2089b61f4abbd24605f390809017240e250241f09938054c9b363e51c0a6
+  languageName: node
+  linkType: hard
+
 "tinyglobby@npm:^0.2.12, tinyglobby@npm:^0.2.14, tinyglobby@npm:^0.2.15":
   version: 0.2.15
   resolution: "tinyglobby@npm:0.2.15"
@@ -9407,6 +9430,18 @@ __metadata:
   bin:
     vite-node: vite-node.mjs
   checksum: 10c0/6ceca67c002f8ef6397d58b9539f80f2b5d79e103a18367288b3f00a8ab55affa3d711d86d9112fce5a7fa658a212a087a005a045eb8f4758947dd99af2a6c6b
+  languageName: node
+  linkType: hard
+
+"vite-plugin-watch-node-modules@npm:0.5.0":
+  version: 0.5.0
+  resolution: "vite-plugin-watch-node-modules@npm:0.5.0"
+  dependencies:
+    chokidar: "npm:^4.0.3"
+    tinyglobby: "npm:0.2.14"
+  peerDependencies:
+    vite: ^7.1.0
+  checksum: 10c0/21472807c934e247940db8e72ff81a7a49212014e324d7a9d1387a492cf4e92da491485a60f745f5b0805478b41f5e5e2bf14aa3e7c1e1b4f0e1c997b42daa22
   languageName: node
   linkType: hard
 

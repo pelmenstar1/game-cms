@@ -9,7 +9,8 @@
     { "path": "./packages/storage-provider-s3" },
     { "path": "./packages/env" },
     { "path": "./packages/shared" },
-    { "path": "./packages/ui" }
+    { "path": "./packages/ui" },
+    { "path": "./packages/vite-plugins" }
   ],
   "include": []
 }

@@ -1,0 +1,38 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25em;
+  border-radius: 0.5em;
+
+  aspect-ratio: 1;
+  width: 6em;
+  height: 4em;
+
+  font-weight: 700;
+
+  transition: background-color 0.1s linear;
+
+  svg {
+    display: block;
+    width: 2em;
+    height: 2em;
+    fill: var(--color-text-on-background);
+  }
+
+  &:hover {
+    background: var(--color-background-dark);
+  }
+
+  &-active {
+    background: var(--color-background-dark-variant);
+  }
+}

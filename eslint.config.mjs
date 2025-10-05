@@ -55,6 +55,7 @@ export default defineConfig(
       '@typescript-eslint/restrict-template-expressions': 'off',
       'unicorn/no-null': 'off',
       'react/prop-types': 'off',
+      'unicorn/prefer-global-this': 'off',
     },
   },
   prettier

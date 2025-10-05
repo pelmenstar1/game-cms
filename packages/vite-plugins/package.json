@@ -1,0 +1,13 @@
+{
+  "name": "@game-cms/vite-plugins",
+  "packageManager": "yarn@4.10.3",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "devDependencies": {
+    "chokidar": "4.0.3"
+  },
+  "peerDependencies": {
+    "vite": "*"
+  }
+}

@@ -8,7 +8,7 @@ function getAbsolutePath(packageName: string) {
 }
 
 const config: StorybookConfig = {
-  stories: ['../**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-a11y', '@storybook/addon-links'].map((name) =>
     getAbsolutePath(name)
   ),
@@ -20,6 +20,7 @@ const config: StorybookConfig = {
       },
     },
   },
+  staticDirs: ['../public']
 };
 
 export default config;
