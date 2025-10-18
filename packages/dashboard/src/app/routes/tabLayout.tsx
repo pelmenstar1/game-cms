@@ -6,7 +6,7 @@ export default function Layout() {
     <div>
       <NavTabs
         items={[
-          { href: '/', icon: <HomeIcon />, text: 'Home' },
+          { href: '/', icon: <HomeIcon />, text: 'Home 1' },
           { href: '/entities', icon: <AppsIcon />, text: 'Entities' },
           { href: '/settings', icon: <SettingsIcon />, text: 'Settings' },
         ]}

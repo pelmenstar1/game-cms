@@ -35,7 +35,10 @@ export function RemoteComponent({
           addStylesheet(url);
         }
 
-        const component: unknown = await import(manifest.jsBundle);
+        const component: unknown = await import(
+          /* @vite-ignore */
+          manifest.jsBundle
+        );
 
         return { default: getRendererFromModule(component) };
       } catch (error: unknown) {

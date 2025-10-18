@@ -13,7 +13,8 @@ import { resolveConfigInitMap } from './config.js';
 import { getDashboardPackagePath, importDashboardBuild } from './dashboard.js';
 import { getSharedAssetsConfig } from './sharedAssets.js';
 
-import { createProxyServer } from 'http-proxy';
+import httpProxy from 'http-proxy';
+import type { Server } from 'node:http';
 
 type StartOptions = {
   dashboard?: string;
@@ -55,17 +56,21 @@ async function initLocalDashboard(app: Application) {
   );
 }
 
-function initProxyDashboard(app: Application, url: string) {
-  const proxy = createProxyServer({ target: url, changeOrigin: true });
+function initProxyDashboard(app: Application, server: Server, url: string) {
+  const proxy = httpProxy.createProxyServer({ target: url, ws: true, proxyTimeout: 0, timeout: 0, });
 
-  app.use('/{*splat}', (req, res) => {
+  app.all('/{*splat}', (req, res) => {
     proxy.web(req, res);
+  });
+
+  server.on('upgrade', (req, socket, head) => {
+    proxy.ws(req, socket, head);
   });
 }
 
-async function initDashboard(app: Application, options: StartOptions) {
+async function initDashboard(app: Application, server: Server, options: StartOptions) {
   if (options.dashboard !== undefined) {
-    initProxyDashboard(app, options.dashboard);
+    initProxyDashboard(app, server, options.dashboard);
   } else {
     await initLocalDashboard(app);
   }
@@ -76,11 +81,10 @@ async function startServer(options: StartOptions) {
   app.disable('x-powered-by');
 
   await setupApiFromConfig(app);
-  await initDashboard(app, options);
 
   const { port } = env().config.server;
 
-  app.listen(port, (error) => {
+  const server = app.listen(port, (error) => {
     if (error) {
       throw error;
     }
@@ -89,6 +93,8 @@ async function startServer(options: StartOptions) {
       `Server started at ${chalk.magentaBright(`http://localhost:${port}`)}`
     );
   });
+
+  await initDashboard(app, server, options);
 }
 
 export default async function start(options: StartOptions) {
