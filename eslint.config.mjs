@@ -1,13 +1,12 @@
 // @ts-check
 
-import react from 'eslint-plugin-react';
-import unicorn from 'eslint-plugin-unicorn';
-import reactHooks from 'eslint-plugin-react-hooks';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
-
 import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-plugin-prettier/recommended';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import unicorn from 'eslint-plugin-unicorn';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig(
@@ -54,11 +53,17 @@ export default defineConfig(
       'unicorn/prefer-top-level-await': 'off',
       'unicorn/no-useless-undefined': 'off',
       'unicorn/filename-case': 'off',
-      'react/react-in-jsx-scope': 'off',
-      '@typescript-eslint/restrict-template-expressions': 'off',
-      'unicorn/no-null': 'off',
-      'react/prop-types': 'off',
       'unicorn/prefer-global-this': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/no-negated-condition': 'off',
+
+      '@typescript-eslint/restrict-template-expressions': 'off',
+
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
   prettier

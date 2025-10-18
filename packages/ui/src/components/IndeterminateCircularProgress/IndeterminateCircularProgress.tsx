@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 
-import styles from './IndeterminateCircularProgress.module.scss';
 import { classNames } from '../../utils/classNames';
+import styles from './IndeterminateCircularProgress.module.scss';
 
 export interface IndeterminateCircularProgressProps
   extends ComponentProps<'svg'> {

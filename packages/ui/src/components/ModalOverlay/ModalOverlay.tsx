@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 
-import styles from './ModalOverlay.module.scss';
 import { useScrollbar } from '../../hooks';
 import { classNames } from '../../utils/classNames';
+import styles from './ModalOverlay.module.scss';
 
 export type ModalOverlayEffect = 'tint' | 'blur';
 

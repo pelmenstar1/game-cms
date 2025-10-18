@@ -1,12 +1,14 @@
+import path from 'node:path';
+
 import { setupApi } from '@game-cms/api';
 import type { Application } from 'express';
-import { scanApiRoutes, scanServices } from './scan.js';
-import path from 'node:path';
-import { getPackageBuildDirectory } from './utils.js';
+
 import {
-  type CompiledFolderName,
   compiledDirectoryPath,
+  type CompiledFolderName,
 } from '../../utils/localPath.js';
+import { scanApiRoutes, scanServices } from './scan.js';
+import { getPackageBuildDirectory } from './utils.js';
 
 function directoryPaths(apiBuildPath: string, name: CompiledFolderName) {
   return [path.join(apiBuildPath, name), compiledDirectoryPath(name)];

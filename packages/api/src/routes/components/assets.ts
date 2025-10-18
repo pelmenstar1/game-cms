@@ -1,6 +1,8 @@
-import { env } from '@game-cms/env';
-import { apiRoute } from '../../utils.js';
 import path from 'node:path';
+
+import { env } from '@game-cms/env';
+
+import { apiRoute } from '../../utils.js';
 
 export default apiRoute({
   path: '/_components/:id/assets/{*splat}',

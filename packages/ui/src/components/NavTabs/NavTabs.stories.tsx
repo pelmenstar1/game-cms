@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { NavTabs } from './NavTabs';
 import { InfoIcon } from '../../icons';
+import { NavTabs } from './NavTabs';
 
 export default {
   component: NavTabs,

@@ -1,9 +1,8 @@
 import { ComponentProps } from 'react';
 
 import { ArrowDownIcon } from '../../icons';
-
-import styles from './SelectHeader.module.scss';
 import { classNames } from '../../utils/classNames';
+import styles from './SelectHeader.module.scss';
 
 export type SelectHeaderProps = ComponentProps<'button'>;
 

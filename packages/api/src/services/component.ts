@@ -1,6 +1,7 @@
-import type { ComponentId, ComponentRenderManifest } from '@game-cms/types';
-import { service } from '../utils.js';
 import { env } from '@game-cms/env';
+import type { ComponentId, ComponentRenderManifest } from '@game-cms/types';
+
+import { service } from '../utils.js';
 
 function assetsPath(id: ComponentId, filePath: string) {
   return `/api/_components/${id}/assets/${filePath}`;

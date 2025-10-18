@@ -1,8 +1,8 @@
 import { ComponentProps, ReactNode, Ref } from 'react';
 
+import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import styles from './TextInput.module.scss';
-import { classNames } from '../../utils/classNames';
 
 export type TextInputVariant = 'bordered' | 'underline';
 

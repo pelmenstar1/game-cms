@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 
-import styles from './List.module.scss';
 import { classNames } from '../../utils/classNames';
+import styles from './List.module.scss';
 
 type ListProps = ComponentProps<'ul'>;
 

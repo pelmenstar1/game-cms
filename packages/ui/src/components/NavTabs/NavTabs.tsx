@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
-import styles from './NavTabs.module.scss';
+import { useLocation } from 'react-router';
+
 import { classNames } from '../../utils/classNames';
 import { Link } from '../Link';
-import { useLocation } from 'react-router';
+import styles from './NavTabs.module.scss';
 
 export interface NavTabsProps {
   className?: string;

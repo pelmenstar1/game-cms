@@ -1,8 +1,8 @@
 import { ComponentProps } from 'react';
 
+import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import styles from './Table.module.scss';
-import { classNames } from '../../utils/classNames';
 
 export interface TableProps extends ComponentProps<'table'> {
   numbered?: boolean;

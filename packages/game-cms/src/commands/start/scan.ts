@@ -1,18 +1,20 @@
+import fsp from 'node:fs/promises';
+import path from 'node:path';
+
+import { isFileNotFoundError } from '@game-cms/shared/errors';
 import {
   type ApiRoute,
   type ComponentController,
   type Service,
 } from '@game-cms/types';
-import { ZodType } from 'zod';
-import fsp from 'node:fs/promises';
-import path from 'node:path';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
-import { statusError } from '../../utils/log.js';
 import type { MaybePromise } from '@game-cms/types/src/utils.js';
+import { ZodType } from 'zod';
+
+import { statusError } from '../../utils/log.js';
 import {
-  serviceSchema,
-  routeSchema,
   componentSchema,
+  routeSchema,
+  serviceSchema,
 } from '../../utils/schema.js';
 
 async function maybeImportWithSchema<T>(

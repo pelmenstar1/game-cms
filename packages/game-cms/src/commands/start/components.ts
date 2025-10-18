@@ -1,11 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+import { mergeObjects } from '@game-cms/shared/object';
 import type {
   ComponentController,
   ComponentStaticConfig,
   ComponentStaticConfigMap,
 } from '@game-cms/types';
-import { mergeObjects } from '@game-cms/shared/object';
-import { getPackageBuildDirectory } from './utils.js';
-import path from 'node:path';
+
+import { compiledDirectoryPath } from '../../utils/localPath.js';
+import { componentSchema } from '../../utils/schema.js';
 import {
   getViteManifest,
   traceEntryPointJsDependencies,
@@ -13,9 +17,7 @@ import {
   type ViteManifest,
   type ViteManifestEntry,
 } from '../../utils/viteManifest.js';
-import fs from 'node:fs';
-import { componentSchema } from '../../utils/schema.js';
-import { compiledDirectoryPath } from '../../utils/localPath.js';
+import { getPackageBuildDirectory } from './utils.js';
 
 const RENDERER_SUFFIX = '-renderer';
 

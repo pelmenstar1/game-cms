@@ -1,5 +1,6 @@
-import type { StorageProvider } from './storageProvider.js';
 import type { MongoClientOptions } from 'mongodb';
+
+import type { StorageProvider } from './storageProvider.js';
 
 export type DatabaseConfig = {
   mongo: { url: string } & MongoClientOptions;

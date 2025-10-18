@@ -21,7 +21,5 @@
     "composite": true
   },
   "include": ["./src"],
-  "references": [
-    { "path": "../build" }
-  ]
+  "references": [{ "path": "../build" }]
 }

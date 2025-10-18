@@ -1,6 +1,7 @@
-import { MongoClient } from 'mongodb';
-import { service } from '../utils.js';
 import { env } from '@game-cms/env';
+import { MongoClient } from 'mongodb';
+
+import { service } from '../utils.js';
 
 let _client: MongoClient | undefined;
 

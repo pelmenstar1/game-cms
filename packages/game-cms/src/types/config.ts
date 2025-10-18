@@ -3,6 +3,7 @@ import type {
   ServerConfig,
   StorageConfig,
 } from '@game-cms/types';
+
 import type { EnvAccessor } from '../utils/env.js';
 
 type MaybePromise<T> = T | Promise<T>;

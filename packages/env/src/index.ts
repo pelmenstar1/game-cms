@@ -2,8 +2,8 @@ import type {
   ComponentStaticConfigMap,
   DatabaseConfig,
   ServerConfig,
-  StorageConfig,
   SharedAssetsConfig,
+  StorageConfig,
 } from '@game-cms/types';
 
 export type CmsEnvironment = {

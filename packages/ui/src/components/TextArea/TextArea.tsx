@@ -1,8 +1,8 @@
 import { ChangeEvent, ComponentProps, useMemo } from 'react';
 
+import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import styles from './TextArea.module.scss';
-import { classNames } from '../../utils/classNames';
 
 export interface TextAreaProps extends ComponentProps<'textarea'> {
   variant?: 'primary' | 'inverted-primary';

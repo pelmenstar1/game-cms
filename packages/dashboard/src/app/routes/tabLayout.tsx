@@ -1,4 +1,4 @@
-import { NavTabs, HomeIcon, AppsIcon, SettingsIcon } from '@game-cms/ui';
+import { AppsIcon, HomeIcon, NavTabs, SettingsIcon } from '@game-cms/ui';
 import { Outlet } from 'react-router';
 
 export default function Layout() {

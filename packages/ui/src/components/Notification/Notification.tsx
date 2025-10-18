@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useMemo, useState } from 'react';
 
-import { contextUseFactory } from '../../utils/contextFactory';
-import styles from './Notification.module.scss';
 import { classNames } from '../../utils/classNames';
+import { contextUseFactory } from '../../utils/contextFactory';
 import { Typography } from '../Typography';
+import styles from './Notification.module.scss';
 
 export type NotificationType = 'plain' | 'error';
 

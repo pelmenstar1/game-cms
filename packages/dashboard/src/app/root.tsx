@@ -1,3 +1,5 @@
+import '@game-cms/ui/theme/global';
+
 import {
   isRouteErrorResponse,
   Links,
@@ -7,10 +9,9 @@ import {
   ScrollRestoration,
 } from 'react-router';
 
-import type { Route } from './+types/root';
-
-import '@game-cms/ui/theme/global';
 import { StylesheetInject } from '@/components/StylesheetInject';
+
+import type { Route } from './+types/root';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

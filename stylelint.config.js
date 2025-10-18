@@ -7,6 +7,7 @@ export default {
     'packages/dashboard/build/**',
     'packages/*/dist',
     'packages/*/storybook-static',
+    'packages/components/dist/**',
     'coverage/**',
   ],
   rules: {

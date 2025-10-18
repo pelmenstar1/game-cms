@@ -1,6 +1,7 @@
-import { parseEnv } from 'node:util';
-import { isFileNotFoundError } from './errors/index.js';
 import fsp from 'node:fs/promises';
+import { parseEnv } from 'node:util';
+
+import { isFileNotFoundError } from './errors/index.js';
 
 export async function loadEnvIfExists() {
   try {

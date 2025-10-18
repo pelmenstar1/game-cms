@@ -14,7 +14,10 @@ export interface ButtonProps {
   color?: ButtonColor;
 }
 
-export const Button = /*@__PURE__*/ impersonatedComponent<ButtonProps, 'button'>(
+export const Button = /*@__PURE__*/ impersonatedComponent<
+  ButtonProps,
+  'button'
+>(
   ({
     as = 'button',
     buttonVariant = 'flat',

@@ -1,6 +1,7 @@
-import type { ServerBuild } from 'react-router';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import type { ServerBuild } from 'react-router';
 
 export async function importDashboardBuild() {
   return (await import('@game-cms/dashboard')) as unknown as ServerBuild;

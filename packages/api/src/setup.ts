@@ -1,7 +1,8 @@
 import '@game-cms/types';
 
-import type { Application } from 'express';
 import type { ApiRoute, GameCmsController, Service } from '@game-cms/types';
+import type { Application } from 'express';
+
 import { createController } from './controller.js';
 
 type ApiConfig = {

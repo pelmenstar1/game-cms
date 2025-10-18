@@ -1,8 +1,8 @@
 import { ChangeEvent, ReactNode, useCallback } from 'react';
 
+import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import styles from './Switch.module.scss';
-import { classNames } from '../../utils/classNames';
 
 export interface SwitchProps {
   disabled?: boolean;

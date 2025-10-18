@@ -1,8 +1,8 @@
 import { Command } from 'commander';
-import build from './commands/build.js';
-import start from './commands/start/index.js';
 
 import packageInfo from '../package.json' with { type: 'json' };
+import build from './commands/build.js';
+import start from './commands/start/index.js';
 
 const program = new Command();
 
@@ -16,6 +16,10 @@ program
   .description('Builds configs for the CMS')
   .action(build);
 
-program.command('start').description('Starts CMS server').action(start);
+program
+  .command('start')
+  .option('-d, --dashboard [DASHBOARD]', 'Dashboard URL')
+  .description('Starts CMS server')
+  .action(start);
 
 program.parse();

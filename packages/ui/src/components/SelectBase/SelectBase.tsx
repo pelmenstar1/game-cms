@@ -1,9 +1,9 @@
 import { ComponentProps, MouseEvent, useCallback, useState } from 'react';
 
+import { classNames } from '../../utils/classNames';
 import { SelectHeader } from '../SelectHeader';
 import { SelectItems } from '../SelectItems';
 import styles from './SelectBase.module.scss';
-import { classNames } from '../../utils/classNames';
 
 export interface SelectBaseProps<T extends string = string>
   extends ComponentProps<'div'> {

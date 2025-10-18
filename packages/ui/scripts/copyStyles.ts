@@ -1,6 +1,7 @@
-import { isEntityExistsError } from '@game-cms/shared/errors';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
+
+import { isEntityExistsError } from '@game-cms/shared/errors';
 
 const srcDir = path.join(import.meta.dirname, '../src');
 

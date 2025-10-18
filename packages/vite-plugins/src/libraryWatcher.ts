@@ -1,6 +1,7 @@
-import { Plugin } from 'vite';
-import { watch } from 'chokidar';
 import path from 'node:path';
+
+import { watch } from 'chokidar';
+import { Plugin } from 'vite';
 
 export function libraryWatcherPlugin(name: string): Plugin {
   return {

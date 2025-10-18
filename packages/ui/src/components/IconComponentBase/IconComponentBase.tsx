@@ -1,8 +1,8 @@
 import { createElement, ReactNode } from 'react';
 
+import { classNames } from '../../utils/classNames';
 import { impersonatedComponent } from '../../utils/impersonation';
 import styles from './IconComponentBase.module.scss';
-import { classNames } from '../../utils/classNames';
 
 export type IconComponentBaseProps = {
   className?: string;

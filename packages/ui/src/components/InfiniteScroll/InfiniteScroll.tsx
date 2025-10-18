@@ -1,8 +1,8 @@
 import { FC, ReactNode, Ref, useEffect, useLayoutEffect, useRef } from 'react';
 
+import { classNames } from '../../utils/classNames';
 import { IndeterminateCircularProgress } from '../IndeterminateCircularProgress';
 import styles from './InfiniteScroll.module.scss';
-import { classNames } from '../../utils/classNames';
 
 type LoadMarkerProps<T extends Element> = {
   ref?: Ref<T | null>;

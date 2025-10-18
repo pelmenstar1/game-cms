@@ -4,8 +4,10 @@ import type {
   ComponentOptions,
 } from '@game-cms/types';
 import React, { Suspense, useMemo } from 'react';
+
 import { getComponentManifest } from '@/api/component';
 import { getRendererFromModule } from '@/utils/component';
+
 import { useStylesheetInject } from '../StylesheetInject/context';
 
 export interface RemoteComponentProps {

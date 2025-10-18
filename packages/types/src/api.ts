@@ -1,6 +1,6 @@
-import type { RequestHandler } from 'express';
 // @ts-expect-error it's correct.
 import type { RouteParameters } from '@types/express-serve-static-core';
+import type { RequestHandler } from 'express';
 
 export const httpMethods = [
   'OPTIONS',

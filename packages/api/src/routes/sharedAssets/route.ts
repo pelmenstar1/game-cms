@@ -1,7 +1,8 @@
-import { env } from '@game-cms/env';
-import { apiRoute } from '../../utils.js';
 import { SHARED_ASSET_PREFIX } from '@game-cms/build';
+import { env } from '@game-cms/env';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
+
+import { apiRoute } from '../../utils.js';
 
 export default apiRoute({
   path: `/assets/${SHARED_ASSET_PREFIX}/:scope/:name.js`,

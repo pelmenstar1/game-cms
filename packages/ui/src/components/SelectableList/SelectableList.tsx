@@ -1,7 +1,7 @@
 import { ChangeEvent, Key, ReactNode, useCallback, useId } from 'react';
 
-import styles from './SelectableList.module.scss';
 import { classNames } from '../../utils/classNames';
+import styles from './SelectableList.module.scss';
 
 export interface SelectableListProps<T extends { id: Key }> {
   disabled?: boolean;

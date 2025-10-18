@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 import { Link } from 'react-router';
 
+import { ArrowLeftIcon, ArrowRightIcon } from '../../icons';
+import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import { getViewPages } from './pages';
 import styles from './Pagination.module.scss';
-import { classNames } from '../../utils/classNames';
-import { ArrowLeftIcon, ArrowRightIcon } from '../../icons';
 
 export type PaginationProps = {
   className?: string;

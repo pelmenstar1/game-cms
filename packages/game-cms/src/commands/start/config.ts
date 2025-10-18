@@ -1,5 +1,7 @@
-import type { CmsEnvironment } from '@game-cms/env';
 import path from 'node:path';
+
+import type { CmsEnvironment } from '@game-cms/env';
+
 import type { ConfigInit } from '../../types/config.js';
 import { createEnvAccessor, type EnvAccessor } from '../../utils/env.js';
 import { compiledDirectoryPath } from '../../utils/localPath.js';

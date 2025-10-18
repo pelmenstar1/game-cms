@@ -1,7 +1,8 @@
-import type { Response } from 'express';
-import fsp from 'node:fs/promises';
 import fs from 'node:fs';
+import fsp from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
+
+import type { Response } from 'express';
 
 export async function writeFileToResponse(
   filePath: string,
