@@ -21,7 +21,10 @@ function isHeader(value: TypographyVariant): value is Header {
   return value.startsWith('h');
 }
 
-export const Typography = impersonatedComponent<TypographyProps, 'p'>(
+export const Typography = /*@__PURE__*/ impersonatedComponent<
+  TypographyProps,
+  'p'
+>(
   ({
     as = 'p',
     className,

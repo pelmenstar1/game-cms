@@ -1,7 +1,9 @@
 import type {
+  ComponentStaticConfigMap,
   DatabaseConfig,
   ServerConfig,
   StorageConfig,
+  SharedAssetsConfig,
 } from '@game-cms/types';
 
 export type CmsEnvironment = {
@@ -10,6 +12,8 @@ export type CmsEnvironment = {
     database: DatabaseConfig;
     server: ServerConfig;
   };
+  components: ComponentStaticConfigMap;
+  sharedAssets: SharedAssetsConfig;
 };
 
 let _env: CmsEnvironment | undefined;

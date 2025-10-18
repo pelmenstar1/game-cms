@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "types": ["node", "vite/client"],
+
+    "declaration": true,
+
+    "allowJs": true,
+
+    "strict": true,
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "composite": true
+  },
+  "references": [{ "path": "../shared" }, { "path": "../types" }],
+  "include": ["./src", "./scripts"]
+}

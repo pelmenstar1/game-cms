@@ -1,10 +1,19 @@
 import { reactRouter } from "@react-router/dev/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { watchNodeModules } from 'vite-plugin-watch-node-modules';
-import path from "node:path";
 import { libraryWatcherPlugin } from "@game-cms/vite-plugins";
+import { EXTERNAL_SHARED_ASSETS, SHARED_ASSETS_PATHS } from '@game-cms/build';
 
-export default defineConfig({
+export default defineConfig((env) => ({
   plugins: [reactRouter(), tsconfigPaths(), libraryWatcherPlugin('ui')],
-});
+  build: {
+    manifest: true,
+    minify: true,
+    rollupOptions: env.isSsrBuild ? {} : {
+      external: EXTERNAL_SHARED_ASSETS,
+      output: {
+        paths: SHARED_ASSETS_PATHS,
+      },
+    }
+  },
+}));

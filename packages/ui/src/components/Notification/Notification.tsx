@@ -21,9 +21,8 @@ export type NotificationManager = {
   show(message: string, type: NotificationType): void;
 };
 
-export const NotificationContext = createContext<NotificationManager | null>(
-  null
-);
+export const NotificationContext =
+  /*@__PURE__*/ createContext<NotificationManager | null>(null);
 
 export function Notification({ message, type, isVisible }: NotificationProps) {
   return (
@@ -73,7 +72,7 @@ export function NotificationWrapper({ children }: NotificationWrapperProps) {
   );
 }
 
-export const useNotification = contextUseFactory(
+export const useNotification = /*@__PURE__*/ contextUseFactory(
   NotificationContext,
   'NotificationContext'
 );

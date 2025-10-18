@@ -10,6 +10,7 @@ import {
 import type { Route } from './+types/root';
 
 import '@game-cms/ui/theme/global';
+import { StylesheetInject } from '@/components/StylesheetInject';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -34,7 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <StylesheetInject>{children}</StylesheetInject>
         <ScrollRestoration />
         <Scripts />
       </body>

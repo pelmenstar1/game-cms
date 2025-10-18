@@ -5,13 +5,14 @@
   "main": "./build/server/index.js",
   "types": "./export-types.d.ts",
   "scripts": {
-    "build": "react-router build",
+    "build": "react-router build --minify false",
     "dev": "react-router dev",
     "typegen": "react-router typegen"
   },
   "devDependencies": {
+    "@game-cms/build": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
-    "@types/node": "24.6.2",
+    "@types/node": "24.7.2",
     "@types/react": "19.2.0",
     "@types/react-dom": "19.2.0",
     "tsx": "4.20.6",
@@ -19,6 +20,9 @@
     "vite-plugin-watch-node-modules": "0.5.0"
   },
   "dependencies": {
+    "@game-cms/react": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
     "@react-router/dev": "7.9.3",
     "@react-router/node": "7.9.3",

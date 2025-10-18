@@ -5,11 +5,9 @@
 
     "module": "nodenext",
     "target": "esnext",
-    "types": ["node"],
+    "types": ["node", "@game-cms/shared/types"],
 
     "declaration": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
 
     "strict": true,
     "jsx": "react-jsx",

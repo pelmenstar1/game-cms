@@ -12,7 +12,7 @@ export type IconComponentBaseProps = {
   children: ReactNode;
 };
 
-export const IconComponentBase = impersonatedComponent<
+export const IconComponentBase = /*@__PURE__*/ impersonatedComponent<
   IconComponentBaseProps,
   'button'
 >(

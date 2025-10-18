@@ -3,7 +3,7 @@
   "packageManager": "yarn@4.10.3",
   "type": "module",
   "dependencies": {
-    "@types/node": "24.6.2",
+    "@types/node": "24.7.2",
     "typescript": "5.9.3"
   },
   "exports": {
@@ -22,6 +22,20 @@
     "./string": {
       "import": "./dist/string/index.js",
       "types": "./dist/string/index.d.ts"
+    },
+    "./fetch": {
+      "import": "./dist/fetch/index.js",
+      "types": "./dist/fetch/index.d.ts"
+    },
+    "./object": {
+      "import": "./dist/object/index.js",
+      "types": "./dist/object/index.d.ts"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts"
     }
+  },
+  "peerDependencies": {
+    "express": "*"
   }
 }

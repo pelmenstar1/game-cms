@@ -8,6 +8,8 @@
     { "path": "./packages/env" },
     { "path": "./packages/shared" },
     { "path": "./packages/ui" },
+    { "path": "./packages/components" },
+    { "path": "./packages/build" },
     { "path": "./packages/vite-plugins" }
   ],
   "include": []

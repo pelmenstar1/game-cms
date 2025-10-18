@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import build from './commands/build.js';
-import start from './commands/start.js';
+import start from './commands/start/index.js';
 
 import packageInfo from '../package.json' with { type: 'json' };
 

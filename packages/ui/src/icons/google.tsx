@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import { SvgProps } from './types';
 
+/*@__NO_SIDE_EFFECTS__*/
 export function googleIcon(d: string) {
   const component: FC<SvgProps> = (props) => {
     return (

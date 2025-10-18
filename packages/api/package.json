@@ -10,5 +10,12 @@
   },
   "peerDependencies": {
     "express": "^5.0.0"
+  },
+  "dependencies": {
+    "@game-cms/build": "workspace:*",
+    "@game-cms/env": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/types": "workspace:*",
+    "mongodb": "6.20.0"
   }
 }

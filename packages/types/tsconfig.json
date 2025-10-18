@@ -20,5 +20,8 @@
     "skipLibCheck": true,
     "composite": true
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "references": [
+    { "path": "../build" }
+  ]
 }

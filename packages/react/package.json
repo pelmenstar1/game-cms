@@ -1,0 +1,41 @@
+{
+  "name": "@game-cms/react",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "scripts": {
+    "build": "vite build && tsc"
+  },
+  "devDependencies": {
+    "@types/node": "24.7.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.9"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/src/re-react.js",
+      "types": "./dist/src/re-react.d.ts"
+    },
+    "./dom": {
+      "import": "./dist/src/re-react-dom.js",
+      "types": "./dist/src/re-react-dom.d.ts"
+    },
+    "./dom/client": {
+      "import": "./dist/src/re-react-dom-client.js",
+      "types": "./dist/src/re-react-dom-client.d.ts"
+    },
+    "./dom/server": {
+      "import": "./dist/src/re-react-dom-server.js",
+      "types": "./dist/src/re-react-dom-server.d.ts"
+    },
+    "./jsx-runtime": {
+      "import": "./dist/src/re-react-jsx-runtime.js",
+      "types": "./dist/src/re-react-jsx-runtime.d.ts"
+    }
+  }
+}

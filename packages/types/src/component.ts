@@ -1,0 +1,76 @@
+import type { FC } from 'react';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ComponentMap extends Record<string, ComponentController> {}
+
+export type ComponentId = keyof ComponentMap;
+
+export type ComponentDataAtom = string | number | boolean | null;
+export type ComponentData =
+  | ComponentDataAtom
+  | ComponentData[]
+  | { [K in string]: ComponentData };
+
+export type ComponentOptions = ComponentData;
+
+export interface ComponentSchema {
+  id: string;
+  name: string;
+  options: ComponentOptions;
+}
+
+export type ComponentProps<
+  Options extends ComponentOptions = ComponentOptions,
+  Data extends ComponentData = ComponentData,
+> = {
+  data: Data;
+  options: Options;
+};
+
+export type GetComponentControllerById<Id extends ComponentId> =
+  ComponentMap[Id];
+
+export type InferComponentOptions<Controller> =
+  Controller extends ComponentController<infer Options> ? Options : never;
+
+export type InferComponentData<Controller> =
+  Controller extends ComponentController<ComponentOptions, infer Data>
+    ? Data
+    : never;
+
+type ComponentPropsFromController<Controller> =
+  Controller extends ComponentController<infer Options, infer Data>
+    ? ComponentProps<Options, Data>
+    : ComponentProps;
+
+export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
+  ComponentPropsFromController<GetComponentControllerById<Id>>
+>;
+
+export interface ComponentController<
+  Options extends ComponentOptions = ComponentOptions,
+  Data extends ComponentData = ComponentData,
+> {
+  id: string;
+
+  defaultOptions(): Options;
+  defaultData(): Data;
+
+  isValid: (options: Options, data: Data) => boolean;
+}
+
+export interface ComponentRenderManifest {
+  jsBundle: string;
+  jsDependencies: string[];
+  cssBundles: string[];
+}
+
+export type ComponentStaticConfig<Id extends ComponentId = ComponentId> = {
+  baseDirectory: string;
+  controller: GetComponentControllerById<Id>;
+  renderManifest: ComponentRenderManifest;
+};
+
+export type ComponentStaticConfigMap = {
+  [Id in ComponentId]: ComponentStaticConfig<Id>;
+};

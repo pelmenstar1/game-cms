@@ -52,6 +52,7 @@ export default defineConfig(
     rules: {
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/prefer-top-level-await': 'off',
+      'unicorn/no-useless-undefined': 'off',
       'unicorn/filename-case': 'off',
       'react/react-in-jsx-scope': 'off',
       '@typescript-eslint/restrict-template-expressions': 'off',
