@@ -1,4 +1,5 @@
 import '@game-cms/ui/theme/global';
+import '../theme/global.scss';
 
 import {
   isRouteErrorResponse,

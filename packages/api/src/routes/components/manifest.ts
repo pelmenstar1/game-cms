@@ -7,12 +7,7 @@ export default apiRoute({
     const { id } = req.params;
     const manifest = cms.service('base::component').getClientRenderManifest(id);
 
-    if (manifest === null) {
-      res.status(404);
-    } else {
-      res.status(200).write(JSON.stringify(manifest));
-    }
-
+    res.json(manifest);
     res.end();
   },
 });
