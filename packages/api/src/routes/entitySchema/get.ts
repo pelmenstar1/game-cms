@@ -1,16 +1,26 @@
+import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { apiRoute } from '@game-cms/utils';
+import z from 'zod';
 
 export default apiRoute({
-  path: '/entitySchema/:id',
+  url: '/entitySchema/byId/:id',
   method: 'GET',
-  handler: (req, res, next) => {
+  schema: {
+    params: z.object({
+      id: z.string(),
+    }),
+  },
+  handler: (req) => {
     const { id } = req.params;
     const result = cms.service('base::entitySchema').getClientById(id);
 
     if (result === null) {
-      next();
-    } else {
-      res.json(result);
+      throw new ApiError(
+        'Entity schema not found',
+        ApiErrorCode.ENTITY_NOT_FOUND
+      );
     }
+
+    return result;
   },
 });

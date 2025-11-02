@@ -1,7 +1,7 @@
 import { env, initializeEnv } from '@game-cms/env';
 import { loadEnvIfExists } from '@game-cms/shared';
 import chalk from 'chalk';
-import express from 'express';
+import fastify from 'fastify';
 
 import { statusInline } from '../../utils/log.js';
 import { setupApiFromConfig } from './api.js';
@@ -26,15 +26,14 @@ async function initEnvFromConfigs() {
 }
 
 async function startServer(options: StartOptions) {
-  const app = express();
-  app.disable('x-powered-by');
-  app.use(express.json());
+  const app = fastify();
 
   await setupApiFromConfig(app);
+  await initDashboard(app, options);
 
   const { port } = env().config.server;
 
-  const server = app.listen(port, (error) => {
+  app.listen({ port }, (error) => {
     if (error) {
       throw error;
     }
@@ -43,8 +42,6 @@ async function startServer(options: StartOptions) {
       `Server started at ${chalk.magentaBright(`http://localhost:${port}`)}`
     );
   });
-
-  initDashboard(app, server, options);
 }
 
 export default async function start(options: StartOptions) {

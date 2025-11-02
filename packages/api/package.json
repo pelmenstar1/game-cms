@@ -8,9 +8,6 @@
     "@types/qs": "^6",
     "typescript": "5.9.3"
   },
-  "peerDependencies": {
-    "express": "^5.0.0"
-  },
   "dependencies": {
     "@game-cms/build": "workspace:*",
     "@game-cms/env": "workspace:*",
@@ -18,9 +15,13 @@
     "@game-cms/shared-api": "workspace:*",
     "@game-cms/types": "workspace:*",
     "@game-cms/utils": "workspace:*",
+    "fastify-type-provider-zod": "6.1.0",
     "mongodb": "6.20.0",
     "qs": "6.14.0",
     "zod": "4.1.12"
+  },
+  "peerDependencies": {
+    "fastify": "*"
   },
   "exports": {
     ".": {

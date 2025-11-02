@@ -1,9 +1,8 @@
-import type { Server } from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import type { Application } from 'express';
-import express from 'express';
+import staticPlugin from '@fastify/static';
+import type { FastifyInstance } from 'fastify';
 import httpProxy from 'http-proxy';
 
 import type { StartOptions } from './types.js';
@@ -14,17 +13,17 @@ function getDashboardBuildPath() {
   return path.dirname(fileURLToPath(dashboardImportUrl));
 }
 
-function initLocalDashboard(app: Application) {
+async function initLocalDashboard(app: FastifyInstance) {
   const dashboardPath = getDashboardBuildPath();
 
-  app.use('/', express.static(dashboardPath));
+  await staticPlugin(app, { root: dashboardPath, wildcard: false });
 
-  app.get('/{*splat}', (_req, res) => {
+  app.get('/*', (_req, res) => {
     res.sendFile(path.join(dashboardPath, 'index.html'));
   });
 }
 
-function initProxyDashboard(app: Application, server: Server, url: string) {
+function initProxyDashboard(app: FastifyInstance, url: string) {
   const proxy = httpProxy.createProxyServer({
     target: url,
     ws: true,
@@ -33,22 +32,21 @@ function initProxyDashboard(app: Application, server: Server, url: string) {
   });
 
   app.all('/{*splat}', (req, res) => {
-    proxy.web(req, res);
+    proxy.web(req.raw, res.raw);
   });
 
-  server.on('upgrade', (req, socket, head) => {
+  app.server.on('upgrade', (req, socket, head) => {
     proxy.ws(req, socket, head);
   });
 }
 
-export function initDashboard(
-  app: Application,
-  server: Server,
+export async function initDashboard(
+  app: FastifyInstance,
   options: StartOptions
 ) {
   if (options.dashboard !== undefined) {
-    initProxyDashboard(app, server, options.dashboard);
+    initProxyDashboard(app, options.dashboard);
   } else {
-    initLocalDashboard(app);
+    await initLocalDashboard(app);
   }
 }

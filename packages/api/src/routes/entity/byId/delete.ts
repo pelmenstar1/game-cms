@@ -1,17 +1,19 @@
+import { objectId } from '@game-cms/shared';
 import { apiRoute } from '@game-cms/utils';
-
-import { handleObjectId } from '../../../utils/objectId.js';
+import z from 'zod';
 
 export default apiRoute({
-  path: '/entity/:entityId/byId/:id',
+  url: '/entity/:entityId/byId/:id',
   method: 'DELETE',
-  handler: async (req, res) => {
+  schema: {
+    params: z.object({
+      entityId: z.string(),
+      id: objectId,
+    }),
+  },
+  handler: async (req) => {
     const { entityId, id } = req.params;
 
-    const objectId = handleObjectId(id);
-
-    await cms.service('base::entity').deleteById(entityId, objectId);
-
-    res.end();
+    await cms.service('base::entity').deleteById(entityId, id);
   },
 });

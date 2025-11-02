@@ -1,5 +1,6 @@
 export * from './delay.js';
 export * from './env.js';
+export * from './fastify.js';
 export * from './json.js';
 export * from './maybeFactory.js';
 export * from './mime.js';

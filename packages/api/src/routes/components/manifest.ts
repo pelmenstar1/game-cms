@@ -1,13 +1,17 @@
 import { apiRoute } from '@game-cms/utils';
+import z from 'zod';
 
 export default apiRoute({
-  path: '/_components/:id/manifest.json',
+  url: '/_components/:id/manifest.json',
   method: 'GET',
-  handler: (req, res) => {
+  schema: {
+    params: z.object({
+      id: z.string(),
+    }),
+  },
+  handler: (req) => {
     const { id } = req.params;
-    const manifest = cms.service('base::component').getClientRenderManifest(id);
 
-    res.json(manifest);
-    res.end();
+    return cms.service('base::component').getClientRenderManifest(id);
   },
 });

@@ -8,7 +8,7 @@ export const serviceSchema = z.object({
 });
 
 export const routeSchema = z.object({
-  path: z.string(),
+  url: z.string(),
   method: httpMethod,
   handler: z.function(),
 });

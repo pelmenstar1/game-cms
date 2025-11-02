@@ -1,12 +1,16 @@
-import type { MaybeFactory } from '@game-cms/shared';
-// @ts-expect-error it's correct.
-import type { RouteParameters } from '@types/express-serve-static-core';
-
-// @ts-expect-error it's correct.
-export type { RouteParameters } from '@types/express-serve-static-core';
-
-import type { Request, RequestHandler } from 'express';
-import type { ZodType } from 'zod';
+import type {
+  ContextConfigDefault,
+  FastifyBaseLogger,
+  FastifySchema,
+  FastifyTypeProvider,
+  RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
+  RawServerBase,
+  RawServerDefault,
+  RouteGenericInterface,
+  RouteOptions,
+} from 'fastify';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 export const httpMethods = [
   'OPTIONS',
@@ -25,6 +29,8 @@ export type HttpMethod = (typeof httpMethods)[number];
 export type HttpMethodWithBody = 'POST' | 'PUT' | 'PATCH';
 export type HttpMethodWithNoBody = Exclude<HttpMethod, HttpMethodWithBody>;
 
+/*
+
 type BaseApiRoute = {
   exact?: boolean;
 };
@@ -32,7 +38,7 @@ type BaseApiRoute = {
 export type BodyValidator<
   T = unknown,
   Path extends string = string,
-> = MaybeFactory<ZodType<T>, [Request<RouteParameters<Path>>]>;
+> = MaybeFactory<ZodType<T>, [FastifyRequest<Path>]>;
 
 interface NonBodyRoute<Path extends string> extends BaseApiRoute {
   path: Path;
@@ -48,7 +54,28 @@ interface BodyRoute<Path extends string, Body> extends BaseApiRoute {
   };
   handler: RequestHandler<RouteParameters<Path>, unknown, Body>;
 }
+*/
 
-export type ApiRoute<Path extends string = string, Body = unknown> = Readonly<
-  NonBodyRoute<Path> | BodyRoute<Path, Body>
->;
+export type ApiRoute<
+  RawServer extends RawServerBase = RawServerDefault,
+  RawRequest extends
+    RawRequestDefaultExpression<RawServer> = RawRequestDefaultExpression<RawServer>,
+  RawReply extends
+    RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>,
+  RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
+  ContextConfig = ContextConfigDefault,
+  SchemaCompiler extends FastifySchema = FastifySchema,
+  TypeProvider extends FastifyTypeProvider = ZodTypeProvider,
+  Logger extends FastifyBaseLogger = FastifyBaseLogger,
+> = RouteOptions<
+  RawServer,
+  RawRequest,
+  RawReply,
+  RouteGeneric,
+  ContextConfig,
+  SchemaCompiler,
+  TypeProvider,
+  Logger
+> & {
+  exact?: boolean;
+};

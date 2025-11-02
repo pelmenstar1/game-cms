@@ -1,40 +1,35 @@
 import type { ApiRoute, GameCmsController, Service } from '@game-cms/types';
-import type { Application, RequestHandler } from 'express';
+import type { FastifyInstance } from 'fastify';
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod';
 
 import { createController } from './controller.js';
 import { errorHandler } from './utils/errorHandler.js';
-import { validateRouteInput } from './utils/requestValidator.js';
 
 type ApiConfig = {
   routes: ApiRoute[];
   services: Service[];
 };
 
-function createRouteHandler(route: ApiRoute): RequestHandler {
-  return (req, res, next) => {
-    if (req.method === route.method) {
-      validateRouteInput(route, req);
-
-      return route.handler(req, res, next);
-    } else {
-      next();
-    }
-  };
-}
-
 function setCms(value: GameCmsController) {
   (globalThis as unknown as { cms: GameCmsController }).cms = value;
 }
 
-export function setupApi(app: Application, { routes, services }: ApiConfig) {
+export function setupApi(
+  app: FastifyInstance,
+  { routes, services }: ApiConfig
+) {
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+
   setCms(createController(services));
+  app.addHook('onError', errorHandler());
 
   for (const route of routes) {
-    const prefix = route.exact ? route.path : `/api${route.path}`;
+    const prefix = route.exact ? route.url : `/api${route.url}`;
 
-    app.route(prefix).all(createRouteHandler(route));
+    app.route({ ...route, url: prefix });
   }
-
-  // Error handler should always be in the end.
-  app.use(errorHandler());
 }

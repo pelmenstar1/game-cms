@@ -1,7 +1,7 @@
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { ObjectId } from 'mongodb';
 
-export function handleObjectId(input: string) {
+export function parseObjectId(input: string) {
   try {
     return new ObjectId(input);
   } catch {

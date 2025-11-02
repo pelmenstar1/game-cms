@@ -1,13 +1,21 @@
 import { SHARED_ASSET_PREFIX } from '@game-cms/build';
 import { env } from '@game-cms/env';
+import { sendFile } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
 import { apiRoute } from '@game-cms/utils';
+import z from 'zod';
 
 export default apiRoute({
-  path: `/assets/${SHARED_ASSET_PREFIX}/:scope/:name.js`,
+  url: `/assets/${SHARED_ASSET_PREFIX}/:scope/:name.js`,
   method: 'GET',
   exact: true,
-  handler: (req, res, next) => {
+  schema: {
+    params: z.object({
+      scope: z.string(),
+      name: z.string(),
+    }),
+  },
+  handler: async (req, res) => {
     const { scope, name } = req.params;
 
     const { paths } = env().sharedAssets;
@@ -16,15 +24,15 @@ export default apiRoute({
     const filePath = paths[scope]?.[name] as string | undefined;
 
     if (filePath === undefined) {
-      next();
+      res.callNotFound();
       return;
     }
 
     try {
-      res.sendFile(filePath);
+      await sendFile(res, filePath, 'text/javascript');
     } catch (error: unknown) {
       if (isFileNotFoundError(error)) {
-        next();
+        res.callNotFound();
         return;
       }
 

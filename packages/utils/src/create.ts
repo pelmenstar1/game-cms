@@ -6,10 +6,40 @@ import type {
   ServerEntitySchema,
   Service,
 } from '@game-cms/types';
+import type {
+  ContextConfigDefault,
+  FastifyBaseLogger,
+  FastifySchema,
+  RawReplyDefaultExpression,
+  RawRequestDefaultExpression,
+  RawServerBase,
+  RawServerDefault,
+  RouteGenericInterface,
+} from 'fastify';
+import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 
 /*@__NO_SIDE_EFFECTS__*/
-export function apiRoute<Path extends string, Body = unknown>(
-  route: ApiRoute<Path, Body>
+export function apiRoute<
+  RawServer extends RawServerBase = RawServerDefault,
+  RawRequest extends
+    RawRequestDefaultExpression<RawServer> = RawRequestDefaultExpression<RawServer>,
+  RawReply extends
+    RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>,
+  RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
+  ContextConfig = ContextConfigDefault,
+  SchemaCompiler extends FastifySchema = FastifySchema,
+  Logger extends FastifyBaseLogger = FastifyBaseLogger,
+>(
+  route: ApiRoute<
+    RawServer,
+    RawRequest,
+    RawReply,
+    RouteGeneric,
+    ContextConfig,
+    SchemaCompiler,
+    ZodTypeProvider,
+    Logger
+  >
 ) {
   return route;
 }

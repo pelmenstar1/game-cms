@@ -1,5 +1,5 @@
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
-import type { ErrorRequestHandler } from 'express';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 
 function getStatusCode(error: ApiError) {
   switch (error.code) {
@@ -18,16 +18,21 @@ function resolveResponseAndStatus(error: unknown) {
     : { status: 500, body: { message: 'Internal Server Error' } };
 }
 
-export function errorHandler(): ErrorRequestHandler {
-  return (err, _req, res, next) => {
-    console.log(res.headersSent);
-    if (res.headersSent) {
-      next(err);
-      return;
+export function errorHandler() {
+  return (
+    req: FastifyRequest,
+    res: FastifyReply,
+    error: Error,
+    done: () => void
+  ) => {
+    if (res.raw.headersSent || !req.url.startsWith('/api')) {
+      done();
+    } else {
+      const { status, body } = resolveResponseAndStatus(error);
+
+      res.status(status);
+
+      return body;
     }
-
-    const { status, body } = resolveResponseAndStatus(err);
-
-    res.status(status).json(body).end();
   };
 }

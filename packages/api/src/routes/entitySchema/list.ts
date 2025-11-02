@@ -1,11 +1,11 @@
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
-  path: '/entitySchema/list',
+  url: '/entitySchema/list',
   method: 'GET',
-  handler: (_req, res) => {
+  handler: () => {
     const schemas = cms.service('base::entitySchema').getClientAll();
 
-    res.json(schemas).end();
+    return schemas;
   },
 });
