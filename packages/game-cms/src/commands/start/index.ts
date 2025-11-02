@@ -1,3 +1,4 @@
+import type { Server } from 'node:http';
 import path from 'node:path';
 
 import { env, initializeEnv } from '@game-cms/env';
@@ -5,6 +6,7 @@ import { loadEnvIfExists } from '@game-cms/shared';
 import { createRequestHandler } from '@react-router/express';
 import chalk from 'chalk';
 import express, { type Application } from 'express';
+import httpProxy from 'http-proxy';
 
 import { statusInline } from '../../utils/log.js';
 import { setupApiFromConfig } from './api.js';
@@ -12,9 +14,6 @@ import { scanAllComponents } from './components.js';
 import { resolveConfigInitMap } from './config.js';
 import { getDashboardPackagePath, importDashboardBuild } from './dashboard.js';
 import { getSharedAssetsConfig } from './sharedAssets.js';
-
-import httpProxy from 'http-proxy';
-import type { Server } from 'node:http';
 
 type StartOptions = {
   dashboard?: string;
@@ -57,7 +56,12 @@ async function initLocalDashboard(app: Application) {
 }
 
 function initProxyDashboard(app: Application, server: Server, url: string) {
-  const proxy = httpProxy.createProxyServer({ target: url, ws: true, proxyTimeout: 0, timeout: 0, });
+  const proxy = httpProxy.createProxyServer({
+    target: url,
+    ws: true,
+    proxyTimeout: 0,
+    timeout: 0,
+  });
 
   app.all('/{*splat}', (req, res) => {
     proxy.web(req, res);
@@ -68,7 +72,11 @@ function initProxyDashboard(app: Application, server: Server, url: string) {
   });
 }
 
-async function initDashboard(app: Application, server: Server, options: StartOptions) {
+async function initDashboard(
+  app: Application,
+  server: Server,
+  options: StartOptions
+) {
   if (options.dashboard !== undefined) {
     initProxyDashboard(app, server, options.dashboard);
   } else {

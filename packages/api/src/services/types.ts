@@ -1,9 +1,16 @@
-type GetService<T extends { default: unknown }> = T['default'];
+import type { EntitySchema, ResolveServices } from '@game-cms/types';
+
+type Services = [
+  typeof import('./entity.js'),
+  typeof import('./component.js'),
+  typeof import('./database.js'),
+  typeof import('./entitySchema.js'),
+];
 
 declare module '@game-cms/types' {
-  interface GameCmsServiceMap {
-    'base:entity': GetService<typeof import('./entity.js')>;
-    'base::component': GetService<typeof import('./component.js')>;
-    'base::database': GetService<typeof import('./database.js')>;
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface GameCmsServiceMap extends ResolveServices<Services> {}
+  interface DatabaseEntityMap {
+    'base::entitySchema': EntitySchema;
   }
 }

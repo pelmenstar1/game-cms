@@ -14,7 +14,8 @@
   "dependencies": {
     "@game-cms/build": "workspace:*",
     "@types/express": "5.0.3",
-    "@types/express-serve-static-core": "5.1.0"
+    "@types/express-serve-static-core": "5.1.0",
+    "zod": "4.1.12"
   },
   "peerDependencies": {
     "@types/react": "*",

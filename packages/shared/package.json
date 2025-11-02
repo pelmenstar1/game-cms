@@ -36,6 +36,7 @@
     }
   },
   "peerDependencies": {
-    "express": "*"
+    "express": "*",
+    "mongodb": "*"
   }
 }

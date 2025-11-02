@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import z, { type ZodType } from 'zod';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentMap extends Record<string, ComponentController> {}
@@ -13,11 +14,13 @@ export type ComponentData =
 
 export type ComponentOptions = ComponentData;
 
-export interface ComponentSchema {
-  id: string;
-  name: string;
-  options: ComponentOptions;
-}
+export const componentSchema = z.object({
+  componentId: z.string(),
+  name: z.string(),
+  options: z.unknown(),
+});
+
+export type ComponentSchema = z.infer<typeof componentSchema>;
 
 export type ComponentProps<
   Options extends ComponentOptions = ComponentOptions,
@@ -47,11 +50,18 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
   ComponentPropsFromController<GetComponentControllerById<Id>>
 >;
 
+export type MaybeOptions<T, Options> = T | ((options: Options) => T);
+
 export interface ComponentController<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
 > {
   id: string;
+
+  validation: {
+    options: ZodType<Options>;
+    data: MaybeOptions<ZodType<Data>, Options>;
+  };
 
   defaultOptions(): Options;
   defaultData(): Data;

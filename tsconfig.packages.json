@@ -10,7 +10,8 @@
     { "path": "./packages/ui" },
     { "path": "./packages/components" },
     { "path": "./packages/build" },
-    { "path": "./packages/vite-plugins" }
+    { "path": "./packages/vite-plugins" },
+    { "path": "./packages/conditional" }
   ],
   "include": []
 }

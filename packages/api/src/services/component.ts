@@ -9,6 +9,16 @@ function assetsPath(id: ComponentId, filePath: string) {
 
 export default service({
   id: 'base::component',
+  getController: <T extends ComponentId>(id: T) => {
+    const staticConfig = env().components[id];
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (staticConfig === undefined) {
+      throw new Error(`Unknown component: ${id}`);
+    }
+
+    return staticConfig.controller;
+  },
   getClientRenderManifest: (
     id: ComponentId
   ): ComponentRenderManifest | null => {

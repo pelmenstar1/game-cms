@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface GameCmsServiceMap {}
+import type { GameCmsServiceMap } from './service.js';
 
 export interface GameCmsController {
   service<K extends keyof GameCmsServiceMap>(name: K): GameCmsServiceMap[K];
