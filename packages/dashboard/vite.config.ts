@@ -8,7 +8,7 @@ export default defineConfig((env) => ({
   plugins: [reactRouter(), tsconfigPaths(), libraryWatcherPlugin('ui')],
   build: {
     manifest: true,
-    minify: true,
+    minify: 'esbuild',
     rollupOptions: env.isSsrBuild ? {} : {
       external: EXTERNAL_SHARED_ASSETS,
       output: {

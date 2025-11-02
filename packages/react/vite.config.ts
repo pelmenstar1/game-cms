@@ -5,6 +5,7 @@ const exports = ['react', 'react-dom', 'react-jsx-runtime'];
 export default defineConfig({
   build: {
     manifest: true,
+    minify: 'esbuild',
     outDir: './dist/src',
     lib: {
       formats: ['es'],

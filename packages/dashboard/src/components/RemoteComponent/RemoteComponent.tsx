@@ -27,10 +27,6 @@ export function RemoteComponent<T extends ComponentId>({
   const client = useApiClient();
 
   const Component = useMemo(() => {
-    if (import.meta.env.SSR) {
-      return () => null;
-    }
-
     return React.lazy(async () => {
       try {
         const manifest = await getComponentManifest({ client }, componentId);

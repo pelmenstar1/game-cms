@@ -2,10 +2,9 @@
   "name": "@game-cms/dashboard",
   "packageManager": "yarn@4.10.3",
   "type": "module",
-  "main": "./build/server/index.js",
-  "types": "./export-types.d.ts",
+  "main": "./build/client/index.html",
   "scripts": {
-    "build": "react-router build --minify false",
+    "build": "react-router build",
     "dev": "react-router dev",
     "typegen": "react-router typegen"
   },

@@ -1,3 +1,4 @@
+import type { RequestInitializer } from './requestInitializer.js';
 import type { ResponseParser } from './responseParser.js';
 import type {
   GameCmsClient,
@@ -14,11 +15,21 @@ export function createStandardRequestInit(options: RequestOptions) {
     headers,
   };
 
-  if ('body' in options && typeof options.body === 'function') {
-    options.body(init);
+  const { body } = options as { body?: RequestInitializer };
+
+  if (typeof body === 'function') {
+    body(init);
   }
 
   return init;
+}
+
+function createFullUrl(url: string, base: string | URL) {
+  if (typeof base === 'string' && base.startsWith('/')) {
+    return `${base}${url}`;
+  }
+
+  return new URL(url, base);
 }
 
 export function createStandardClient({
@@ -27,12 +38,14 @@ export function createStandardClient({
   async function makeRequest<T>(
     options: RequestOptions & { response?: ResponseParser<T> }
   ) {
-    const url = new URL(options.path, baseUrl);
+    const { path, response: responseParser } = options;
+
+    const url = createFullUrl(path, baseUrl);
     const init = createStandardRequestInit(options);
 
     const response = await fetch(url, init);
 
-    return options.response ? options.response(response) : response;
+    return responseParser ? responseParser(response) : response;
   }
 
   return {
