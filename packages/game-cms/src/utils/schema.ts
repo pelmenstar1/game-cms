@@ -15,7 +15,4 @@ export const routeSchema = z.object({
 
 export const componentSchema = z.object({
   id: z.string(),
-  defaultOptions: z.function(),
-  defaultData: z.function(),
-  isValid: z.function(),
 });

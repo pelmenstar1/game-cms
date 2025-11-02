@@ -1,14 +1,14 @@
+import { component } from '@game-cms/utils';
 import z from 'zod';
 
-import { defineComponent } from '../index.js';
-
-export default defineComponent({
-  id: 'base::test',
-  defaultData: () => [],
-  defaultOptions: () => [],
+export default component({
+  id: 'base::text',
   validation: {
-    data: z.tuple([]),
-    options: z.tuple([]),
+    data: z.string(),
+    options: z.object(),
   },
-  isValid: () => true,
+  default: {
+    data: () => '',
+    options: () => ({}),
+  },
 });

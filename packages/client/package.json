@@ -3,6 +3,7 @@
   "packageManager": "yarn@4.10.3",
   "type": "module",
   "devDependencies": {
+    "@game-cms/conditional": "workspace:*",
     "@game-cms/types": "workspace:*",
     "typescript": "5.9.3"
   },
@@ -11,5 +12,8 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
+  },
+  "dependencies": {
+    "@game-cms/shared-api": "workspace:*"
   }
 }

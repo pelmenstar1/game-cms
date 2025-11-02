@@ -3,6 +3,7 @@ import { defineConfig, UserConfig } from "vite";
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { EXTERNAL_SHARED_ASSETS, SHARED_ASSETS_PATHS } from "@game-cms/build";
+import dts from 'vite-plugin-dts';
 
 async function getEntries() {
   const result: Record<string, string> = {
@@ -22,9 +23,22 @@ async function getEntries() {
   return result;
 }
 
+async function getPaths() {
+  const result: Record<string, string> = {};
+
+  for await (const entry of fsp.glob('./src/*/*')) {
+    const name = path.basename(path.dirname(entry));
+  
+    result[`./${name}`] = `${name}.js`;
+  }
+
+  return result;
+}
+
 export default defineConfig(async (): Promise<UserConfig> => ({
   plugins: [
     react(),
+    dts()
   ],
   build: {
     manifest: true,
@@ -33,11 +47,11 @@ export default defineConfig(async (): Promise<UserConfig> => ({
       entry: await getEntries(),
     },
     rollupOptions: {
-      external: EXTERNAL_SHARED_ASSETS,
+      external: [...EXTERNAL_SHARED_ASSETS, 'zod'],
       output: {
         assetFileNames: '[name][extname]',
         entryFileNames: '[name].js',
-        paths: SHARED_ASSETS_PATHS,
+        paths: { ...SHARED_ASSETS_PATHS, ...await getPaths() },
       },
     },
     cssCodeSplit: true,

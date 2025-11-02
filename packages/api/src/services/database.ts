@@ -1,13 +1,12 @@
-import type { EntityConditionalData } from '@game-cms/conditional';
+import type { EntityConditionalDataById } from '@game-cms/conditional';
 import { env } from '@game-cms/env';
 import type {
   DatabaseCollectionId,
   DatabaseEntityMap,
-  EntityData,
+  EntityId,
 } from '@game-cms/types';
+import { service } from '@game-cms/utils';
 import { MongoClient } from 'mongodb';
-
-import { service } from '../utils.js';
 
 let _client: MongoClient | undefined;
 
@@ -27,9 +26,9 @@ export default service({
   collection: <T extends DatabaseCollectionId>(id: T) => {
     return client().db().collection<DatabaseEntityMap[T]>(id);
   },
-  entityCollection: <T extends EntityData>(id: string) => {
+  entityCollection: <T extends EntityId>(id: T) => {
     return client()
       .db()
-      .collection<EntityConditionalData<T>>(`base::entity::${id}`);
+      .collection<EntityConditionalDataById<T>>(`base::entity::${id}`);
   },
 });

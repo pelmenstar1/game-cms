@@ -1,4 +1,4 @@
-import type { EntityData } from '@game-cms/types';
+import type { EntityData, EntityId, GetEntityById } from '@game-cms/types';
 
 import type { ConditionalAstExpression } from './ast.js';
 
@@ -12,9 +12,12 @@ export type RawConditionalNotation = string;
 
 export type ConditionalChoices<T> = {
   default: T;
-  alternative: [ConditionalAstExpression, T][];
+  alternative?: [ConditionalAstExpression, T][];
 };
 
 export type EntityConditionalData<T extends EntityData = EntityData> = {
   [K in keyof T]: ConditionalChoices<T[K]>;
 };
+
+export type EntityConditionalDataById<T extends EntityId> =
+  EntityConditionalData<GetEntityById<T>>;

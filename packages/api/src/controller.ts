@@ -4,10 +4,10 @@ import type {
   Service,
 } from '@game-cms/types';
 
-function createServiceMap(services: Service[]): GameCmsServiceMap {
+function createServiceMap(services: Service[]) {
   return Object.fromEntries(
     services.map((service) => [service.id, service])
-  ) as unknown as GameCmsServiceMap;
+  ) as Partial<GameCmsServiceMap>;
 }
 
 export function createController(services: Service[]): GameCmsController {
@@ -17,7 +17,6 @@ export function createController(services: Service[]): GameCmsController {
     service(name) {
       const result = serviceMap[name];
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (result === undefined) {
         throw new Error(`Unknown service: ${name}`);
       }

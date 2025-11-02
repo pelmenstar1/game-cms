@@ -2,6 +2,7 @@ import type { ApiRoute, GameCmsController, Service } from '@game-cms/types';
 import type { Application, RequestHandler } from 'express';
 
 import { createController } from './controller.js';
+import { errorHandler } from './utils/errorHandler.js';
 import { validateRouteInput } from './utils/requestValidator.js';
 
 type ApiConfig = {
@@ -12,14 +13,12 @@ type ApiConfig = {
 function createRouteHandler(route: ApiRoute): RequestHandler {
   return (req, res, next) => {
     if (req.method === route.method) {
-      if (validateRouteInput(route, req, res)) {
-        return route.handler(req, res, next);
-      }
+      validateRouteInput(route, req);
 
-      return;
+      return route.handler(req, res, next);
+    } else {
+      next();
     }
-
-    next();
   };
 }
 
@@ -35,4 +34,7 @@ export function setupApi(app: Application, { routes, services }: ApiConfig) {
 
     app.route(prefix).all(createRouteHandler(route));
   }
+
+  // Error handler should always be in the end.
+  app.use(errorHandler());
 }

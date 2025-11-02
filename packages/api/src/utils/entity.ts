@@ -1,95 +1,41 @@
 import {
   conditionalAstExpression,
+  type ConditionalChoices,
   type EntityConditionalData,
 } from '@game-cms/conditional';
-import type {
-  ComponentData,
-  EntitySchema,
-  MaybeOptions,
-} from '@game-cms/types';
-import { z } from 'zod';
+import { resolveMaybeFactory } from '@game-cms/shared';
+import type { ComponentData, ServerComponentSchema } from '@game-cms/types';
+import { z, ZodType } from 'zod';
 
-function resolveValidator<T extends object, Options>(
-  value: MaybeOptions<T, Options>,
-  options: Options
-) {
-  if (typeof value === 'function') {
-    return value(options);
-  }
+function getValidatorForComponent<Data extends ComponentData>(
+  component: ServerComponentSchema<ComponentData, Data>
+): ZodType<ConditionalChoices<Data>> {
+  const { validation } = component.controller;
 
-  return value;
-}
+  const dataValidator = resolveMaybeFactory(validation.data, component.options);
 
-function isValidChoices(
-  input: unknown,
-  fieldKey: string,
-  schema: EntitySchema
-): boolean {
-  if (typeof input !== 'object' || input === null) {
-    return false;
-  }
-
-  const componentInfo = schema.components[fieldKey];
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (componentInfo === undefined) {
-    return false;
-  }
-
-  const { componentId } = componentInfo;
-
-  const { validation } = cms
-    .service('base::component')
-    .getController(componentId);
-
-  const dataValidator = resolveValidator(
-    validation.data,
-    componentInfo.options as ComponentData
-  );
-
-  if (!('default' in input && 'alternative' in input)) {
-    return false;
-  }
-
-  if (!Array.isArray(input.alternative)) {
-    return false;
-  }
-
-  const defaultResult = dataValidator.safeParse(input.default);
-  if (!defaultResult.success) {
-    return false;
-  }
-
-  return input.alternative.every((choice) => {
-    if (!Array.isArray(choice) || choice.length !== 2) {
-      return false;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const [condition, value] = choice;
-
-    const conditionResult = conditionalAstExpression.safeParse(condition);
-    const valueResult = dataValidator.safeParse(value);
-
-    return conditionResult.success && valueResult.success;
+  return z.object({
+    default: dataValidator,
+    alternative: z
+      .array(z.tuple([conditionalAstExpression, dataValidator]))
+      .optional(),
   });
 }
 
 export function getEntityValidationType<T extends EntityConditionalData>(
   id: string
 ) {
-  return z.custom<T>(async (input) => {
-    if (typeof input !== 'object' || input === null) {
-      return false;
-    }
+  const schema = cms.service('base::entitySchema').getById(id);
 
-    const schema = await cms.service('base::entitySchema').get(id);
-    if (schema === null) {
-      return false;
-    }
+  if (schema === null) {
+    throw new Error(`Unknown schema: ${id}`);
+  }
 
-    return Object.entries(input).every(([key, choices]) =>
-      isValidChoices(choices, key, schema)
-    );
-  });
+  return z.strictObject(
+    Object.fromEntries(
+      Object.entries(schema.components).map(([key, component]) => {
+        return [key, getValidatorForComponent(component)];
+      })
+    )
+  ) as unknown as ZodType<T>;
 }

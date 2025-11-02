@@ -1,5 +1,6 @@
+import type { MaybeFactory } from '@game-cms/shared';
 import type { FC } from 'react';
-import z, { type ZodType } from 'zod';
+import { type ZodType } from 'zod';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentMap extends Record<string, ComponentController> {}
@@ -14,13 +15,22 @@ export type ComponentData =
 
 export type ComponentOptions = ComponentData;
 
-export const componentSchema = z.object({
-  componentId: z.string(),
-  name: z.string(),
-  options: z.unknown(),
-});
+export type BaseComponentSchema<
+  Options extends ComponentOptions,
+  Controller,
+> = {
+  name: string;
+  options: Options;
+  controller: Controller;
+};
 
-export type ComponentSchema = z.infer<typeof componentSchema>;
+export type ServerComponentSchema<
+  Options extends ComponentOptions = ComponentOptions,
+  Data extends ComponentData = ComponentData,
+> = BaseComponentSchema<Options, ComponentController<Options, Data>>;
+
+export type ClientComponentSchema<Options extends ComponentOptions> =
+  BaseComponentSchema<Options, ComponentId>;
 
 export type ComponentProps<
   Options extends ComponentOptions = ComponentOptions,
@@ -50,8 +60,6 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
   ComponentPropsFromController<GetComponentControllerById<Id>>
 >;
 
-export type MaybeOptions<T, Options> = T | ((options: Options) => T);
-
 export interface ComponentController<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
@@ -60,13 +68,13 @@ export interface ComponentController<
 
   validation: {
     options: ZodType<Options>;
-    data: MaybeOptions<ZodType<Data>, Options>;
+    data: MaybeFactory<ZodType<Data>, [Options]>;
   };
 
-  defaultOptions(): Options;
-  defaultData(): Data;
-
-  isValid: (options: Options, data: Data) => boolean;
+  default: {
+    options(): Options;
+    data(): Data;
+  };
 }
 
 export interface ComponentRenderManifest {

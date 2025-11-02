@@ -1,15 +1,14 @@
 import {
   type ConditionalValueInput,
-  type EntityConditionalData,
+  type EntityConditionalDataById,
   resolveConditionalEntity,
 } from '@game-cms/conditional';
-import type { EntityData } from '@game-cms/types';
-import type { Filter, ObjectId, WithId } from 'mongodb';
+import type { EntityId } from '@game-cms/types';
+import { service } from '@game-cms/utils';
+import type { Filter, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
 
-import { service } from '../utils.js';
-
-function collection<T extends EntityData>(id: string) {
-  return cms.service('base::database').entityCollection<T>(id);
+function collection<T extends EntityId>(id: T) {
+  return cms.service('base::database').entityCollection(id);
 }
 
 function idFilter<T>(id: ObjectId) {
@@ -18,15 +17,18 @@ function idFilter<T>(id: ObjectId) {
 
 export default service({
   id: 'base::entity',
-  create: async <T extends EntityConditionalData>(id: string, data: T) => {
+  create: async <T extends EntityId>(
+    id: T,
+    data: OptionalUnlessRequiredId<EntityConditionalDataById<T>>
+  ) => {
     const result = await collection(id).insertOne(data);
 
     return { _id: result.insertedId, ...data };
   },
-  update: async (
-    entityId: string,
+  update: async <T extends EntityId>(
+    entityId: T,
     id: ObjectId,
-    data: EntityConditionalData
+    data: OptionalUnlessRequiredId<EntityConditionalDataById<T>>
   ) => {
     const result = await collection(entityId).updateOne(idFilter(id), data);
 
@@ -35,23 +37,23 @@ export default service({
   deleteById: async (entityId: string, id: ObjectId) => {
     await collection(entityId).deleteOne(idFilter(id));
   },
-  getById: async <T extends EntityData>(
+  getById: async <T extends EntityId>(
     entityId: string,
     id: ObjectId,
     input: ConditionalValueInput
   ) => {
-    const result = await collection<T>(entityId).findOne(idFilter(id));
+    const result = await collection(entityId).findOne(idFilter(id));
 
     if (result === null) {
       return null;
     }
 
     const { _id, ...rest } = result;
-    const resolved = resolveConditionalEntity<T>(
-      rest as unknown as EntityConditionalData<T>,
+    const resolved = resolveConditionalEntity(
+      rest as unknown as EntityConditionalDataById<T>,
       input
     );
 
-    return { _id, ...resolved } as unknown as WithId<T>;
+    return { _id, ...resolved };
   },
 });

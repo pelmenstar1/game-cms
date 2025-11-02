@@ -1,3 +1,4 @@
+import type { MaybeFactory } from '@game-cms/shared';
 // @ts-expect-error it's correct.
 import type { RouteParameters } from '@types/express-serve-static-core';
 
@@ -28,14 +29,10 @@ type BaseApiRoute = {
   exact?: boolean;
 };
 
-type MaybeRequest<T, Path extends string> =
-  | T
-  | ((req: Request<RouteParameters<Path>>) => T);
-
 export type BodyValidator<
   T = unknown,
   Path extends string = string,
-> = MaybeRequest<ZodType<T>, Path>;
+> = MaybeFactory<ZodType<T>, [Request<RouteParameters<Path>>]>;
 
 interface NonBodyRoute<Path extends string> extends BaseApiRoute {
   path: Path;

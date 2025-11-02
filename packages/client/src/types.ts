@@ -1,5 +1,6 @@
 import type { HttpMethodWithBody } from '@game-cms/types';
 
+import type { Replace } from '../../shared/dist/typeutil.js';
 import type { RequestInitializer } from './requestInitializer.js';
 import type { ResponseParser } from './responseParser.js';
 
@@ -12,10 +13,13 @@ interface BodyRequestOptions extends BaseRequestOptions {
   method: HttpMethodWithBody;
 }
 
-type InitBodyRequestOptions = BaseRequestOptions & {
-  body: RequestInitializer;
-  method: HttpMethodWithBody;
-};
+export type InitBodyRequestOptions = Replace<
+  BaseRequestOptions,
+  {
+    body: RequestInitializer;
+    method: HttpMethodWithBody;
+  }
+>;
 
 export type RequestContext = {
   client: GameCmsClient;

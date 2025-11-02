@@ -1,4 +1,5 @@
-import { apiRoute } from '../../utils.js';
+import { apiRoute } from '@game-cms/utils';
+
 import { getEntityValidationType } from '../../utils/entity.js';
 
 export default apiRoute({

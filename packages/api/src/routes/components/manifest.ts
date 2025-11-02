@@ -1,4 +1,4 @@
-import { apiRoute } from '../../utils.js';
+import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
   path: '/_components/:id/manifest.json',

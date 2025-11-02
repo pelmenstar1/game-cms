@@ -1,14 +1,14 @@
-import { apiRoute } from '../../utils.js';
+import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
   path: '/entitySchema/:id',
   method: 'GET',
-  handler: async (req, res) => {
+  handler: (req, res, next) => {
     const { id } = req.params;
-    const result = await cms.service('base::entitySchema').get(id);
+    const result = cms.service('base::entitySchema').getClientById(id);
 
     if (result === null) {
-      res.status(404).end();
+      next();
     } else {
       res.json(result);
     }

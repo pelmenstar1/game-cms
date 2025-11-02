@@ -8,24 +8,27 @@ import { setupApiFromConfig } from './api.js';
 import { scanAllComponents } from './components.js';
 import { resolveConfigInitMap } from './config.js';
 import { initDashboard } from './dashboard.js';
+import { scanEntitySchemas } from './entity.js';
 import { getSharedAssetsConfig } from './sharedAssets.js';
 import type { StartOptions } from './types.js';
 
 async function initEnvFromConfigs() {
   await loadEnvIfExists();
 
-  const [config, components, sharedAssets] = await Promise.all([
+  const [config, components, entitySchemas, sharedAssets] = await Promise.all([
     resolveConfigInitMap(),
     scanAllComponents(),
+    scanEntitySchemas(),
     getSharedAssetsConfig(),
   ]);
 
-  initializeEnv({ config, components, sharedAssets });
+  initializeEnv({ config, components, entitySchemas, sharedAssets });
 }
 
 async function startServer(options: StartOptions) {
   const app = express();
   app.disable('x-powered-by');
+  app.use(express.json());
 
   await setupApiFromConfig(app);
 

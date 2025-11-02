@@ -11,9 +11,11 @@ function resolveConditionalField<T>(
   choices: ConditionalChoices<T>,
   input: ConditionalValueInput
 ) {
-  for (const [condition, value] of choices.alternative) {
-    if (evaluateConditionalExpression(condition, input)) {
-      return value;
+  if (choices.alternative) {
+    for (const [condition, value] of choices.alternative) {
+      if (evaluateConditionalExpression(condition, input)) {
+        return value;
+      }
     }
   }
 

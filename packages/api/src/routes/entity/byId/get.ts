@@ -1,21 +1,16 @@
 import type { ConditionalValueInput } from '@game-cms/conditional';
-import { ObjectId } from 'mongodb';
+import { apiRoute } from '@game-cms/utils';
 import qs from 'qs';
 
-import { apiRoute } from '../../utils.js';
+import { handleObjectId } from '../../../utils/objectId.js';
 
 export default apiRoute({
-  path: '/entity/:entityId/getById/:id',
+  path: '/entity/:entityId/byId/:id',
   method: 'GET',
   handler: async (req, res) => {
     const { entityId, id } = req.params;
-    let objectId: ObjectId;
-    try {
-      objectId = new ObjectId(id);
-    } catch {
-      res.status(400).end();
-      return;
-    }
+
+    const objectId = handleObjectId(id);
 
     const { search } = new URL(req.url);
     const filter = qs.parse(search);

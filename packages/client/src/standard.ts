@@ -1,27 +1,31 @@
-import type { RequestInitializer } from './requestInitializer.js';
+import { handleResponseError } from './errors.js';
 import type { ResponseParser } from './responseParser.js';
 import type {
   GameCmsClient,
   GameCmsClientOptions,
+  InitBodyRequestOptions,
   RequestOptions,
 } from './types.js';
-import type { RequestInitWithHeaders } from './utilTypes.js';
 
-export function createStandardRequestInit(options: RequestOptions) {
-  const headers = new Headers(options.headers);
+function isBodyOptions(
+  options: RequestOptions
+): options is InitBodyRequestOptions {
+  return 'body' in options && typeof options.body === 'function';
+}
 
-  const init: RequestInitWithHeaders = {
-    ...options,
-    headers,
-  };
+export function createStandardRequestInit(
+  options: RequestOptions
+): RequestInit {
+  if (isBodyOptions(options)) {
+    const { body, ...rest } = options;
 
-  const { body } = options as { body?: RequestInitializer };
-
-  if (typeof body === 'function') {
+    const init = { ...rest, headers: new Headers(options.headers) };
     body(init);
+
+    return init;
   }
 
-  return init;
+  return options;
 }
 
 function createFullUrl(url: string, base: string | URL) {
@@ -44,6 +48,9 @@ export function createStandardClient({
     const init = createStandardRequestInit(options);
 
     const response = await fetch(url, init);
+    if (!response.ok) {
+      await handleResponseError(response);
+    }
 
     return responseParser ? responseParser(response) : response;
   }

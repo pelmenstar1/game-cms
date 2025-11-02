@@ -1,7 +1,7 @@
 import { env } from '@game-cms/env';
+import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import type { ComponentId, ComponentRenderManifest } from '@game-cms/types';
-
-import { service } from '../utils.js';
+import { service } from '@game-cms/utils';
 
 function assetsPath(id: ComponentId, filePath: string) {
   return `/api/_components/${id}/assets/${filePath}`;
@@ -14,7 +14,10 @@ export default service({
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (staticConfig === undefined) {
-      throw new Error(`Unknown component: ${id}`);
+      throw new ApiError(
+        `Unknown component: ${id}`,
+        ApiErrorCode.ENTITY_NOT_FOUND
+      );
     }
 
     return staticConfig.controller;

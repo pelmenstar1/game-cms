@@ -1,4 +1,4 @@
-import type { EntitySchema, ResolveServices } from '@game-cms/types';
+import type { ResolveServices } from '@game-cms/types';
 
 type Services = [
   typeof import('./entity.js'),
@@ -10,7 +10,9 @@ type Services = [
 declare module '@game-cms/types' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface GameCmsServiceMap extends ResolveServices<Services> {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface DatabaseEntityMap {
-    'base::entitySchema': EntitySchema;
+    // 'base::entitySchema': EntitySchema;
   }
 }

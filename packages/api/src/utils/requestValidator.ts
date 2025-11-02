@@ -1,47 +1,23 @@
-import type { ApiRoute, BodyValidator, RouteParameters } from '@game-cms/types';
-import type { Request, Response } from 'express';
-import type { ZodType } from 'zod';
+import { resolveMaybeFactory } from '@game-cms/shared';
+import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
+import type { ApiRoute, BodyValidator } from '@game-cms/types';
+import type { Request } from 'express';
 
-function resolveValidator<T, Path extends string>(
-  validator: BodyValidator<T, Path>,
-  req: Request<RouteParameters<Path>>
-): ZodType<T> {
-  if (typeof validator === 'function') {
-    return validator(req);
-  }
-
-  return validator;
-}
-
-function validateBody(
-  validator: BodyValidator,
-  req: Request,
-  res: Response
-): boolean {
-  const type = resolveValidator(validator, req);
+function validateBody(validator: BodyValidator, req: Request) {
+  const type = resolveMaybeFactory(validator, req);
 
   const result = type.safeParse(req.body);
   if (!result.success) {
-    res.status(400).send(result.error.message).end();
-
-    return false;
+    throw new ApiError(result.error.message, ApiErrorCode.VALIDATION_ISSUE);
   }
-
-  return true;
 }
 
-export function validateRouteInput(
-  route: ApiRoute,
-  req: Request,
-  res: Response
-): boolean {
+export function validateRouteInput(route: ApiRoute, req: Request) {
   if ('validation' in route) {
     const bodyValidator = route.validation?.body;
 
-    if (bodyValidator && !validateBody(bodyValidator, req, res)) {
-      return false;
+    if (bodyValidator) {
+      validateBody(bodyValidator, req);
     }
   }
-
-  return true;
 }

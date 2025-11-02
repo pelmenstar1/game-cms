@@ -1,30 +1,45 @@
-import type { EntitySchema } from '@game-cms/types';
+import { env } from '@game-cms/env';
+import type { ClientEntitySchema, ServerEntitySchema } from '@game-cms/types';
+import { service } from '@game-cms/utils';
 
-import { service } from '../utils.js';
+function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
+  console.log(schema);
+  const { components } = schema;
 
-function schemas() {
-  return cms.service('base::database').collection('base::entitySchema');
+  return {
+    ...schema,
+    components: Object.fromEntries(
+      Object.entries(components).map(([key, value]) => [
+        key,
+        {
+          ...value,
+          controller: value.controller.id,
+        },
+      ])
+    ),
+  };
+}
+
+function getById(id: string) {
+  const { entitySchemas } = env();
+
+  const result = entitySchemas.find((schema) => schema.id === id);
+
+  return result ?? null;
 }
 
 export default service({
   id: 'base::entitySchema',
-  init: async () => {
-    await schemas().createIndex({ id: 1 }, { unique: true });
-  },
-  get: async (id: string) => {
-    const result = await schemas().findOne({ id });
+  getById,
+  getClientById: (id: string) => {
+    const result = getById(id);
 
-    return result;
+    return result ? toClientEntitySchema(result) : null;
   },
-  create: async (schema: EntitySchema) => {
-    await schemas().insertOne(schema);
+  getAll() {
+    return env().entitySchemas;
   },
-  update: async ({ id, ...rest }: EntitySchema) => {
-    const result = await schemas().updateOne({ id }, rest);
-
-    return result.matchedCount > 0;
-  },
-  deleteById: async (id: string) => {
-    await schemas().deleteOne({ id });
+  getClientAll() {
+    return env().entitySchemas.map((value) => toClientEntitySchema(value));
   },
 });

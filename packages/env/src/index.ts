@@ -2,6 +2,7 @@ import type {
   ComponentStaticConfigMap,
   DatabaseConfig,
   ServerConfig,
+  ServerEntitySchema,
   SharedAssetsConfig,
   StorageConfig,
 } from '@game-cms/types';
@@ -13,6 +14,7 @@ export type CmsEnvironment = {
     server: ServerConfig;
   };
   components: ComponentStaticConfigMap;
+  entitySchemas: ServerEntitySchema[];
   sharedAssets: SharedAssetsConfig;
 };
 
