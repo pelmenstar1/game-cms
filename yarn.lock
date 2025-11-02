@@ -1403,6 +1403,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@game-cms/client@workspace:*, @game-cms/client@workspace:packages/client":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/client@workspace:packages/client"
+  dependencies:
+    "@game-cms/types": "workspace:*"
+    typescript: "npm:5.9.3"
+  languageName: unknown
+  linkType: soft
+
 "@game-cms/components@workspace:*, @game-cms/components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@game-cms/components@workspace:packages/components"
@@ -1417,6 +1426,7 @@ __metadata:
     glob: "npm:11.0.3"
     typescript: "npm:5.9.3"
     vite: "npm:7.1.9"
+    zod: "npm:4.1.12"
   peerDependencies:
     react: ^19.0.0
     react-dom: ^19.0.0
@@ -1437,6 +1447,7 @@ __metadata:
   resolution: "@game-cms/dashboard@workspace:packages/dashboard"
   dependencies:
     "@game-cms/build": "workspace:*"
+    "@game-cms/client": "workspace:*"
     "@game-cms/react": "workspace:*"
     "@game-cms/shared": "workspace:*"
     "@game-cms/types": "workspace:*"

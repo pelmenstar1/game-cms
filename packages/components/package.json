@@ -2,14 +2,13 @@
   "name": "@game-cms/components",
   "packageManager": "yarn@4.10.3",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "vite build"
   },
   "dependencies": {
     "@game-cms/types": "workspace:*",
-    "@game-cms/ui": "workspace:*"
+    "@game-cms/ui": "workspace:*",
+    "zod": "4.1.12"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -24,5 +23,15 @@
     "glob": "11.0.3",
     "typescript": "5.9.3",
     "vite": "7.1.9"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    }
   }
 }

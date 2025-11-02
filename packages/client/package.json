@@ -1,0 +1,15 @@
+{
+  "name": "@game-cms/client",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "devDependencies": {
+    "@game-cms/types": "workspace:*",
+    "typescript": "5.9.3"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
+}

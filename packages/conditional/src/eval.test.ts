@@ -30,7 +30,7 @@ test.each<
       rhs: { $type: 'literal', value: '123' },
     },
     { abc: 124 },
-    true,
+    false,
   ],
 ])('eval', (expression, input, expected) => {
   const actual = evaluateConditionalExpression(expression, input);

@@ -11,7 +11,8 @@
     { "path": "./packages/components" },
     { "path": "./packages/build" },
     { "path": "./packages/vite-plugins" },
-    { "path": "./packages/conditional" }
+    { "path": "./packages/conditional" },
+    { "path": "./packages/client" }
   ],
   "include": []
 }

@@ -10,7 +10,7 @@ export function meta() {
 export default function Home() {
   return (
     <div>
-      <RemoteComponent componentId={'base::number'} />
+      <RemoteComponent componentId={'base::number'} data={[]} options={[]} />
     </div>
   );
 }

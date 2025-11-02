@@ -20,6 +20,7 @@
     "vite-plugin-watch-node-modules": "0.5.0"
   },
   "dependencies": {
+    "@game-cms/client": "workspace:*",
     "@game-cms/react": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",

@@ -1,27 +1,30 @@
+import { getComponentManifest } from '@game-cms/client';
 import type {
-  ComponentData,
   ComponentId,
-  ComponentOptions,
+  GetComponentControllerById,
+  InferComponentData,
+  InferComponentOptions,
 } from '@game-cms/types';
 import React, { Suspense, useMemo } from 'react';
 
-import { getComponentManifest } from '@/api/component';
+import { useApiClient } from '@/hooks/useApiClient';
 import { getRendererFromModule } from '@/utils/component';
 
 import { useStylesheetInject } from '../StylesheetInject/context';
 
-export interface RemoteComponentProps {
-  componentId: ComponentId;
-  options: ComponentOptions;
-  data: ComponentData;
+export interface RemoteComponentProps<T extends ComponentId> {
+  componentId: T;
+  options: InferComponentOptions<GetComponentControllerById<T>>;
+  data: InferComponentData<GetComponentControllerById<T>>;
 }
 
-export function RemoteComponent({
+export function RemoteComponent<T extends ComponentId>({
   componentId,
   options,
   data,
-}: RemoteComponentProps) {
+}: RemoteComponentProps<T>) {
   const { addStylesheet } = useStylesheetInject();
+  const client = useApiClient();
 
   const Component = useMemo(() => {
     if (import.meta.env.SSR) {
@@ -30,7 +33,7 @@ export function RemoteComponent({
 
     return React.lazy(async () => {
       try {
-        const manifest = await getComponentManifest(componentId);
+        const manifest = await getComponentManifest({ client }, componentId);
         for (const url of manifest.cssBundles) {
           addStylesheet(url);
         }
@@ -47,7 +50,7 @@ export function RemoteComponent({
         return { default: () => <p>Failed to import component</p> };
       }
     });
-  }, [addStylesheet, componentId]);
+  }, [addStylesheet, client, componentId]);
 
   return (
     <Suspense fallback={'Loading'}>
