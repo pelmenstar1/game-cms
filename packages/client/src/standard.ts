@@ -6,6 +6,7 @@ import type {
   InitBodyRequestOptions,
   RequestOptions,
 } from './types.js';
+import { createFullUrl } from './utils.js';
 
 function isBodyOptions(
   options: RequestOptions
@@ -26,14 +27,6 @@ export function createStandardRequestInit(
   }
 
   return options;
-}
-
-function createFullUrl(url: string, base: string | URL) {
-  if (typeof base === 'string' && base.startsWith('/')) {
-    return `${base}${url}`;
-  }
-
-  return new URL(url, base);
 }
 
 export function createStandardClient({

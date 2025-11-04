@@ -31,6 +31,10 @@
       "import": "./dist/object/index.js",
       "types": "./dist/object/index.d.ts"
     },
+    "./mongo": {
+      "import": "./dist/mongo/index.js",
+      "types": "./dist/mongo/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }

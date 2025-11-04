@@ -4,6 +4,7 @@ export * from './component.js';
 export * from './config.js';
 export * from './database.js';
 export * from './entity.js';
+export * from './paging.js';
 export * from './service.js';
 export * from './sharedAssets.js';
 export * from './storageProvider.js';

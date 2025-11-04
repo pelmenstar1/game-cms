@@ -1,4 +1,4 @@
-import { objectId } from '@game-cms/shared';
+import { objectId } from '@game-cms/shared/mongo';
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';

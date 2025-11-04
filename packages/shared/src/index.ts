@@ -4,6 +4,7 @@ export * from './fastify.js';
 export * from './json.js';
 export * from './maybeFactory.js';
 export * from './mime.js';
+export * from './paging.js';
+export * from './searchParams.js';
 export * from './typecheck.js';
 export * from './typeutil.js';
-export * from './zod.js';

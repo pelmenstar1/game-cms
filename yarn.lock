@@ -1498,6 +1498,7 @@ __metadata:
   resolution: "@game-cms/client@workspace:packages/client"
   dependencies:
     "@game-cms/conditional": "workspace:*"
+    "@game-cms/shared": "workspace:*"
     "@game-cms/shared-api": "workspace:*"
     "@game-cms/types": "workspace:*"
     typescript: "npm:5.9.3"

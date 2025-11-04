@@ -1,9 +1,11 @@
 import type { EntityConditionalDataById } from '@game-cms/conditional';
+import { formatSearchParams, type PagingOptions } from '@game-cms/shared';
 import type {
   ClientEntitySchema,
   ComponentId,
   ComponentRenderManifest,
   EntityId,
+  PageData,
 } from '@game-cms/types';
 
 import { jsonInit } from './requestInitializer.js';
@@ -13,6 +15,9 @@ import type {
   RequestOptions,
   RequestOptionsWithResult,
 } from './types.js';
+
+type EntityConditionalDataByIdWithId<T extends EntityId> =
+  EntityConditionalDataById<T> & { _id: string };
 
 function request<Args extends unknown[], R>(
   factory: (...args: Args) => RequestOptionsWithResult<R>
@@ -51,7 +56,7 @@ export const createEntity = request(
     path: `/entity/${entityId}`,
     method: 'POST',
     body: jsonInit(body),
-    response: json<EntityConditionalDataById<T> & { _id: string }>(),
+    response: json<EntityConditionalDataByIdWithId<T>>(),
   })
 );
 
@@ -59,7 +64,7 @@ export const getEntityById = request(
   <T extends EntityId>(entityId: T, id: string) => ({
     path: `/entity/${entityId}/byId/${id}`,
     method: 'GET',
-    response: json<EntityConditionalDataById<T> & { _id: string }>(),
+    response: json<EntityConditionalDataByIdWithId<T>>(),
   })
 );
 
@@ -67,3 +72,10 @@ export const deleteEntityById = request((entityId: EntityId, id: string) => ({
   path: `/entity/${entityId}/byId/${id}`,
   method: 'DELETE',
 }));
+
+export const listEntities = request(
+  <T extends EntityId>(entityId: T, options: PagingOptions) => ({
+    path: `/entity/${entityId}/list?${formatSearchParams(options)}`,
+    response: json<PageData<EntityConditionalDataByIdWithId<T>>>(),
+  })
+);
