@@ -1,23 +1,18 @@
 import { apiRoute } from '@game-cms/utils';
-import z from 'zod';
 
 import { pagingOptionsSchema } from '../../utils/paging.js';
 
 export default apiRoute({
-  url: `/entity/:entityId/list`,
+  url: '/user/list',
   method: 'GET',
   schema: {
-    params: z.object({
-      entityId: z.string(),
-    }),
     querystring: pagingOptionsSchema,
   },
   handler: async (req) => {
-    const { entityId } = req.params;
     const options = req.query;
 
-    const result = await cms.service('base::entity').list(entityId, options);
+    const users = await cms.service('base::user').list(options);
 
-    return result;
+    return users;
   },
 });

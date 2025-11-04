@@ -4,13 +4,11 @@ import {
   resolveConditionalEntity,
 } from '@game-cms/conditional';
 import type { PagingOptions } from '@game-cms/shared';
-import {
-  pagingAggregatePipeline,
-  type PagingAggregationResult,
-} from '@game-cms/shared/mongo';
 import type { EntityId } from '@game-cms/types';
 import { service } from '@game-cms/utils';
 import type { Filter, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
+
+import { getPage } from '../utils/paging.js';
 
 function collection<T extends EntityId>(id: T) {
   return cms.service('base::database').entityCollection(id);
@@ -43,13 +41,7 @@ export default service({
     await collection(entityId).deleteOne(idFilter(id));
   },
   list: async <T extends EntityId>(entityId: T, options: PagingOptions) => {
-    const result = await collection(entityId)
-      .aggregate<PagingAggregationResult<T>>([pagingAggregatePipeline(options)])
-      .next();
-
-    if (result === null) {
-      return { meta: { totalCount: 0 }, data: [] };
-    }
+    const result = await getPage(collection(entityId), options);
 
     return result;
   },

@@ -6,7 +6,7 @@ import type {
   EntityId,
 } from '@game-cms/types';
 import { service } from '@game-cms/utils';
-import { MongoClient } from 'mongodb';
+import { ClientSession, MongoClient, type TransactionOptions } from 'mongodb';
 
 let _client: MongoClient | undefined;
 
@@ -30,5 +30,25 @@ export default service({
     return client()
       .db()
       .collection<EntityConditionalDataById<T>>(`base::entity::${id}`);
+  },
+  withTransaction: async <R>(
+    action: (session: ClientSession) => Promise<R>
+  ) => {
+    const session = client().startSession();
+
+    const transactionOptions: TransactionOptions = {
+      readPreference: 'primary',
+      readConcern: { level: 'local' },
+      writeConcern: { w: 'majority' },
+    };
+
+    try {
+      return await session.withTransaction(
+        () => action(session),
+        transactionOptions
+      );
+    } finally {
+      await session.endSession();
+    }
   },
 });
