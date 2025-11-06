@@ -8,7 +8,9 @@ import z from 'zod';
 export default apiRoute({
   url: `/assets/${SHARED_ASSET_PREFIX}/:scope/:name.js`,
   method: 'GET',
-  exact: true,
+  config: {
+    exact: true,
+  },
   schema: {
     params: z.object({
       scope: z.string(),

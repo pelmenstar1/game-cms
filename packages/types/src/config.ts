@@ -15,7 +15,7 @@ export type ServerConfig = {
 };
 
 export type AuthConfig = {
-  jwtSignKey: CryptoKey;
+  jwtSignKey: string | Uint8Array | CryptoKey;
   admin: {
     email: string;
     password: string;

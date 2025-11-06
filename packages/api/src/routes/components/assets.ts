@@ -31,8 +31,6 @@ export default apiRoute({
 
     const [, filePath] = req.url.split('assets/', 2);
 
-    console.log(filePath);
-
     if (filePath === 'renderer.js') {
       await sendFile(
         res,

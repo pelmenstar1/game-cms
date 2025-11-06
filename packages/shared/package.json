@@ -40,6 +40,10 @@
       "import": "./dist/crypto/index.js",
       "types": "./dist/crypto/index.d.ts"
     },
+    "./http": {
+      "import": "./dist/http/index.js",
+      "types": "./dist/http/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }

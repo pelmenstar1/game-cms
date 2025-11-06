@@ -7,7 +7,6 @@ import type {
   Service,
 } from '@game-cms/types';
 import type {
-  ContextConfigDefault,
   FastifyBaseLogger,
   FastifySchema,
   RawReplyDefaultExpression,
@@ -26,7 +25,6 @@ export function apiRoute<
   RawReply extends
     RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>,
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
-  ContextConfig = ContextConfigDefault,
   SchemaCompiler extends FastifySchema = FastifySchema,
   Logger extends FastifyBaseLogger = FastifyBaseLogger,
 >(
@@ -35,7 +33,6 @@ export function apiRoute<
     RawRequest,
     RawReply,
     RouteGeneric,
-    ContextConfig,
     SchemaCompiler,
     ZodTypeProvider,
     Logger

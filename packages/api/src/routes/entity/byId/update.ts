@@ -3,17 +3,23 @@ import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
+import { authHandler } from '../../../middlewares/auth.js';
 import { getEntityValidationType } from '../../../utils/entity.js';
+import { entityRouteId } from '../../../utils/routeId.js';
 
 export default apiRoute({
   url: '/entity/:entityId/byId/:id',
   method: 'PUT',
+  config: {
+    id: entityRouteId('update'),
+  },
   schema: {
     params: z.object({
       entityId: z.string(),
       id: objectId,
     }),
   },
+  preHandler: [authHandler()],
   handler: async (req) => {
     const { entityId, id } = req.params;
 

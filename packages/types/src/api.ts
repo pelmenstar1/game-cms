@@ -1,5 +1,4 @@
 import type {
-  ContextConfigDefault,
   FastifyBaseLogger,
   FastifySchema,
   FastifyTypeProvider,
@@ -29,32 +28,12 @@ export type HttpMethod = (typeof httpMethods)[number];
 export type HttpMethodWithBody = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type HttpMethodWithNoBody = Exclude<HttpMethod, HttpMethodWithBody>;
 
-/*
+export type ApiRouteId = `${string}$${string}`;
 
-type BaseApiRoute = {
+export type ApiRouteContextConfig = {
   exact?: boolean;
+  id?: ApiRouteId;
 };
-
-export type BodyValidator<
-  T = unknown,
-  Path extends string = string,
-> = MaybeFactory<ZodType<T>, [FastifyRequest<Path>]>;
-
-interface NonBodyRoute<Path extends string> extends BaseApiRoute {
-  path: Path;
-  method: HttpMethodWithNoBody;
-  handler: RequestHandler<RouteParameters<Path>>;
-}
-
-interface BodyRoute<Path extends string, Body> extends BaseApiRoute {
-  path: Path;
-  method: HttpMethodWithBody;
-  validation?: {
-    body?: BodyValidator<Body, Path>;
-  };
-  handler: RequestHandler<RouteParameters<Path>, unknown, Body>;
-}
-*/
 
 export type ApiRoute<
   RawServer extends RawServerBase = RawServerDefault,
@@ -63,7 +42,6 @@ export type ApiRoute<
   RawReply extends
     RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>,
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
-  ContextConfig = ContextConfigDefault,
   SchemaCompiler extends FastifySchema = FastifySchema,
   TypeProvider extends FastifyTypeProvider = ZodTypeProvider,
   Logger extends FastifyBaseLogger = FastifyBaseLogger,
@@ -72,10 +50,8 @@ export type ApiRoute<
   RawRequest,
   RawReply,
   RouteGeneric,
-  ContextConfig,
+  ApiRouteContextConfig,
   SchemaCompiler,
   TypeProvider,
   Logger
-> & {
-  exact?: boolean;
-};
+>;

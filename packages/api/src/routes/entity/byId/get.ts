@@ -4,19 +4,28 @@ import { apiRoute } from '@game-cms/utils';
 import qs from 'qs';
 import z from 'zod';
 
+import { authHandler } from '../../../middlewares/auth.js';
+import { entityRouteId } from '../../../utils/routeId.js';
+
 export default apiRoute({
   url: '/entity/:entityId/byId/:id',
   method: 'GET',
+  config: {
+    id: entityRouteId('get'),
+  },
   schema: {
     params: z.object({
       entityId: z.string(),
       id: objectId,
     }),
   },
+  preHandler: [authHandler()],
   handler: async (req) => {
     const { entityId, id } = req.params;
 
-    const { search } = new URL(req.url);
+    console.log(req.raw.url);
+
+    const { search } = new URL(req.url, 'http://localhost');
     const filter = qs.parse(search);
 
     const result = await cms
