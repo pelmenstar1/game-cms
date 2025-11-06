@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@types/node": "24.7.2",
+    "jose": "6.1.0",
     "typescript": "5.9.3"
   },
   "exports": {
@@ -34,6 +35,10 @@
     "./mongo": {
       "import": "./dist/mongo/index.js",
       "types": "./dist/mongo/index.d.ts"
+    },
+    "./crypto": {
+      "import": "./dist/crypto/index.js",
+      "types": "./dist/crypto/index.d.ts"
     },
     "./types": {
       "types": "./dist/types.d.ts"

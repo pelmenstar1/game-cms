@@ -1,9 +1,9 @@
 import path from 'node:path';
 
 import type { CmsEnvironment } from '@game-cms/env';
+import { createEnvAccessor, type EnvAccessor } from '@game-cms/shared';
 
 import type { ConfigInit } from '../../types/config.js';
-import { createEnvAccessor, type EnvAccessor } from '../../utils/env.js';
 import { compiledDirectoryPath } from '../../utils/localPath.js';
 
 type ConfigMap = CmsEnvironment['config'];
@@ -12,7 +12,7 @@ type ConfigInitMap = {
   [K in ConfigKey]: ConfigInit<ConfigMap[K]>;
 };
 
-const configNames: ConfigKey[] = ['storage', 'database', 'server'];
+const configNames: ConfigKey[] = ['storage', 'database', 'server', 'auth'];
 
 async function getConfigMap(): Promise<ConfigInitMap> {
   const basePath = path.join(process.cwd(), compiledDirectoryPath('config'));

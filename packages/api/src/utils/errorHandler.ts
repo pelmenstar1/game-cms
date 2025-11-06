@@ -6,6 +6,12 @@ function getStatusCode(error: ApiError) {
     case ApiErrorCode.ENTITY_NOT_FOUND: {
       return 404;
     }
+    case ApiErrorCode.UNAUTHORIZED: {
+      return 401;
+    }
+    case ApiErrorCode.DUPLICATE: {
+      return 409;
+    }
     default: {
       return 400;
     }
@@ -19,20 +25,11 @@ function resolveResponseAndStatus(error: unknown) {
 }
 
 export function errorHandler() {
-  return (
-    req: FastifyRequest,
-    res: FastifyReply,
-    error: Error,
-    done: () => void
-  ) => {
-    if (res.raw.headersSent || !req.url.startsWith('/api')) {
-      done();
-    } else {
-      const { status, body } = resolveResponseAndStatus(error);
+  return (error: Error, _req: FastifyRequest, res: FastifyReply) => {
+    console.error(error);
 
-      res.status(status);
+    const { status, body } = resolveResponseAndStatus(error);
 
-      return body;
-    }
+    res.status(status).send(body);
   };
 }

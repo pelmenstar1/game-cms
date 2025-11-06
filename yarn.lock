@@ -1504,6 +1504,7 @@ __metadata:
     "@types/node": "npm:24.7.2"
     "@types/qs": "npm:^6"
     fastify-type-provider-zod: "npm:6.1.0"
+    jose: "npm:6.1.0"
     mongodb: "npm:6.20.0"
     qs: "npm:6.14.0"
     typescript: "npm:5.9.3"
@@ -1666,6 +1667,7 @@ __metadata:
   resolution: "@game-cms/shared@workspace:packages/shared"
   dependencies:
     "@types/node": "npm:24.7.2"
+    jose: "npm:6.1.0"
     typescript: "npm:5.9.3"
   peerDependencies:
     fastify: "*"
@@ -7160,6 +7162,13 @@ __metadata:
   version: 1.4.0
   resolution: "jju@npm:1.4.0"
   checksum: 10c0/f3f444557e4364cfc06b1abf8331bf3778b26c0c8552ca54429bc0092652172fdea26cbffe33e1017b303d5aa506f7ede8571857400efe459cb7439180e2acad
+  languageName: node
+  linkType: hard
+
+"jose@npm:6.1.0":
+  version: 6.1.0
+  resolution: "jose@npm:6.1.0"
+  checksum: 10c0/f4518579e907317e144facd15c7627acd06097bbea17735097437217498aa419564c039dd4020f6af5f2d024a7cee6b7be4648ccbbdc238aedb80a47c061217d
   languageName: node
   linkType: hard
 

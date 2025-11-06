@@ -1,13 +1,13 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
+import type { MaybePromise } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
 import {
   type ApiRoute,
   type ComponentController,
   type Service,
 } from '@game-cms/types';
-import type { MaybePromise } from '@game-cms/types/src/utils.js';
 import { ZodType } from 'zod';
 
 import { statusError } from '../../utils/log.js';

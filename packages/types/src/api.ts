@@ -26,7 +26,7 @@ export const httpMethods = [
 
 export type HttpMethod = (typeof httpMethods)[number];
 
-export type HttpMethodWithBody = 'POST' | 'PUT' | 'PATCH';
+export type HttpMethodWithBody = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type HttpMethodWithNoBody = Exclude<HttpMethod, HttpMethodWithBody>;
 
 /*

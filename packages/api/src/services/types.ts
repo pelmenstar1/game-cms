@@ -1,4 +1,4 @@
-import type { ResolveServices, ServerUser } from '@game-cms/types';
+import type { ApiToken, ResolveServices, ServerUser } from '@game-cms/types';
 
 type Services = [
   typeof import('./entity.js'),
@@ -6,6 +6,8 @@ type Services = [
   typeof import('./database.js'),
   typeof import('./entitySchema.js'),
   typeof import('./user.js'),
+  typeof import('./auth.js'),
+  typeof import('./apiToken.js'),
 ];
 
 declare module '@game-cms/types' {
@@ -14,5 +16,6 @@ declare module '@game-cms/types' {
 
   interface DatabaseEntityMap {
     'base::users': ServerUser;
+    'base::apiTokens': ApiToken;
   }
 }

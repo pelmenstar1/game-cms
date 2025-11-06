@@ -13,3 +13,18 @@ export type StorageConfig = {
 export type ServerConfig = {
   port: number;
 };
+
+export type AuthConfig = {
+  jwtSignKey: CryptoKey;
+  admin: {
+    email: string;
+    password: string;
+  };
+  expirationTimes?: {
+    user?: string | number;
+    apiToken: string | number;
+  };
+  apiToken?: {
+    byteLength?: number;
+  };
+};

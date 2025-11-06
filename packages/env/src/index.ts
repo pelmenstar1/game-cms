@@ -1,4 +1,5 @@
 import type {
+  AuthConfig,
   ComponentStaticConfigMap,
   DatabaseConfig,
   ServerConfig,
@@ -12,6 +13,7 @@ export type CmsEnvironment = {
     storage: StorageConfig;
     database: DatabaseConfig;
     server: ServerConfig;
+    auth: AuthConfig;
   };
   components: ComponentStaticConfigMap;
   entitySchemas: ServerEntitySchema[];

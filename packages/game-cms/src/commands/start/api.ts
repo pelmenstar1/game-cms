@@ -22,5 +22,5 @@ export async function setupApiFromConfig(app: FastifyInstance) {
     scanServices(directoryPaths(apiBuildPath, 'services')),
   ]);
 
-  setupApi(app, { routes, services });
+  await setupApi(app, { routes, services });
 }

@@ -1,3 +1,7 @@
+import fsp from 'node:fs/promises';
+
+import { importPKCS8 } from 'jose';
+
 type EnvForType<T> = (name: string, defaultValue?: T) => T;
 
 type Transformer<T> = (input: string, varName: string) => T;
@@ -6,6 +10,7 @@ export interface EnvAccessor extends EnvForType<string> {
   int: EnvForType<number>;
   float: EnvForType<number>;
   bool: EnvForType<boolean>;
+  pemFile: (filePath: string, alg: string) => Promise<CryptoKey>;
 }
 
 function createEnvForType<T>(transform: Transformer<T>): EnvForType<T> {
@@ -59,6 +64,12 @@ export function createEnvAccessor(): EnvAccessor {
       }
     }
   });
+
+  result.pemFile = async (filePath, alg) => {
+    const content = await fsp.readFile(filePath, 'utf8');
+
+    return importPKCS8(content, alg);
+  };
 
   return result;
 }

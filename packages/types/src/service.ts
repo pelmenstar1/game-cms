@@ -1,4 +1,4 @@
-import type { MaybePromise } from './utils.js';
+import type { MaybePromise } from '@game-cms/shared';
 
 export interface Service<Id extends string = string> {
   id: Id;
