@@ -1,7 +1,8 @@
-import type { UnknownApiRoute } from '@game-cms/types';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
+
+import type { UnknownApiRoute } from '@game-cms/types';
 
 const routesDir = path.resolve('./src/routes');
 const outFileName = 'types.gen.ts';
