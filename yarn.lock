@@ -1569,6 +1569,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@game-cms/codegen@workspace:packages/codegen"
   dependencies:
+    "@game-cms/shared": "workspace:*"
     "@game-cms/types": "workspace:*"
     "@types/node": "npm:24.10.0"
     typescript: "npm:5.9.3"

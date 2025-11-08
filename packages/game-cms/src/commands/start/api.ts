@@ -3,14 +3,14 @@ import path from 'node:path';
 import { type CmsEnvironment } from '@game-cms/env';
 
 import {
-  compiledDirectoryPath,
-  type CompiledFolderName,
+  type CompiledFileName,
+  compiledFilePath,
 } from '../../utils/localPath.js';
 import { scanApiRoutes, scanServices } from './scan.js';
 import { getPackageBuildDirectory } from './utils.js';
 
-function directoryPaths(apiBuildPath: string, name: CompiledFolderName) {
-  return [path.join(apiBuildPath, name), compiledDirectoryPath(name)];
+function directoryPaths(apiBuildPath: string, name: CompiledFileName) {
+  return [path.join(apiBuildPath, name), compiledFilePath(name)];
 }
 
 export async function getApiRoutes(config: CmsEnvironment['config']) {

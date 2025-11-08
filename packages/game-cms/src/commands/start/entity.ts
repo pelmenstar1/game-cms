@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import type { ServerEntitySchema } from '@game-cms/types';
 
-import { compiledDirectoryPath } from '../../utils/localPath.js';
+import { compiledFilePath } from '../../utils/localPath.js';
 import { scanDirectory } from './scan.js';
 
 async function importEntitySchema(filePath: string) {
@@ -15,7 +15,7 @@ async function importEntitySchema(filePath: string) {
 }
 
 export async function scanEntitySchemas(): Promise<ServerEntitySchema[]> {
-  const directoryPath = compiledDirectoryPath('entities');
+  const directoryPath = compiledFilePath('entities');
 
   return scanDirectory(directoryPath, (filePath) =>
     importEntitySchema(filePath)

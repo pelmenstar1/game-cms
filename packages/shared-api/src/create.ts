@@ -1,5 +1,7 @@
+import type { EnvAccessor, MaybePromise } from '@game-cms/shared';
 import type {
   ApiRoute,
+  CmsConfig,
   ComponentController,
   ComponentData,
   ComponentOptions,
@@ -16,6 +18,10 @@ import type {
   RouteGenericInterface,
 } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
+
+type MaybeEnv<R extends object> = R | ((env: EnvAccessor) => MaybePromise<R>);
+
+type ConfigInit = MaybeEnv<CmsConfig>;
 
 /*@__NO_SIDE_EFFECTS__*/
 export function apiRoute<
@@ -58,5 +64,9 @@ export function component<
   Options extends ComponentOptions,
   Data extends ComponentData,
 >(value: ComponentController<Options, Data>) {
+  return value;
+}
+
+export function config(value: ConfigInit): ConfigInit {
   return value;
 }

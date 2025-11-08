@@ -7,7 +7,7 @@ import fastify from 'fastify';
 import { statusInline } from '../../utils/log.js';
 import { getAllServices, getApiRoutes } from './api.js';
 import { scanAllComponents } from './components.js';
-import { resolveConfigInitMap } from './config.js';
+import { resolveConfig } from './config.js';
 import { initDashboard } from './dashboard.js';
 import { scanEntitySchemas } from './entity.js';
 import { getSharedAssetsConfig } from './sharedAssets.js';
@@ -31,7 +31,7 @@ const envInitializers: EnvInitializers = {
 async function initEnvFromConfigs() {
   await loadEnvIfExists();
 
-  const config = await resolveConfigInitMap();
+  const config = await resolveConfig();
 
   const envEntries = await Promise.all(
     Object.entries(envInitializers).map(

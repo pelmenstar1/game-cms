@@ -1,56 +1,21 @@
-import path from 'node:path';
-
-import type { CmsEnvironment } from '@game-cms/env';
-import { createEnvAccessor, type EnvAccessor } from '@game-cms/shared';
+import { importFile, resolveMaybeFactory } from '@game-cms/shared';
+import { createEnvAccessor } from '@game-cms/shared';
+import type { CmsConfig } from '@game-cms/types';
 
 import type { ConfigInit } from '../../types/config.js';
-import { compiledDirectoryPath } from '../../utils/localPath.js';
+import { compiledFilePath } from '../../utils/localPath.js';
 
-type ConfigMap = CmsEnvironment['config'];
-type ConfigKey = keyof ConfigMap;
-type ConfigInitMap = {
-  [K in ConfigKey]: ConfigInit<ConfigMap[K]>;
-};
-
-const configNames: ConfigKey[] = ['storage', 'database', 'server', 'auth'];
-
-async function getConfigMap(): Promise<ConfigInitMap> {
-  const basePath = path.join(process.cwd(), compiledDirectoryPath('config'));
-
-  const entries = await Promise.all(
-    configNames.map(async (name) => {
-      const module = (await import(`file://${basePath}/${name}.js`)) as {
-        config: unknown;
-      };
-
-      return [name, module.config];
-    })
+async function importConfig(filePath: string) {
+  const { default: result } = await importFile<{ default: ConfigInit }>(
+    filePath
   );
 
-  return Object.fromEntries(entries) as ConfigInitMap;
+  return result;
 }
 
-async function resolveConfigInit<T extends object>(
-  env: EnvAccessor,
-  init: ConfigInit<T>
-): Promise<T> {
-  if (typeof init === 'function') {
-    return await init(env);
-  }
+export async function resolveConfig(): Promise<CmsConfig> {
+  const configPath = compiledFilePath('cms.config.js');
+  const configInit = await importConfig(configPath);
 
-  return init;
-}
-
-export async function resolveConfigInitMap(): Promise<ConfigMap> {
-  const map = await getConfigMap();
-
-  const env = createEnvAccessor();
-  const entries = await Promise.all(
-    Object.entries(map).map(async ([key, init]) => [
-      key,
-      await resolveConfigInit(env, init),
-    ])
-  );
-
-  return Object.fromEntries(entries) as ConfigMap;
+  return resolveMaybeFactory(configInit, createEnvAccessor());
 }

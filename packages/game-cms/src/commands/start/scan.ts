@@ -1,7 +1,7 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import type { MaybePromise } from '@game-cms/shared';
+import { importFile, type MaybePromise } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
 import {
   type ApiRoute,
@@ -22,7 +22,7 @@ async function maybeImportWithSchema<T>(
   filePath: string
 ): Promise<T | undefined> {
   try {
-    const module: unknown = await import(`file://${filePath}`);
+    const module = await importFile(filePath);
 
     if (typeof module === 'object' && module !== null && 'default' in module) {
       const result = schema.safeParse(module.default);

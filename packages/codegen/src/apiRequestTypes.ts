@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
+import { importFile } from '@game-cms/shared';
 import type { UnknownApiRoute } from '@game-cms/types';
 
 const routesDir = path.resolve('./src/routes');
@@ -42,10 +43,7 @@ async function scanRoutes(): Promise<string[]> {
 }
 
 async function transformRoute(filePath: string): Promise<RouteInfo> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const moduleValue: { default: UnknownApiRoute } = await import(
-    `file://${filePath}`
-  );
+  const moduleValue = await importFile<{ default: UnknownApiRoute }>(filePath);
 
   return { filePath, url: moduleValue.default.url };
 }

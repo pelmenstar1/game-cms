@@ -13,6 +13,7 @@
     }
   },
   "dependencies": {
+    "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*"
   }
 }

@@ -28,3 +28,10 @@ export type AuthConfig = {
     byteLength?: number;
   };
 };
+
+export type CmsConfig = {
+  storage: StorageConfig;
+  database: DatabaseConfig;
+  server: ServerConfig;
+  auth: AuthConfig;
+};

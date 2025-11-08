@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { importFile } from '@game-cms/shared';
 import { mergeObjects } from '@game-cms/shared/object';
 import type {
   ComponentController,
@@ -8,7 +9,7 @@ import type {
   ComponentStaticConfigMap,
 } from '@game-cms/types';
 
-import { compiledDirectoryPath } from '../../utils/localPath.js';
+import { compiledFilePath } from '../../utils/localPath.js';
 import { componentSchema } from '../../utils/schema.js';
 import {
   getViteManifest,
@@ -24,7 +25,7 @@ const RENDERER_SUFFIX = '-renderer';
 async function importController(
   filePath: string
 ): Promise<ComponentController> {
-  const module: unknown = await import(`file://${filePath}`);
+  const module: unknown = await importFile(filePath);
   if (!(typeof module === 'object' && module !== null && 'default' in module)) {
     throw new Error(`Expected default export in ${filePath}`);
   }
@@ -99,7 +100,7 @@ async function scanDirectoryForComponents(
 export async function scanAllComponents(): Promise<ComponentStaticConfigMap> {
   const directoryPaths = [
     getPackageBuildDirectory('@game-cms/components'),
-    compiledDirectoryPath('components'),
+    compiledFilePath('components'),
   ];
 
   const result = await Promise.all(
