@@ -1,13 +1,13 @@
 import type { Readable } from 'node:stream';
 
-import type { MaybePromise, MimeType } from '@game-cms/shared';
+import type { MaybePromise } from '@game-cms/shared';
 
 import type { ApiRoute } from './api.js';
 import type { ServerStorageFile } from './file.js';
 
 export type UploadFileToProviderInfo = {
   name: string;
-  mime: MimeType;
+  mime: string;
   content: Readable;
 };
 

@@ -4,12 +4,11 @@ import fsp from 'node:fs/promises';
 import type { FastifyReply } from 'fastify';
 
 import { isFileNotFoundError } from './errors/index.js';
-import type { MimeType } from './mime.js';
 
 export async function sendFile(
   res: FastifyReply,
   filePath: string,
-  type?: MimeType
+  type?: string
 ) {
   try {
     const { size } = await fsp.stat(filePath);
