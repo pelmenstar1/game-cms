@@ -16,7 +16,8 @@
     { "path": "./packages/conditional" },
     { "path": "./packages/client" },
     { "path": "./packages/shared-api" },
-    { "path": "./packages/codegen" }
+    { "path": "./packages/codegen" },
+    { "path": "./packages/react" }
   ],
   "include": []
 }

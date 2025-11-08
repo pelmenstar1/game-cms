@@ -10,12 +10,14 @@
     "incremental": true,
     "allowJs": true,
     "module": "esnext",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   },
   "include": [
     "./eslint.config.mjs",
     "stylelint.config.js",
     "prettier.config.mjs",
+    "__tests__",
     "./scripts"
   ],
   "exclude": ["./node_modules"]
