@@ -4,6 +4,6 @@ import { json } from '../responseParser.js';
 import { request } from '../utils.js';
 
 export const getComponentManifest = request((key: ComponentId) => ({
-  path: `/_components/${key}/manifest.json`,
+  url: `/_components/${key}/manifest.json`,
   response: json<ComponentRenderManifest>(),
 }));

@@ -1,6 +1,6 @@
 import type { ConditionalValueInput } from '@game-cms/conditional';
 import { objectId } from '@game-cms/shared/mongo';
-import { apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/shared-api';
 import qs from 'qs';
 import z from 'zod';
 

@@ -18,9 +18,9 @@ export function createStandardRequestInit(
   options: RequestOptions
 ): RequestInit {
   if (isBodyOptions(options)) {
-    const { body, ...rest } = options;
+    const { body, headers, ...rest } = options;
 
-    const init = { ...rest, headers: new Headers(options.headers) };
+    const init = { ...rest, headers: new Headers(headers) };
     body(init);
 
     return init;
@@ -35,9 +35,9 @@ export function createStandardClient({
   async function makeRequest<T>(
     options: RequestOptions & { response?: ResponseParser<T> }
   ) {
-    const { path, response: responseParser } = options;
+    const { url: relativeUrl, response: responseParser } = options;
 
-    const url = createFullUrl(path, baseUrl);
+    const url = createFullUrl(relativeUrl, baseUrl);
     const init = createStandardRequestInit(options);
 
     const response = await fetch(url, init);

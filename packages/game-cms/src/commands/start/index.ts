@@ -10,6 +10,7 @@ import { resolveConfigInitMap } from './config.js';
 import { initDashboard } from './dashboard.js';
 import { scanEntitySchemas } from './entity.js';
 import { getSharedAssetsConfig } from './sharedAssets.js';
+import { setupStorageProvider } from './storageProvider.js';
 import type { StartOptions } from './types.js';
 
 async function initEnvFromConfigs() {
@@ -28,8 +29,11 @@ async function initEnvFromConfigs() {
 async function startServer(options: StartOptions) {
   const app = fastify();
 
-  await setupApiFromConfig(app);
-  await initDashboard(app, options);
+  await Promise.all([
+    setupApiFromConfig(app),
+    initDashboard(app, options),
+    setupStorageProvider(),
+  ]);
 
   const { port } = env().config.server;
 

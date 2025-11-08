@@ -1,10 +1,29 @@
+import { formatSearchParams } from '@game-cms/shared';
+
 import type {
+  ObjectRequestUrl,
   RequestContext,
   RequestOptions,
   RequestOptionsWithResult,
 } from './types.js';
 
-export function createFullUrl(url: string, base: string | URL) {
+function constructRelativeUrl(url: string | ObjectRequestUrl): string {
+  if (typeof url === 'string') {
+    return url;
+  }
+
+  const { path, search = {} } = url;
+  const searchString = formatSearchParams(search);
+
+  let result = path;
+  if (searchString) {
+    result += `?${searchString}`;
+  }
+
+  return result;
+}
+
+function concatUrls(url: string, base: string | URL) {
   if (typeof base === 'string' && base.startsWith('/')) {
     if (url.startsWith('/') && base.endsWith('/')) {
       return `${base.slice(0, -1)}${url}`;
@@ -18,6 +37,15 @@ export function createFullUrl(url: string, base: string | URL) {
   }
 
   return new URL(url, base);
+}
+
+export function createFullUrl(
+  url: string | ObjectRequestUrl,
+  base: string | URL
+) {
+  const stringUrl = constructRelativeUrl(url);
+
+  return concatUrls(stringUrl, base);
 }
 
 export function request<Args extends unknown[], R>(

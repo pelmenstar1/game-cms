@@ -1,6 +1,6 @@
 import { env } from '@game-cms/env';
+import { service } from '@game-cms/shared-api';
 import type { ClientEntitySchema, ServerEntitySchema } from '@game-cms/types';
-import { service } from '@game-cms/utils';
 
 function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
   console.log(schema);

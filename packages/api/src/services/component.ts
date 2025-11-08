@@ -1,7 +1,7 @@
 import { env } from '@game-cms/env';
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
+import { service } from '@game-cms/shared-api';
 import type { ComponentId, ComponentRenderManifest } from '@game-cms/types';
-import { service } from '@game-cms/utils';
 
 function assetsPath(id: ComponentId, filePath: string) {
   return `/api/_components/${id}/assets/${filePath}`;

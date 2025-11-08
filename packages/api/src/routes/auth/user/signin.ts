@@ -1,5 +1,5 @@
+import { apiRoute } from '@game-cms/shared-api';
 import { signInPayload } from '@game-cms/types';
-import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
   url: '/auth/user/signin',

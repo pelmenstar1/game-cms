@@ -1,4 +1,4 @@
-import { apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/shared-api';
 
 import { authHandler } from '../../middlewares/auth.js';
 

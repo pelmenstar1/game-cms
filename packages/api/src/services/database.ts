@@ -1,11 +1,11 @@
 import type { EntityConditionalDataById } from '@game-cms/conditional';
 import { env } from '@game-cms/env';
+import { service } from '@game-cms/shared-api';
 import type {
   DatabaseCollectionId,
   DatabaseEntityMap,
   EntityId,
 } from '@game-cms/types';
-import { service } from '@game-cms/utils';
 import { ClientSession, MongoClient, type TransactionOptions } from 'mongodb';
 
 let _client: MongoClient | undefined;

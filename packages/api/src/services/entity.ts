@@ -4,8 +4,8 @@ import {
   resolveConditionalEntity,
 } from '@game-cms/conditional';
 import type { PagingOptions } from '@game-cms/shared';
+import { service } from '@game-cms/shared-api';
 import type { EntityId } from '@game-cms/types';
-import { service } from '@game-cms/utils';
 import type { Filter, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';

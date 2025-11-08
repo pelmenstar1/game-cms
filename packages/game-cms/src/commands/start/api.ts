@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import { setupApi } from '@game-cms/api';
+import { env } from '@game-cms/env';
 import type { FastifyInstance } from 'fastify';
 
 import {
@@ -15,12 +16,15 @@ function directoryPaths(apiBuildPath: string, name: CompiledFolderName) {
 }
 
 export async function setupApiFromConfig(app: FastifyInstance) {
+  const storageProvider = env().config.storage.provider;
   const apiBuildPath = getPackageBuildDirectory('@game-cms/api');
 
   const [routes, services] = await Promise.all([
     scanApiRoutes(directoryPaths(apiBuildPath, 'routes')),
     scanServices(directoryPaths(apiBuildPath, 'services')),
   ]);
+
+  routes.push(...(storageProvider.routes ?? []));
 
   await setupApi(app, { routes, services });
 }

@@ -9,12 +9,12 @@
     "typescript": "5.9.3"
   },
   "dependencies": {
+    "@fastify/multipart": "9.3.0",
     "@game-cms/build": "workspace:*",
     "@game-cms/env": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/shared-api": "workspace:*",
     "@game-cms/types": "workspace:*",
-    "@game-cms/utils": "workspace:*",
     "@node-rs/argon2": "2.0.2",
     "fastify-type-provider-zod": "6.1.0",
     "jose": "6.1.0",

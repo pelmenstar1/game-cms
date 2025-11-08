@@ -1,4 +1,4 @@
-import { component } from '@game-cms/utils';
+import { component } from '@game-cms/shared-api';
 import z from 'zod';
 
 export default component({

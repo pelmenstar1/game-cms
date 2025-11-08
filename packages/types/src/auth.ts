@@ -28,6 +28,12 @@ export const createApiTokenPayload = z.object({
   permissions: z.array(z.string()),
 });
 
+export const getApiTokenJwtResponse = z.object({
+  jwt: z.string(),
+});
+
+export type GetApiTokenJwtResponse = z.infer<typeof getApiTokenJwtResponse>;
+
 export type CreateApiTokenPayload = z.infer<typeof createApiTokenPayload>;
 
 export const createApiTokenResponse = z.object({

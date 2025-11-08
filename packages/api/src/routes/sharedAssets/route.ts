@@ -2,7 +2,7 @@ import { SHARED_ASSET_PREFIX } from '@game-cms/build';
 import { env } from '@game-cms/env';
 import { sendFile } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
-import { apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/shared-api';
 import z from 'zod';
 
 export default apiRoute({

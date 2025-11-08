@@ -1,11 +1,14 @@
-import { signTokenInPayload } from '@game-cms/types';
-import { apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/shared-api';
+import { getApiTokenJwtResponse, signTokenInPayload } from '@game-cms/types';
 
 export default apiRoute({
   url: `/auth/token/jwt`,
   method: 'POST',
   schema: {
     body: signTokenInPayload,
+    response: {
+      200: getApiTokenJwtResponse,
+    },
   },
   handler: async (req) => {
     const { token } = req.body;

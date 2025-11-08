@@ -1,8 +1,8 @@
-import { apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/shared-api';
+import { pagingOptionsSchema } from '@game-cms/types';
 import z from 'zod';
 
 import { authHandler } from '../../middlewares/auth.js';
-import { pagingOptionsSchema } from '../../utils/paging.js';
 import { entityRouteId } from '../../utils/routeId.js';
 
 export default apiRoute({

@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { env } from '@game-cms/env';
 import { type MimeType, sendFile } from '@game-cms/shared';
-import { apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/shared-api';
 import z from 'zod';
 
 export default apiRoute({

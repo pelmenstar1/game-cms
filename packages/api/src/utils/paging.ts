@@ -1,12 +1,6 @@
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import { pagingAggregatePipeline } from '@game-cms/shared/mongo';
 import type { Collection, Document } from 'mongodb';
-import z from 'zod';
-
-export const pagingOptionsSchema = z.object({
-  offset: z.number().min(0).optional(),
-  size: z.number().refine((value) => value === -1 || value >= 1),
-});
 
 export async function getPage<T extends Document, R = T>(
   collection: Collection<T>,

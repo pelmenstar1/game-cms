@@ -15,7 +15,6 @@
     { "path": "./packages/vite-plugins" },
     { "path": "./packages/conditional" },
     { "path": "./packages/client" },
-    { "path": "./packages/utils" },
     { "path": "./packages/shared-api" }
   ],
   "include": []

@@ -1,5 +1,5 @@
+import { apiRoute } from '@game-cms/shared-api';
 import { deleteApiTokenPayload } from '@game-cms/types';
-import { apiRoute } from '@game-cms/utils';
 
 import { authHandler } from '../../../middlewares/auth.js';
 

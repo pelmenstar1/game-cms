@@ -1,5 +1,6 @@
 import { isPromise } from 'node:util/types';
 
+import multipart from '@fastify/multipart';
 import type { ApiRoute, GameCmsController, Service } from '@game-cms/types';
 import type { FastifyInstance } from 'fastify';
 import {
@@ -31,17 +32,18 @@ export async function setupApi(
   app: FastifyInstance,
   { routes, services }: ApiConfig
 ) {
+  setCms(createController(services));
+
+  app.register(multipart);
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-
-  setCms(createController(services));
 
   app.setErrorHandler(errorHandler());
 
   await setupServices(services);
 
   for (const route of routes) {
-    const prefix = route.exact ? route.url : `/api${route.url}`;
+    const prefix = route.config?.exact ? route.url : `/api${route.url}`;
 
     app.route({ ...route, url: prefix });
   }

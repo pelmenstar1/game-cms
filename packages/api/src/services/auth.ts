@@ -1,12 +1,12 @@
 import { env } from '@game-cms/env';
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
+import { service } from '@game-cms/shared-api';
 import {
   type ApiRouteId,
   type JwtPayload,
   jwtPayloadSchema,
   type SignInPayload,
 } from '@game-cms/types';
-import { service } from '@game-cms/utils';
 import { jwtVerify, SignJWT } from 'jose';
 import type { ObjectId } from 'mongodb';
 

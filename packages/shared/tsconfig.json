@@ -7,7 +7,6 @@
     "target": "esnext",
     "types": ["node"],
 
-    "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
 
     "strict": true,

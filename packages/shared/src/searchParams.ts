@@ -1,4 +1,4 @@
-type SearchParams = Record<
+export type SearchParams = Record<
   string,
   string | number | boolean | null | undefined
 >;

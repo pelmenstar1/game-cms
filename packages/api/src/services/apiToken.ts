@@ -1,7 +1,7 @@
 import { env } from '@game-cms/env';
 import { randomBytes } from '@game-cms/shared/crypto';
+import { service } from '@game-cms/shared-api';
 import type { CreateApiTokenPayload } from '@game-cms/types';
-import { service } from '@game-cms/utils';
 
 function collection() {
   return cms.service('base::database').collection('base::apiTokens');

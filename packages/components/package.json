@@ -8,7 +8,6 @@
   "dependencies": {
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
-    "@game-cms/utils": "workspace:*",
     "zod": "4.1.12"
   },
   "peerDependencies": {

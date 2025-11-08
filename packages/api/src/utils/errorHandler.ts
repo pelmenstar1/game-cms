@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { isErrorWithCode } from '@game-cms/shared/errors';
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-function getStatusCode(error: ApiError) {
+function getApiStatusCode(error: ApiError) {
   switch (error.code) {
     case ApiErrorCode.ENTITY_NOT_FOUND: {
       return 404;
@@ -18,10 +20,39 @@ function getStatusCode(error: ApiError) {
   }
 }
 
+function getApiErrorResponse(error: ApiError) {
+  const status = getApiStatusCode(error);
+
+  const { message, code, details } = error;
+
+  return {
+    status,
+    body: { message, code, details },
+  };
+}
+
+function getGenericErrorResponse(error: unknown) {
+  if (isErrorWithCode(error, 'FST_ERR_VALIDATION')) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { message, validation } = error as any;
+
+    return {
+      status: 400,
+      body: {
+        message: message,
+        code: ApiErrorCode.VALIDATION_ISSUE,
+        details: validation,
+      },
+    };
+  }
+
+  return { status: 500, body: { message: 'Internal Server Error' } };
+}
+
 function resolveResponseAndStatus(error: unknown) {
   return error instanceof ApiError
-    ? { status: getStatusCode(error), body: { message: error.message } }
-    : { status: 500, body: { message: 'Internal Server Error' } };
+    ? getApiErrorResponse(error)
+    : getGenericErrorResponse(error);
 }
 
 export function errorHandler() {

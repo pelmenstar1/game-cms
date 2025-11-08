@@ -1,4 +1,4 @@
-import { apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/shared-api';
 import z from 'zod';
 
 export default apiRoute({

@@ -9,16 +9,23 @@ import type { MimeType } from './mime.js';
 export async function sendFile(
   res: FastifyReply,
   filePath: string,
-  type: MimeType
+  type?: MimeType
 ) {
   try {
     const { size } = await fsp.stat(filePath);
     const stream = fs.createReadStream(filePath);
 
-    return await res.type(type).header('content-length', size).send(stream);
+    if (type) {
+      res.type(type);
+    }
+
+    return await res.header('content-length', size).send(stream);
   } catch (error: unknown) {
     if (isFileNotFoundError(error)) {
       res.callNotFound();
+      return;
     }
+
+    throw error;
   }
 }

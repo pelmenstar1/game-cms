@@ -8,5 +8,10 @@
     "@game-cms/types": "workspace:*",
     "@types/node": "24.7.2",
     "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/shared-api": "workspace:*",
+    "zod": "4.1.12"
   }
 }
