@@ -1,7 +1,8 @@
 import { isPromise } from 'node:util/types';
 
 import multipart from '@fastify/multipart';
-import type { ApiRoute, GameCmsController, Service } from '@game-cms/types';
+import { env } from '@game-cms/env';
+import type { GameCmsController, Service } from '@game-cms/types';
 import type { FastifyInstance } from 'fastify';
 import {
   serializerCompiler,
@@ -10,11 +11,6 @@ import {
 
 import { createController } from './controller.js';
 import { errorHandler } from './utils/errorHandler.js';
-
-type ApiConfig = {
-  routes: ApiRoute[];
-  services: Service[];
-};
 
 function setCms(value: GameCmsController) {
   (globalThis as unknown as { cms: GameCmsController }).cms = value;
@@ -28,10 +24,9 @@ async function setupServices(services: Service[]) {
   console.log('[api] Services initialized');
 }
 
-export async function setupApi(
-  app: FastifyInstance,
-  { routes, services }: ApiConfig
-) {
+export async function setupApi(app: FastifyInstance) {
+  const { apiRoutes, services } = env();
+
   setCms(createController(services));
 
   app.register(multipart);
@@ -42,7 +37,7 @@ export async function setupApi(
 
   await setupServices(services);
 
-  for (const route of routes) {
+  for (const route of apiRoutes) {
     const prefix = route.config?.exact ? route.url : `/api${route.url}`;
 
     app.route({ ...route, url: prefix });

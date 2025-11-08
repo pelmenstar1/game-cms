@@ -1,10 +1,11 @@
-import { env, initializeEnv } from '@game-cms/env';
+import { setupApi } from '@game-cms/api';
+import { type CmsEnvironment, env, initializeEnv } from '@game-cms/env';
 import { loadEnvIfExists } from '@game-cms/shared';
 import chalk from 'chalk';
 import fastify from 'fastify';
 
 import { statusInline } from '../../utils/log.js';
-import { setupApiFromConfig } from './api.js';
+import { getAllServices, getApiRoutes } from './api.js';
 import { scanAllComponents } from './components.js';
 import { resolveConfigInitMap } from './config.js';
 import { initDashboard } from './dashboard.js';
@@ -13,24 +14,41 @@ import { getSharedAssetsConfig } from './sharedAssets.js';
 import { setupStorageProvider } from './storageProvider.js';
 import type { StartOptions } from './types.js';
 
+type EnvInitializers = {
+  [K in Exclude<keyof CmsEnvironment, 'config'>]: (
+    config: CmsEnvironment['config']
+  ) => Promise<CmsEnvironment[K]>;
+};
+
+const envInitializers: EnvInitializers = {
+  apiRoutes: getApiRoutes,
+  components: scanAllComponents,
+  entitySchemas: scanEntitySchemas,
+  services: getAllServices,
+  sharedAssets: getSharedAssetsConfig,
+};
+
 async function initEnvFromConfigs() {
   await loadEnvIfExists();
 
-  const [config, components, entitySchemas, sharedAssets] = await Promise.all([
-    resolveConfigInitMap(),
-    scanAllComponents(),
-    scanEntitySchemas(),
-    getSharedAssetsConfig(),
-  ]);
+  const config = await resolveConfigInitMap();
 
-  initializeEnv({ config, components, entitySchemas, sharedAssets });
+  const envEntries = await Promise.all(
+    Object.entries(envInitializers).map(
+      async ([key, init]) => [key, await init(config)] as const
+    )
+  );
+
+  const env = { ...Object.fromEntries(envEntries), config } as CmsEnvironment;
+
+  initializeEnv(env);
 }
 
 async function startServer(options: StartOptions) {
   const app = fastify();
 
   await Promise.all([
-    setupApiFromConfig(app),
+    setupApi(app),
     initDashboard(app, options),
     setupStorageProvider(),
   ]);

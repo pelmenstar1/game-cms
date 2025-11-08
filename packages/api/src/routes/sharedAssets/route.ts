@@ -25,20 +25,18 @@ export default apiRoute({
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const filePath = paths[scope]?.[name] as string | undefined;
 
-    if (filePath === undefined) {
-      res.callNotFound();
-      return;
-    }
+    if (filePath !== undefined) {
+      try {
+        await sendFile(res, filePath, 'text/javascript');
 
-    try {
-      await sendFile(res, filePath, 'text/javascript');
-    } catch (error: unknown) {
-      if (isFileNotFoundError(error)) {
-        res.callNotFound();
         return;
+      } catch (error: unknown) {
+        if (!isFileNotFoundError(error)) {
+          throw error;
+        }
       }
-
-      throw error;
     }
+
+    res.callNotFound();
   },
 });

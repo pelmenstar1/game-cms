@@ -3,6 +3,7 @@ import type {
   CreateApiTokenResponse,
   DeleteApiTokenPayload,
   GetApiTokenJwtResponse,
+  GetPermissionsResponse,
   SignInPayload,
   SignTokenInPayload,
 } from '@game-cms/types';
@@ -35,4 +36,9 @@ export const deleteApiToken = request((payload: DeleteApiTokenPayload) => ({
   url: '/auth/token',
   method: 'DELETE',
   body: jsonInit(payload),
+}));
+
+export const getPermissions = request(() => ({
+  url: '/auth/permissions',
+  response: json<GetPermissionsResponse>(),
 }));

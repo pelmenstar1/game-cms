@@ -2,6 +2,10 @@ import type { ResolveRouteMetaArray } from '@game-cms/types';
 
 export type Meta = ResolveRouteMetaArray<
   [
+    {
+      url: '/auth/permissions';
+      exported: typeof import('./auth/permissions/get.js');
+    },
     { url: '/auth/token'; exported: typeof import('./auth/token/create.js') },
     { url: '/auth/token'; exported: typeof import('./auth/token/delete.js') },
     {

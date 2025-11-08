@@ -1,9 +1,11 @@
 import type {
+  ApiRoute,
   AuthConfig,
   ComponentStaticConfigMap,
   DatabaseConfig,
   ServerConfig,
   ServerEntitySchema,
+  Service,
   SharedAssetsConfig,
   StorageConfig,
 } from '@game-cms/types';
@@ -16,6 +18,8 @@ export type CmsEnvironment = {
     auth: AuthConfig;
   };
   components: ComponentStaticConfigMap;
+  apiRoutes: ApiRoute[];
+  services: Service[];
   entitySchemas: ServerEntitySchema[];
   sharedAssets: SharedAssetsConfig;
 };

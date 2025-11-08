@@ -53,3 +53,9 @@ export const deleteApiTokenPayload = z.object({
 });
 
 export type DeleteApiTokenPayload = z.infer<typeof deleteApiTokenPayload>;
+
+export const getPermissionsResponse = z.object({
+  permissions: z.array(z.string()),
+});
+
+export type GetPermissionsResponse = z.infer<typeof getPermissionsResponse>;

@@ -115,4 +115,11 @@ export default service({
       throw new ApiError('Cannot access this route', ApiErrorCode.UNAUTHORIZED);
     }
   },
+  getAllPermissions: () => {
+    const result = env()
+      .apiRoutes.map((route) => route.config?.id)
+      .filter((id) => id !== undefined);
+
+    return result;
+  },
 });
