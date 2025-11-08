@@ -1,9 +1,9 @@
 import type {
   ClientFileUploadMeta,
+  ClientListFilesOptions,
+  ClientListFilesResponse,
   ClientStorageFileMeta,
   DeleteFileOptions,
-  ListFilesOptions,
-  ListFilesResponse,
   UploadFileResponse,
 } from '@game-cms/types';
 
@@ -31,12 +31,12 @@ export const deleteFileById = request(
   })
 );
 
-export const listFiles = request((options: ListFilesOptions) => ({
+export const listFiles = request((options: ClientListFilesOptions) => ({
   url: {
     path: `/file/list`,
     search: options,
   },
-  response: json<ListFilesResponse>(),
+  response: json<ClientListFilesResponse>(),
 }));
 
 export const uploadFile = request((payload: ClientUploadFilePayload) => ({

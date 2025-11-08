@@ -21,11 +21,8 @@ export default apiRoute({
 
     const fileService = cms.service('base::file');
 
-    const { items, meta } = await fileService.list(options);
+    const result = await fileService.list(options);
 
-    return {
-      items,
-      meta,
-    };
+    return result;
   },
 });

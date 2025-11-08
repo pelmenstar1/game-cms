@@ -56,6 +56,19 @@ export type Meta = ResolveRouteMetaArray<
     { url: '/file/list'; exported: typeof import('./file/list/get.js') },
     { url: '/file'; exported: typeof import('./file/upload.js') },
     {
+      url: '/folder/byId/:folderId';
+      exported: typeof import('./folder/byId/delete.js');
+    },
+    {
+      url: '/folder/byId/:folderId';
+      exported: typeof import('./folder/byId/get.js');
+    },
+    {
+      url: '/folder/byId/:folderId';
+      exported: typeof import('./folder/byId/update.js');
+    },
+    { url: '/folder'; exported: typeof import('./folder/create.js') },
+    {
       url: '/assets/_s/:scope/:name.js';
       exported: typeof import('./sharedAssets/route.js');
     },

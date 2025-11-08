@@ -1,7 +1,7 @@
 import { objectId } from '@game-cms/shared/mongo';
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { apiRoute } from '@game-cms/shared-api';
-import { clientStorageFileMeta } from '@game-cms/types';
+import { serverStorageFileMeta } from '@game-cms/types';
 import z from 'zod';
 
 export default apiRoute({
@@ -15,7 +15,7 @@ export default apiRoute({
       fileId: objectId,
     }),
     response: {
-      200: clientStorageFileMeta,
+      200: serverStorageFileMeta,
     },
   },
   handler: async (req) => {

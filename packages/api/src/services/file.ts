@@ -7,9 +7,8 @@ import type {
   ServerStorageFile,
   ServerStorageFileMeta,
   UploadFilePayload,
-  UploadFileResponse,
 } from '@game-cms/types';
-import type { ObjectId } from 'mongodb';
+import type { ClientSession, ObjectId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
@@ -30,17 +29,19 @@ async function hydrateFile(file: ServerStorageFile) {
 
 export default service({
   id: 'base::file',
-  upload: async (payload: UploadFilePayload): Promise<UploadFileResponse> => {
+  upload: async (payload: UploadFilePayload) => {
+    const { mime, name, folderId } = payload;
     const { url, meta } = await storageProvider().protocol.upload(payload);
 
     const { insertedId } = await collection().insertOne({
       url,
-      mime: payload.mime,
-      name: payload.name,
+      mime,
+      name,
+      folderId,
       providerMeta: meta,
     });
 
-    return { id: insertedId.toString(), url };
+    return { id: insertedId, url };
   },
   getMeta: async (id: ObjectId): Promise<ServerStorageFileMeta | null> => {
     const file = await collection().findOne({ _id: id });
@@ -79,5 +80,12 @@ export default service({
         await collection().deleteOne({ _id: id }, { session });
       }
     });
+  },
+  moveFilesToRoot: async (folderId: ObjectId, session?: ClientSession) => {
+    await collection().updateMany(
+      { folderId },
+      { $unset: { folderId: 1 } },
+      { session }
+    );
   },
 });

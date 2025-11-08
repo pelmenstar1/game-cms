@@ -54,11 +54,13 @@ export default apiRoute({
 
     const info = getInfo(data);
 
-    return cms.service('base::file').upload({
+    const result = await cms.service('base::file').upload({
       name: data.filename,
       content: data.file,
       mime: data.mimetype as MimeType,
       folderId: info?.folderId,
     });
+
+    return result;
   },
 });
