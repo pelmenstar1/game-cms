@@ -5,22 +5,23 @@ import type { Replace } from '../../shared/dist/typeutil.js';
 import type { RequestInitializer } from './requestInitializer.js';
 import type { ResponseParser } from './responseParser.js';
 
-export type ObjectRequestUrl = {
-  path: string;
+export type ObjectRequestUrl<Path extends string = string> = {
+  path: Path;
   search?: SearchParams;
 };
 
-interface BaseRequestOptions extends RequestInit {
-  url: string | ObjectRequestUrl;
+interface BaseRequestOptions<Path extends string = string> extends RequestInit {
+  url: Path | ObjectRequestUrl<Path>;
 }
 
-interface BodyRequestOptions extends BaseRequestOptions {
+interface BodyRequestOptions<Path extends string>
+  extends BaseRequestOptions<Path> {
   body?: BodyInit;
   method: HttpMethodWithBody;
 }
 
-export type InitBodyRequestOptions = Replace<
-  BaseRequestOptions,
+export type InitBodyRequestOptions<Path extends string = string> = Replace<
+  BaseRequestOptions<Path>,
   {
     body: RequestInitializer;
     method: HttpMethodWithBody;
@@ -32,12 +33,15 @@ export type RequestContext = {
   abortController?: AbortController;
 };
 
-export type RequestOptions =
-  | BaseRequestOptions
-  | BodyRequestOptions
-  | InitBodyRequestOptions;
+export type RequestOptions<Path extends string = string> =
+  | BaseRequestOptions<Path>
+  | BodyRequestOptions<Path>
+  | InitBodyRequestOptions<Path>;
 
-export type RequestOptionsWithResult<R> = RequestOptions & {
+export type RequestOptionsWithResult<
+  R,
+  Path extends string = string,
+> = RequestOptions<Path> & {
   response: ResponseParser<R>;
 };
 

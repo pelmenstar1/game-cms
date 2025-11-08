@@ -7,8 +7,8 @@ import type {
   UploadFileResponse,
 } from '@game-cms/types';
 
+import { request } from '../internal/utils.js';
 import { json } from '../responseParser.js';
-import { request } from '../utils.js';
 
 export interface ClientUploadFilePayload {
   content: Blob;

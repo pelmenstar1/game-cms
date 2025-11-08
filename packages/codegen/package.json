@@ -1,12 +1,16 @@
 {
-  "name": "@game-cms/env",
+  "name": "@game-cms/codegen",
   "packageManager": "yarn@4.10.3",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "devDependencies": {
     "@types/node": "24.10.0",
     "typescript": "5.9.3"
+  },
+  "exports": {
+    "./apiRequestTypes": {
+      "import": "./dist/apiRequestTypes.js",
+      "types": "./dist/apiRequestTypes.d.ts"
+    }
   },
   "dependencies": {
     "@game-cms/types": "workspace:*"

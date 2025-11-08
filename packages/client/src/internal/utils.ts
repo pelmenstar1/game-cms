@@ -1,3 +1,4 @@
+import type { RoutesMeta } from '@game-cms/api/types';
 import { formatSearchParams } from '@game-cms/shared';
 
 import type {
@@ -5,7 +6,10 @@ import type {
   RequestContext,
   RequestOptions,
   RequestOptionsWithResult,
-} from './types.js';
+} from '../types.js';
+
+type BaseApiRoute = RoutesMeta[number];
+type ApiRoutePath = BaseApiRoute['path'];
 
 function constructRelativeUrl(url: string | ObjectRequestUrl): string {
   if (typeof url === 'string') {
@@ -49,11 +53,11 @@ export function createFullUrl(
 }
 
 export function request<Args extends unknown[], R>(
-  factory: (...args: Args) => RequestOptionsWithResult<R>
+  factory: (...args: Args) => RequestOptionsWithResult<R, ApiRoutePath>
 ): (context: RequestContext, ...args: Args) => Promise<R>;
 
 export function request<Args extends unknown[]>(
-  factory: (...args: Args) => RequestOptions
+  factory: (...args: Args) => RequestOptions<ApiRoutePath>
 ): (context: RequestContext, ...args: Args) => Promise<Response>;
 
 export function request<Args extends unknown[], R>(

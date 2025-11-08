@@ -2,10 +2,15 @@
   "name": "@game-cms/api",
   "packageManager": "yarn@4.10.3",
   "type": "module",
+  "scripts": {
+    "generate-types": "tsx ./scripts/generateTypes.ts"
+  },
   "devDependencies": {
+    "@game-cms/codegen": "workspace:*",
     "@game-cms/conditional": "workspace:*",
-    "@types/node": "24.7.2",
+    "@types/node": "24.10.0",
     "@types/qs": "^6",
+    "tsx": "4.20.6",
     "typescript": "5.9.3"
   },
   "dependencies": {

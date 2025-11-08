@@ -2,9 +2,9 @@ import type { EntityConditionalDataById } from '@game-cms/conditional';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import type { ClientEntitySchema, EntityId } from '@game-cms/types';
 
+import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
-import { request } from '../utils.js';
 
 type EntityConditionalDataByIdWithId<T extends EntityId> =
   EntityConditionalDataById<T> & { _id: string };

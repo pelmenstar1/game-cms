@@ -7,9 +7,9 @@ import type {
   SignTokenInPayload,
 } from '@game-cms/types';
 
+import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
-import { request } from '../utils.js';
 
 export const signUserIn = request((payload: SignInPayload) => ({
   url: '/auth/user/signin',

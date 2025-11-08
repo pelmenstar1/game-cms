@@ -40,7 +40,7 @@ export const createApiTokenResponse = z.object({
   token: z.string(),
 });
 
-export type CreateApiTokenResponse = z.infer<typeof createApiTokenPayload>;
+export type CreateApiTokenResponse = z.infer<typeof createApiTokenResponse>;
 
 export const signTokenInPayload = z.object({
   token: z.string(),

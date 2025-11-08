@@ -1,4 +1,5 @@
-import { handleResponseError } from './errors.js';
+import { handleResponseError } from './internal/errors.js';
+import { createFullUrl } from './internal/utils.js';
 import type { ResponseParser } from './responseParser.js';
 import type {
   GameCmsClient,
@@ -6,7 +7,6 @@ import type {
   InitBodyRequestOptions,
   RequestOptions,
 } from './types.js';
-import { createFullUrl } from './utils.js';
 
 function isBodyOptions(
   options: RequestOptions

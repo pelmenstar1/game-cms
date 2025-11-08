@@ -18,7 +18,7 @@
     "@game-cms/build": "workspace:*",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-replace": "6.0.2",
-    "@types/node": "24.7.2",
+    "@types/node": "24.10.0",
     "@vitejs/plugin-react": "5.0.4",
     "glob": "11.0.3",
     "typescript": "5.9.3",

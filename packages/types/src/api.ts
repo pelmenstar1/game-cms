@@ -55,3 +55,26 @@ export type ApiRoute<
   TypeProvider,
   Logger
 >;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type UnknownApiRoute = ApiRoute<any, any, any, any, any, any, any>;
+
+type RouteInfo = { url: string; exported: { default: UnknownApiRoute } };
+
+type ProcessParameter<T> = T extends `:${string}` ? string : T;
+
+type ReplaceParametersToTemplate<T extends string> =
+  T extends `${infer Part}/${infer Rest}`
+    ? `${ProcessParameter<Part>}/${ReplaceParametersToTemplate<Rest>}`
+    : ProcessParameter<T>;
+
+type ResolveRouteMeta<T extends RouteInfo> = {
+  path: ReplaceParametersToTemplate<T['url']>;
+  types: {
+    body: T['exported']['default']['schema']['Body'];
+  };
+};
+
+export type ResolveRouteMetaArray<T extends RouteInfo[]> = {
+  [K in keyof T]: ResolveRouteMeta<T[K]>;
+};

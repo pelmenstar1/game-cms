@@ -3,6 +3,7 @@
   "packageManager": "yarn@4.10.3",
   "type": "module",
   "devDependencies": {
+    "@game-cms/api": "workspace:*",
     "@game-cms/conditional": "workspace:*",
     "@game-cms/types": "workspace:*",
     "typescript": "5.9.3"
