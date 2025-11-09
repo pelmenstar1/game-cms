@@ -16,12 +16,12 @@ function setCms(value: GameCmsController) {
   (globalThis as unknown as { cms: GameCmsController }).cms = value;
 }
 
-async function setupServices(services: Service[]) {
+async function setupServices(app: FastifyInstance, services: Service[]) {
   const jobs = services.map((service) => service.init?.());
 
   await Promise.all(jobs.filter((job) => isPromise(job)));
 
-  console.log('[api] Services initialized');
+  app.log.info('Services initialized');
 }
 
 export async function setupApi(app: FastifyInstance) {
@@ -35,7 +35,7 @@ export async function setupApi(app: FastifyInstance) {
 
   app.setErrorHandler(errorHandler());
 
-  await setupServices(services);
+  await setupServices(app, services);
 
   for (const route of apiRoutes) {
     const prefix = route.config?.exact ? route.url : `/api${route.url}`;
