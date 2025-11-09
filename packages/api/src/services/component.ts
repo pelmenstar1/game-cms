@@ -7,8 +7,11 @@ function assetsPath(id: ComponentId, filePath: string) {
   return `/api/_components/${id}/assets/${filePath}`;
 }
 
+const RENDERER_FILE = 'renderer.js';
+
 export default service({
   id: 'base::component',
+  RENDERER_FILE,
   getController: <T extends ComponentId>(id: T) => {
     const staticConfig = env().components[id];
 
@@ -35,7 +38,7 @@ export default service({
     const { renderManifest } = staticConfig;
 
     return {
-      jsBundle: assetsPath(id, 'renderer.js'),
+      jsBundle: assetsPath(id, RENDERER_FILE),
       jsDependencies: renderManifest.jsDependencies.map((filePath) =>
         assetsPath(id, filePath)
       ),

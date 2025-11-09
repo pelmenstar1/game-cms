@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { COMPONENT_RENDERER_SUFFIX } from '@game-cms/build';
 import { importFile } from '@game-cms/shared';
 import { mergeObjects } from '@game-cms/shared/object';
 import type {
@@ -19,8 +20,6 @@ import {
   type ViteManifestEntry,
 } from '../../utils/viteManifest.js';
 import { getPackageBuildDirectory } from './utils.js';
-
-const RENDERER_SUFFIX = '-renderer';
 
 async function importController(
   filePath: string
@@ -44,7 +43,11 @@ async function createComponentStaticConfigEntry(
   directoryPath: string
 ): Promise<[string, ComponentStaticConfig]> {
   const manifestEntries = Object.values(manifest);
-  const controllerName = rendererEntry.name?.slice(0, -RENDERER_SUFFIX.length);
+  const controllerName = rendererEntry.name?.slice(
+    0,
+    -COMPONENT_RENDERER_SUFFIX.length
+  );
+
   if (controllerName === undefined) {
     throw new Error(`No renderer entry name`);
   }
@@ -86,7 +89,7 @@ async function scanDirectoryForComponents(
 
   const result = await Promise.all(
     manifestEntries.map(async (entry) => {
-      if (entry.name?.endsWith(RENDERER_SUFFIX)) {
+      if (entry.name?.endsWith(COMPONENT_RENDERER_SUFFIX)) {
         return createComponentStaticConfigEntry(manifest, entry, directoryPath);
       }
     })

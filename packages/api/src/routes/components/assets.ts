@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import { env } from '@game-cms/env';
-import { type MimeType, sendFile } from '@game-cms/shared';
+import { sendFile } from '@game-cms/shared';
 import { apiRoute } from '@game-cms/shared-api';
 import z from 'zod';
 
@@ -29,9 +29,11 @@ export default apiRoute({
       renderManifest: { cssBundles, jsDependencies, jsBundle },
     } = staticConfig;
 
+    const { RENDERER_FILE } = cms.service('base::component');
+
     const [, filePath] = req.url.split('assets/', 2);
 
-    if (filePath === 'renderer.js') {
+    if (filePath === RENDERER_FILE) {
       await sendFile(
         res,
         path.join(baseDirectory, jsBundle),
@@ -41,9 +43,7 @@ export default apiRoute({
       jsDependencies.includes(filePath) ||
       cssBundles.includes(filePath)
     ) {
-      const mime: MimeType = filePath.endsWith('.css')
-        ? 'text/css'
-        : 'text/javascript';
+      const mime = filePath.endsWith('.css') ? 'text/css' : 'text/javascript';
 
       await sendFile(res, path.join(baseDirectory, filePath), mime);
     } else {

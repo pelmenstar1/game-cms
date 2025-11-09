@@ -2,7 +2,7 @@ import type { Readable } from 'node:stream';
 
 import type { MaybePromise } from '@game-cms/shared';
 
-import type { ApiRoute } from './api.js';
+import type { UnknownApiRoute } from './api.js';
 import type { ServerStorageFile } from './file.js';
 
 export type UploadFileToProviderInfo = {
@@ -28,7 +28,6 @@ export interface StorageProviderProtocol<Meta = unknown> {
 export interface StorageProvider<Meta = unknown> {
   init?: () => MaybePromise<void>;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  routes?: ApiRoute<any, any, any, any, any, any, any>[];
+  routes?: UnknownApiRoute[];
   protocol: StorageProviderProtocol<Meta>;
 }

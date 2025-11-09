@@ -63,7 +63,8 @@ export function entity<T extends Record<string, ComponentData>>(
 export function component<
   Options extends ComponentOptions,
   Data extends ComponentData,
->(value: ComponentController<Options, Data>) {
+  Id extends string,
+>(value: ComponentController<Options, Data, Id>) {
   return value;
 }
 

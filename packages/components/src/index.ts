@@ -11,8 +11,11 @@ import Text from './Text';
 function componentAccessor<
   Options extends ComponentOptions,
   Data extends ComponentData,
->(controller: ComponentController<Options, Data>) {
-  return (input: Omit<ServerComponentSchema<Options, Data>, 'controller'>) => {
+  Id extends string,
+>(controller: ComponentController<Options, Data, Id>) {
+  return (
+    input: Omit<ServerComponentSchema<Options, Data, Id>, 'controller'>
+  ) => {
     return { controller, ...input };
   };
 }

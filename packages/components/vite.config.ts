@@ -2,7 +2,7 @@ import fsp from "node:fs/promises";
 import { defineConfig, UserConfig } from "vite";
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
-import { EXTERNAL_SHARED_ASSETS, SHARED_ASSETS_PATHS } from "@game-cms/build";
+import { COMPONENT_RENDERER_SUFFIX, EXTERNAL_SHARED_ASSETS, SHARED_ASSETS_PATHS } from "@game-cms/build";
 import dts from 'vite-plugin-dts';
 
 async function getEntries() {
@@ -14,7 +14,7 @@ async function getEntries() {
     const name = path.basename(path.dirname(entry));
 
     if (entry.endsWith('renderer.tsx')) {
-      result[`${name}-renderer`] = entry;
+      result[`${name}${COMPONENT_RENDERER_SUFFIX}`] = entry;
     } else if (entry.endsWith('index.ts')) {
       result[name] = entry;
     }

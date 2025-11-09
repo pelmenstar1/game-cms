@@ -1,5 +1,7 @@
 import type { MaybePromise } from '@game-cms/shared';
 
+import type { DefaultExport, IdArrayToMap } from './typeutil.js';
+
 export interface Service<Id extends string = string> {
   id: Id;
 
@@ -7,18 +9,7 @@ export interface Service<Id extends string = string> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface GameCmsServiceMap {}
+export interface ServiceMap {}
 
-type ServiceImport = { default: Service };
-
-type ServiceTupleToUnion<T extends ServiceImport[]> = {
-  [K in keyof T]: [T[K]['default']['id'], T[K]['default']];
-}[number];
-
-type ResolveIds<T extends [string, unknown]> = {
-  [K in T[0]]: Extract<T, [K, unknown]>[1];
-};
-
-export type ResolveServices<T extends ServiceImport[]> = ResolveIds<
-  ServiceTupleToUnion<T>
->;
+export type ResolveServices<T extends DefaultExport<Service>[]> =
+  IdArrayToMap<T>;

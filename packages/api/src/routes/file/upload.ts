@@ -1,5 +1,5 @@
 import type { MultipartFile } from '@fastify/multipart';
-import { type MimeType, parseJsonOptional } from '@game-cms/shared';
+import { parseJsonOptional } from '@game-cms/shared';
 import { ApiError, ApiErrorCode, apiValidateValue } from '@game-cms/shared-api';
 import { apiRoute } from '@game-cms/shared-api';
 import { uploadFileMeta, uploadFileResponse } from '@game-cms/types';
@@ -57,7 +57,7 @@ export default apiRoute({
     const result = await cms.service('base::file').upload({
       name: data.filename,
       content: data.file,
-      mime: data.mimetype as MimeType,
+      mime: data.mimetype,
       folderId: info?.folderId,
     });
 

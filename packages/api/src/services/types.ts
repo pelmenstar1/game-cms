@@ -20,7 +20,7 @@ type Services = [
 
 declare module '@game-cms/types' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface GameCmsServiceMap extends ResolveServices<Services> {}
+  interface ServiceMap extends ResolveServices<Services> {}
 
   interface DatabaseEntityMap {
     'base::users': ServerUser;

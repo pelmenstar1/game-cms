@@ -1,13 +1,9 @@
-import type {
-  GameCmsController,
-  GameCmsServiceMap,
-  Service,
-} from '@game-cms/types';
+import type { GameCmsController, Service, ServiceMap } from '@game-cms/types';
 
 function createServiceMap(services: Service[]) {
   return Object.fromEntries(
     services.map((service) => [service.id, service])
-  ) as Partial<GameCmsServiceMap>;
+  ) as Partial<ServiceMap>;
 }
 
 export function createController(services: Service[]): GameCmsController {

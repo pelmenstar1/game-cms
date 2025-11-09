@@ -1,8 +1,20 @@
-type GetComponent<T extends { default: unknown }> = T['default'];
+import { ResolveKeyValueArray } from '@game-cms/types';
+
+type ExportedComponents = typeof import('./index');
+
+type Components = {
+  [K in keyof ExportedComponents]: ReturnType<
+    ExportedComponents[K]
+  >['controller'];
+};
+
+type ComponentToKeyValue<T extends Record<string, { id: string }>> = {
+  [K in keyof T]: [T[K]['id'], T[K]];
+}[keyof T];
+
+type ComponentsOutput = ResolveKeyValueArray<ComponentToKeyValue<Components>>;
 
 declare module '@game-cms/types' {
-  interface ComponentMap {
-    'base::number': GetComponent<typeof import('./Number')>;
-    'base::text': GetComponent<typeof import('./Text')>;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  interface ComponentMap extends ComponentsOutput {}
 }
