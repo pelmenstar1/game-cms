@@ -44,6 +44,10 @@
       "import": "./dist/http/index.js",
       "types": "./dist/http/index.d.ts"
     },
+    "./io": {
+      "import": "./dist/io/index.js",
+      "types": "./dist/io/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }

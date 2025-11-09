@@ -21,6 +21,5 @@
     "skipLibCheck": true,
     "composite": true
   },
-  "include": ["./src"],
-  "references": [{ "path": "../types" }]
+  "include": ["./src"]
 }

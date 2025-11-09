@@ -20,6 +20,5 @@
     "skipLibCheck": true,
     "composite": true
   },
-  "references": [{ "path": "../shared" }],
   "include": ["./src"]
 }

@@ -20,6 +20,10 @@
     "skipLibCheck": true,
     "composite": true
   },
-  "references": [{ "path": "../shared" }, { "path": "../types" }],
+  "references": [
+    { "path": "../build" },
+    { "path": "../types" },
+    { "path": "../ui" }
+  ],
   "include": ["./src", "./scripts"]
 }

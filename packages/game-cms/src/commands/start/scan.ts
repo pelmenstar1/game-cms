@@ -10,7 +10,6 @@ import {
 } from '@game-cms/types';
 import { ZodType } from 'zod';
 
-import { statusError } from '../../utils/log.js';
 import {
   componentSchema,
   routeSchema,
@@ -30,12 +29,12 @@ async function maybeImportWithSchema<T>(
         return module.default as T;
       }
 
-      statusError(
+      console.error(
         `Failed to import ${filePath} because of the invalid default import: ${result.error.message}`
       );
     }
   } catch (error: unknown) {
-    statusError(`Failed to import ${filePath} because of ${error}`);
+    console.error(`Failed to import ${filePath} because of ${error}`);
   }
 }
 

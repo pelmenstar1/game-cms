@@ -23,5 +23,14 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true
-  }
+  },
+  "references": [
+    { "path": "../build" },
+    { "path": "../client" },
+    { "path": "../react" },
+    { "path": "../shared" },
+    { "path": "../types" },
+    { "path": "../ui" },
+    { "path": "../vite-plugins" }
+  ]
 }

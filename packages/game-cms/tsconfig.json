@@ -18,5 +18,13 @@
     "composite": true
   },
   "include": ["./src"],
-  "references": [{ "path": "../types" }]
+  "references": [
+    { "path": "../types" },
+    { "path": "../api" },
+    { "path": "../components" },
+    { "path": "../env" },
+    { "path": "../react" },
+    { "path": "../shared" },
+    { "path": "../shared-api" }
+  ]
 }
