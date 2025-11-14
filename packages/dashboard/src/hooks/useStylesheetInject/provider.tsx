@@ -1,15 +1,11 @@
-import { type ReactNode, useMemo, useState } from 'react';
+import { type PropsWithChildren, useMemo, useState } from 'react';
 
 import {
   StylesheetInjectContext,
   type StylesheetInjectContextType,
 } from './context';
 
-type StylesheetInjectProps = {
-  children: ReactNode;
-};
-
-export function StylesheetInject(props: StylesheetInjectProps) {
+export function StylesheetInjectProvider({ children }: PropsWithChildren) {
   const [stylesheets, setStylesheets] = useState<string[]>([]);
 
   const context = useMemo(
@@ -29,7 +25,7 @@ export function StylesheetInject(props: StylesheetInjectProps) {
         <link key={url} rel="stylesheet" href={url} />
       ))}
 
-      {props.children}
+      {children}
     </StylesheetInjectContext.Provider>
   );
 }

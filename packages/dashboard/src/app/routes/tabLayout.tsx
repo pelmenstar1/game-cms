@@ -8,12 +8,15 @@ export default function Layout() {
     <div className={styles.root}>
       <NavTabs
         items={[
-          { href: '/', icon: <HomeIcon />, text: 'Home 1' },
+          { href: '/', icon: <HomeIcon />, text: 'Home' },
           { href: '/entities', icon: <AppsIcon />, text: 'Entities' },
           { href: '/settings', icon: <SettingsIcon />, text: 'Settings' },
         ]}
       />
-      <Outlet />
+
+      <div className={styles.content}>
+        <Outlet />
+      </div>
     </div>
   );
 }

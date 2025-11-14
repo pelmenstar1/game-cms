@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { COMPONENT_RENDERER_SUFFIX } from '@game-cms/build';
-import { importFile } from '@game-cms/shared';
+import { importFile, isNonNullObject } from '@game-cms/shared';
 import { mergeObjects } from '@game-cms/shared/object';
 import type {
   ComponentController,
@@ -25,7 +25,7 @@ async function importController(
   filePath: string
 ): Promise<ComponentController> {
   const module: unknown = await importFile(filePath);
-  if (!(typeof module === 'object' && module !== null && 'default' in module)) {
+  if (!(isNonNullObject(module) && 'default' in module)) {
     throw new Error(`Expected default export in ${filePath}`);
   }
 

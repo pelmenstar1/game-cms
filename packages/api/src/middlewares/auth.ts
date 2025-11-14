@@ -1,5 +1,6 @@
 import type { IncomingHttpHeaders } from 'node:http';
 
+import { isNonNullObject } from '@game-cms/shared';
 import { getCookieValue } from '@game-cms/shared/http';
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { type ApiRouteContextConfig, type ApiRouteId } from '@game-cms/types';
@@ -31,8 +32,7 @@ function getJwt(headers: IncomingHttpHeaders) {
 function hydrateRouteId(id: ApiRouteId, params: unknown): ApiRouteId {
   const { namespace, action } = parseApiRouteId(id);
 
-  const entries =
-    typeof params === 'object' && params !== null ? Object.entries(params) : [];
+  const entries = isNonNullObject(params) ? Object.entries(params) : [];
 
   let newNamespace = namespace;
 

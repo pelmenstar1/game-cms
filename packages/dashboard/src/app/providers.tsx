@@ -1,12 +1,15 @@
+import { NotificationWrapper } from '@game-cms/ui';
 import type { PropsWithChildren } from 'react';
 
-import { StylesheetInject } from '@/components/StylesheetInject';
 import { useApiClient } from '@/hooks/useApiClient';
+import { useStylesheetInject } from '@/hooks/useStylesheetInject';
 
 export function Providers({ children }: PropsWithChildren) {
   return (
-    <StylesheetInject>
-      <useApiClient.Provider>{children}</useApiClient.Provider>
-    </StylesheetInject>
+    <useStylesheetInject.Provider>
+      <NotificationWrapper>
+        <useApiClient.Provider>{children}</useApiClient.Provider>
+      </NotificationWrapper>
+    </useStylesheetInject.Provider>
   );
 }

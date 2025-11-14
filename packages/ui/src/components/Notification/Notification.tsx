@@ -1,11 +1,17 @@
-import { createContext, ReactNode, useMemo, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { contextUseFactory } from '../../utils/contextFactory';
 import { Typography } from '../Typography';
 import styles from './Notification.module.scss';
 
-export type NotificationType = 'plain' | 'error';
+export type NotificationType = 'info' | 'error';
 
 export type NotificationProps = {
   message: string;
@@ -17,9 +23,9 @@ export type NotificationWrapperProps = {
   children: ReactNode;
 };
 
-export type NotificationManager = {
-  show(message: string, type: NotificationType): void;
-};
+type SendMessages = Record<NotificationType, (message: string) => void>;
+
+export type NotificationManager = SendMessages;
 
 export const NotificationContext =
   /*@__PURE__*/ createContext<NotificationManager | null>(null);
@@ -45,23 +51,33 @@ export function NotificationWrapper({ children }: NotificationWrapperProps) {
     type: NotificationType;
   }>();
 
+  const showNotification = useCallback(
+    (message: string, type: NotificationType) => {
+      setVisible(true);
+      setNotification({ message, type });
+
+      setTimeout(() => {
+        setVisible(false);
+
+        // Let the animation run for 250 ms
+        setTimeout(() => {
+          setNotification(undefined);
+        }, 250);
+      }, 3000);
+    },
+    []
+  );
+
   const manager = useMemo(
     (): NotificationManager => ({
-      show: (message, type) => {
-        setVisible(true);
-        setNotification({ message, type });
-
-        setTimeout(() => {
-          setVisible(false);
-
-          // Let the animation run for 250 ms
-          setTimeout(() => {
-            setNotification(undefined);
-          }, 250);
-        }, 3000);
+      info: (message) => {
+        showNotification(message, 'info');
+      },
+      error: (message) => {
+        showNotification(message, 'error');
       },
     }),
-    []
+    [showNotification]
   );
 
   return (

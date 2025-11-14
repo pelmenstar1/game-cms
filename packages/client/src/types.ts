@@ -33,6 +33,11 @@ export type RequestContext = {
   abortController?: AbortController;
 };
 
+export type RequestFn<Args extends unknown[], R> = (
+  context: RequestContext,
+  ...args: Args
+) => Promise<R>;
+
 export type RequestOptions<Path extends string = string> =
   | BaseRequestOptions<Path>
   | BodyRequestOptions<Path>

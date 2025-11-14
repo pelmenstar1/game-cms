@@ -9,7 +9,7 @@ function Component({ type }: { type: NotificationType }) {
     <NotificationWrapper>
       <button
         onClick={() => {
-          notification.show('Message', type);
+          notification[type]('Message');
         }}
       >
         Show
@@ -26,7 +26,7 @@ type Story = StoryObj<typeof Component>;
 
 export const Plain: Story = {
   args: {
-    type: 'plain',
+    type: 'info',
   },
 };
 

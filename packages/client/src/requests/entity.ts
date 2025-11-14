@@ -6,7 +6,7 @@ import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
 
-type EntityConditionalDataByIdWithId<T extends EntityId> =
+export type EntityConditionalDataByIdWithId<T extends EntityId> =
   EntityConditionalDataById<T> & { _id: string };
 
 export const getEntitySchemas = request(() => ({
@@ -36,7 +36,7 @@ export const deleteEntityById = request((entityId: EntityId, id: string) => ({
 }));
 
 export const listEntities = request(
-  <T extends EntityId>(entityId: T, options: PagingOptions) => ({
+  <T extends EntityId>(entityId: T, options?: PagingOptions) => ({
     url: { path: `/entity/${entityId}/list`, search: options },
     response: json<PageData<EntityConditionalDataByIdWithId<T>>>(),
   })

@@ -8,7 +8,7 @@ import styles from './NavTabs.module.scss';
 export interface NavTabsProps {
   className?: string;
   items: {
-    icon: ReactNode;
+    icon?: ReactNode;
     text: string;
     href: string;
   }[];
@@ -16,7 +16,6 @@ export interface NavTabsProps {
 
 export function NavTabs({ className, items }: NavTabsProps) {
   const currentLocation = useLocation();
-  console.log(1);
 
   return (
     <div className={classNames(styles.root, className)}>

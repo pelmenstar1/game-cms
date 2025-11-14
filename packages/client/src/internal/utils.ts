@@ -4,6 +4,7 @@ import { formatSearchParams } from '@game-cms/shared';
 import type {
   ObjectRequestUrl,
   RequestContext,
+  RequestFn,
   RequestOptions,
   RequestOptionsWithResult,
 } from '../types.js';
@@ -54,11 +55,11 @@ export function createFullUrl(
 
 export function request<Args extends unknown[], R>(
   factory: (...args: Args) => RequestOptionsWithResult<R, ApiRoutePath>
-): (context: RequestContext, ...args: Args) => Promise<R>;
+): RequestFn<Args, R>;
 
 export function request<Args extends unknown[]>(
   factory: (...args: Args) => RequestOptions<ApiRoutePath>
-): (context: RequestContext, ...args: Args) => Promise<Response>;
+): RequestFn<Args, Response>;
 
 export function request<Args extends unknown[], R>(
   factory: (...args: Args) => RequestOptions | RequestOptionsWithResult<R>

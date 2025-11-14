@@ -1,0 +1,10 @@
+.root {
+  display: flex;
+  flex-grow: 1;
+}
+
+.entities-tabs {
+  > * {
+    padding: 0 2em;
+  }
+}

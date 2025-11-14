@@ -31,7 +31,7 @@ function initProxyDashboard(app: FastifyInstance, url: string) {
     timeout: 0,
   });
 
-  app.all('/{*splat}', (req, res) => {
+  app.all('/*', (req, res) => {
     proxy.web(req.raw, res.raw);
   });
 

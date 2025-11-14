@@ -1,7 +1,9 @@
-import type { RequestContext } from '@game-cms/client';
+import type { RequestContext, RequestFn } from '@game-cms/client';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { createAbortController } from '@/utils/abortController';
+import { type ApiRedirectOptions, withApiErrorHandling } from '@/utils/api';
 
 import { useApiClient } from './useApiClient';
 
@@ -18,21 +20,41 @@ export type ApiQueryResult<T> =
       value: T;
     };
 
+type ApiQueryOptions = ApiRedirectOptions;
+type UseApiQueryResult<R> = [value: ApiQueryResult<R>, retry: () => void];
+
+export function useApiQuery<R>(
+  queryFn: RequestFn<[], R>,
+  options?: ApiQueryOptions
+): UseApiQueryResult<R>;
+
 export function useApiQuery<Args extends unknown[], R>(
-  queryFn: (context: RequestContext, ...args: Args) => Promise<R>,
-  args: Args
-) {
+  queryFn: RequestFn<Args, R>,
+  args: Args,
+  options?: ApiQueryOptions
+): UseApiQueryResult<R>;
+
+export function useApiQuery<Args extends unknown[], R>(
+  queryFn: RequestFn<Args, R>,
+  args?: Args,
+  options?: ApiQueryOptions
+): UseApiQueryResult<R> {
   const client = useApiClient();
+  const navigate = useNavigate();
 
   const [result, setResult] = useState<ApiQueryResult<R>>({
     status: 'pending',
   });
 
+  const resolvedArgs = (args ?? []) as Args;
+
   const worker = useCallback(() => {
     const abortController = createAbortController();
     const context: RequestContext = { client, abortController };
 
-    queryFn(context, ...args)
+    const doRequest = withApiErrorHandling(queryFn, navigate, options);
+
+    doRequest(context, ...resolvedArgs)
       .then((value) => {
         setResult({ status: 'success', value });
       })
@@ -43,7 +65,8 @@ export function useApiQuery<Args extends unknown[], R>(
     return () => {
       abortController?.abort();
     };
-  }, [args, client, queryFn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...resolvedArgs, client, queryFn, navigate]);
 
   useEffect(worker, [worker]);
 

@@ -1,9 +1,7 @@
+import { isNonNullObject } from '../typecheck.js';
+
 export function isErrorWithCode(value: unknown, code: string) {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    (value as { code?: string }).code === code
-  );
+  return isNonNullObject(value) && (value as { code?: string }).code === code;
 }
 
 export function isFileNotFoundError(value: unknown) {

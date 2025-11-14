@@ -8,9 +8,8 @@ import type {
 import React, { Suspense, useMemo } from 'react';
 
 import { useApiClient } from '@/hooks/useApiClient';
+import { useStylesheetInject } from '@/hooks/useStylesheetInject';
 import { getRendererFromModule } from '@/utils/component';
-
-import { useStylesheetInject } from '../StylesheetInject/context';
 
 export interface RemoteComponentProps<T extends ComponentId> {
   componentId: T;

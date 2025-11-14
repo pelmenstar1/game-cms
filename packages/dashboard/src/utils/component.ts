@@ -1,7 +1,8 @@
+import { isNonNullObject } from '@game-cms/shared';
 import type { ComponentRenderer } from '@game-cms/types';
 
 export function getRendererFromModule(value: unknown): ComponentRenderer {
-  if (typeof value !== 'object' || value === null) {
+  if (!isNonNullObject(value)) {
     throw new Error('Module is not an object');
   }
 
