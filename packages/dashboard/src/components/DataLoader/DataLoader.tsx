@@ -7,8 +7,6 @@ import type { ReactNode } from 'react';
 
 import type { ApiQueryResult } from '@/hooks/useApiQuery';
 
-import styles from './DataLoader.module.scss';
-
 export interface DataLoaderProps<T> {
   className?: string;
   result: ApiQueryResult<T>;

@@ -1,4 +1,4 @@
-import type { RequestInitWithHeaders } from './utilTypes.js';
+import type { RequestInitWithHeaders } from './internal/utilTypes.js';
 
 export type RequestInitializer = (init: RequestInitWithHeaders) => void;
 

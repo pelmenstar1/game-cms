@@ -1,11 +1,11 @@
-import type { EntityConditionalData } from '@game-cms/conditional';
+import type { EntityData } from '@game-cms/types';
 import { classNames } from '@game-cms/ui';
 
 import styles from './EntityListItem.module.scss';
 
 export interface EntityListItemProps {
   className?: string;
-  value: EntityConditionalData & { _id: string };
+  value: EntityData & { _id: string };
 }
 
 export function EntityListItem({ className, value }: EntityListItemProps) {

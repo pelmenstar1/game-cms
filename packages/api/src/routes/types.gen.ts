@@ -1,88 +1,32 @@
-import type { ResolveRouteMetaArray } from '@game-cms/types';
-
-export type Meta = ResolveRouteMetaArray<
-  [
-    {
-      url: '/auth/permissions';
-      exported: typeof import('./auth/permissions/get.js');
-    },
-    { url: '/auth/token'; exported: typeof import('./auth/token/create.js') },
-    { url: '/auth/token'; exported: typeof import('./auth/token/delete.js') },
-    {
-      url: '/auth/token/jwt';
-      exported: typeof import('./auth/token/signin.js');
-    },
-    {
-      url: '/auth/user/signin';
-      exported: typeof import('./auth/user/signin.js');
-    },
-    {
-      url: '/_components/:id/assets/*';
-      exported: typeof import('./components/assets.js');
-    },
-    {
-      url: '/_components/:id/manifest.json';
-      exported: typeof import('./components/manifest.js');
-    },
-    {
-      url: '/entity/:entityId/byId/:id';
-      exported: typeof import('./entity/byId/delete.js');
-    },
-    {
-      url: '/entity/:entityId/byId/:id';
-      exported: typeof import('./entity/byId/get.js');
-    },
-    {
-      url: '/entity/:entityId/byId/:id';
-      exported: typeof import('./entity/byId/update.js');
-    },
-    { url: '/entity/:entityId'; exported: typeof import('./entity/create.js') },
-    {
-      url: '/entity/:entityId/list';
-      exported: typeof import('./entity/list.js');
-    },
-    {
-      url: '/entity/:entityid/raw/byId/:id';
-      exported: typeof import('./entity/raw/byId/get.js');
-    },
-    {
-      url: '/entitySchema/byId/:id';
-      exported: typeof import('./entitySchema/get.js');
-    },
-    {
-      url: '/entitySchema/list';
-      exported: typeof import('./entitySchema/list.js');
-    },
-    {
-      url: '/file/byId/:fileId';
-      exported: typeof import('./file/byId/delete.js');
-    },
-    {
-      url: '/file/byId/:fileId';
-      exported: typeof import('./file/byId/get.js');
-    },
-    { url: '/file/list'; exported: typeof import('./file/list/get.js') },
-    { url: '/file'; exported: typeof import('./file/upload.js') },
-    {
-      url: '/folder/byId/:folderId';
-      exported: typeof import('./folder/byId/delete.js');
-    },
-    {
-      url: '/folder/byId/:folderId';
-      exported: typeof import('./folder/byId/get.js');
-    },
-    {
-      url: '/folder/byId/:folderId';
-      exported: typeof import('./folder/byId/update.js');
-    },
-    { url: '/folder'; exported: typeof import('./folder/create.js') },
-    {
-      url: '/assets/_s/:scope/:name.js';
-      exported: typeof import('./sharedAssets/route.js');
-    },
-    { url: '/user/byId/:id'; exported: typeof import('./user/byId/delete.js') },
-    { url: '/users/byId/:id'; exported: typeof import('./user/byId/get.js') },
-    { url: '/user'; exported: typeof import('./user/create.js') },
-    { url: '/user/list'; exported: typeof import('./user/list.js') },
-  ]
->;
+declare module '@game-cms/types' {
+  interface ApiRouteMap {
+    'GET /auth/permissions': typeof import('./auth/permissions/get.js');
+    'POST /auth/token': typeof import('./auth/token/create.js');
+    'DELETE /auth/token': typeof import('./auth/token/delete.js');
+    'POST /auth/token/jwt': typeof import('./auth/token/signin.js');
+    'POST /auth/user/signin': typeof import('./auth/user/signin.js');
+    'GET /_components/:id/assets/*': typeof import('./components/assets.js');
+    'GET /_components/:id/manifest.json': typeof import('./components/manifest.js');
+    'DELETE /entity/:entityId/byId/:id': typeof import('./entity/byId/delete.js');
+    'GET /entity/:entityId/byId/:id': typeof import('./entity/byId/get.js');
+    'PUT /entity/:entityId/byId/:id': typeof import('./entity/byId/update.js');
+    'POST /entity/:entityId': typeof import('./entity/create.js');
+    'GET /entity/:entityId/list': typeof import('./entity/list.js');
+    'GET /entity/:entityid/raw/byId/:id': typeof import('./entity/raw/byId/get.js');
+    'GET /entitySchema/byId/:id': typeof import('./entitySchema/get.js');
+    'GET /entitySchema/list': typeof import('./entitySchema/list.js');
+    'DELETE /file/byId/:fileId': typeof import('./file/byId/delete.js');
+    'GET /file/byId/:fileId': typeof import('./file/byId/get.js');
+    'GET /file/list': typeof import('./file/list/get.js');
+    'POST /file': typeof import('./file/upload.js');
+    'DELETE /folder/byId/:folderId': typeof import('./folder/byId/delete.js');
+    'GET /folder/byId/:folderId': typeof import('./folder/byId/get.js');
+    'PUT /folder/byId/:folderId': typeof import('./folder/byId/update.js');
+    'POST /folder': typeof import('./folder/create.js');
+    'GET /assets/_s/:scope/:name.js': typeof import('./sharedAssets/route.js');
+    'DELETE /user/byId/:id': typeof import('./user/byId/delete.js');
+    'GET /users/byId/:id': typeof import('./user/byId/get.js');
+    'POST /user': typeof import('./user/create.js');
+    'GET /user/list': typeof import('./user/list.js');
+  }
+}

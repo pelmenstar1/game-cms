@@ -6,7 +6,7 @@
     "module": "nodenext",
     "target": "esnext",
     "moduleResolution": "nodenext",
-    "types": [],
+    "types": ["@game-cms/api/clientTypes"],
 
     "declaration": true,
     "noUncheckedIndexedAccess": true,

@@ -39,6 +39,10 @@
     "./types": {
       "import": "./dist/types.js",
       "types": "./dist/types.d.ts"
+    },
+    "./clientTypes": {
+      "import": "./dist/clientTypes.js",
+      "types": "./dist/clientTypes.d.ts"
     }
   }
 }
