@@ -53,9 +53,10 @@ export function service<const T extends Service>(value: T): T {
 }
 
 /*@__NO_SIDE_EFFECTS__*/
-export function entity<T extends Record<string, ComponentData>>(
-  value: ServerEntitySchema<T>
-): ServerEntitySchema<T> {
+export function entity<
+  T extends Record<string, ComponentData>,
+  Id extends string,
+>(value: ServerEntitySchema<T, Id>): ServerEntitySchema<T, Id> {
   return value;
 }
 

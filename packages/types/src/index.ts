@@ -11,5 +11,5 @@ export * from './paging.js';
 export * from './service.js';
 export * from './sharedAssets.js';
 export * from './storageProvider.js';
-export type { ResolveKeyValueArray } from './typeutil.js';
+export type { FromEntries } from './typeutil.js';
 export * from './user.js';

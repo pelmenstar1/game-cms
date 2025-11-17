@@ -12,14 +12,12 @@ export type DefaultExport<T = unknown> = { default: T };
 
 type IdArray = DefaultExport<{ id: PropertyKey }>[];
 
-type IdArrayToUnion<T extends IdArray> = {
+type IdArrayToEntries<T extends IdArray> = {
   [K in keyof T]: [T[K]['default']['id'], T[K]['default']];
 }[number];
 
-export type ResolveKeyValueArray<T extends [PropertyKey, unknown]> = {
+export type FromEntries<T extends [PropertyKey, unknown]> = {
   [K in T[0]]: Extract<T, [K, unknown]>[1];
 };
 
-export type IdArrayToMap<T extends IdArray> = ResolveKeyValueArray<
-  IdArrayToUnion<T>
->;
+export type IdArrayToMap<T extends IdArray> = FromEntries<IdArrayToEntries<T>>;
