@@ -3,7 +3,6 @@ import { service } from '@game-cms/shared-api';
 import type { ClientEntitySchema, ServerEntitySchema } from '@game-cms/types';
 
 function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
-  console.log(schema);
   const { components } = schema;
 
   return {
@@ -13,6 +12,7 @@ function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
         key,
         {
           ...value,
+          defaultData: value.controller.default.data(),
           controller: value.controller.id,
         },
       ])

@@ -7,6 +7,7 @@ export default function Layout() {
   return (
     <div className={styles.root}>
       <NavTabs
+        className={styles['nav-tabs']}
         items={[
           { href: '/', icon: <HomeIcon />, text: 'Home' },
           { href: '/entities', icon: <AppsIcon />, text: 'Entities' },

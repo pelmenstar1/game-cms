@@ -7,7 +7,12 @@ import { type ApiRedirectOptions, withApiErrorHandling } from '@/utils/api';
 
 import { useApiClient } from './useApiClient';
 
-export type ApiQueryResult<T> =
+export type SuccessApiQueryResult<T = unknown> = {
+  status: 'success';
+  value: T;
+};
+
+export type ApiQueryResult<T = unknown> =
   | {
       status: 'pending';
     }
@@ -15,10 +20,12 @@ export type ApiQueryResult<T> =
       status: 'error';
       error: unknown;
     }
-  | {
-      status: 'success';
-      value: T;
-    };
+  | SuccessApiQueryResult<T>;
+
+export type ApiQueryStatus = ApiQueryResult['status'];
+
+export type InferApiQueryResult<T> =
+  T extends SuccessApiQueryResult<infer R> ? R : never;
 
 type ApiQueryOptions = ApiRedirectOptions;
 type UseApiQueryResult<R> = [value: ApiQueryResult<R>, retry: () => void];

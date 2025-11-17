@@ -10,6 +10,8 @@ export default [
   layout('routes/tabLayout.tsx', [
     index('routes/home/route.tsx'),
     route('entities/:name?', 'routes/entities/route.tsx'),
+    route('entities/:name/+', 'routes/entities/+/route.tsx'),
+    route('entities/:name/edit/:id', 'routes/entities/edit/route.tsx'),
     route('settings', 'routes/settings/route.tsx'),
   ]),
 ] satisfies RouteConfig;

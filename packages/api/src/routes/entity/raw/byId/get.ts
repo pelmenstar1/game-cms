@@ -1,0 +1,27 @@
+import { objectId } from '@game-cms/shared/mongo';
+import { apiRoute } from '@game-cms/shared-api';
+import z from 'zod';
+
+import { authHandler } from '../../../../middlewares/auth.js';
+
+export default apiRoute({
+  url: '/entity/:entityid/raw/byId/:id',
+  method: 'GET',
+  config: {
+    id: 'entity$get',
+  },
+  schema: {
+    params: z.object({
+      entityId: z.string(),
+      id: objectId,
+    }),
+  },
+  preHandler: [authHandler()],
+  handler: async (req) => {
+    const { entityId, id } = req.params;
+
+    const result = await cms.service('base::entity').getRawById(entityId, id);
+
+    return result;
+  },
+});

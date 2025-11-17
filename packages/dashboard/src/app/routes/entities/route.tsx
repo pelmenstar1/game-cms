@@ -1,5 +1,5 @@
 import { getEntitySchemas } from '@game-cms/client';
-import { NavTabs } from '@game-cms/ui';
+import { LinkButton, NavTabs, PlusIcon } from '@game-cms/ui';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -43,7 +43,20 @@ export default function Home({ params }: Route.ComponentProps) {
         }
       />
 
-      {}
+      {selectedEntity && (
+        <div className={styles.content}>
+          <div className={styles.header}>
+            <LinkButton
+              className={styles['new-entity-button']}
+              to={`/entities/${selectedEntity}/+`}
+              buttonVariant="outlined"
+            >
+              <PlusIcon />
+              New entity
+            </LinkButton>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

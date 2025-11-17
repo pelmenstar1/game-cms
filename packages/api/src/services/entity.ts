@@ -18,6 +18,16 @@ function idFilter<T>(id: ObjectId) {
   return { _id: id } as Filter<T>;
 }
 
+async function getRawById<T extends EntityId>(entityId: T, id: ObjectId) {
+  const result = await collection(entityId).findOne(idFilter(id));
+
+  if (result === null) {
+    return null;
+  }
+
+  return result;
+}
+
 export default service({
   id: 'base::entity',
   create: async <T extends EntityId>(
@@ -45,12 +55,13 @@ export default service({
 
     return result;
   },
+  getRawById,
   getById: async <T extends EntityId>(
-    entityId: string,
+    entityId: T,
     id: ObjectId,
     input: ConditionalValueInput
   ) => {
-    const result = await collection(entityId).findOne(idFilter(id));
+    const result = await getRawById(entityId, id);
 
     if (result === null) {
       return null;

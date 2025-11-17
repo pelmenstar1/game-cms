@@ -1540,6 +1540,7 @@ __metadata:
     "@node-rs/argon2": "npm:2.0.2"
     "@types/node": "npm:24.10.0"
     "@types/qs": "npm:^6"
+    cookie: "npm:1.0.2"
     fastify-type-provider-zod: "npm:6.1.0"
     jose: "npm:6.1.0"
     mongodb: "npm:6.20.0"
@@ -4936,7 +4937,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:^1.0.1":
+"cookie@npm:1.0.2, cookie@npm:^1.0.1":
   version: 1.0.2
   resolution: "cookie@npm:1.0.2"
   checksum: 10c0/fd25fe79e8fbcfcaf6aa61cd081c55d144eeeba755206c058682257cb38c4bd6795c6620de3f064c740695bb65b7949ebb1db7a95e4636efb8357a335ad3f54b

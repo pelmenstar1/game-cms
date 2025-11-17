@@ -7,12 +7,23 @@ export enum ApiErrorCode {
 
 export class ApiError extends Error {
   code: ApiErrorCode | undefined;
+  httpCode: number | undefined;
   details: unknown;
 
-  constructor(message: string, code: ApiErrorCode, details?: unknown) {
+  constructor(
+    message: string,
+    codes: ApiErrorCode | { api?: ApiErrorCode; http?: number },
+    details?: unknown
+  ) {
     super(message);
 
-    this.code = code;
     this.details = details;
+
+    if (typeof codes === 'string') {
+      this.code = codes;
+    } else {
+      this.code = codes.api;
+      this.httpCode = codes.http;
+    }
   }
 }

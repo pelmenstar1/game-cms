@@ -1,9 +1,8 @@
 import { getComponentManifest } from '@game-cms/client';
 import type {
+  ComponentDataById,
   ComponentId,
-  GetComponentControllerById,
-  InferComponentData,
-  InferComponentOptions,
+  ComponentOptionsById,
 } from '@game-cms/types';
 import React, { Suspense, useMemo } from 'react';
 
@@ -11,16 +10,16 @@ import { useApiClient } from '@/hooks/useApiClient';
 import { useStylesheetInject } from '@/hooks/useStylesheetInject';
 import { getRendererFromModule } from '@/utils/component';
 
-export interface RemoteComponentProps<T extends ComponentId> {
+export type RemoteComponentProps<T extends ComponentId> = {
   componentId: T;
-  options: InferComponentOptions<GetComponentControllerById<T>>;
-  data: InferComponentData<GetComponentControllerById<T>>;
-}
+  options: ComponentOptionsById<T>;
+  data: ComponentDataById<T>;
+  onDataChanged?: (data: ComponentDataById<T>) => void;
+};
 
 export function RemoteComponent<T extends ComponentId>({
   componentId,
-  options,
-  data,
+  ...rest
 }: RemoteComponentProps<T>) {
   const { addStylesheet } = useStylesheetInject();
   const client = useApiClient();
@@ -49,7 +48,7 @@ export function RemoteComponent<T extends ComponentId>({
 
   return (
     <Suspense fallback={'Loading'}>
-      <Component options={options} data={data} />
+      <Component {...rest} />
     </Suspense>
   );
 }

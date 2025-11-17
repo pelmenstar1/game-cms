@@ -23,7 +23,7 @@ export function DataLoader<T>({
   children,
 }: DataLoaderProps<T>) {
   return (
-    <div className={classNames(styles.root, className)}>
+    <div className={classNames(className)}>
       {result.status === 'pending' ? (
         <IndeterminateCircularProgress />
       ) : result.status === 'error' ? (

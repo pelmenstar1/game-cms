@@ -1,3 +1,4 @@
+import type { RelativeTime } from '@game-cms/shared/chrono';
 import type { MongoClientOptions } from 'mongodb';
 
 import type { StorageProvider } from './storageProvider.js';
@@ -14,16 +15,15 @@ export type ServerConfig = {
   port: number;
 };
 
+export type ExpirationTimeType = 'user' | 'apiToken';
+
 export type AuthConfig = {
   jwtSignKey: string | Uint8Array | CryptoKey;
   admin: {
     email: string;
     password: string;
   };
-  expirationTimes?: {
-    user?: string | number;
-    apiToken: string | number;
-  };
+  expirationTimes?: Partial<Record<ExpirationTimeType, RelativeTime | number>>;
   apiToken?: {
     byteLength?: number;
   };

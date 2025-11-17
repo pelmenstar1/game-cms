@@ -1,17 +1,11 @@
-import type { SearchParams } from '@game-cms/shared';
 import type { HttpMethodWithBody } from '@game-cms/types';
 
 import type { Replace } from '../../shared/dist/typeutil.js';
 import type { RequestInitializer } from './requestInitializer.js';
 import type { ResponseParser } from './responseParser.js';
 
-export type ObjectRequestUrl<Path extends string = string> = {
-  path: Path;
-  search?: SearchParams;
-};
-
 interface BaseRequestOptions<Path extends string = string> extends RequestInit {
-  url: Path | ObjectRequestUrl<Path>;
+  url: Path;
 }
 
 interface BodyRequestOptions<Path extends string>

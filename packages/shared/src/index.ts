@@ -4,6 +4,7 @@ export * from './envAccessor.js';
 export * from './fastify.js';
 export * from './import.js';
 export * from './json.js';
+export * from './maybeArray.js';
 export * from './maybeFactory.js';
 export * from './paging.js';
 export * from './searchParams.js';

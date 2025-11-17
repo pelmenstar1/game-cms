@@ -21,14 +21,17 @@ export async function handleResponseError(response: Response) {
           const { code } = error;
 
           if (typeof code === 'string') {
-            throw new ApiError(message, code as ApiErrorCode);
+            throw new ApiError(message, {
+              api: code as ApiErrorCode,
+              http: response.status,
+            });
           }
         }
 
-        throw new Error(message);
+        throw new ApiError(message, { http: response.status });
       }
     }
   }
 
-  throw new Error(bodyString);
+  throw new ApiError(bodyString, { http: response.status });
 }

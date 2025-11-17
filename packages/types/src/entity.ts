@@ -1,7 +1,7 @@
-import {
-  type ClientComponentSchema,
-  type ComponentData,
-  type ServerComponentSchema,
+import type {
+  ClientComponentSchema,
+  ComponentData,
+  ServerComponentSchema,
 } from './component.js';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -31,5 +31,5 @@ export type ServerEntitySchema<T extends EntityData = EntityData> =
 export type ClientEntitySchema<T extends EntityData = EntityData> =
   BaseEntitySchema<{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [K in keyof T]: ClientComponentSchema<any>;
+    [K in keyof T]: ClientComponentSchema<any, T[K]>;
   }>;

@@ -32,8 +32,12 @@ export type ServerComponentSchema<
   Id extends string = string,
 > = BaseComponentSchema<Options, ComponentController<Options, Data, Id>>;
 
-export type ClientComponentSchema<Options extends ComponentOptions> =
-  BaseComponentSchema<Options, ComponentId>;
+export interface ClientComponentSchema<
+  Options extends ComponentOptions = ComponentOptions,
+  Data extends ComponentData = ComponentData,
+> extends BaseComponentSchema<Options, ComponentId> {
+  defaultData: Data;
+}
 
 export type ComponentProps<
   Options extends ComponentOptions = ComponentOptions,
@@ -41,6 +45,7 @@ export type ComponentProps<
 > = {
   data: Data;
   options: Options;
+  onDataChanged?: (data: Data) => void;
 };
 
 export type GetComponentControllerById<Id extends ComponentId> =
@@ -61,13 +66,24 @@ export type InferComponentOptions<Controller> =
 export type InferComponentData<Controller> =
   InferControllerParams<Controller>['data'];
 
+export type ComponentDataById<T extends ComponentId> = InferComponentData<
+  GetComponentControllerById<T>
+>;
+
+export type ComponentOptionsById<T extends ComponentId> = InferComponentOptions<
+  GetComponentControllerById<T>
+>;
+
 type ComponentPropsFromController<Controller> =
   Controller extends ComponentController<infer Options, infer Data>
     ? ComponentProps<Options, Data>
     : ComponentProps;
 
+export type ComponentPropsById<Id extends ComponentId = ComponentId> =
+  ComponentPropsFromController<GetComponentControllerById<Id>>;
+
 export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
-  ComponentPropsFromController<GetComponentControllerById<Id>>
+  ComponentPropsById<Id>
 >;
 
 export interface ComponentController<

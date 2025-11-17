@@ -1,3 +1,4 @@
+import type { MaybeArray } from '@game-cms/shared';
 import { ReactElement, useId, useState } from 'react';
 import React from 'react';
 
@@ -5,8 +6,6 @@ import { classNames } from '../../utils/classNames';
 import { Button } from '../Button';
 import { List } from '../List';
 import styles from './Tabs.module.scss';
-
-type MaybeArray<T> = T | T[];
 
 export type TabsProps<K extends string> = {
   className?: string;

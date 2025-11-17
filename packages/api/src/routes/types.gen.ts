@@ -42,6 +42,10 @@ export type Meta = ResolveRouteMetaArray<
       exported: typeof import('./entity/list.js');
     },
     {
+      url: '/entity/:entityid/raw/byId/:id';
+      exported: typeof import('./entity/raw/byId/get.js');
+    },
+    {
       url: '/entitySchema/byId/:id';
       exported: typeof import('./entitySchema/get.js');
     },

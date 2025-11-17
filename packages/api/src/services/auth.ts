@@ -1,8 +1,13 @@
 import { env } from '@game-cms/env';
+import {
+  parseRelativeTimeToTotalSeconds,
+  type RelativeTime,
+} from '@game-cms/shared/chrono';
 import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { service } from '@game-cms/shared-api';
 import {
   type ApiRouteId,
+  type ExpirationTimeType,
   type JwtPayload,
   jwtPayloadSchema,
   type SignInPayload,
@@ -12,10 +17,12 @@ import type { ObjectId } from 'mongodb';
 
 import { verifyPassword } from '../utils/password.js';
 
-const DEFAULT_USER_EXPIRATION_TIME = '7W';
-const DEFAULT_API_TOKEN_EXPIRATION_TIME = '2h';
-
 const SESSION_JWT_TOKEN_COOKIE_NAME = 'sjwt';
+
+const defaultExpirationTimes: Record<ExpirationTimeType, RelativeTime> = {
+  user: '7w',
+  apiToken: '2h',
+};
 
 function getJwtSignKey() {
   const key = env().config.auth.jwtSignKey;
@@ -48,6 +55,13 @@ function hasPermission(permissions: string[], id: string) {
   return permissions.includes('*') || permissions.includes(id);
 }
 
+function getExpirationTime(key: ExpirationTimeType) {
+  const raw =
+    env().config.auth.expirationTimes?.[key] ?? defaultExpirationTimes[key];
+
+  return typeof raw === 'string' ? parseRelativeTimeToTotalSeconds(raw) : raw;
+}
+
 export default service({
   id: 'base::auth',
   SESSION_JWT_TOKEN_COOKIE_NAME,
@@ -64,8 +78,7 @@ export default service({
       throw new ApiError('Invalid user or password', ApiErrorCode.UNAUTHORIZED);
     }
 
-    const expirationTime =
-      env().config.auth.expirationTimes?.user ?? DEFAULT_USER_EXPIRATION_TIME;
+    const expirationTime = getExpirationTime('user');
 
     const jwt = await createJwtToken(user, expirationTime);
 
@@ -83,9 +96,7 @@ export default service({
       throw new ApiError(`Token expired`, ApiErrorCode.UNAUTHORIZED);
     }
 
-    const jwtExpirationTime =
-      env().config.auth.expirationTimes?.user ??
-      DEFAULT_API_TOKEN_EXPIRATION_TIME;
+    const jwtExpirationTime = getExpirationTime('apiToken');
 
     const jwt = await createJwtToken(
       {

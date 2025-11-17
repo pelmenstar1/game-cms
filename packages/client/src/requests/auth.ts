@@ -11,34 +11,49 @@ import type {
 import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
+import type { RequestContext } from '../types.js';
 
-export const signUserIn = request((payload: SignInPayload) => ({
-  url: '/auth/user/signin',
-  method: 'POST',
-  body: jsonInit(payload),
-}));
+export const signUserIn = (context: RequestContext, payload: SignInPayload) =>
+  request(context, {
+    url: '/auth/user/signin',
+    method: 'POST',
+    body: jsonInit(payload),
+  });
 
-export const getApiTokenJwt = request((payload: SignTokenInPayload) => ({
-  url: `/auth/token/jwt`,
-  method: 'POST',
-  body: jsonInit(payload),
-  response: json<GetApiTokenJwtResponse>(),
-}));
+export const getApiTokenJwt = (
+  context: RequestContext,
+  payload: SignTokenInPayload
+) =>
+  request(context, {
+    url: `/auth/token/jwt`,
+    method: 'POST',
+    body: jsonInit(payload),
+    response: json<GetApiTokenJwtResponse>(),
+  });
 
-export const createApiToken = request((payload: CreateApiTokenPayload) => ({
-  url: '/auth/token',
-  method: 'POST',
-  body: jsonInit(payload),
-  response: json<CreateApiTokenResponse>(),
-}));
+export const createApiToken = (
+  context: RequestContext,
+  payload: CreateApiTokenPayload
+) =>
+  request(context, {
+    url: '/auth/token',
+    method: 'POST',
+    body: jsonInit(payload),
+    response: json<CreateApiTokenResponse>(),
+  });
 
-export const deleteApiToken = request((payload: DeleteApiTokenPayload) => ({
-  url: '/auth/token',
-  method: 'DELETE',
-  body: jsonInit(payload),
-}));
+export const deleteApiToken = (
+  context: RequestContext,
+  payload: DeleteApiTokenPayload
+) =>
+  request(context, {
+    url: '/auth/token',
+    method: 'DELETE',
+    body: jsonInit(payload),
+  });
 
-export const getPermissions = request(() => ({
-  url: '/auth/permissions',
-  response: json<GetPermissionsResponse>(),
-}));
+export const getPermissions = (context: RequestContext) =>
+  request(context, {
+    url: '/auth/permissions',
+    response: json<GetPermissionsResponse>(),
+  });

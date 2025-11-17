@@ -1,5 +1,6 @@
 import { apiRoute } from '@game-cms/shared-api';
 import { signInPayload } from '@game-cms/types';
+import cookie from 'cookie';
 
 export default apiRoute({
   url: '/auth/user/signin',
@@ -16,11 +17,13 @@ export default apiRoute({
 
     const cookieName = cms.service('base::auth').SESSION_JWT_TOKEN_COOKIE_NAME;
 
-    res
-      .status(200)
-      .header(
-        'set-cookie',
-        `${cookieName}=${jwt}; HttpOnly; Path=/api; Max-Age=${expirationTime}; SameSite=Strict`
-      );
+    const encodedCookie = cookie.serialize(cookieName, jwt, {
+      httpOnly: true,
+      path: '/api',
+      maxAge: expirationTime,
+      sameSite: 'strict',
+    });
+
+    res.status(200).header('set-cookie', encodedCookie);
   },
 });

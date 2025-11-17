@@ -1,10 +1,8 @@
 import type { RoutesMeta } from '@game-cms/api/types';
-import { formatSearchParams } from '@game-cms/shared';
+import { formatSearchParams, type SearchParams } from '@game-cms/shared';
 
 import type {
-  ObjectRequestUrl,
   RequestContext,
-  RequestFn,
   RequestOptions,
   RequestOptionsWithResult,
 } from '../types.js';
@@ -12,23 +10,25 @@ import type {
 type BaseApiRoute = RoutesMeta[number];
 type ApiRoutePath = BaseApiRoute['path'];
 
-function constructRelativeUrl(url: string | ObjectRequestUrl): string {
-  if (typeof url === 'string') {
-    return url;
-  }
+type ObjectRequestUrl = {
+  path: ApiRoutePath;
+  search?: string | SearchParams;
+};
 
-  const { path, search = {} } = url;
-  const searchString = formatSearchParams(search);
+export function url(info: ObjectRequestUrl) {
+  const { path, search = '' } = info;
+  const searchString =
+    typeof search === 'string' ? search : formatSearchParams(search);
 
   let result = path;
   if (searchString) {
     result += `?${searchString}`;
   }
 
-  return result;
+  return result as ApiRoutePath;
 }
 
-function concatUrls(url: string, base: string | URL) {
+export function createFullUrl(url: string, base: string | URL) {
   if (typeof base === 'string' && base.startsWith('/')) {
     if (url.startsWith('/') && base.endsWith('/')) {
       return `${base.slice(0, -1)}${url}`;
@@ -44,33 +44,24 @@ function concatUrls(url: string, base: string | URL) {
   return new URL(url, base);
 }
 
-export function createFullUrl(
-  url: string | ObjectRequestUrl,
-  base: string | URL
+export function request<R>(
+  context: RequestContext,
+  options: RequestOptionsWithResult<R, ApiRoutePath>
+): Promise<R>;
+
+export function request(
+  context: RequestContext,
+  options: RequestOptions<ApiRoutePath>
+): Promise<Response>;
+
+export function request<R>(
+  context: RequestContext,
+  options: RequestOptions | RequestOptionsWithResult<R>
 ) {
-  const stringUrl = constructRelativeUrl(url);
+  const signal = context.abortController?.signal;
+  if (signal) {
+    options.signal = signal;
+  }
 
-  return concatUrls(stringUrl, base);
-}
-
-export function request<Args extends unknown[], R>(
-  factory: (...args: Args) => RequestOptionsWithResult<R, ApiRoutePath>
-): RequestFn<Args, R>;
-
-export function request<Args extends unknown[]>(
-  factory: (...args: Args) => RequestOptions<ApiRoutePath>
-): RequestFn<Args, Response>;
-
-export function request<Args extends unknown[], R>(
-  factory: (...args: Args) => RequestOptions | RequestOptionsWithResult<R>
-) {
-  return (context: RequestContext, ...args: Args) => {
-    const signal = context.abortController?.signal;
-    const init = factory(...args);
-    if (signal) {
-      init.signal = signal;
-    }
-
-    return context.client.makeRequest(init);
-  };
+  return context.client.makeRequest(options);
 }

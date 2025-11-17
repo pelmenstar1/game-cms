@@ -8,3 +8,25 @@
     padding: 0 2em;
   }
 }
+
+.header {
+
+}
+
+.content {
+  flex-grow: 1;
+  padding: 1em;
+}
+
+.new-entity-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  width: fit-content;
+  margin-left: auto;
+
+  svg {
+    fill: var(--color-primary);
+  }
+}

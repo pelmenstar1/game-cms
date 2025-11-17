@@ -39,7 +39,7 @@ function getGenericErrorResponse(error: unknown) {
     return {
       status: 400,
       body: {
-        message: message,
+        message,
         code: ApiErrorCode.VALIDATION_ISSUE,
         details: validation,
       },
@@ -57,10 +57,8 @@ function resolveResponseAndStatus(error: unknown) {
 
 export function errorHandler() {
   return (error: Error, _req: FastifyRequest, res: FastifyReply) => {
-    console.error(error);
-
     const { status, body } = resolveResponseAndStatus(error);
 
-    res.status(status).send(body);
+    res.status(status).send({ error: body });
   };
 }
