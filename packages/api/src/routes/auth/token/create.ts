@@ -1,8 +1,6 @@
 import { apiRoute } from '@game-cms/shared-api';
 import { createApiTokenPayload, createApiTokenResponse } from '@game-cms/types';
 
-import { authHandler } from '../../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/auth/token',
   method: 'POST',
@@ -13,7 +11,6 @@ export default apiRoute({
     body: createApiTokenPayload,
     response: { 200: createApiTokenResponse },
   },
-  preHandler: [authHandler()],
   handler: async (req) => {
     const payload = req.body;
 

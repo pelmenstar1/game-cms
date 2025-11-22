@@ -2,7 +2,6 @@ import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
 import { apiRoute } from '@game-cms/shared-api';
 import z from 'zod';
 
-import { authHandler } from '../../middlewares/auth.js';
 import { getEntityValidationType } from '../../utils/entity.js';
 import { entityRouteId } from '../../utils/routeId.js';
 
@@ -17,7 +16,6 @@ export default apiRoute({
       entityId: z.string(),
     }),
   },
-  preHandler: [authHandler()],
   handler: async (req, res) => {
     const schema = getEntityValidationType(req.params.entityId);
     const body = schema.safeParse(req.body);

@@ -4,8 +4,6 @@ import { ApiError, ApiErrorCode, apiValidateValue } from '@game-cms/shared-api';
 import { apiRoute } from '@game-cms/shared-api';
 import { uploadFileMeta, uploadFileResponse } from '@game-cms/types';
 
-import { authHandler } from '../../middlewares/auth.js';
-
 function getInfo(data: MultipartFile) {
   const infoField = data.fields.info;
   if (infoField === undefined) {
@@ -45,7 +43,6 @@ export default apiRoute({
       200: uploadFileResponse,
     },
   },
-  preHandler: [authHandler()],
   handler: async (req) => {
     const data = await req.file();
     if (data === undefined) {

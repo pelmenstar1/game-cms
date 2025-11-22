@@ -1,8 +1,6 @@
 import { apiRoute } from '@game-cms/shared-api';
 import { createUserPayload } from '@game-cms/types';
 
-import { authHandler } from '../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/user',
   method: 'POST',
@@ -12,7 +10,6 @@ export default apiRoute({
   config: {
     id: 'user$create',
   },
-  preHandler: [authHandler()],
   handler: async (req, res) => {
     const payload = req.body;
 

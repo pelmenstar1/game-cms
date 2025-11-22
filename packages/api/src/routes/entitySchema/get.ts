@@ -1,8 +1,6 @@
 import { apiRoute } from '@game-cms/shared-api';
 import z from 'zod';
 
-import { authHandler } from '../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/entitySchema/byId/:id',
   method: 'GET',
@@ -14,7 +12,6 @@ export default apiRoute({
       id: z.string(),
     }),
   },
-  preHandler: [authHandler()],
   handler: (req, res) => {
     const { id } = req.params;
     const result = cms.service('base::entitySchema').getClientById(id);

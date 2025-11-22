@@ -2,7 +2,6 @@ import { apiRoute } from '@game-cms/shared-api';
 import { pagingOptionsSchema } from '@game-cms/types';
 import z from 'zod';
 
-import { authHandler } from '../../middlewares/auth.js';
 import { entityRouteId } from '../../utils/routeId.js';
 
 export default apiRoute({
@@ -17,7 +16,6 @@ export default apiRoute({
     }),
     querystring: pagingOptionsSchema,
   },
-  preHandler: [authHandler()],
   handler: async (req) => {
     const { entityId } = req.params;
     const options = req.query;

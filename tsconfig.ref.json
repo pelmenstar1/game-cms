@@ -17,7 +17,8 @@
     { "path": "./packages/client" },
     { "path": "./packages/shared-api" },
     { "path": "./packages/codegen" },
-    { "path": "./packages/react" }
+    { "path": "./packages/react" },
+    { "path": "./packages/api-testing" }
   ],
   "include": []
 }

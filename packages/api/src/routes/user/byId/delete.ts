@@ -2,8 +2,6 @@ import { objectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/shared-api';
 import z from 'zod';
 
-import { authHandler } from '../../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/user/byId/:id',
   method: 'DELETE',
@@ -15,7 +13,6 @@ export default apiRoute({
       id: objectId,
     }),
   },
-  preHandler: [authHandler()],
   handler: async (req, res) => {
     const { id } = req.params;
 

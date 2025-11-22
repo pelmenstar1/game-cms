@@ -5,12 +5,12 @@
 
     "module": "nodenext",
     "target": "esnext",
-    "types": ["node", "@game-cms/shared/types"],
+    "moduleResolution": "nodenext",
 
     "declaration": true,
+    "noUncheckedIndexedAccess": true,
 
     "strict": true,
-    "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
@@ -19,14 +19,5 @@
     "composite": true
   },
   "include": ["./src"],
-  "references": [
-    { "path": "../build" },
-    { "path": "../codegen" },
-    { "path": "../conditional" },
-    { "path": "../env" },
-    { "path": "../shared" },
-    { "path": "../shared-api" },
-    { "path": "../types" },
-    { "path": "../api-testing" }
-  ]
+  "references": [{ "path": "../shared" }, { "path": "../types" }]
 }

@@ -3,8 +3,6 @@ import { apiRoute } from '@game-cms/shared-api';
 import { deleteFolderOptions } from '@game-cms/types';
 import z from 'zod';
 
-import { authHandler } from '../../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/folder/byId/:folderId',
   method: 'DELETE',
@@ -17,7 +15,6 @@ export default apiRoute({
       folderId: objectId,
     }),
   },
-  preHandler: [authHandler()],
   handler: async (req) => {
     const { folderId } = req.params;
 

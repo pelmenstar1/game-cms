@@ -1,8 +1,6 @@
 import { apiRoute } from '@game-cms/shared-api';
 import { listFilesOptions, listFilesResponse } from '@game-cms/types';
 
-import { authHandler } from '../../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/file/list',
   method: 'GET',
@@ -15,7 +13,6 @@ export default apiRoute({
       200: listFilesResponse,
     },
   },
-  preHandler: [authHandler()],
   handler: async (req) => {
     const options = req.query;
 

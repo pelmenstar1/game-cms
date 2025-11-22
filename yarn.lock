@@ -1525,11 +1525,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@game-cms/api-testing@workspace:*, @game-cms/api-testing@workspace:packages/api-testing":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/api-testing@workspace:packages/api-testing"
+  dependencies:
+    "@game-cms/shared": "workspace:*"
+    "@game-cms/types": "workspace:*"
+    typescript: "npm:5.9.3"
+    vitest: "npm:3.2.4"
+  peerDependencies:
+    fastify: "*"
+  languageName: unknown
+  linkType: soft
+
 "@game-cms/api@workspace:*, @game-cms/api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@game-cms/api@workspace:packages/api"
   dependencies:
     "@fastify/multipart": "npm:9.3.0"
+    "@game-cms/api-testing": "workspace:*"
     "@game-cms/build": "workspace:*"
     "@game-cms/codegen": "workspace:*"
     "@game-cms/conditional": "workspace:*"

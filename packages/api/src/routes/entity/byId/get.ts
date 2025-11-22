@@ -4,7 +4,6 @@ import { apiRoute } from '@game-cms/shared-api';
 import qs from 'qs';
 import z from 'zod';
 
-import { authHandler } from '../../../middlewares/auth.js';
 import { entityRouteId } from '../../../utils/routeId.js';
 
 export default apiRoute({
@@ -19,7 +18,6 @@ export default apiRoute({
       id: objectId,
     }),
   },
-  preHandler: [authHandler()],
   handler: async (req) => {
     const { entityId, id } = req.params;
 

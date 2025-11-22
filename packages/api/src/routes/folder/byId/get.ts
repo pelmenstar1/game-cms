@@ -3,8 +3,6 @@ import { apiRoute } from '@game-cms/shared-api';
 import { getFolderResponse } from '@game-cms/types';
 import z from 'zod';
 
-import { authHandler } from '../../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/folder/byId/:folderId',
   method: 'GET',
@@ -19,7 +17,6 @@ export default apiRoute({
       200: getFolderResponse,
     },
   },
-  preHandler: [authHandler()],
   handler: async (req, res) => {
     const { folderId } = req.params;
 

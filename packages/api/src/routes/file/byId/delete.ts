@@ -3,8 +3,6 @@ import { apiRoute } from '@game-cms/shared-api';
 import { deleteFileOptions } from '@game-cms/types';
 import z from 'zod';
 
-import { authHandler } from '../../../middlewares/auth.js';
-
 export default apiRoute({
   url: '/file/byId/:fileId',
   method: 'DELETE',
@@ -17,7 +15,6 @@ export default apiRoute({
     }),
     querystring: deleteFileOptions,
   },
-  preHandler: [authHandler()],
   handler: async (req) => {
     const { fileId } = req.params;
     const options = req.query;

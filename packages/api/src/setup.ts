@@ -10,6 +10,7 @@ import {
 } from 'fastify-type-provider-zod';
 
 import { createController } from './controller.js';
+import { auth } from './plugins/auth.js';
 import { errorHandler } from './utils/errorHandler.js';
 
 function setCms(value: GameCmsController) {
@@ -30,9 +31,10 @@ export async function setupApi(app: FastifyInstance) {
   setCms(createController(services));
 
   app.register(multipart);
+  app.register(auth);
+
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-
   app.setErrorHandler(errorHandler());
 
   await setupServices(app, services);

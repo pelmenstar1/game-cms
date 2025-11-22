@@ -1,8 +1,6 @@
 import { apiRoute } from '@game-cms/shared-api';
 import { deleteApiTokenPayload } from '@game-cms/types';
 
-import { authHandler } from '../../../middlewares/auth.js';
-
 export default apiRoute({
   url: `/auth/token`,
   method: 'DELETE',
@@ -12,7 +10,6 @@ export default apiRoute({
   schema: {
     body: deleteApiTokenPayload,
   },
-  preHandler: [authHandler()],
   handler: async (req, res) => {
     const { token } = req.body;
 
