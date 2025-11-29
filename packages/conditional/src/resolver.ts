@@ -1,4 +1,4 @@
-import type { EntityData } from '@game-cms/types';
+import type { EntityData } from '@game-cms/base-types';
 
 import { evaluateConditionalExpression } from './eval.js';
 import type {

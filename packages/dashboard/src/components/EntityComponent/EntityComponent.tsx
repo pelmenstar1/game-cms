@@ -1,4 +1,4 @@
-import type { EntityId } from '@game-cms/types';
+import type { EntityId } from '@game-cms/base-types';
 import { classNames, Labeled } from '@game-cms/ui';
 
 import { RemoteComponent, type RemoteComponentProps } from '../RemoteComponent';

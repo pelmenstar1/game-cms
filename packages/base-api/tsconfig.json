@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "module": "nodenext",
+    "target": "esnext",
+    "types": ["node", "@game-cms/shared/types", "@game-cms/base-types"],
+
+    "declaration": true,
+
+    "strict": true,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true,
+    "composite": true
+  },
+  "include": ["./src", "../game-cms/src/commands/start/controller.ts"],
+  "references": [
+    { "path": "../build" },
+    { "path": "../codegen" },
+    { "path": "../conditional" },
+    { "path": "../env" },
+    { "path": "../shared" },
+    { "path": "../utils" },
+    { "path": "../types" },
+    { "path": "../api-testing" }
+  ]
+}

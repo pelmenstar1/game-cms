@@ -1,4 +1,4 @@
-import type { ClientEntitySchema, EntityData } from '@game-cms/types';
+import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
 import {
   Button,
   classNames,

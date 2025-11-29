@@ -1,20 +1,21 @@
 import type {
   ApiRoute,
-  CmsConfig,
   ComponentStaticConfigMap,
-  ServerEntitySchema,
+  ResolvedCmsConfig,
   Service,
   SharedAssetsConfig,
 } from '@game-cms/types';
 
-export type CmsEnvironment = {
-  config: CmsConfig;
+export type BaseCmsEnvironment = {
+  config: ResolvedCmsConfig;
   components: ComponentStaticConfigMap;
   apiRoutes: ApiRoute[];
   services: Service[];
-  entitySchemas: ServerEntitySchema[];
   sharedAssets: SharedAssetsConfig;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface CmsEnvironment extends BaseCmsEnvironment {}
 
 let _env: CmsEnvironment | undefined;
 

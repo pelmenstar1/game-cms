@@ -1,18 +1,7 @@
-import fsp from 'node:fs/promises';
-import path from 'node:path';
-
-import {
-  importFile,
-  isNonNullObject,
-  type MaybePromise,
-} from '@game-cms/shared';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
-import {
-  type ApiRoute,
-  type ComponentController,
-  type Service,
-} from '@game-cms/types';
-import { ZodType } from 'zod';
+import { importFile, isNonNullObject } from '@game-cms/shared';
+import { scanDirectory } from '@game-cms/shared/io';
+import type { ApiRoute, ComponentController, Service } from '@game-cms/types';
+import type { ZodType } from 'zod';
 
 import {
   componentSchema,
@@ -39,35 +28,6 @@ async function maybeImportWithSchema<T>(
     }
   } catch (error: unknown) {
     console.error(`Failed to import ${filePath} because of ${error}`);
-  }
-}
-
-export async function scanDirectory<T>(
-  directoryPath: string,
-  handler: (filePath: string) => MaybePromise<T | undefined>
-): Promise<T[]> {
-  try {
-    const entries = await fsp.readdir(directoryPath, { withFileTypes: true });
-
-    const result = (await Promise.all(
-      entries.map(async (entry) => {
-        const entryPath = path.join(directoryPath, entry.name);
-
-        if (entry.isDirectory()) {
-          return scanDirectory(entryPath, handler);
-        } else if (entry.isFile()) {
-          return handler(entryPath);
-        }
-      })
-    )) as (T | undefined)[][];
-
-    return result.flat().filter((value) => value !== undefined);
-  } catch (error: unknown) {
-    if (isFileNotFoundError(error)) {
-      return [];
-    }
-
-    throw error;
   }
 }
 

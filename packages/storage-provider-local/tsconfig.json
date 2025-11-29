@@ -22,8 +22,8 @@
   },
   "include": ["./src"],
   "references": [
-    { "path": "../types" },
+    { "path": "../base-types" },
     { "path": "../shared" },
-    { "path": "../shared-api" }
+    { "path": "../utils" }
   ]
 }

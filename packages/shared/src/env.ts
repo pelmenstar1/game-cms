@@ -4,7 +4,7 @@ import util from 'node:util';
 
 import { isFileNotFoundError } from './errors/index.js';
 
-export async function loadEnvIfExists() {
+export async function loadEnvFileIfExists() {
   try {
     const content = await fsp.readFile('./.env', 'utf8');
 

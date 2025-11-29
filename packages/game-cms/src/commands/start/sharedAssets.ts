@@ -4,12 +4,11 @@ import { fileURLToPath } from 'node:url';
 import type { SharedAssetDerivativeMap } from '@game-cms/build';
 import { mergeObjects } from '@game-cms/shared/object';
 import { removeExtension } from '@game-cms/shared/string';
-import type { SharedAssetsConfig } from '@game-cms/types';
-
 import {
   getViteManifest,
   traceEntryPointJsDependencies,
-} from '../../utils/viteManifest.js';
+} from '@game-cms/shared/vite';
+import type { SharedAssetsConfig } from '@game-cms/types';
 
 type PackageWithBundle = { name: string; bundle: string };
 

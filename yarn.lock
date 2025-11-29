@@ -1538,9 +1538,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@game-cms/api@workspace:*, @game-cms/api@workspace:packages/api":
+"@game-cms/base-api@workspace:*, @game-cms/base-api@workspace:packages/base-api":
   version: 0.0.0-use.local
-  resolution: "@game-cms/api@workspace:packages/api"
+  resolution: "@game-cms/base-api@workspace:packages/base-api"
   dependencies:
     "@fastify/multipart": "npm:9.3.0"
     "@game-cms/api-testing": "workspace:*"
@@ -1549,15 +1549,15 @@ __metadata:
     "@game-cms/conditional": "workspace:*"
     "@game-cms/env": "workspace:*"
     "@game-cms/shared": "workspace:*"
-    "@game-cms/shared-api": "workspace:*"
     "@game-cms/types": "workspace:*"
+    "@game-cms/utils": "workspace:*"
     "@node-rs/argon2": "npm:2.0.2"
     "@types/node": "npm:24.10.0"
     "@types/qs": "npm:^6"
     cookie: "npm:1.0.2"
     fastify-type-provider-zod: "npm:6.1.0"
     jose: "npm:6.1.0"
-    mongodb: "npm:6.20.0"
+    mongodb: "npm:7.0.0"
     qs: "npm:6.14.0"
     tsx: "npm:4.20.6"
     typescript: "npm:5.9.3"
@@ -1567,42 +1567,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@game-cms/build@workspace:*, @game-cms/build@workspace:packages/build":
+"@game-cms/base-components@workspace:*, @game-cms/base-components@workspace:packages/base-components":
   version: 0.0.0-use.local
-  resolution: "@game-cms/build@workspace:packages/build"
-  dependencies:
-    "@types/node": "npm:24.10.0"
-    typescript: "npm:5.9.3"
-  languageName: unknown
-  linkType: soft
-
-"@game-cms/client@workspace:*, @game-cms/client@workspace:packages/client":
-  version: 0.0.0-use.local
-  resolution: "@game-cms/client@workspace:packages/client"
-  dependencies:
-    "@game-cms/api": "workspace:*"
-    "@game-cms/conditional": "workspace:*"
-    "@game-cms/shared": "workspace:*"
-    "@game-cms/shared-api": "workspace:*"
-    "@game-cms/types": "workspace:*"
-    typescript: "npm:5.9.3"
-  languageName: unknown
-  linkType: soft
-
-"@game-cms/codegen@workspace:*, @game-cms/codegen@workspace:packages/codegen":
-  version: 0.0.0-use.local
-  resolution: "@game-cms/codegen@workspace:packages/codegen"
-  dependencies:
-    "@game-cms/shared": "workspace:*"
-    "@game-cms/types": "workspace:*"
-    "@types/node": "npm:24.10.0"
-    typescript: "npm:5.9.3"
-  languageName: unknown
-  linkType: soft
-
-"@game-cms/components@workspace:*, @game-cms/components@workspace:packages/components":
-  version: 0.0.0-use.local
-  resolution: "@game-cms/components@workspace:packages/components"
+  resolution: "@game-cms/base-components@workspace:packages/base-components"
   dependencies:
     "@game-cms/build": "workspace:*"
     "@game-cms/types": "workspace:*"
@@ -1622,10 +1589,78 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@game-cms/base-plugin@workspace:*, @game-cms/base-plugin@workspace:packages/base-plugin":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/base-plugin@workspace:packages/base-plugin"
+  dependencies:
+    "@game-cms/base-api": "workspace:*"
+    "@game-cms/base-components": "workspace:*"
+    "@game-cms/base-types": "workspace:*"
+    "@game-cms/shared": "workspace:*"
+    "@game-cms/types": "workspace:*"
+    mongodb: "npm:7.0.0"
+    typescript: "npm:5.9.3"
+  languageName: unknown
+  linkType: soft
+
+"@game-cms/base-types@workspace:*, @game-cms/base-types@workspace:packages/base-types":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/base-types@workspace:packages/base-types"
+  dependencies:
+    "@game-cms/env": "workspace:*"
+    "@game-cms/types": "workspace:*"
+    zod: "npm:4.1.12"
+  languageName: unknown
+  linkType: soft
+
+"@game-cms/base-utils@workspace:packages/base-utils":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/base-utils@workspace:packages/base-utils"
+  dependencies:
+    "@game-cms/base-types": "workspace:*"
+    "@game-cms/types": "workspace:*"
+    typescript: "npm:5.9.3"
+  languageName: unknown
+  linkType: soft
+
+"@game-cms/build@workspace:*, @game-cms/build@workspace:packages/build":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/build@workspace:packages/build"
+  dependencies:
+    "@types/node": "npm:24.10.0"
+    typescript: "npm:5.9.3"
+  languageName: unknown
+  linkType: soft
+
+"@game-cms/client@workspace:*, @game-cms/client@workspace:packages/client":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/client@workspace:packages/client"
+  dependencies:
+    "@game-cms/base-api": "workspace:*"
+    "@game-cms/conditional": "workspace:*"
+    "@game-cms/shared": "workspace:*"
+    "@game-cms/types": "workspace:*"
+    "@game-cms/utils": "workspace:*"
+    typescript: "npm:5.9.3"
+  languageName: unknown
+  linkType: soft
+
+"@game-cms/codegen@workspace:*, @game-cms/codegen@workspace:packages/codegen":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/codegen@workspace:packages/codegen"
+  dependencies:
+    "@game-cms/shared": "workspace:*"
+    "@game-cms/types": "workspace:*"
+    "@types/node": "npm:24.10.0"
+    typescript: "npm:5.9.3"
+  languageName: unknown
+  linkType: soft
+
 "@game-cms/conditional@workspace:*, @game-cms/conditional@workspace:packages/conditional":
   version: 0.0.0-use.local
   resolution: "@game-cms/conditional@workspace:packages/conditional"
   dependencies:
+    "@game-cms/base-types": "workspace:*"
     "@game-cms/types": "workspace:*"
     typescript: "npm:5.9.3"
   languageName: unknown
@@ -1718,15 +1753,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@game-cms/shared-api@workspace:*, @game-cms/shared-api@workspace:packages/shared-api":
-  version: 0.0.0-use.local
-  resolution: "@game-cms/shared-api@workspace:packages/shared-api"
-  dependencies:
-    typescript: "npm:5.9.3"
-    zod: "npm:4.1.12"
-  languageName: unknown
-  linkType: soft
-
 "@game-cms/shared@workspace:*, @game-cms/shared@workspace:packages/shared":
   version: 0.0.0-use.local
   resolution: "@game-cms/shared@workspace:packages/shared"
@@ -1744,9 +1770,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@game-cms/storage-provider-local@workspace:packages/storage-provider-local"
   dependencies:
+    "@game-cms/base-types": "workspace:*"
     "@game-cms/shared": "workspace:*"
-    "@game-cms/shared-api": "workspace:*"
-    "@game-cms/types": "workspace:*"
+    "@game-cms/utils": "workspace:*"
     "@types/node": "npm:24.10.0"
     typescript: "npm:5.9.3"
     zod: "npm:4.1.12"
@@ -1758,8 +1784,8 @@ __metadata:
   resolution: "@game-cms/storage-provider-s3@workspace:packages/storage-provider-s3"
   dependencies:
     "@aws-sdk/client-s3": "npm:^3.0.0"
+    "@game-cms/base-types": "workspace:*"
     "@game-cms/shared": "workspace:*"
-    "@game-cms/types": "workspace:*"
     "@types/mime-types": "npm:^3"
     "@types/node": "npm:24.10.0"
     mime-types: "npm:^3.0.0"
@@ -1809,6 +1835,16 @@ __metadata:
     tsx: "npm:4.20.6"
     typescript: "npm:5.9.3"
     vite: "npm:7.1.9"
+  languageName: unknown
+  linkType: soft
+
+"@game-cms/utils@workspace:*, @game-cms/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@game-cms/utils@workspace:packages/utils"
+  dependencies:
+    "@game-cms/shared": "workspace:*"
+    typescript: "npm:5.9.3"
+    zod: "npm:4.1.12"
   languageName: unknown
   linkType: soft
 
@@ -3821,12 +3857,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/whatwg-url@npm:^11.0.2":
-  version: 11.0.5
-  resolution: "@types/whatwg-url@npm:11.0.5"
+"@types/whatwg-url@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "@types/whatwg-url@npm:13.0.0"
   dependencies:
     "@types/webidl-conversions": "npm:*"
-  checksum: 10c0/7a9b9252dee98df6db1ad62337daca7f59ae50d7a3406d14ac6b57168d406004359994f3371155e24f3cf12002c4cb8bbb0883bd4cefb9d7ee8e2b510bdd7f5e
+  checksum: 10c0/b7b53ae7b5290a0c26e2a5c6a2353af925fe9fc7ab0bbf642e8b76f65b39f638b471dadfda8da441aed3ca32cafd33b1a03459117c9ec85fd91b1e6c0e93044e
   languageName: node
   linkType: hard
 
@@ -4669,10 +4705,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:^6.10.4":
-  version: 6.10.4
-  resolution: "bson@npm:6.10.4"
-  checksum: 10c0/6c6819ce642516901349f42c5d9d131d5a4e84352a3859c814d4abf6b2b9249e3685b57fc4cf7b5737fb5c71252f65900a41826c1429815a93e43f0f5bb3c173
+"bson@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "bson@npm:7.0.0"
+  checksum: 10c0/6b12fb0411f4e6f4473da878c0aa615f03439040a349f4115beae336e3922265b25d833c6cc93fcb299017904b32e4ef86e284996f1103addc5918c576b57d9d
   languageName: node
   linkType: hard
 
@@ -6385,15 +6421,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "game-cms@workspace:packages/game-cms"
   dependencies:
+    "@fastify/multipart": "npm:9.3.0"
     "@fastify/static": "npm:8.3.0"
-    "@game-cms/api": "workspace:*"
-    "@game-cms/components": "workspace:*"
+    "@game-cms/base-plugin": "workspace:*"
     "@game-cms/dashboard": "workspace:*"
     "@game-cms/env": "workspace:*"
     "@game-cms/react": "workspace:*"
     "@game-cms/shared": "workspace:*"
-    "@game-cms/shared-api": "workspace:*"
     "@game-cms/types": "workspace:*"
+    "@game-cms/utils": "workspace:*"
     "@types/http-proxy": "npm:^1"
     "@types/node": "npm:24.10.0"
     commander: "npm:14.0.1"
@@ -7888,31 +7924,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb-connection-string-url@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "mongodb-connection-string-url@npm:3.0.2"
+"mongodb-connection-string-url@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "mongodb-connection-string-url@npm:7.0.0"
   dependencies:
-    "@types/whatwg-url": "npm:^11.0.2"
-    whatwg-url: "npm:^14.1.0 || ^13.0.0"
-  checksum: 10c0/8b7ac99634f167dbe690e90fa10528e3ffc029faf2feabf36efb84299a04831130b3dba114dbe132f05a8a38022976904b625976996a4534bca4368e8fa5ba33
+    "@types/whatwg-url": "npm:^13.0.0"
+    whatwg-url: "npm:^14.1.0"
+  checksum: 10c0/33fe304a0f8e59bf541b2ddef073ddb2ae66d6cb3175c6297c8f844004b1608573e2e61892aa8486f8273634c9cb8a90202d21c289aa1b1f8b8e5cd92711be09
   languageName: node
   linkType: hard
 
-"mongodb@npm:6.20.0":
-  version: 6.20.0
-  resolution: "mongodb@npm:6.20.0"
+"mongodb@npm:7.0.0":
+  version: 7.0.0
+  resolution: "mongodb@npm:7.0.0"
   dependencies:
     "@mongodb-js/saslprep": "npm:^1.3.0"
-    bson: "npm:^6.10.4"
-    mongodb-connection-string-url: "npm:^3.0.2"
+    bson: "npm:^7.0.0"
+    mongodb-connection-string-url: "npm:^7.0.0"
   peerDependencies:
-    "@aws-sdk/credential-providers": ^3.188.0
-    "@mongodb-js/zstd": ^1.1.0 || ^2.0.0
-    gcp-metadata: ^5.2.0
-    kerberos: ^2.0.1
-    mongodb-client-encryption: ">=6.0.0 <7"
+    "@aws-sdk/credential-providers": ^3.806.0
+    "@mongodb-js/zstd": ^7.0.0
+    gcp-metadata: ^7.0.1
+    kerberos: ^7.0.0
+    mongodb-client-encryption: ">=7.0.0 <7.1.0"
     snappy: ^7.3.2
-    socks: ^2.7.1
+    socks: ^2.8.6
   peerDependenciesMeta:
     "@aws-sdk/credential-providers":
       optional: true
@@ -7928,7 +7964,7 @@ __metadata:
       optional: true
     socks:
       optional: true
-  checksum: 10c0/a42d5a04cd2dc195c80293cdc2deb8efd1887559f3a37ffa42bade0d7709a980b6655bf38dd3e774dd68ad063a2c0c577fca9d5bcae1cafa2582083cf39e1e6c
+  checksum: 10c0/425258188fd6d0d73c58ce2f16177d53d4280804b52de0e6dfd4ce0bec2c2965625c1765111f800ce8e6f2a28187657e8f42bf7dd6cc9675844e619b0dec18b9
   languageName: node
   linkType: hard
 
@@ -10958,7 +10994,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatwg-url@npm:^14.1.0 || ^13.0.0":
+"whatwg-url@npm:^14.1.0":
   version: 14.2.0
   resolution: "whatwg-url@npm:14.2.0"
   dependencies:

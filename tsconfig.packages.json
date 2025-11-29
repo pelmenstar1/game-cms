@@ -4,7 +4,6 @@
     { "path": "./packages/types" },
     { "path": "./packages/storage-provider-local" },
     { "path": "./packages/storage-provider-s3" },
-    { "path": "./packages/api" },
     { "path": "./packages/env" },
     { "path": "./packages/shared" },
     { "path": "./packages/ui" },
@@ -12,9 +11,13 @@
     { "path": "./packages/vite-plugins" },
     { "path": "./packages/conditional" },
     { "path": "./packages/client" },
-    { "path": "./packages/shared-api" },
+    { "path": "./packages/utils" },
     { "path": "./packages/codegen" },
-    { "path": "./packages/api-testing" }
+    { "path": "./packages/api-testing" },
+    { "path": "./packages/base-plugin" },
+    { "path": "./packages/base-api" },
+    { "path": "./packages/base-types" },
+    { "path": "./packages/base-utils" }
   ],
   "include": []
 }

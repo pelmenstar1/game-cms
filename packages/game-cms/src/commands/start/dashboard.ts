@@ -2,7 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import staticPlugin from '@fastify/static';
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import httpProxy from 'http-proxy';
 
 import type { StartOptions } from './types.js';
@@ -40,13 +40,13 @@ function initProxyDashboard(app: FastifyInstance, url: string) {
   });
 }
 
-export async function initDashboard(
-  app: FastifyInstance,
-  options: StartOptions
-) {
+export const dashboard: FastifyPluginAsync<StartOptions> = async (
+  app,
+  options
+) => {
   if (options.dashboard !== undefined) {
     initProxyDashboard(app, options.dashboard);
   } else {
     await initLocalDashboard(app);
   }
-}
+};

@@ -1,10 +1,10 @@
+import type { Replace } from '@game-cms/shared';
 import type {
   ApiRouteMap,
   HttpMethod,
   HttpMethodWithBody,
 } from '@game-cms/types';
 
-import type { Replace } from '../../shared/dist/typeutil.js';
 import type { MaybeSearch } from './internal/utilTypes.js';
 import type { RequestInitializer } from './requestInitializer.js';
 import type { ResponseParser } from './responseParser.js';

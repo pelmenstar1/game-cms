@@ -6,7 +6,7 @@
     "module": "nodenext",
     "target": "esnext",
     "moduleResolution": "nodenext",
-    "types": ["@game-cms/api/clientTypes"],
+    "types": ["@game-cms/base-api/clientTypes"],
 
     "declaration": true,
     "noUncheckedIndexedAccess": true,
@@ -23,9 +23,9 @@
   "include": ["./src"],
   "references": [
     { "path": "../types" },
-    { "path": "../api" },
+    { "path": "../base-api" },
     { "path": "../conditional" },
     { "path": "../shared" },
-    { "path": "../shared-api" }
+    { "path": "../utils" }
   ]
 }

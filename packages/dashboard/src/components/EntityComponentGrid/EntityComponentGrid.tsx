@@ -1,8 +1,5 @@
-import type {
-  ClientComponentSchema,
-  ClientEntitySchema,
-  EntityData,
-} from '@game-cms/types';
+import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
+import type { ClientComponentSchema } from '@game-cms/types';
 import { classNames } from '@game-cms/ui';
 
 import { EntityComponent } from '../EntityComponent';

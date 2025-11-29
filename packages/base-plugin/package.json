@@ -1,0 +1,26 @@
+{
+  "name": "@game-cms/base-plugin",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    }
+  },
+  "dependencies": {
+    "@game-cms/base-api": "workspace:*",
+    "@game-cms/base-components": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@game-cms/base-types": "workspace:*",
+    "mongodb": "7.0.0",
+    "typescript": "5.9.3"
+  }
+}

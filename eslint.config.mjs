@@ -23,7 +23,7 @@ export default defineConfig(
       'vitest.config.ts',
       'packages/ui/.storybook',
       'packages/ui/vite.storybook.config.ts',
-      'packages/api/scripts/*',
+      'packages/base-api/scripts/*',
       'coverage',
     ],
   },

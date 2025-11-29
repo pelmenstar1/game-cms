@@ -1,4 +1,4 @@
-import type { EntityData, EntityId, GetEntityById } from '@game-cms/types';
+import type { EntityData, EntityId, GetEntityById } from '@game-cms/base-types';
 
 import type { ConditionalAstExpression } from './ast.js';
 

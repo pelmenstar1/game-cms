@@ -3,10 +3,10 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 
+import type { ServerStorageFile, StorageProvider } from '@game-cms/base-types';
 import { sendFile } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
-import { apiRoute } from '@game-cms/shared-api';
-import type { ServerStorageFile, StorageProvider } from '@game-cms/types';
+import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 import { resolveNewFilePath } from './utils.js';
@@ -15,7 +15,7 @@ export type LocalStorageProviderConfig = {
   storagePath?: string;
 };
 
-const GET_ROUTE = `/api/file/provider/get`;
+const GET_ROUTE = `/file/provider/get`;
 
 function getFileRoute(storagePath: string) {
   return apiRoute({
@@ -67,7 +67,7 @@ export function localStorageProvider(
 
         await pipeline(info.content, output);
 
-        return { url: encodeURI(`${GET_ROUTE}/${fileName}`) };
+        return { url: encodeURI(`/api${GET_ROUTE}/${fileName}`) };
       },
       delete: async (url) => {
         const filePath = getFilePath(storagePath, url);

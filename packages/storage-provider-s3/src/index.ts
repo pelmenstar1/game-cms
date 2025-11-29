@@ -6,7 +6,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
-import type { StorageProvider } from '@game-cms/types';
+import type { StorageProvider } from '@game-cms/base-types';
 
 import type { S3StorageProviderConfig } from './types.js';
 import { createFileKey, getFileUrl } from './utils.js';

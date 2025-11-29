@@ -19,5 +19,5 @@
     "skipLibCheck": true
   },
   "include": ["./src"],
-  "references": [{ "path": "../shared" }, { "path": "../types" }]
+  "references": [{ "path": "../shared" }, { "path": "../base-types" }]
 }

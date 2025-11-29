@@ -1,5 +1,5 @@
+import type { ClientEntitySchema } from '@game-cms/base-types';
 import { listEntities } from '@game-cms/client';
-import type { ClientEntitySchema } from '@game-cms/types';
 import { classNames, List } from '@game-cms/ui';
 
 import { useApiQuery } from '@/hooks/useApiQuery';

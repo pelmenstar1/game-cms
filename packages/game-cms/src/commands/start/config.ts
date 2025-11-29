@@ -1,6 +1,7 @@
+import { basePlugin } from '@game-cms/base-plugin';
 import { importFile, resolveMaybeFactory } from '@game-cms/shared';
 import { createEnvAccessor } from '@game-cms/shared';
-import type { CmsConfig } from '@game-cms/types';
+import type { ResolvedCmsConfig } from '@game-cms/types';
 
 import type { ConfigInit } from '../../types/config.js';
 import { compiledFilePath } from '../../utils/localPath.js';
@@ -13,9 +14,14 @@ async function importConfig(filePath: string) {
   return result;
 }
 
-export async function resolveConfig(): Promise<CmsConfig> {
+export async function resolveConfig(): Promise<ResolvedCmsConfig> {
   const configPath = compiledFilePath('cms.config.js');
   const configInit = await importConfig(configPath);
 
-  return resolveMaybeFactory(configInit, createEnvAccessor());
+  const instance = await resolveMaybeFactory(configInit, createEnvAccessor());
+
+  return {
+    ...instance,
+    plugins: [basePlugin, ...(instance.plugins ?? [])],
+  };
 }

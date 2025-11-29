@@ -20,11 +20,9 @@
   "include": ["./src"],
   "references": [
     { "path": "../types" },
-    { "path": "../api" },
-    { "path": "../components" },
     { "path": "../env" },
     { "path": "../react" },
     { "path": "../shared" },
-    { "path": "../shared-api" }
+    { "path": "../utils" }
   ]
 }

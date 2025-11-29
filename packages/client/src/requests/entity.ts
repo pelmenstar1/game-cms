@@ -1,13 +1,13 @@
 import type {
+  ClientEntitySchema,
+  EntityId,
+  GetEntityById,
+} from '@game-cms/base-types';
+import type {
   ConditionalValueInput,
   EntityConditionalDataById,
 } from '@game-cms/conditional';
 import type { PageData, PagingOptions } from '@game-cms/shared';
-import type {
-  ClientEntitySchema,
-  EntityId,
-  GetEntityById,
-} from '@game-cms/types';
 import qs from 'qs';
 
 import { request, url } from '../internal/utils.js';

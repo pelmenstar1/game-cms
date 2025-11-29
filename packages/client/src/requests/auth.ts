@@ -6,7 +6,7 @@ import type {
   GetPermissionsResponse,
   SignInPayload,
   SignTokenInPayload,
-} from '@game-cms/types';
+} from '@game-cms/base-types';
 
 import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';

@@ -48,6 +48,10 @@
       "import": "./dist/io/index.js",
       "types": "./dist/io/index.d.ts"
     },
+    "./vite": {
+      "import": "./dist/vite/index.js",
+      "types": "./dist/vite/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }

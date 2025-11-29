@@ -5,7 +5,7 @@ import type {
   ClientStorageFileMeta,
   DeleteFileOptions,
   UploadFileResponse,
-} from '@game-cms/types';
+} from '@game-cms/base-types';
 
 import { request, url } from '../internal/utils.js';
 import { json } from '../responseParser.js';

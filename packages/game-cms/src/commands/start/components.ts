@@ -4,6 +4,13 @@ import path from 'node:path';
 import { COMPONENT_RENDERER_SUFFIX } from '@game-cms/build';
 import { importFile, isNonNullObject } from '@game-cms/shared';
 import { mergeObjects } from '@game-cms/shared/object';
+import {
+  getViteManifest,
+  traceEntryPointJsDependencies,
+  traceEntryPointStyles,
+  type ViteManifest,
+  type ViteManifestEntry,
+} from '@game-cms/shared/vite';
 import type {
   ComponentController,
   ComponentStaticConfig,
@@ -12,13 +19,6 @@ import type {
 
 import { compiledFilePath } from '../../utils/localPath.js';
 import { componentSchema } from '../../utils/schema.js';
-import {
-  getViteManifest,
-  traceEntryPointJsDependencies,
-  traceEntryPointStyles,
-  type ViteManifest,
-  type ViteManifestEntry,
-} from '../../utils/viteManifest.js';
 import { getPackageBuildDirectory } from './utils.js';
 
 async function importController(

@@ -1,4 +1,4 @@
-import { ApiError, ApiErrorCode } from '@game-cms/shared-api';
+import { ApiError, ApiErrorCode } from '@game-cms/utils';
 import type { NavigateFunction } from 'react-router';
 
 export interface ApiRedirectOptions {

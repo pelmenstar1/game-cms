@@ -1,0 +1,13 @@
+{
+  "name": "@game-cms/base-utils",
+  "packageManager": "yarn@4.10.3",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "private": true,
+  "devDependencies": {
+    "@game-cms/base-types": "workspace:*",
+    "@game-cms/types": "workspace:*",
+    "typescript": "5.9.3"
+  }
+}

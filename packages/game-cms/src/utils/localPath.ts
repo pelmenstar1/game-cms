@@ -1,10 +1,3 @@
-export type CompiledFileName =
-  | 'routes'
-  | 'components'
-  | 'entities'
-  | 'services'
-  | 'cms.config.js';
-
-export function compiledFilePath(name: CompiledFileName) {
+export function compiledFilePath(name: string) {
   return `./dist/${name}`;
 }

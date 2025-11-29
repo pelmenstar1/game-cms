@@ -1,37 +1,17 @@
-import type { RelativeTime } from '@game-cms/shared/chrono';
-import type { MongoClientOptions } from 'mongodb';
+import type { RequiredProperty } from '@game-cms/shared';
 
-import type { StorageProvider } from './storageProvider.js';
-
-export type DatabaseConfig = {
-  mongo: { url: string } & MongoClientOptions;
-};
-
-export type StorageConfig = {
-  provider: StorageProvider;
-};
+import type { Plugin } from './plugin.js';
 
 export type ServerConfig = {
   port: number;
 };
 
-export type ExpirationTimeType = 'user' | 'apiToken';
-
-export type AuthConfig = {
-  jwtSignKey: string | Uint8Array | CryptoKey;
-  admin: {
-    email: string;
-    password: string;
-  };
-  expirationTimes?: Partial<Record<ExpirationTimeType, RelativeTime | number>>;
-  apiToken?: {
-    byteLength?: number;
-  };
-};
-
-export type CmsConfig = {
-  storage: StorageConfig;
-  database: DatabaseConfig;
+export interface UnresolvedCmsConfig {
+  plugins?: Plugin<object | null>[];
   server: ServerConfig;
-  auth: AuthConfig;
-};
+}
+
+export type ResolvedCmsConfig = RequiredProperty<
+  UnresolvedCmsConfig,
+  'plugins'
+>;
