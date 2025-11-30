@@ -7,12 +7,11 @@
   },
   "dependencies": {
     "@game-cms/storage-provider-local": "workspace:*",
-    "@react-router/express": "7.9.3",
     "game-cms": "workspace:*"
   },
   "devDependencies": {
     "@game-cms/types": "workspace:*",
-    "@types/node": "24.10.0",
+    "@types/node": "catalog:",
     "typescript": "5.9.3"
   }
 }

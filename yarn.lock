@@ -1552,16 +1552,16 @@ __metadata:
     "@game-cms/types": "workspace:*"
     "@game-cms/utils": "workspace:*"
     "@node-rs/argon2": "npm:2.0.2"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     "@types/qs": "npm:^6"
     cookie: "npm:1.0.2"
     fastify-type-provider-zod: "npm:6.1.0"
     jose: "npm:6.1.0"
-    mongodb: "npm:7.0.0"
+    mongodb: "catalog:"
     qs: "npm:6.14.0"
-    tsx: "npm:4.20.6"
+    tsx: "catalog:"
     typescript: "npm:5.9.3"
-    zod: "npm:4.1.12"
+    zod: "catalog:"
   peerDependencies:
     fastify: "*"
   languageName: unknown
@@ -1578,16 +1578,16 @@ __metadata:
     "@game-cms/vite-plugins": "workspace:*"
     "@rollup/plugin-commonjs": "npm:28.0.6"
     "@rollup/plugin-replace": "npm:6.0.2"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     "@vitejs/plugin-react": "npm:5.0.4"
     glob: "npm:11.0.3"
     typescript: "npm:5.9.3"
-    vite: "npm:7.1.9"
+    vite: "catalog:"
     vite-plugin-dts: "npm:4.5.4"
-    zod: "npm:4.1.12"
+    zod: "catalog:"
   peerDependencies:
-    react: ^19.0.0
-    react-dom: ^19.0.0
+    react: "*"
+    react-dom: "*"
   languageName: unknown
   linkType: soft
 
@@ -1600,7 +1600,7 @@ __metadata:
     "@game-cms/base-types": "workspace:*"
     "@game-cms/shared": "workspace:*"
     "@game-cms/types": "workspace:*"
-    mongodb: "npm:7.0.0"
+    mongodb: "catalog:"
     typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
@@ -1611,7 +1611,7 @@ __metadata:
   dependencies:
     "@game-cms/env": "workspace:*"
     "@game-cms/types": "workspace:*"
-    zod: "npm:4.1.12"
+    zod: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -1629,7 +1629,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@game-cms/build@workspace:packages/build"
   dependencies:
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
@@ -1653,7 +1653,7 @@ __metadata:
   dependencies:
     "@game-cms/shared": "workspace:*"
     "@game-cms/types": "workspace:*"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
@@ -1681,16 +1681,16 @@ __metadata:
     "@game-cms/vite-plugins": "workspace:*"
     "@react-router/dev": "npm:7.9.3"
     "@react-router/node": "npm:7.9.3"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     "@types/react": "npm:19.2.0"
     "@types/react-dom": "npm:19.2.0"
     isbot: "npm:5.1.31"
-    react: "npm:19.2.0"
-    react-dom: "npm:19.2.0"
+    react: "catalog:"
+    react-dom: "catalog:"
     react-router: "npm:7.9.3"
-    tsx: "npm:4.20.6"
+    tsx: "catalog:"
     typescript: "npm:5.9.3"
-    vite: "npm:7.1.9"
+    vite: "catalog:"
     vite-plugin-watch-node-modules: "npm:0.5.0"
     vite-tsconfig-paths: "npm:5.1.4"
   languageName: unknown
@@ -1701,7 +1701,7 @@ __metadata:
   resolution: "@game-cms/env@workspace:packages/env"
   dependencies:
     "@game-cms/types": "workspace:*"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     typescript: "npm:5.9.3"
   languageName: unknown
   linkType: soft
@@ -1711,7 +1711,7 @@ __metadata:
   resolution: "@game-cms/monorepo@workspace:."
   dependencies:
     "@eslint/js": "npm:9.37.0"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     "@types/react": "npm:19.2.0"
     "@types/react-dom": "npm:19.2.0"
     "@vitest/browser": "npm:3.2.4"
@@ -1727,12 +1727,12 @@ __metadata:
     playwright: "npm:1.55.1"
     postcss: "npm:8.5.6"
     prettier: "npm:3.6.2"
-    react: "npm:19.2.0"
-    react-dom: "npm:19.2.0"
+    react: "catalog:"
+    react-dom: "catalog:"
     stylelint: "npm:16.25.0"
     stylelint-config-standard-scss: "npm:16.0.0"
     stylelint-scss: "npm:6.12.1"
-    tsx: "npm:4.20.6"
+    tsx: "catalog:"
     typescript: "npm:5.9.3"
     typescript-eslint: "npm:8.45.0"
     vite-tsconfig-paths: "npm:5.1.4"
@@ -1745,13 +1745,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@game-cms/react@workspace:packages/react"
   dependencies:
-    "@types/node": "npm:24.10.0"
-    "@types/react": "npm:^19.0.0"
+    "@types/node": "npm:24.10.1"
+    "@types/react": "npm:19.2.0"
     "@types/react-dom": "npm:^19.0.0"
-    react: "npm:^19.0.0"
-    react-dom: "npm:^19.0.0"
+    react: "catalog:"
+    react-dom: "catalog:"
     typescript: "npm:5.9.3"
-    vite: "npm:7.1.9"
+    vite: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -1759,7 +1759,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@game-cms/shared@workspace:packages/shared"
   dependencies:
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     jose: "npm:6.1.0"
     typescript: "npm:5.9.3"
   peerDependencies:
@@ -1775,9 +1775,9 @@ __metadata:
     "@game-cms/base-types": "workspace:*"
     "@game-cms/shared": "workspace:*"
     "@game-cms/utils": "workspace:*"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     typescript: "npm:5.9.3"
-    zod: "npm:4.1.12"
+    zod: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -1789,7 +1789,7 @@ __metadata:
     "@game-cms/base-types": "workspace:*"
     "@game-cms/shared": "workspace:*"
     "@types/mime-types": "npm:^3"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     mime-types: "npm:^3.0.0"
     typescript: "npm:5.9.3"
   languageName: unknown
@@ -1801,11 +1801,11 @@ __metadata:
   dependencies:
     "@game-cms/build": "workspace:*"
     "@game-cms/shared": "workspace:*"
-    "@types/node": "npm:24.10.0"
-    fastify: "npm:5.6.1"
+    "@types/node": "catalog:"
+    fastify: "catalog:"
     fastify-type-provider-zod: "npm:6.1.0"
     typescript: "npm:5.9.3"
-    zod: "npm:4.1.12"
+    zod: "catalog:"
   peerDependencies:
     "@types/react": "*"
     mongodb: "*"
@@ -1823,20 +1823,20 @@ __metadata:
     "@storybook/react": "npm:9.1.10"
     "@storybook/react-vite": "npm:9.1.10"
     "@types/copyfiles": "npm:^2"
-    "@types/node": "npm:24.10.0"
-    "@types/react": "npm:^19.0.0"
+    "@types/node": "catalog:"
+    "@types/react": "npm:19.2.0"
     "@types/react-dom": "npm:^19.0.0"
     "@vitejs/plugin-react": "npm:5.0.4"
     copyfiles: "npm:2.4.1"
-    react: "npm:^19.0.0"
-    react-dom: "npm:^19.0.0"
+    react: "catalog:"
+    react-dom: "catalog:"
     react-router: "npm:7.9.3"
-    rollup: "npm:4.52.4"
+    rollup: "catalog:"
     sass-embedded: "npm:1.93.2"
     storybook: "npm:9.1.10"
-    tsx: "npm:4.20.6"
+    tsx: "catalog:"
     typescript: "npm:5.9.3"
-    vite: "npm:7.1.9"
+    vite: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -1846,7 +1846,7 @@ __metadata:
   dependencies:
     "@game-cms/shared": "workspace:*"
     typescript: "npm:5.9.3"
-    zod: "npm:4.1.12"
+    zod: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -1859,9 +1859,9 @@ __metadata:
     "@types/espree": "npm:10.1.0"
     chokidar: "npm:4.0.3"
     espree: "npm:11.0.0"
-    rollup: "npm:4.53.3"
+    rollup: "catalog:"
     terser: "npm:5.44.1"
-    zod: "npm:4.1.13"
+    zod: "catalog:"
   peerDependencies:
     vite: "*"
   languageName: unknown
@@ -2573,22 +2573,6 @@ __metadata:
   bin:
     react-router: bin.js
   checksum: 10c0/40ea391ef7ad165ee143cfa05c4ccc46c4f874d152119259ee3a942bc66d0c980031383a84add87786809225c930da6bf8a5d088d4eb602f2d4df11f50e06b51
-  languageName: node
-  linkType: hard
-
-"@react-router/express@npm:7.9.3":
-  version: 7.9.3
-  resolution: "@react-router/express@npm:7.9.3"
-  dependencies:
-    "@react-router/node": "npm:7.9.3"
-  peerDependencies:
-    express: ^4.17.1 || ^5
-    react-router: 7.9.3
-    typescript: ^5.1.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10c0/e2358746dc0d048c5e1a851a463b125f7b1b9846a2abe0d80707750433774129f6780a91af1642daa51d062f72f9b4ec6bcd9c2b2668292782e7d5b6ac879973
   languageName: node
   linkType: hard
 
@@ -3992,12 +3976,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.10.0":
-  version: 24.10.0
-  resolution: "@types/node@npm:24.10.0"
+"@types/node@npm:24.10.1":
+  version: 24.10.1
+  resolution: "@types/node@npm:24.10.1"
   dependencies:
     undici-types: "npm:~7.16.0"
-  checksum: 10c0/f82ed7194e16f5590ef7afdc20c6d09068c76d50278b485ede8f0c5749683536e3064ffa8def8db76915196afb3724b854aa5723c64d6571b890b14492943b46
+  checksum: 10c0/d6bca7a78f550fbb376f236f92b405d676003a8a09a1b411f55920ef34286ee3ee51f566203920e835478784df52662b5b2af89159d9d319352e9ea21801c002
   languageName: node
   linkType: hard
 
@@ -4017,7 +4001,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.2.0, @types/react@npm:^19.0.0":
+"@types/react@npm:19.2.0":
   version: 19.2.0
   resolution: "@types/react@npm:19.2.0"
   dependencies:
@@ -5429,8 +5413,7 @@ __metadata:
   dependencies:
     "@game-cms/storage-provider-local": "workspace:*"
     "@game-cms/types": "workspace:*"
-    "@react-router/express": "npm:7.9.3"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     game-cms: "workspace:*"
     typescript: "npm:5.9.3"
   languageName: unknown
@@ -6648,17 +6631,17 @@ __metadata:
     "@game-cms/types": "workspace:*"
     "@game-cms/utils": "workspace:*"
     "@types/http-proxy": "npm:^1"
-    "@types/node": "npm:24.10.0"
+    "@types/node": "catalog:"
     commander: "npm:14.0.1"
-    fastify: "npm:5.6.1"
+    fastify: "catalog:"
     fastify-type-provider-zod: "npm:6.1.0"
     http-proxy: "npm:1.18.1"
     pino: "npm:10.1.0"
     pino-pretty: "npm:13.1.2"
     react-router: "npm:7.9.3"
-    tsx: "npm:4.20.6"
+    tsx: "catalog:"
     typescript: "npm:5.9.3"
-    zod: "npm:4.1.12"
+    zod: "catalog:"
   bin:
     game-cms: ./dist/bin.js
   languageName: unknown
@@ -9035,7 +9018,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:19.2.0, react-dom@npm:^19.0.0":
+"react-dom@npm:19.2.0":
   version: 19.2.0
   resolution: "react-dom@npm:19.2.0"
   dependencies:
@@ -9090,7 +9073,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:19.2.0, react@npm:^19.0.0":
+"react@npm:19.2.0":
   version: 19.2.0
   resolution: "react@npm:19.2.0"
   checksum: 10c0/1b6d64eacb9324725bfe1e7860cb7a6b8a34bc89a482920765ebff5c10578eb487e6b46b2f0df263bd27a25edbdae2c45e5ea5d81ae61404301c1a7192c38330
@@ -9359,87 +9342,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup@npm:4.52.4, rollup@npm:^4.43.0":
-  version: 4.52.4
-  resolution: "rollup@npm:4.52.4"
-  dependencies:
-    "@rollup/rollup-android-arm-eabi": "npm:4.52.4"
-    "@rollup/rollup-android-arm64": "npm:4.52.4"
-    "@rollup/rollup-darwin-arm64": "npm:4.52.4"
-    "@rollup/rollup-darwin-x64": "npm:4.52.4"
-    "@rollup/rollup-freebsd-arm64": "npm:4.52.4"
-    "@rollup/rollup-freebsd-x64": "npm:4.52.4"
-    "@rollup/rollup-linux-arm-gnueabihf": "npm:4.52.4"
-    "@rollup/rollup-linux-arm-musleabihf": "npm:4.52.4"
-    "@rollup/rollup-linux-arm64-gnu": "npm:4.52.4"
-    "@rollup/rollup-linux-arm64-musl": "npm:4.52.4"
-    "@rollup/rollup-linux-loong64-gnu": "npm:4.52.4"
-    "@rollup/rollup-linux-ppc64-gnu": "npm:4.52.4"
-    "@rollup/rollup-linux-riscv64-gnu": "npm:4.52.4"
-    "@rollup/rollup-linux-riscv64-musl": "npm:4.52.4"
-    "@rollup/rollup-linux-s390x-gnu": "npm:4.52.4"
-    "@rollup/rollup-linux-x64-gnu": "npm:4.52.4"
-    "@rollup/rollup-linux-x64-musl": "npm:4.52.4"
-    "@rollup/rollup-openharmony-arm64": "npm:4.52.4"
-    "@rollup/rollup-win32-arm64-msvc": "npm:4.52.4"
-    "@rollup/rollup-win32-ia32-msvc": "npm:4.52.4"
-    "@rollup/rollup-win32-x64-gnu": "npm:4.52.4"
-    "@rollup/rollup-win32-x64-msvc": "npm:4.52.4"
-    "@types/estree": "npm:1.0.8"
-    fsevents: "npm:~2.3.2"
-  dependenciesMeta:
-    "@rollup/rollup-android-arm-eabi":
-      optional: true
-    "@rollup/rollup-android-arm64":
-      optional: true
-    "@rollup/rollup-darwin-arm64":
-      optional: true
-    "@rollup/rollup-darwin-x64":
-      optional: true
-    "@rollup/rollup-freebsd-arm64":
-      optional: true
-    "@rollup/rollup-freebsd-x64":
-      optional: true
-    "@rollup/rollup-linux-arm-gnueabihf":
-      optional: true
-    "@rollup/rollup-linux-arm-musleabihf":
-      optional: true
-    "@rollup/rollup-linux-arm64-gnu":
-      optional: true
-    "@rollup/rollup-linux-arm64-musl":
-      optional: true
-    "@rollup/rollup-linux-loong64-gnu":
-      optional: true
-    "@rollup/rollup-linux-ppc64-gnu":
-      optional: true
-    "@rollup/rollup-linux-riscv64-gnu":
-      optional: true
-    "@rollup/rollup-linux-riscv64-musl":
-      optional: true
-    "@rollup/rollup-linux-s390x-gnu":
-      optional: true
-    "@rollup/rollup-linux-x64-gnu":
-      optional: true
-    "@rollup/rollup-linux-x64-musl":
-      optional: true
-    "@rollup/rollup-openharmony-arm64":
-      optional: true
-    "@rollup/rollup-win32-arm64-msvc":
-      optional: true
-    "@rollup/rollup-win32-ia32-msvc":
-      optional: true
-    "@rollup/rollup-win32-x64-gnu":
-      optional: true
-    "@rollup/rollup-win32-x64-msvc":
-      optional: true
-    fsevents:
-      optional: true
-  bin:
-    rollup: dist/bin/rollup
-  checksum: 10c0/aaec0f57e887d4fb37d152f93cf7133954eec79d11643e95de768ec9a377f08793b1745c648ca65a0dcc6c795c4d9ca398724d013e5745de270e88a543782aea
-  languageName: node
-  linkType: hard
-
 "rollup@npm:4.53.3":
   version: 4.53.3
   resolution: "rollup@npm:4.53.3"
@@ -9518,6 +9420,87 @@ __metadata:
   bin:
     rollup: dist/bin/rollup
   checksum: 10c0/a21305aac72013083bd0dec92162b0f7f24cacf57c876ca601ec76e892895952c9ea592c1c07f23b8c125f7979c2b17f7fb565e386d03ee4c1f0952ac4ab0d75
+  languageName: node
+  linkType: hard
+
+"rollup@npm:^4.43.0":
+  version: 4.52.4
+  resolution: "rollup@npm:4.52.4"
+  dependencies:
+    "@rollup/rollup-android-arm-eabi": "npm:4.52.4"
+    "@rollup/rollup-android-arm64": "npm:4.52.4"
+    "@rollup/rollup-darwin-arm64": "npm:4.52.4"
+    "@rollup/rollup-darwin-x64": "npm:4.52.4"
+    "@rollup/rollup-freebsd-arm64": "npm:4.52.4"
+    "@rollup/rollup-freebsd-x64": "npm:4.52.4"
+    "@rollup/rollup-linux-arm-gnueabihf": "npm:4.52.4"
+    "@rollup/rollup-linux-arm-musleabihf": "npm:4.52.4"
+    "@rollup/rollup-linux-arm64-gnu": "npm:4.52.4"
+    "@rollup/rollup-linux-arm64-musl": "npm:4.52.4"
+    "@rollup/rollup-linux-loong64-gnu": "npm:4.52.4"
+    "@rollup/rollup-linux-ppc64-gnu": "npm:4.52.4"
+    "@rollup/rollup-linux-riscv64-gnu": "npm:4.52.4"
+    "@rollup/rollup-linux-riscv64-musl": "npm:4.52.4"
+    "@rollup/rollup-linux-s390x-gnu": "npm:4.52.4"
+    "@rollup/rollup-linux-x64-gnu": "npm:4.52.4"
+    "@rollup/rollup-linux-x64-musl": "npm:4.52.4"
+    "@rollup/rollup-openharmony-arm64": "npm:4.52.4"
+    "@rollup/rollup-win32-arm64-msvc": "npm:4.52.4"
+    "@rollup/rollup-win32-ia32-msvc": "npm:4.52.4"
+    "@rollup/rollup-win32-x64-gnu": "npm:4.52.4"
+    "@rollup/rollup-win32-x64-msvc": "npm:4.52.4"
+    "@types/estree": "npm:1.0.8"
+    fsevents: "npm:~2.3.2"
+  dependenciesMeta:
+    "@rollup/rollup-android-arm-eabi":
+      optional: true
+    "@rollup/rollup-android-arm64":
+      optional: true
+    "@rollup/rollup-darwin-arm64":
+      optional: true
+    "@rollup/rollup-darwin-x64":
+      optional: true
+    "@rollup/rollup-freebsd-arm64":
+      optional: true
+    "@rollup/rollup-freebsd-x64":
+      optional: true
+    "@rollup/rollup-linux-arm-gnueabihf":
+      optional: true
+    "@rollup/rollup-linux-arm-musleabihf":
+      optional: true
+    "@rollup/rollup-linux-arm64-gnu":
+      optional: true
+    "@rollup/rollup-linux-arm64-musl":
+      optional: true
+    "@rollup/rollup-linux-loong64-gnu":
+      optional: true
+    "@rollup/rollup-linux-ppc64-gnu":
+      optional: true
+    "@rollup/rollup-linux-riscv64-gnu":
+      optional: true
+    "@rollup/rollup-linux-riscv64-musl":
+      optional: true
+    "@rollup/rollup-linux-s390x-gnu":
+      optional: true
+    "@rollup/rollup-linux-x64-gnu":
+      optional: true
+    "@rollup/rollup-linux-x64-musl":
+      optional: true
+    "@rollup/rollup-openharmony-arm64":
+      optional: true
+    "@rollup/rollup-win32-arm64-msvc":
+      optional: true
+    "@rollup/rollup-win32-ia32-msvc":
+      optional: true
+    "@rollup/rollup-win32-x64-gnu":
+      optional: true
+    "@rollup/rollup-win32-x64-msvc":
+      optional: true
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: 10c0/aaec0f57e887d4fb37d152f93cf7133954eec79d11643e95de768ec9a377f08793b1745c648ca65a0dcc6c795c4d9ca398724d013e5745de270e88a543782aea
   languageName: node
   linkType: hard
 
@@ -11572,13 +11555,6 @@ __metadata:
   version: 1.2.1
   resolution: "yocto-queue@npm:1.2.1"
   checksum: 10c0/5762caa3d0b421f4bdb7a1926b2ae2189fc6e4a14469258f183600028eb16db3e9e0306f46e8ebf5a52ff4b81a881f22637afefbef5399d6ad440824e9b27f9f
-  languageName: node
-  linkType: hard
-
-"zod@npm:4.1.12":
-  version: 4.1.12
-  resolution: "zod@npm:4.1.12"
-  checksum: 10c0/b64c1feb19e99d77075261eaf613e0b2be4dfcd3551eff65ad8b4f2a079b61e379854d066f7d447491fcf193f45babd8095551a9d47973d30b46b6d8e2c46774
   languageName: node
   linkType: hard
 

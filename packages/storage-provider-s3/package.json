@@ -7,7 +7,7 @@
   "devDependencies": {
     "@game-cms/base-types": "workspace:*",
     "@types/mime-types": "^3",
-    "@types/node": "24.10.0",
+    "@types/node": "catalog:",
     "typescript": "5.9.3"
   },
   "dependencies": {

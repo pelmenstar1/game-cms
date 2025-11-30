@@ -10,6 +10,6 @@
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",
-    "zod": "4.1.12"
+    "zod": "catalog:"
   }
 }

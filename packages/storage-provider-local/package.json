@@ -6,12 +6,12 @@
   "types": "./dist/index.d.ts",
   "devDependencies": {
     "@game-cms/base-types": "workspace:*",
-    "@types/node": "24.10.0",
+    "@types/node": "catalog:",
     "typescript": "5.9.3"
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",
     "@game-cms/utils": "workspace:*",
-    "zod": "4.1.12"
+    "zod": "catalog:"
   }
 }

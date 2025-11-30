@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@game-cms/base-types": "workspace:*",
-    "mongodb": "7.0.0",
+    "mongodb": "catalog:",
     "typescript": "5.9.3"
   }
 }

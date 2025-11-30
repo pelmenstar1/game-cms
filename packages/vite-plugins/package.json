@@ -9,7 +9,7 @@
     "@game-cms/types": "workspace:*",
     "@types/espree": "10.1.0",
     "chokidar": "4.0.3",
-    "rollup": "4.53.3"
+    "rollup": "catalog:"
   },
   "peerDependencies": {
     "vite": "*"
@@ -17,6 +17,6 @@
   "dependencies": {
     "espree": "11.0.0",
     "terser": "5.44.1",
-    "zod": "4.1.13"
+    "zod": "catalog:"
   }
 }
