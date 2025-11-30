@@ -7,14 +7,16 @@ export function scanDirectorySource<T>(
 ): PluginValueSource<T[]> {
   return () => {
     return scanDirectory(directoryPath, async (filePath) => {
-      try {
-        const { default: defaultExport } = await importFile<{ default?: T }>(
-          filePath
-        );
+      if (filePath.endsWith('.js')) {
+        try {
+          const { default: defaultExport } = await importFile<{ default?: T }>(
+            filePath
+          );
 
-        return defaultExport;
-      } catch (error: unknown) {
-        console.error(error);
+          return defaultExport;
+        } catch (error: unknown) {
+          console.error(error);
+        }
       }
     });
   };

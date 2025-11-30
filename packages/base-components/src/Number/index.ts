@@ -1,8 +1,10 @@
 import { component } from '@game-cms/utils';
 import z from 'zod';
 
+import { id } from './meta.js';
+
 export default component({
-  id: 'base::number',
+  id,
   validation: {
     data: z.number(),
     options: z.object(),

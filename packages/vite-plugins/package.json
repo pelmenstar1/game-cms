@@ -5,9 +5,18 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "devDependencies": {
-    "chokidar": "4.0.3"
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/types": "workspace:*",
+    "@types/espree": "10.1.0",
+    "chokidar": "4.0.3",
+    "rollup": "4.53.3"
   },
   "peerDependencies": {
     "vite": "*"
+  },
+  "dependencies": {
+    "espree": "11.0.0",
+    "terser": "5.44.1",
+    "zod": "4.1.13"
   }
 }

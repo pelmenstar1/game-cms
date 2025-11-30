@@ -1,7 +1,5 @@
-import path from 'node:path';
-
 import { env } from '@game-cms/env';
-import { sendFile } from '@game-cms/shared';
+import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import type { ComponentRenderManifest } from '@game-cms/types';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
@@ -10,11 +8,19 @@ function getFileAndType(filePath: string, manifest: ComponentRenderManifest) {
   const { RENDERER_FILE } = cms.service('base::component');
 
   if (filePath === RENDERER_FILE) {
-    return { filePath: manifest.jsBundle, mime: 'text/javascript' };
-  } else if (manifest.jsDependencies.includes(filePath)) {
-    return { filePath, mime: 'text/javascript' };
-  } else if (manifest.cssBundles.includes(filePath)) {
-    return { filePath, mime: 'text/css' };
+    return { source: manifest.main, mime: 'text/javascript' };
+  }
+
+  const jsSource = manifest.dependencies.js[filePath];
+
+  if (jsSource) {
+    return { source: jsSource, mime: 'text/javascript' };
+  }
+
+  const cssSource = manifest.dependencies.css[filePath];
+
+  if (cssSource) {
+    return { source: cssSource, mime: 'text/css' };
   }
 }
 
@@ -33,7 +39,7 @@ export default apiRoute({
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (staticConfig !== undefined) {
-      const { baseDirectory, renderManifest } = staticConfig;
+      const { renderManifest } = staticConfig;
 
       const { pathname } = new URL(req.url, 'http://a.com');
       const [, filePath] = pathname.split('assets/', 2);
@@ -41,11 +47,9 @@ export default apiRoute({
       const fileAndType = getFileAndType(filePath, renderManifest);
 
       if (fileAndType) {
-        await sendFile(
-          res,
-          path.join(baseDirectory, fileAndType.filePath),
-          fileAndType.mime
-        );
+        const content = await resolveAsyncMaybeFactory(fileAndType.source);
+
+        res.type(fileAndType.mime).send(content);
 
         return;
       }

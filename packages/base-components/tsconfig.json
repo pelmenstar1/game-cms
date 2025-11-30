@@ -10,20 +10,21 @@
 
     "declaration": true,
 
-    "allowJs": true,
-
     "strict": true,
     "jsx": "react-jsx",
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "composite": true
   },
   "references": [
     { "path": "../build" },
     { "path": "../types" },
-    { "path": "../ui" }
+    { "path": "../ui" },
+    { "path": "../utils" },
+    { "path": "../vite-plugins" }
   ],
   "include": ["./src", "./scripts"]
 }

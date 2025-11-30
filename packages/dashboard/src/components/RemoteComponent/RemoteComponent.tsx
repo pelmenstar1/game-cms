@@ -28,13 +28,13 @@ export function RemoteComponent<T extends ComponentId>({
     return React.lazy(async () => {
       try {
         const manifest = await getComponentManifest({ client }, componentId);
-        for (const url of manifest.cssBundles) {
+        for (const url of manifest.dependencies.css) {
           addStylesheet(url);
         }
 
         const component: unknown = await import(
           /* @vite-ignore */
-          manifest.jsBundle
+          manifest.main
         );
 
         return { default: getRendererFromModule(component) };

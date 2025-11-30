@@ -1,5 +1,8 @@
 import { env } from '@game-cms/env';
-import type { ComponentId, ComponentRenderManifest } from '@game-cms/types';
+import type {
+  ComponentClientRenderManifest,
+  ComponentId,
+} from '@game-cms/types';
 import { ApiError, ApiErrorCode } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
 
@@ -27,8 +30,10 @@ export default service({
   },
   getClientRenderManifest: (
     id: ComponentId
-  ): ComponentRenderManifest | null => {
+  ): ComponentClientRenderManifest | null => {
     const staticConfig = env().components[id];
+
+    console.log(env().components);
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (staticConfig === undefined) {
@@ -38,13 +43,12 @@ export default service({
     const { renderManifest } = staticConfig;
 
     return {
-      jsBundle: assetsPath(id, RENDERER_FILE),
-      jsDependencies: renderManifest.jsDependencies.map((filePath) =>
-        assetsPath(id, filePath)
-      ),
-      cssBundles: renderManifest.cssBundles.map((filePath) =>
-        assetsPath(id, filePath)
-      ),
+      main: assetsPath(id, RENDERER_FILE),
+      dependencies: {
+        css: Object.keys(renderManifest.dependencies.css).map((filePath) =>
+          assetsPath(id, filePath)
+        ),
+      },
     };
   },
 });

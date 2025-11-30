@@ -22,5 +22,5 @@
     "composite": true
   },
   "include": ["./src"],
-  "references": [{ "path": "../types" }]
+  "references": [{ "path": "../types" }, { "path": "../base-types" }]
 }

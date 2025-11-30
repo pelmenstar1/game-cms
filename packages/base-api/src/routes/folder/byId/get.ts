@@ -1,6 +1,6 @@
 import { getFolderResponse } from '@game-cms/base-types';
 import { objectId } from '@game-cms/shared/mongo';
-import { apiRoute } from '@game-cms/utils';
+import { ApiError, ApiErrorCode, apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 export default apiRoute({
@@ -17,13 +17,12 @@ export default apiRoute({
       200: getFolderResponse,
     },
   },
-  handler: async (req, res) => {
+  handler: async (req) => {
     const { folderId } = req.params;
 
     const result = await cms.service('base::folder').getById(folderId);
     if (result === null) {
-      res.callNotFound();
-      return;
+      throw new ApiError(`Folder not found`, ApiErrorCode.ENTITY_NOT_FOUND);
     }
 
     return result;

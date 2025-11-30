@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import { watch } from 'chokidar';
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 
 export function libraryWatcherPlugin(name: string): Plugin {
   return {
@@ -13,8 +13,6 @@ export function libraryWatcherPlugin(name: string): Plugin {
         ignoreInitial: true,
         usePolling: true,
       });
-
-      console.log('server configured');
 
       watcher.on('change', (filePath) => {
         if (filePath.endsWith('.tsbuildinfo')) {

@@ -13,7 +13,7 @@ import type {
 
 import { compiledFilePath } from '../../utils/localPath.js';
 import { getAllServices, getApiRoutes } from './api.js';
-import { scanAllComponents } from './components.js';
+import { getAllComponents } from './components.js';
 import { resolveConfig } from './config.js';
 import { getSharedAssetsConfig } from './sharedAssets.js';
 
@@ -21,7 +21,7 @@ type BaseEnvResolvers = EnvResolver<Omit<BaseCmsEnvironment, 'config'>>;
 
 const baseEnvResolvers: BaseEnvResolvers = {
   apiRoutes: getApiRoutes,
-  components: scanAllComponents,
+  components: getAllComponents,
   services: getAllServices,
   sharedAssets: getSharedAssetsConfig,
 };
@@ -53,5 +53,5 @@ export async function initEnvFromConfigs() {
     resolvers.map((resolver) => resolveObject(resolver, context))
   );
 
-  initializeEnv(mergeObjects(items) as CmsEnvironment);
+  initializeEnv(mergeObjects([{ config }, ...items]) as CmsEnvironment);
 }

@@ -16,9 +16,11 @@
     "jsx": "react-jsx",
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
+    "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
     "composite": true
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "references": [{ "path": "../shared" }, { "path": "../types" }]
 }

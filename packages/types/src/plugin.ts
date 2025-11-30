@@ -7,7 +7,7 @@ import type {
 } from 'fastify';
 
 import type { ApiRoute } from './api.js';
-import type { ComponentController } from './component.js';
+import type { ComponentStaticConfigMap } from './component.js';
 import type { ResolvedCmsConfig } from './config.js';
 import type { Service } from './service.js';
 
@@ -21,7 +21,7 @@ export type PluginValueSourceArgs = [context: ValueSourceContext];
 export type PluginValueSource<T> = MaybeAsyncFactory<T, PluginValueSourceArgs>;
 
 export type ApiRouteSource = PluginValueSource<ApiRoute[]>;
-export type ComponentSource = PluginValueSource<ComponentController[]>;
+export type ComponentSource = PluginValueSource<ComponentStaticConfigMap>;
 export type ServiceSource = PluginValueSource<Service[]>;
 
 export type EnvResolver<Env> = ObjectResolver<Env, PluginValueSourceArgs>;

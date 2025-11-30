@@ -14,6 +14,11 @@ import { initPlugins } from './plugin.js';
 import type { StartOptions } from './types.js';
 
 async function startServer(options: StartOptions) {
+  const {
+    config: { server },
+    apiRoutes,
+  } = env();
+
   const app = createFastifyApp();
 
   app.register(dashboard, options);
@@ -22,13 +27,17 @@ async function startServer(options: StartOptions) {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
+  for (const route of apiRoutes) {
+    const url = route.config?.exact ? route.url : `/api${route.url}`;
+
+    app.route({ ...route, url });
+  }
+
   await initPlugins(app);
 
   setCmsController(createController());
 
-  const { port } = env().config.server;
-
-  await app.listen({ port });
+  await app.listen({ port: server.port });
 }
 
 export default async function start(options: StartOptions) {

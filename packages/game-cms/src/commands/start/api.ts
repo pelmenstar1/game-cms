@@ -1,4 +1,3 @@
-import { env } from '@game-cms/env';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import type {
   Plugin,
@@ -16,7 +15,7 @@ async function resolvePluginValueSource<T>(
   context: ValueSourceContext,
   getSource: (plugin: Plugin) => PluginValueSource<T[]> | undefined
 ): Promise<T[]> {
-  const { plugins } = env().config;
+  const { plugins } = context.config;
 
   const result = await Promise.all(
     plugins.map(async (plugin) => {

@@ -1,10 +1,10 @@
 import type { MaybePromise } from './typeutil.js';
 
-export type MaybeFactory<T, Args extends unknown[]> =
+export type MaybeFactory<T, Args extends unknown[] = []> =
   | T
   | ((...args: Args) => T);
 
-export type MaybeAsyncFactory<T, Args extends unknown[]> =
+export type MaybeAsyncFactory<T, Args extends unknown[] = []> =
   | T
   | ((...args: Args) => MaybePromise<T>);
 
@@ -16,9 +16,10 @@ export function resolveMaybeFactory<T extends object, Args extends unknown[]>(
 }
 
 export async function resolveAsyncMaybeFactory<
-  T extends object,
+  T extends object | string,
   Args extends unknown[],
 >(factory: MaybeAsyncFactory<T, Args>, ...args: Args): Promise<T> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return typeof factory === 'function' ? await factory(...args) : factory;
 }
 

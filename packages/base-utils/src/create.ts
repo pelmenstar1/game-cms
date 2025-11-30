@@ -1,5 +1,5 @@
 import type { ServerEntitySchema } from '@game-cms/base-types';
-import { ComponentData } from '@game-cms/types';
+import type { ComponentData } from '@game-cms/types';
 
 /*@__NO_SIDE_EFFECTS__*/
 export function entity<

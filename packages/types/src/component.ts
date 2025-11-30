@@ -1,4 +1,4 @@
-import type { MaybeFactory } from '@game-cms/shared';
+import type { MaybeAsyncFactory, MaybeFactory } from '@game-cms/shared';
 import type { FC } from 'react';
 import type { ZodType } from 'zod';
 
@@ -86,12 +86,13 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
   ComponentPropsById<Id>
 >;
 
+export type ComponentControllerMeta<Id extends string = string> = { id: Id };
+
 export interface ComponentController<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
   Id extends string = string,
-> {
-  id: Id;
+> extends ComponentControllerMeta<Id> {
   validation: {
     options: ZodType<Options>;
     data: MaybeFactory<ZodType<Data>, [Options]>;
@@ -102,21 +103,34 @@ export interface ComponentController<
   };
 }
 
-export interface ComponentRenderManifest {
-  jsBundle: string;
-  jsDependencies: string[];
-  cssBundles: string[];
+export type FileSource = MaybeAsyncFactory<string>;
+
+export interface ComponentRendererDependencies {
+  js: Record<string, FileSource>;
+  css: Record<string, FileSource>;
 }
 
+export interface ComponentRenderManifest {
+  main: FileSource;
+  dependencies: ComponentRendererDependencies;
+}
+
+export type ComponentClientRenderManifest = {
+  main: string;
+  dependencies: {
+    css: string[];
+  };
+};
+
 export type ComponentStaticConfig<Id extends ComponentId = ComponentId> = {
-  baseDirectory: string;
   controller: GetComponentControllerById<Id>;
   renderManifest: ComponentRenderManifest;
 };
 
-export type ComponentStaticConfigMap = {
-  [Id in ComponentId]: ComponentStaticConfig<Id>;
-};
+export type ComponentStaticConfigMap<K extends string | number = ComponentId> =
+  {
+    [Id in K]: ComponentStaticConfig<Id>;
+  };
 
 export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
   IdArrayToMap<T>;

@@ -23,6 +23,9 @@
     { "path": "../env" },
     { "path": "../react" },
     { "path": "../shared" },
-    { "path": "../utils" }
+    { "path": "../utils" },
+    { "path": "../base-components" },
+    { "path": "../base-plugin" },
+    { "path": "../base-utils" }
   ]
 }

@@ -36,12 +36,18 @@ function getWorkspaceDependencies(info: PackageInfo) {
 async function createPackageRegistry() {
   const packages = await fsp.readdir(packagesDir);
   const packagesInfos = await Promise.all(
-    packages.map(async (name) => ({
-      directoryName: name,
-      info: await readJson<PackageInfo>(
-        path.join(packagesDir, name, 'package.json')
-      ),
-    }))
+    packages.map(async (name) => {
+      try {
+        return {
+          directoryName: name,
+          info: await readJson<PackageInfo>(
+            path.join(packagesDir, name, 'package.json')
+          ),
+        };
+      } catch (error) {
+        throw new Error(`Invalid package.json in ${name}`, { cause: error });
+      }
+    })
   );
 
   return {

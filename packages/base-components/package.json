@@ -8,6 +8,7 @@
   "dependencies": {
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
+    "@game-cms/utils": "workspace:*",
     "zod": "4.1.12"
   },
   "peerDependencies": {
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@game-cms/build": "workspace:*",
+    "@game-cms/vite-plugins": "workspace:*",
     "@rollup/plugin-commonjs": "28.0.6",
     "@rollup/plugin-replace": "6.0.2",
     "@types/node": "24.10.0",
@@ -29,6 +31,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./source": {
+      "import": "./dist/source.js",
+      "types": "./src/source.d.ts"
     },
     "./types": {
       "import": "./dist/types.js",

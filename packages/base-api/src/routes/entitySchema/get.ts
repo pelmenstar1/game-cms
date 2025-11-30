@@ -1,4 +1,4 @@
-import { apiRoute } from '@game-cms/utils';
+import { ApiError, ApiErrorCode, apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 export default apiRoute({
@@ -12,14 +12,12 @@ export default apiRoute({
       id: z.string(),
     }),
   },
-  handler: (req, res) => {
+  handler: (req) => {
     const { id } = req.params;
     const result = cms.service('base::entitySchema').getClientById(id);
 
     if (result === null) {
-      res.callNotFound();
-
-      return;
+      throw new ApiError('Unknown entity', ApiErrorCode.ENTITY_NOT_FOUND);
     }
 
     return result;

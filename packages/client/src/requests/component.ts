@@ -1,4 +1,7 @@
-import type { ComponentId, ComponentRenderManifest } from '@game-cms/types';
+import type {
+  ComponentClientRenderManifest,
+  ComponentId,
+} from '@game-cms/types';
 
 import { request } from '../internal/utils.js';
 import { json } from '../responseParser.js';
@@ -10,5 +13,5 @@ export const getComponentManifest = (
 ) =>
   request(context, {
     url: `/_components/${key}/manifest.json`,
-    response: json<ComponentRenderManifest>(),
+    response: json<ComponentClientRenderManifest>(),
   });

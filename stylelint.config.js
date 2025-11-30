@@ -3,11 +3,9 @@ export default {
   extends: ['stylelint-scss', 'stylelint-config-standard-scss'],
   ignoreFiles: [
     '**/node_modules',
-    'packages/*/build',
     'packages/dashboard/build/**',
-    'packages/*/dist',
-    'packages/*/storybook-static',
-    'packages/components/dist/**',
+    'packages/base-components/dist/**',
+    'packages/**/storybook-static',
     'coverage/**',
   ],
   rules: {
