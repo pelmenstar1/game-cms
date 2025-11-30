@@ -1,5 +1,5 @@
 import { type ApiRouteContextConfig } from '@game-cms/types';
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import { ApiError } from '@game-cms/utils';
 import type { FastifyPluginCallback, RouteGenericInterface } from 'fastify';
 
 import { getRequestJwt, type JwtSourceOptions } from '../utils/jwtSource.js';
@@ -19,7 +19,7 @@ export const auth: FastifyPluginCallback = (instance) => {
 
         const token = getRequestJwt(req, jwtOptions);
         if (token === undefined) {
-          throw new ApiError('No JWT', ApiErrorCode.UNAUTHORIZED);
+          throw new ApiError('No JWT', 'base::access/unauthorized');
         }
 
         const hydratedId = hydrateRouteId(id, req.params);

@@ -10,7 +10,7 @@ import {
   type RelativeTime,
 } from '@game-cms/shared/chrono';
 import type { ApiRouteId } from '@game-cms/types';
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import { ApiError } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
 import { jwtVerify, SignJWT } from 'jose';
 import type { ObjectId } from 'mongodb';
@@ -75,7 +75,10 @@ export default service({
       : false;
 
     if (user === null || !isValid) {
-      throw new ApiError('Invalid user or password', ApiErrorCode.UNAUTHORIZED);
+      throw new ApiError(
+        'Invalid user or password',
+        'base::access/unauthorized'
+      );
     }
 
     const expirationTime = getExpirationTime('user');
@@ -87,13 +90,13 @@ export default service({
   signApiTokenIn: async (token: string) => {
     const tokenInfo = await cms.service('base::auth::apiToken').get(token);
     if (tokenInfo === null) {
-      throw new ApiError('Unknown token', ApiErrorCode.UNAUTHORIZED);
+      throw new ApiError('Unknown token', 'base::access/unauthorized');
     }
 
     const now = Date.now();
 
     if (now > tokenInfo.expirationDate.getTime()) {
-      throw new ApiError(`Token expired`, ApiErrorCode.UNAUTHORIZED);
+      throw new ApiError(`Token expired`, 'base::access/unauthorized');
     }
 
     const jwtExpirationTime = getExpirationTime('apiToken');
@@ -114,16 +117,16 @@ export default service({
 
     const payloadResult = jwtPayloadSchema.safeParse(payload);
     if (!payloadResult.success) {
-      throw new ApiError(
-        'Invalid token payload',
-        ApiErrorCode.VALIDATION_ISSUE
-      );
+      throw new ApiError('Invalid token payload', 'base::access/unauthorized');
     }
 
     const permissions = payloadResult.data.prms;
 
     if (routeId !== undefined && !hasPermission(permissions, routeId)) {
-      throw new ApiError('Cannot access this route', ApiErrorCode.UNAUTHORIZED);
+      throw new ApiError(
+        'Cannot access this route',
+        'base::access/unauthorized'
+      );
     }
   },
   getAllPermissions: () => {

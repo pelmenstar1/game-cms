@@ -1,4 +1,5 @@
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import type { ApiErrorCode } from '@game-cms/types';
+import { ApiError } from '@game-cms/utils';
 import type { NavigateFunction } from 'react-router';
 
 export interface ApiRedirectOptions {
@@ -13,12 +14,12 @@ type RedirectConfig = {
 };
 
 const redirectConfigMap: Partial<Record<ApiErrorCode, RedirectConfig>> = {
-  [ApiErrorCode.UNAUTHORIZED]: {
+  'base::access/unauthorized': {
     key: 'redirectOnUnauthorized',
     defaultValue: true,
     route: '/signin',
   },
-  [ApiErrorCode.ENTITY_NOT_FOUND]: {
+  'base::entity/notFound': {
     key: 'redirectOnNotFound',
     route: '/404',
   },
@@ -35,8 +36,6 @@ export function withApiErrorHandling<Args extends unknown[], R>(
     } catch (error: unknown) {
       if (error instanceof ApiError) {
         const config = redirectConfigMap[error.code as ApiErrorCode];
-
-        console.log(error.code);
 
         if (config && (options?.[config.key] ?? config.defaultValue)) {
           await navigate(config.route);

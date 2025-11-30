@@ -2,7 +2,7 @@ import type { CreateUserPayload, ServerUser } from '@game-cms/base-types';
 import { env } from '@game-cms/env';
 import type { PagingOptions } from '@game-cms/shared';
 import { isDuplicateKeyError } from '@game-cms/shared/mongo';
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import { ApiError } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
 import type { ClientSession, Filter, ObjectId } from 'mongodb';
 
@@ -71,7 +71,7 @@ async function createUser(payload: CreateUserPayload) {
     if (isDuplicateKeyError(error)) {
       throw new ApiError(
         'User with specified email already exists',
-        ApiErrorCode.DUPLICATE
+        'base::entity/duplicate'
       );
     }
 

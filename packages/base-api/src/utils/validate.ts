@@ -1,6 +1,5 @@
+import { ApiError } from '@game-cms/utils';
 import { ZodType } from 'zod';
-
-import { ApiError, ApiErrorCode } from './error.js';
 
 export function apiValidateValue<T>(value: unknown, schema: ZodType<T>) {
   const result = schema.safeParse(value);
@@ -9,7 +8,7 @@ export function apiValidateValue<T>(value: unknown, schema: ZodType<T>) {
 
     throw new ApiError(
       'Schema validation issue',
-      ApiErrorCode.VALIDATION_ISSUE,
+      'base::schema/validation',
       error.issues
     );
   }

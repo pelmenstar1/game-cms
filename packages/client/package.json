@@ -12,6 +12,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/globalTypes.js",
+      "types": "./dist/globalTypes.d.ts"
     }
   },
   "dependencies": {

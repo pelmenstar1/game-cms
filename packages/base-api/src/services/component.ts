@@ -3,7 +3,7 @@ import type {
   ComponentClientRenderManifest,
   ComponentId,
 } from '@game-cms/types';
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import { ApiError } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
 
 function assetsPath(id: ComponentId, filePath: string) {
@@ -20,10 +20,7 @@ export default service({
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (staticConfig === undefined) {
-      throw new ApiError(
-        `Unknown component: ${id}`,
-        ApiErrorCode.ENTITY_NOT_FOUND
-      );
+      throw new ApiError(`Unknown component: ${id}`, 'base::entity/notFound');
     }
 
     return staticConfig.controller;

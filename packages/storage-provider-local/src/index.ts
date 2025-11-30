@@ -6,7 +6,7 @@ import { pipeline } from 'node:stream/promises';
 import type { ServerStorageFile, StorageProvider } from '@game-cms/base-types';
 import { sendFile } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
-import { ApiError, ApiErrorCode, apiRoute } from '@game-cms/utils';
+import { ApiError, apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 import { resolveNewFilePath } from './utils.js';
@@ -29,7 +29,7 @@ function getFileRoute(storagePath: string) {
     handler: async (req, res) => {
       const { fileName } = req.params;
       if (fileName.includes('/') || fileName.includes('\\')) {
-        throw new ApiError('Unknown file', ApiErrorCode.ENTITY_NOT_FOUND);
+        throw new ApiError('Unknown file', 'base::entity/notFound');
       }
 
       const filePath = path.join(storagePath, fileName);

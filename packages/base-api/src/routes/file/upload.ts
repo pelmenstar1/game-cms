@@ -1,8 +1,10 @@
 import type { MultipartFile } from '@fastify/multipart';
 import { uploadFileMeta, uploadFileResponse } from '@game-cms/base-types';
 import { parseJsonOptional } from '@game-cms/shared';
-import { ApiError, ApiErrorCode, apiValidateValue } from '@game-cms/utils';
+import { ApiError } from '@game-cms/utils';
 import { apiRoute } from '@game-cms/utils';
+
+import { apiValidateValue } from '../../utils/validate.js';
 
 function getInfo(data: MultipartFile) {
   const infoField = data.fields.info;
@@ -11,22 +13,16 @@ function getInfo(data: MultipartFile) {
   }
 
   if (Array.isArray(infoField)) {
-    throw new ApiError(
-      'Invalid info field format',
-      ApiErrorCode.VALIDATION_ISSUE
-    );
+    throw new ApiError('Invalid info field format', 'base::schema/validation');
   }
 
   if (infoField.type !== 'field') {
-    throw new ApiError(
-      'Info must not be a file',
-      ApiErrorCode.VALIDATION_ISSUE
-    );
+    throw new ApiError('Info must not be a file', 'base::schema/validation');
   }
 
   const rawInfo = infoField.value;
   if (typeof rawInfo !== 'string') {
-    throw new ApiError('Info must be a string', ApiErrorCode.VALIDATION_ISSUE);
+    throw new ApiError('Info must be a string', 'base::schema/validation');
   }
 
   return apiValidateValue(parseJsonOptional(rawInfo), uploadFileMeta);
@@ -46,7 +42,7 @@ export default apiRoute({
   handler: async (req) => {
     const data = await req.file();
     if (data === undefined) {
-      throw new ApiError('No file', ApiErrorCode.VALIDATION_ISSUE);
+      throw new ApiError('No file', 'base::schema/validation');
     }
 
     const info = getInfo(data);

@@ -1,5 +1,6 @@
 import { isNonNullObject, parseJsonOptional } from '@game-cms/shared';
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import type { ApiErrorCode } from '@game-cms/types';
+import { ApiError } from '@game-cms/utils';
 
 export async function handleResponseError(response: Response) {
   const bodyString = await response.text().catch(() => null);

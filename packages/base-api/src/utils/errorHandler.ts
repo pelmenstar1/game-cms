@@ -1,23 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { isErrorWithCode } from '@game-cms/shared/errors';
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import type { ApiErrorCode } from '@game-cms/types';
+import { ApiError } from '@game-cms/utils';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
+type ErrorResponseBody = {
+  message: string;
+  code: ApiErrorCode;
+  details?: string;
+};
+
+type FastifyValidationError = {
+  message: string;
+  validation?: string;
+};
+
+const statusCodes: Partial<Record<ApiErrorCode, number>> = {
+  'base::entity/notFound': 404,
+  'base::access/unauthorized': 401,
+  'base::entity/duplicate': 409,
+};
+
 function getApiStatusCode(error: ApiError) {
-  switch (error.code) {
-    case ApiErrorCode.ENTITY_NOT_FOUND: {
-      return 404;
-    }
-    case ApiErrorCode.UNAUTHORIZED: {
-      return 401;
-    }
-    case ApiErrorCode.DUPLICATE: {
-      return 409;
-    }
-    default: {
-      return 400;
-    }
-  }
+  const { code } = error;
+
+  const status = code && statusCodes[code];
+
+  return status ?? 400;
 }
 
 function getApiErrorResponse(error: ApiError) {
@@ -31,22 +39,30 @@ function getApiErrorResponse(error: ApiError) {
   };
 }
 
-function getGenericErrorResponse(error: unknown) {
+function getGenericErrorResponse(error: unknown): {
+  status: number;
+  body: ErrorResponseBody;
+} {
   if (isErrorWithCode(error, 'FST_ERR_VALIDATION')) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { message, validation } = error as any;
+    const { message, validation } = error as FastifyValidationError;
 
     return {
       status: 400,
       body: {
         message,
-        code: ApiErrorCode.VALIDATION_ISSUE,
+        code: 'base::schema/validation',
         details: validation,
       },
     };
   }
 
-  return { status: 500, body: { message: 'Internal Server Error' } };
+  return {
+    status: 500,
+    body: {
+      message: 'Internal Server Error',
+      code: 'base::server/interalError',
+    },
+  };
 }
 
 function resolveResponseAndStatus(error: unknown) {

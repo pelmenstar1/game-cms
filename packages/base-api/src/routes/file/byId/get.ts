@@ -1,6 +1,6 @@
 import { serverStorageFileMeta } from '@game-cms/base-types';
 import { objectId } from '@game-cms/shared/mongo';
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import { ApiError } from '@game-cms/utils';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
@@ -24,7 +24,7 @@ export default apiRoute({
 
     const meta = await fileService.getMeta(fileId);
     if (meta === null) {
-      throw new ApiError('Unknown file', ApiErrorCode.ENTITY_NOT_FOUND);
+      throw new ApiError('Unknown file', 'base::entity/notFound');
     }
 
     return meta;

@@ -1,17 +1,14 @@
-export enum ApiErrorCode {
-  ENTITY_NOT_FOUND = 'base::entityNotFound',
-  VALIDATION_ISSUE = 'base::validationIssue',
-  UNAUTHORIZED = 'base::unauthorized',
-  DUPLICATE = 'base::duplicate',
-}
+import type { ApiErrorCode } from '@game-cms/types';
 
 export class ApiError extends Error {
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   code: ApiErrorCode | undefined;
   httpCode: number | undefined;
   details: unknown;
 
   constructor(
     message: string,
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     codes: ApiErrorCode | { api?: ApiErrorCode; http?: number },
     details?: unknown
   ) {

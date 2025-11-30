@@ -9,6 +9,7 @@
     "typegen": "react-router typegen"
   },
   "devDependencies": {
+    "@game-cms/base-api": "workspace:*",
     "@game-cms/build": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
     "@types/node": "catalog:",
@@ -24,6 +25,7 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
+    "@game-cms/utils": "workspace:*",
     "@react-router/dev": "7.9.3",
     "@react-router/node": "7.9.3",
     "isbot": "5.1.31",

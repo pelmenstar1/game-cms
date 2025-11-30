@@ -61,3 +61,18 @@ export type UnknownApiRoute = ApiRoute<any, any, any, any, any, any, any>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ApiRouteMap {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ApiErrorCodeMap {}
+
+export type ApiErrorCodePath<T> = T extends string
+  ? T
+  : T extends string[]
+    ? T[number]
+    : {
+        [K in keyof T & string]: `${K}/${ApiErrorCodePath<T[K]>}`;
+      }[keyof T & string];
+
+export type ApiErrorCode = {
+  [NS in keyof ApiErrorCodeMap]: `${NS}::${ApiErrorCodePath<ApiErrorCodeMap[NS]>}`;
+}[keyof ApiErrorCodeMap];

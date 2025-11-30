@@ -1,4 +1,4 @@
-import { ApiError, ApiErrorCode } from '@game-cms/utils';
+import { ApiError } from '@game-cms/utils';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
@@ -20,7 +20,7 @@ export default apiRoute({
     const schema = getEntityValidationType(req.params.entityId);
     const body = schema.safeParse(req.body);
     if (!body.success) {
-      throw new ApiError(body.error.message, ApiErrorCode.VALIDATION_ISSUE);
+      throw new ApiError(body.error.message, 'base::schema/validation');
     }
 
     const result = await cms
