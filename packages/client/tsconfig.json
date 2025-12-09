@@ -24,6 +24,7 @@
   "references": [
     { "path": "../types" },
     { "path": "../base-api" },
+    { "path": "../base-types" },
     { "path": "../conditional" },
     { "path": "../shared" },
     { "path": "../utils" }

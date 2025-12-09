@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/base-types",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@game-cms/env": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "mongodb": "catalog:",
     "zod": "catalog:"
   }
 }

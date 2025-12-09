@@ -1,47 +1,48 @@
 {
   "name": "@game-cms/monorepo",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "type": "module",
+  "private": true,
   "scripts": {
     "lint": "tsx ./scripts/lint.ts",
-    "lint:fix": "yarn lint --fix",
-    "typegen": "yarn workspaces foreach --all -p run typegen",
-    "prebuild": "yarn workspace @game-cms/ui build && yarn tsc --build tsconfig.packages.json --declaration",
-    "prebuild:watch": "yarn workspace @game-cms/ui build && yarn tsc --build tsconfig.packages.json --declaration --watch",
-    "test": "vitest --run"
+    "lint:fix": "pnpm lint --fix",
+    "typegen": "pnpm run -r typegen",
+    "prebuild": "pnpm run --filter @game-cms/ui build && tsc --build tsconfig.packages.json --declaration",
+    "prebuild:watch": "pnpm run -filter @game-cms/ui build && tsc --build tsconfig.packages.json --declaration --watch",
+    "test": "vitest --run",
+    "clean": "tsx ./scripts/clean.ts"
   },
   "devDependencies": {
-    "@eslint/js": "9.37.0",
+    "@eslint/js": "9.39.1",
     "@types/node": "catalog:",
-    "@types/react": "19.2.0",
-    "@types/react-dom": "19.2.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitest/browser": "3.2.4",
-    "eslint": "9.37.0",
+    "eslint": "9.39.1",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-react": "7.37.5",
-    "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-simple-import-sort": "12.1.1",
-    "eslint-plugin-unicorn": "60.0.0",
+    "eslint-plugin-unicorn": "62.0.0",
     "playwright": "1.55.1",
     "postcss": "8.5.6",
-    "prettier": "3.6.2",
+    "prettier": "3.7.4",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "stylelint": "16.25.0",
+    "stylelint": "16.26.1",
     "stylelint-config-standard-scss": "16.0.0",
-    "stylelint-scss": "6.12.1",
+    "stylelint-scss": "6.13.0",
     "tsx": "catalog:",
-    "typescript": "5.9.3",
+    "typescript": "catalog:",
     "typescript-eslint": "8.45.0",
-    "vite-tsconfig-paths": "5.1.4",
+    "vite-tsconfig-paths": "catalog:",
     "vitest": "3.2.4",
     "vitest-browser-react": "1.0.1"
   },
-  "workspaces": [
-    "demo-app",
-    "packages/*"
-  ]
+  "dependencies": {
+    "glob": "13.0.0"
+  }
 }

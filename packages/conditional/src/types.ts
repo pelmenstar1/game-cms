@@ -5,8 +5,10 @@ import type { ConditionalAstExpression } from './ast.js';
 export type ConditionalValueInputAtom = string | number | boolean;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ConditionalValueInput
-  extends Record<string, ConditionalValueInputAtom> {}
+export interface ConditionalValueInput extends Record<
+  string,
+  ConditionalValueInputAtom
+> {}
 
 export type RawConditionalNotation = string;
 

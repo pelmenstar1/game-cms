@@ -1,15 +1,16 @@
 {
   "name": "@game-cms/utils",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
-    "typescript": "5.9.3"
+    "typescript": "catalog:"
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",
+    "@game-cms/types": "workspace:*",
     "zod": "catalog:"
   }
 }

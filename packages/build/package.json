@@ -1,11 +1,11 @@
 {
   "name": "@game-cms/build",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
     "@types/node": "catalog:",
-    "typescript": "5.9.3"
+    "typescript": "catalog:"
   }
 }

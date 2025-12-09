@@ -18,8 +18,10 @@ export interface EntitySchemaMeta<Id extends string = string> {
   title: string;
 }
 
-export interface BaseEntitySchema<Id extends string, Components>
-  extends EntitySchemaMeta<Id> {
+export interface BaseEntitySchema<
+  Id extends string,
+  Components,
+> extends EntitySchemaMeta<Id> {
   components: Components;
 }
 

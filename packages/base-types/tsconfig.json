@@ -19,5 +19,9 @@
     "composite": true
   },
   "include": ["./src"],
-  "references": [{ "path": "../types" }, { "path": "../env" }]
+  "references": [
+    { "path": "../types" },
+    { "path": "../env" },
+    { "path": "../shared" }
+  ]
 }

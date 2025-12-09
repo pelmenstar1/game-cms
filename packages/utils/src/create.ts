@@ -25,10 +25,10 @@ type ConfigInit = MaybeEnv<UnresolvedCmsConfig>;
 /*@__NO_SIDE_EFFECTS__*/
 export function apiRoute<
   RawServer extends RawServerBase = RawServerDefault,
-  RawRequest extends
-    RawRequestDefaultExpression<RawServer> = RawRequestDefaultExpression<RawServer>,
-  RawReply extends
-    RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>,
+  RawRequest extends RawRequestDefaultExpression<RawServer> =
+    RawRequestDefaultExpression<RawServer>,
+  RawReply extends RawReplyDefaultExpression<RawServer> =
+    RawReplyDefaultExpression<RawServer>,
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
   SchemaCompiler extends FastifySchema = FastifySchema,
   Logger extends FastifyBaseLogger = FastifyBaseLogger,

@@ -1,11 +1,11 @@
 {
   "name": "@game-cms/shared",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "type": "module",
   "dependencies": {
     "@types/node": "catalog:",
     "jose": "6.1.0",
-    "typescript": "5.9.3"
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {
@@ -62,6 +62,6 @@
   },
   "peerDependencies": {
     "fastify": "*",
-    "mongodb": "*"
+    "mongodb": "catalog:"
   }
 }

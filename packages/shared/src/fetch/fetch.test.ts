@@ -11,7 +11,7 @@ import {
 describe('getJsonOrError', () => {
   test('ok', async () => {
     const object = { abc: 123 };
-    const response = new Response(JSON.stringify(object));
+    const response = Response.json(object);
     const actual = await getJsonOrError(response);
 
     expect(actual).toEqual(object);

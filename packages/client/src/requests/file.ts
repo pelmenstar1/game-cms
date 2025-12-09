@@ -51,7 +51,7 @@ export const listFiles = (
 export const uploadFile = (
   context: RequestContext,
   payload: ClientUploadFilePayload
-) =>
+): Promise<UploadFileResponse> =>
   request(context, {
     url: '/file',
     method: 'POST',
@@ -70,5 +70,5 @@ export const uploadFile = (
 
       init.body = formData;
     },
-    response: json<UploadFileResponse>(),
+    response: json(),
   });

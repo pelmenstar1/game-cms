@@ -14,6 +14,7 @@ export default {
     'value-keyword-case': null,
     'scss/dollar-variable-pattern': null,
     'media-feature-range-notation': null,
+    'no-empty-source': null,
     'selector-pseudo-class-no-unknown': [
       true,
       { ignorePseudoClasses: ['global'] },

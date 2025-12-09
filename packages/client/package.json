@@ -1,12 +1,13 @@
 {
   "name": "@game-cms/client",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "type": "module",
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
+    "@game-cms/base-types": "workspace:*",
     "@game-cms/conditional": "workspace:*",
     "@game-cms/types": "workspace:*",
-    "typescript": "5.9.3"
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {

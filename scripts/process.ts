@@ -14,6 +14,6 @@ export function execFileAsync(file: string, args: string[], cwd?: string) {
   });
 }
 
-export function yarn(args: string[], cwd?: string) {
-  return execFileAsync('yarn', args, cwd);
+export function pnpm(args: string[], cwd?: string) {
+  return execFileAsync('pnpm', args, cwd);
 }

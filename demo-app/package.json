@@ -1,6 +1,6 @@
 {
   "name": "demo-app",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
     "build": "tsc"
@@ -12,6 +12,6 @@
   "devDependencies": {
     "@game-cms/types": "workspace:*",
     "@types/node": "catalog:",
-    "typescript": "5.9.3"
+    "typescript": "catalog:"
   }
 }

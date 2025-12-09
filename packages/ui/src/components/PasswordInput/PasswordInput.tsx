@@ -6,8 +6,10 @@ import { IconButton } from '../IconButton';
 import { TextInput, TextInputProps } from '../TextInput';
 import styles from './PasswordInput.module.scss';
 
-interface PasswordInputProps
-  extends Omit<TextInputProps, 'endContent' | 'type'> {
+interface PasswordInputProps extends Omit<
+  TextInputProps,
+  'endContent' | 'type'
+> {
   autoComplete?: 'current-password' | 'new-password';
 }
 

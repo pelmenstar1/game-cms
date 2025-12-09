@@ -17,11 +17,11 @@ function story(variant: TypographyVariant): Story {
   };
 }
 
-export const Body = story('body');
-export const BodyLarge = story('bodyLarge');
-export const H1 = story('h1');
-export const H2 = story('h2');
-export const H3 = story('h3');
-export const H4 = story('h4');
-export const H5 = story('h5');
-export const H6 = story('h6');
+export const Body: unknown = story('body');
+export const BodyLarge: unknown = story('bodyLarge');
+export const H1: unknown = story('h1');
+export const H2: unknown = story('h2');
+export const H3: unknown = story('h3');
+export const H4: unknown = story('h4');
+export const H5: unknown = story('h5');
+export const H6: unknown = story('h6');

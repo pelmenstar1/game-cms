@@ -3,8 +3,7 @@ import { ComponentProps } from 'react';
 import { classNames } from '../../utils/classNames';
 import styles from './IndeterminateCircularProgress.module.scss';
 
-export interface IndeterminateCircularProgressProps
-  extends ComponentProps<'svg'> {
+export interface IndeterminateCircularProgressProps extends ComponentProps<'svg'> {
   size?: 'sm' | 'md';
 }
 

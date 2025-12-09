@@ -27,6 +27,7 @@
     { "path": "../shared" },
     { "path": "../utils" },
     { "path": "../types" },
-    { "path": "../api-testing" }
+    { "path": "../api-testing" },
+    { "path": "../base-types" }
   ]
 }

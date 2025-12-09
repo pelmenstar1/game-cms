@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/base-components",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
     "build": "vite build"
@@ -18,12 +18,12 @@
   "devDependencies": {
     "@game-cms/build": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
-    "@rollup/plugin-commonjs": "28.0.6",
-    "@rollup/plugin-replace": "6.0.2",
+    "@rollup/plugin-commonjs": "20.0.0",
+    "@rollup/plugin-replace": "6.0.3",
     "@types/node": "catalog:",
-    "@vitejs/plugin-react": "5.0.4",
-    "glob": "11.0.3",
-    "typescript": "5.9.3",
+    "@vitejs/plugin-react": "5.1.2",
+    "glob": "13.0.0",
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-dts": "4.5.4"
   },

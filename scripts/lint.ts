@@ -1,4 +1,4 @@
-import { yarn } from './process';
+import { pnpm } from './process';
 
 const STYLELINT_PATTERN = `**/*.{css,scss}`;
 
@@ -7,7 +7,7 @@ const PRETTIER_PATTERN = '**.{json,css,scss,md,yml}';
 
 async function phase(name: string, args: string[]) {
   try {
-    await yarn(args);
+    await pnpm(args);
     console.log(`> ${name} finished`);
   } catch (error: unknown) {
     console.error(`> ${name}`);

@@ -72,6 +72,7 @@ function resolveResponseAndStatus(error: unknown) {
 }
 
 export function errorHandler() {
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   return (error: Error, _req: FastifyRequest, res: FastifyReply) => {
     const { status, body } = resolveResponseAndStatus(error);
 

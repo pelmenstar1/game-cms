@@ -3,8 +3,9 @@ import { ComponentProps, useCallback, useState } from 'react';
 import { SelectBase } from '../SelectBase';
 import { Typography } from '../Typography';
 
-export interface SelectProps<T extends string = string>
-  extends ComponentProps<'div'> {
+export interface SelectProps<
+  T extends string = string,
+> extends ComponentProps<'div'> {
   items: { key: T; title: string }[];
   selectedItem?: T;
   placeholder: string;

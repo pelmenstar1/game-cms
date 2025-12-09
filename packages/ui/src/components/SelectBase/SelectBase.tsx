@@ -5,8 +5,9 @@ import { SelectHeader } from '../SelectHeader';
 import { SelectItems } from '../SelectItems';
 import styles from './SelectBase.module.scss';
 
-export interface SelectBaseProps<T extends string = string>
-  extends ComponentProps<'div'> {
+export interface SelectBaseProps<
+  T extends string = string,
+> extends ComponentProps<'div'> {
   items: { key: T; title: string }[];
   selectedItem?: T;
 

@@ -37,10 +37,10 @@ export type ApiRouteContextConfig = {
 
 export type ApiRoute<
   RawServer extends RawServerBase = RawServerDefault,
-  RawRequest extends
-    RawRequestDefaultExpression<RawServer> = RawRequestDefaultExpression<RawServer>,
-  RawReply extends
-    RawReplyDefaultExpression<RawServer> = RawReplyDefaultExpression<RawServer>,
+  RawRequest extends RawRequestDefaultExpression<RawServer> =
+    RawRequestDefaultExpression<RawServer>,
+  RawReply extends RawReplyDefaultExpression<RawServer> =
+    RawReplyDefaultExpression<RawServer>,
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
   SchemaCompiler extends FastifySchema = FastifySchema,
   TypeProvider extends FastifyTypeProvider = ZodTypeProvider,

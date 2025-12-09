@@ -47,7 +47,6 @@ export function traceEntryPointStyles(
   const entryInfo =
     typeof entryPoint == 'string' ? manifest[entryPoint] : entryPoint;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (entryInfo === undefined) {
     throw new Error(
       `Invalid entry point: ${typeof entryPoint === 'string' ? entryPoint : entryPoint.name}`
@@ -71,7 +70,6 @@ export function traceEntryPointJsDependencies(
   const entryInfo =
     typeof entryPoint == 'string' ? manifest[entryPoint] : entryPoint;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (entryInfo === undefined) {
     throw new Error(
       `Invalid entry point: ${typeof entryPoint === 'string' ? entryPoint : entryPoint.name}`

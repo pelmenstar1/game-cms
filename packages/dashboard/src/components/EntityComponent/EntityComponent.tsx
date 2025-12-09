@@ -4,8 +4,9 @@ import { classNames, Labeled } from '@game-cms/ui';
 import { RemoteComponent, type RemoteComponentProps } from '../RemoteComponent';
 import styles from './EntityComponent.module.scss';
 
-export interface EntityComponentProps<T extends EntityId>
-  extends RemoteComponentProps<T> {
+export interface EntityComponentProps<
+  T extends EntityId,
+> extends RemoteComponentProps<T> {
   className?: string;
   title: string;
 }

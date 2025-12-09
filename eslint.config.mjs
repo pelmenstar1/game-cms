@@ -29,7 +29,7 @@ export default defineConfig(
   },
   eslint.configs.recommended,
   react.configs.flat.recommended,
-  reactHooks.configs['recommended-latest'],
+  reactHooks.configs.flat['recommended-latest'],
   tseslint.configs.strictTypeChecked,
   unicorn.configs.recommended,
   {
@@ -40,7 +40,6 @@ export default defineConfig(
     },
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     plugins: {
-      react,
       'simple-import-sort': simpleImportSort,
     },
     languageOptions: {
