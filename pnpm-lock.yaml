@@ -406,6 +406,9 @@ importers:
       '@game-cms/types':
         specifier: workspace:*
         version: link:../types
+      glob:
+        specifier: 13.0.0
+        version: 13.0.0
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -757,6 +760,9 @@ importers:
       copyfiles:
         specifier: 2.4.1
         version: 2.4.1
+      glob:
+        specifier: 13.0.0
+        version: 13.0.0
       react-router:
         specifier: 'catalog:'
         version: 7.9.3(react-dom@19.2.1(react@19.2.1))(react@19.2.1)

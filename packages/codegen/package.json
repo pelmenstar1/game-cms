@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",
-    "@game-cms/types": "workspace:*"
+    "@game-cms/types": "workspace:*",
+    "glob": "13.0.0"
   }
 }
