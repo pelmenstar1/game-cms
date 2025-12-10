@@ -1,7 +1,9 @@
 import {
   type ExpirationTimeType,
-  type JwtPayload,
-  jwtPayloadSchema,
+  type RefreshJwtPayload,
+  refreshJwtPayloadSchema,
+  type SessionJwtPayload,
+  sessionJwtPayloadSchema,
   type SignInPayload,
 } from '@game-cms/base-types';
 import { env } from '@game-cms/env';
@@ -12,15 +14,21 @@ import {
 import type { ApiRouteId } from '@game-cms/types';
 import { ApiError } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
-import { jwtVerify, SignJWT } from 'jose';
-import type { ObjectId } from 'mongodb';
+import { type JWTPayload, jwtVerify, SignJWT } from 'jose';
+import { JWTExpired } from 'jose/errors';
+import { ObjectId } from 'mongodb';
+import type { ZodType } from 'zod';
 
 import { verifyPassword } from '../utils/password.js';
 
-const SESSION_JWT_TOKEN_COOKIE_NAME = 'sjwt';
+export type JwtResult = { token: string; expirationTime: number };
+
+const SESSION_JWT_COOKIE_NAME = 'sjwt';
+const REFRESH_JWT_COOKIE_NAME = 'rjwt';
 
 const defaultExpirationTimes: Record<ExpirationTimeType, RelativeTime> = {
-  user: '7w',
+  userSession: '15m',
+  userRefresh: '1w',
   apiToken: '2h',
 };
 
@@ -34,21 +42,40 @@ function getJwtSignKey() {
   return key;
 }
 
-function createJwtToken(
-  actor: { _id: ObjectId | string; name: string; permissions: string[] },
-  expirationTime: string | number
+// For better type inference
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+async function createJwtToken<T extends JWTPayload>(
+  type: ExpirationTimeType,
+  payload: T
 ) {
-  const payload: JwtPayload = {
+  const expirationTime = getExpirationTime(type);
+
+  const token = await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime(Date.now() / 1000 + expirationTime)
+    .setIssuedAt()
+    .sign(getJwtSignKey());
+
+  return { token, expirationTime };
+}
+
+async function createSessionToken(
+  type: ExpirationTimeType,
+  actor: {
+    _id: ObjectId | string;
+    name: string;
+    permissions: string[];
+  }
+) {
+  return createJwtToken<SessionJwtPayload>(type, {
     id: actor._id.toString(),
     name: actor.name,
     prms: actor.permissions,
-  };
+  });
+}
 
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime(expirationTime)
-    .setIssuedAt()
-    .sign(getJwtSignKey());
+async function createRefreshSessionToken(userId: string) {
+  return createJwtToken<RefreshJwtPayload>('userRefresh', { userId });
 }
 
 function hasPermission(permissions: string[], id: string) {
@@ -62,9 +89,21 @@ function getExpirationTime(key: ExpirationTimeType) {
   return typeof raw === 'string' ? parseRelativeTimeToTotalSeconds(raw) : raw;
 }
 
+async function parseJwtWithSchema<T>(token: string, schema: ZodType<T>) {
+  const { payload } = await jwtVerify(token, getJwtSignKey());
+
+  const payloadResult = schema.safeParse(payload);
+  if (!payloadResult.success) {
+    throw new ApiError('Invalid token payload', 'base::access/unauthorized');
+  }
+
+  return payloadResult.data;
+}
+
 export default service({
   id: 'base::auth',
-  SESSION_JWT_TOKEN_COOKIE_NAME,
+  SESSION_JWT_COOKIE_NAME,
+  REFRESH_JWT_COOKIE_NAME,
   signUserIn: async (payload: SignInPayload) => {
     const user = await cms
       .service('base::user')
@@ -81,11 +120,23 @@ export default service({
       );
     }
 
-    const expirationTime = getExpirationTime('user');
+    const [session, refresh] = await Promise.all([
+      createSessionToken('userSession', user),
+      createRefreshSessionToken(user._id.toString()),
+    ]);
 
-    const jwt = await createJwtToken(user, expirationTime);
+    return { session, refresh };
+  },
+  refreshUserSession: async (token: string) => {
+    const { userId } = await parseJwtWithSchema(token, refreshJwtPayloadSchema);
 
-    return { jwt, expirationTime };
+    const user = await cms.service('base::user').getById(new ObjectId(userId));
+
+    if (user === null) {
+      throw new ApiError('Unknown user', 'base::entity/notFound');
+    }
+
+    return createSessionToken('userSession', user);
   },
   signApiTokenIn: async (token: string) => {
     const tokenInfo = await cms.service('base::auth::apiToken').get(token);
@@ -96,37 +147,34 @@ export default service({
     const now = Date.now();
 
     if (now > tokenInfo.expirationDate.getTime()) {
-      throw new ApiError(`Token expired`, 'base::access/unauthorized');
+      throw new ApiError(`Token expired`, 'base::access/expired');
     }
 
-    const jwtExpirationTime = getExpirationTime('apiToken');
-
-    const jwt = await createJwtToken(
-      {
-        _id: 'API token',
-        name: tokenInfo.name,
-        permissions: tokenInfo.permissions,
-      },
-      jwtExpirationTime
-    );
-
-    return { jwt };
+    return createSessionToken('apiToken', {
+      _id: 'API token',
+      name: tokenInfo.name,
+      permissions: tokenInfo.permissions,
+    });
   },
-  verifyJwt: async (token: string, routeId: ApiRouteId | undefined) => {
-    const { payload } = await jwtVerify(token, getJwtSignKey());
-
-    const payloadResult = jwtPayloadSchema.safeParse(payload);
-    if (!payloadResult.success) {
-      throw new ApiError('Invalid token payload', 'base::access/unauthorized');
-    }
-
-    const permissions = payloadResult.data.prms;
-
-    if (routeId !== undefined && !hasPermission(permissions, routeId)) {
-      throw new ApiError(
-        'Cannot access this route',
-        'base::access/unauthorized'
+  verifySessionJwt: async (token: string, routeId: ApiRouteId | undefined) => {
+    try {
+      const { prms: permissions } = await parseJwtWithSchema(
+        token,
+        sessionJwtPayloadSchema
       );
+
+      if (routeId !== undefined && !hasPermission(permissions, routeId)) {
+        throw new ApiError(
+          'Cannot access this route',
+          'base::access/unauthorized'
+        );
+      }
+    } catch (error: unknown) {
+      if (error instanceof JWTExpired) {
+        throw new ApiError('Expired token', 'base::access/expired');
+      }
+
+      throw error;
     }
   },
   getAllPermissions: () => {

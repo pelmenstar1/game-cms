@@ -3,7 +3,7 @@ declare module '@game-cms/types' {
     base: {
       entity: ['notFound', 'duplicate'];
       schema: ['validation'];
-      access: ['unauthorized'];
+      access: ['unauthorized', 'expired'];
       server: ['interalError'];
     };
   }

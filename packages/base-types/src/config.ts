@@ -11,7 +11,7 @@ export type StorageConfig = {
   provider: StorageProvider;
 };
 
-export type ExpirationTimeType = 'user' | 'apiToken';
+export type ExpirationTimeType = 'userSession' | 'userRefresh' | 'apiToken';
 
 export type AuthConfig = {
   jwtSignKey: string | Uint8Array | CryptoKey;

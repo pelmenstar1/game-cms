@@ -1,9 +1,13 @@
-import type { RequestContext, RequestFn } from '@game-cms/client';
+import type { RequestFn } from '@game-cms/client';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { createAbortController } from '@/utils/abortController';
-import { type ApiRedirectOptions, withApiErrorHandling } from '@/utils/api';
+import {
+  type ApiRedirectOptions,
+  makeApiRequest,
+  type MakeApiRequestContext,
+} from '@/utils/api';
 
 import { useApiClient } from './useApiClient';
 
@@ -30,21 +34,10 @@ export type InferApiQueryResult<T> =
 type ApiQueryOptions = ApiRedirectOptions;
 type UseApiQueryResult<R> = [value: ApiQueryResult<R>, retry: () => void];
 
-export function useApiQuery<R>(
-  queryFn: RequestFn<[], R>,
-  options?: ApiQueryOptions
-): UseApiQueryResult<R>;
-
-export function useApiQuery<Args extends unknown[], R>(
-  queryFn: RequestFn<Args, R>,
-  args: Args,
-  options?: ApiQueryOptions
-): UseApiQueryResult<R>;
-
 export function useApiQuery<Args extends unknown[], R>(
   queryFn: RequestFn<Args, R>,
   args?: Args,
-  options?: ApiQueryOptions
+  redirectOptions?: ApiQueryOptions
 ): UseApiQueryResult<R> {
   const client = useApiClient();
   const navigate = useNavigate();
@@ -57,11 +50,12 @@ export function useApiQuery<Args extends unknown[], R>(
 
   const worker = useCallback(() => {
     const abortController = createAbortController();
-    const context: RequestContext = { client, abortController };
+    const context: MakeApiRequestContext = {
+      requestContext: { client, abortController },
+      navigate,
+    };
 
-    const doRequest = withApiErrorHandling(queryFn, navigate, options);
-
-    doRequest(context, ...resolvedArgs)
+    makeApiRequest(queryFn, resolvedArgs, context, redirectOptions)
       .then((value) => {
         setResult({ status: 'success', value });
       })

@@ -1,6 +1,10 @@
 import { signInPayload } from '@game-cms/base-types';
 import { apiRoute } from '@game-cms/utils';
-import cookie from 'cookie';
+
+import {
+  createRefreshAuthCookie,
+  createSessionAuthCookie,
+} from '../../../utils/cookie.js';
 
 export default apiRoute({
   url: '/auth/user/signin',
@@ -11,19 +15,15 @@ export default apiRoute({
   handler: async (req, res) => {
     const payload = req.body;
 
-    const { jwt, expirationTime } = await cms
+    const { session, refresh } = await cms
       .service('base::auth')
       .signUserIn(payload);
 
-    const cookieName = cms.service('base::auth').SESSION_JWT_TOKEN_COOKIE_NAME;
-
-    const encodedCookie = cookie.serialize(cookieName, jwt, {
-      httpOnly: true,
-      path: '/api',
-      maxAge: expirationTime,
-      sameSite: 'strict',
+    res.status(200).headers({
+      'set-cookie': [
+        createSessionAuthCookie(session),
+        createRefreshAuthCookie(refresh),
+      ],
     });
-
-    res.status(200).header('set-cookie', encodedCookie);
   },
 });

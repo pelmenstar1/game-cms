@@ -18,6 +18,6 @@ export default apiRoute({
 
     const result = await cms.service('base::auth').signApiTokenIn(token);
 
-    return result;
+    return { jwt: result.token };
   },
 });

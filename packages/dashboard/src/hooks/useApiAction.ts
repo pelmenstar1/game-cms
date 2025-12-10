@@ -2,7 +2,11 @@ import type { RequestFn } from '@game-cms/client';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
-import { type ApiRedirectOptions, withApiErrorHandling } from '@/utils/api';
+import {
+  type ApiRedirectOptions,
+  makeApiRequest,
+  type MakeApiRequestContext,
+} from '@/utils/api';
 
 import { useApiClient } from './useApiClient';
 
@@ -10,19 +14,20 @@ type ApiActionOptions = ApiRedirectOptions;
 
 export function useApiAction<Args extends unknown[], R>(
   queryFn: RequestFn<Args, R>,
-  options?: ApiActionOptions
+  redirectOptions?: ApiActionOptions
 ) {
   const client = useApiClient();
   const navigate = useNavigate();
 
   const makeAction = useMemo(() => {
-    return withApiErrorHandling(
-      (...args: Args) => queryFn({ client }, ...args),
+    const context: MakeApiRequestContext = {
       navigate,
-      options
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client, queryFn, navigate]);
+      requestContext: { client },
+    };
+
+    return (...args: Args) =>
+      makeApiRequest(queryFn, args, context, redirectOptions);
+  }, [client, redirectOptions, navigate, queryFn]);
 
   return makeAction;
 }

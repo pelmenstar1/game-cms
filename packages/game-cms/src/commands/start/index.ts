@@ -17,6 +17,7 @@ async function startServer(options: StartOptions) {
   const {
     config: { server },
     apiRoutes,
+    services,
   } = env();
 
   const app = createFastifyApp();
@@ -35,12 +36,17 @@ async function startServer(options: StartOptions) {
 
   await initPlugins(app);
 
-  setCmsController(createController());
+  // eslint-disable-next-line @typescript-eslint/await-thenable
+  await Promise.all(services.map((service) => service.init?.()));
 
   await app.listen({ port: server.port });
 }
 
 export default async function start(options: StartOptions) {
   await initEnvFromConfigs();
+
+  // Must be after initializing env as the controller needs env.
+  setCmsController(createController());
+
   await startServer(options);
 }

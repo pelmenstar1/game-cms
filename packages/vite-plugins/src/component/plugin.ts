@@ -1,4 +1,3 @@
-import fsp from 'node:fs/promises';
 import { builtinModules } from 'node:module';
 import path from 'node:path';
 
@@ -7,6 +6,7 @@ import {
   EXTERNAL_SHARED_ASSETS,
   SHARED_ASSETS_PATHS,
 } from '@game-cms/build';
+import { glob } from 'glob';
 import type { Plugin } from 'vite';
 
 import { getComponentStaticConfigMap } from './bundle.js';
@@ -18,7 +18,7 @@ async function getBundles() {
     index: './src/index.ts',
   };
 
-  for await (const entry of fsp.glob('./src/*/*')) {
+  for (const entry of await glob('./src/*/*')) {
     const name = path.basename(path.dirname(entry));
 
     if (entry.endsWith('renderer.tsx')) {
@@ -35,7 +35,7 @@ async function getBundles() {
 async function getPaths() {
   const result: Record<string, string> = {};
 
-  for await (const entry of fsp.glob('./src/*/*')) {
+  for (const entry of await glob('./src/*/*')) {
     const name = path.basename(path.dirname(entry));
 
     result[`./${name}`] = `${name}.js`;

@@ -7,13 +7,19 @@ export const signInPayload = z.object({
 
 export type SignInPayload = z.infer<typeof signInPayload>;
 
-export const jwtPayloadSchema = z.object({
+export const sessionJwtPayloadSchema = z.object({
   id: z.string(),
   name: z.string(),
   prms: z.array(z.string()), // permissions
 });
 
-export type JwtPayload = z.infer<typeof jwtPayloadSchema>;
+export type SessionJwtPayload = z.infer<typeof sessionJwtPayloadSchema>;
+
+export const refreshJwtPayloadSchema = z.object({
+  userId: z.string(),
+});
+
+export type RefreshJwtPayload = z.infer<typeof refreshJwtPayloadSchema>;
 
 export type ApiToken = {
   token: string;

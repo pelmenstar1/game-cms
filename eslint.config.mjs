@@ -61,6 +61,7 @@ export default defineConfig(
 
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
 
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',

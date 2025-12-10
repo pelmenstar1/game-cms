@@ -8,7 +8,7 @@ import authService from '../services/auth.js';
 import { getRequestJwt, type JwtSourceOptions } from './jwtSource.js';
 
 const sourceOptions: JwtSourceOptions = {
-  cookieName: authService.SESSION_JWT_TOKEN_COOKIE_NAME,
+  cookieName: authService.SESSION_JWT_COOKIE_NAME,
 };
 
 function getRequestJwtViaFastify(options: MakeRequestInjectOptions) {
@@ -35,7 +35,7 @@ describe('getRequestJwt', () => {
   });
 
   test('cookie', async () => {
-    const name = authService.SESSION_JWT_TOKEN_COOKIE_NAME;
+    const name = authService.SESSION_JWT_COOKIE_NAME;
     const expectedJwt = 'token';
 
     const actual = await getRequestJwtViaFastify({

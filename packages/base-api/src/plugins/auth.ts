@@ -14,7 +14,7 @@ export const auth: FastifyPluginCallback = (instance) => {
       // If a route has id, it means it's protected.
       if (id !== undefined) {
         const jwtOptions: JwtSourceOptions = {
-          cookieName: cms.service('base::auth').SESSION_JWT_TOKEN_COOKIE_NAME,
+          cookieName: cms.service('base::auth').SESSION_JWT_COOKIE_NAME,
         };
 
         const token = getRequestJwt(req, jwtOptions);
@@ -24,7 +24,7 @@ export const auth: FastifyPluginCallback = (instance) => {
 
         const hydratedId = hydrateRouteId(id, req.params);
 
-        await cms.service('base::auth').verifyJwt(token, hydratedId);
+        await cms.service('base::auth').verifySessionJwt(token, hydratedId);
       }
     }
   );

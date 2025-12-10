@@ -20,6 +20,12 @@ export const signUserIn = (context: RequestContext, payload: SignInPayload) =>
     body: jsonInit(payload),
   });
 
+export const refreshUserSession = (context: RequestContext) =>
+  request(context, {
+    url: '/auth/user/refresh',
+    method: 'POST',
+  });
+
 export const getApiTokenJwt = (
   context: RequestContext,
   payload: SignTokenInPayload
