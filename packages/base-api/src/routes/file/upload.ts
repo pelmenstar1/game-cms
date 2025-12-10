@@ -1,7 +1,7 @@
 import type { MultipartFile } from '@fastify/multipart';
 import { uploadFileMeta, uploadFileResponse } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
 import { parseJsonOptional } from '@game-cms/shared';
-import { ApiError } from '@game-cms/utils';
 import { apiRoute } from '@game-cms/utils';
 
 import { apiValidateValue } from '../../utils/validate.js';

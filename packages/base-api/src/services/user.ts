@@ -1,8 +1,8 @@
 import type { CreateUserPayload, ServerUser } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/env';
 import type { PagingOptions } from '@game-cms/shared';
 import { isDuplicateKeyError } from '@game-cms/shared/mongo';
-import { ApiError } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
 import type { ClientSession, Filter, ObjectId } from 'mongodb';
 

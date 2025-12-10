@@ -1,6 +1,7 @@
+import type { ApiErrorCode } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
+import { env } from '@game-cms/env';
 import { isErrorWithCode } from '@game-cms/shared/errors';
-import type { ApiErrorCode } from '@game-cms/types';
-import { ApiError } from '@game-cms/utils';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
 type ErrorResponseBody = {
@@ -14,14 +15,9 @@ type FastifyValidationError = {
   validation?: string;
 };
 
-const statusCodes: Partial<Record<ApiErrorCode, number>> = {
-  'base::entity/notFound': 404,
-  'base::access/unauthorized': 401,
-  'base::entity/duplicate': 409,
-};
-
 function getApiStatusCode(error: ApiError) {
   const { code } = error;
+  const { statusCodes } = env().api;
 
   const status = code && statusCodes[code];
 

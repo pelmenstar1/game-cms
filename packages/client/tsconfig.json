@@ -25,6 +25,7 @@
     { "path": "../types" },
     { "path": "../base-api" },
     { "path": "../base-types" },
+    { "path": "../base-utils" },
     { "path": "../conditional" },
     { "path": "../shared" },
     { "path": "../utils" }

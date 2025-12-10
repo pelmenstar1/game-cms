@@ -28,6 +28,7 @@
     { "path": "../utils" },
     { "path": "../types" },
     { "path": "../api-testing" },
-    { "path": "../base-types" }
+    { "path": "../base-types" },
+    { "path": "../base-utils" }
   ]
 }

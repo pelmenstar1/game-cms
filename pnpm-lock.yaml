@@ -194,6 +194,9 @@ importers:
       '@game-cms/base-types':
         specifier: workspace:*
         version: link:../base-types
+      '@game-cms/base-utils':
+        specifier: workspace:*
+        version: link:../base-utils
       '@game-cms/build':
         specifier: workspace:*
         version: link:../build
@@ -375,6 +378,9 @@ importers:
 
   packages/client:
     dependencies:
+      '@game-cms/base-utils':
+        specifier: workspace:*
+        version: link:../base-utils
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -434,6 +440,9 @@ importers:
       '@game-cms/base-types':
         specifier: workspace:*
         version: link:../base-types
+      '@game-cms/base-utils':
+        specifier: workspace:*
+        version: link:../base-utils
       '@game-cms/client':
         specifier: workspace:*
         version: link:../client
@@ -636,6 +645,9 @@ importers:
 
   packages/storage-provider-local:
     dependencies:
+      '@game-cms/base-utils':
+        specifier: workspace:*
+        version: link:../base-utils
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared

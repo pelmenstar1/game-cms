@@ -1,6 +1,7 @@
 import { getFolderResponse } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
 import { objectId } from '@game-cms/shared/mongo';
-import { ApiError, apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 export default apiRoute({

@@ -37,6 +37,7 @@
     { "path": "../utils" },
     { "path": "../base-api" },
     { "path": "../base-types" },
-    { "path": "../vite-plugins" }
+    { "path": "../vite-plugins" },
+    { "path": "../base-utils" }
   ]
 }

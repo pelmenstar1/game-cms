@@ -1,4 +1,4 @@
-import type { ApiErrorCode } from '@game-cms/types';
+import type { ApiErrorCode } from '@game-cms/base-types';
 
 export class ApiError extends Error {
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents

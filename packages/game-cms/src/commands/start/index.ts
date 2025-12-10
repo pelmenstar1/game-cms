@@ -16,7 +16,7 @@ import type { StartOptions } from './types.js';
 async function startServer(options: StartOptions) {
   const {
     config: { server },
-    apiRoutes,
+    api: { routes },
     services,
   } = env();
 
@@ -28,7 +28,7 @@ async function startServer(options: StartOptions) {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  for (const route of apiRoutes) {
+  for (const route of routes) {
     const url = route.config?.exact ? route.url : `/api${route.url}`;
 
     app.route({ ...route, url });

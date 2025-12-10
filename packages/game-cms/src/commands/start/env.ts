@@ -12,7 +12,7 @@ import type {
 } from '@game-cms/types';
 
 import { compiledFilePath } from '../../utils/localPath.js';
-import { getAllServices, getApiRoutes } from './api.js';
+import { getAllServices, getApiConfig } from './api.js';
 import { getAllComponents } from './components.js';
 import { resolveConfig } from './config.js';
 import { getSharedAssetsConfig } from './sharedAssets.js';
@@ -20,7 +20,7 @@ import { getSharedAssetsConfig } from './sharedAssets.js';
 type BaseEnvResolvers = EnvResolver<Omit<BaseCmsEnvironment, 'config'>>;
 
 const baseEnvResolvers: BaseEnvResolvers = {
-  apiRoutes: getApiRoutes,
+  api: getApiConfig,
   components: getAllComponents,
   services: getAllServices,
   sharedAssets: getSharedAssetsConfig,

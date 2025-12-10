@@ -8,7 +8,6 @@
     "types": ["node", "@game-cms/base-api/clientTypes"],
 
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
 
     "strict": true,
     "jsx": "react-jsx",
@@ -24,6 +23,7 @@
   "references": [
     { "path": "../base-types" },
     { "path": "../base-api" },
+    { "path": "../base-utils" },
     { "path": "../shared" },
     { "path": "../utils" }
   ]

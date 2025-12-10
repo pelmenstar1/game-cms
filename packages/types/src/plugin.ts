@@ -38,10 +38,10 @@ export type PluginApiFastifyConfig = {
   setup?: (instance: FastifyInstance) => MaybePromise<void>;
 };
 
-export type PluginApiConfig = {
+export interface PluginApiConfig {
   fastify?: PluginApiFastifyConfig;
   routes?: MaybeWithUrlPrefix<ApiRouteSource>;
-};
+}
 
 type BasePlugin = {
   api?: PluginApiConfig;

@@ -22,6 +22,7 @@
     "@game-cms/types": "workspace:*",
     "@game-cms/utils": "workspace:*",
     "@game-cms/base-types": "workspace:*",
+    "@game-cms/base-utils": "workspace:*",
     "@node-rs/argon2": "2.0.2",
     "cookie": "1.1.1",
     "fastify-type-provider-zod": "6.1.0",

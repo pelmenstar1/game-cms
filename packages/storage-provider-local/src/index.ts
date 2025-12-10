@@ -4,9 +4,10 @@ import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 
 import type { ServerStorageFile, StorageProvider } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
 import { sendFile } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
-import { ApiError, apiRoute } from '@game-cms/utils';
+import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 import { resolveNewFilePath } from './utils.js';

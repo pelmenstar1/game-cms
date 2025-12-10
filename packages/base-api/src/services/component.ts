@@ -1,9 +1,9 @@
+import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/env';
 import type {
   ComponentClientRenderManifest,
   ComponentId,
 } from '@game-cms/types';
-import { ApiError } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
 
 function assetsPath(id: ComponentId, filePath: string) {

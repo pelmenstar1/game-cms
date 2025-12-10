@@ -28,6 +28,7 @@
     "@react-router/dev": "catalog:",
     "@react-router/node": "catalog:",
     "@game-cms/base-types": "workspace:*",
+    "@game-cms/base-utils": "workspace:*",
     "isbot": "5.1.31",
     "react": "catalog:",
     "react-dom": "catalog:",

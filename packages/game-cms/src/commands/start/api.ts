@@ -1,4 +1,7 @@
+import type { ApiEnvironment } from '@game-cms/env';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
+import { filterOutNullable } from '@game-cms/shared/collections';
+import { mergeObjects } from '@game-cms/shared/object';
 import type {
   Plugin,
   PluginValueSource,
@@ -30,10 +33,30 @@ async function resolvePluginValueSource<T>(
   return result.flat().filter((value) => value !== undefined) as T[];
 }
 
-export async function getApiRoutes(context: ValueSourceContext) {
+async function getApiRoutes(context: ValueSourceContext) {
   return resolvePluginValueSource(context, getApiRouteSourceFromPlugin);
+}
+
+function getErrorStatusCodes(context: ValueSourceContext) {
+  const result = filterOutNullable(
+    context.config.plugins.map((plugin) => plugin.api?.error?.statuses)
+  );
+
+  return mergeObjects(result);
 }
 
 export async function getAllServices(context: ValueSourceContext) {
   return resolvePluginValueSource(context, (plugin) => plugin.services);
+}
+
+export async function getApiConfig(
+  context: ValueSourceContext
+): Promise<ApiEnvironment> {
+  const routes = await getApiRoutes(context);
+  const statusCodes = getErrorStatusCodes(context);
+
+  return {
+    routes,
+    statusCodes,
+  };
 }

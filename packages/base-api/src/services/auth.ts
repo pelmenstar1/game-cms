@@ -6,13 +6,13 @@ import {
   sessionJwtPayloadSchema,
   type SignInPayload,
 } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/env';
 import {
   parseRelativeTimeToTotalSeconds,
   type RelativeTime,
 } from '@game-cms/shared/chrono';
 import type { ApiRouteId } from '@game-cms/types';
-import { ApiError } from '@game-cms/utils';
 import { service } from '@game-cms/utils';
 import { type JWTPayload, jwtVerify, SignJWT } from 'jose';
 import { JWTExpired } from 'jose/errors';
@@ -173,10 +173,10 @@ export default service({
     }
   },
   getAllPermissions: () => {
-    const result = env()
-      .apiRoutes.map((route) => route.config?.id)
-      .filter((id) => id !== undefined);
+    const { routes } = env().api;
 
-    return result;
+    return routes
+      .map((route) => route.config?.id)
+      .filter((id) => id !== undefined);
   },
 });

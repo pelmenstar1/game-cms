@@ -4,6 +4,7 @@ import { combineAsyncFactories } from '@game-cms/shared';
 import type { PluginApiConfig, ServiceSource } from '@game-cms/types';
 import { scanDirectorySource } from '@game-cms/utils';
 
+import { errorStatuses } from './errors.js';
 import { auth } from './plugins/auth.js';
 import * as services from './services/index.js';
 import { errorHandler } from './utils/errorHandler.js';
@@ -11,6 +12,9 @@ import { errorHandler } from './utils/errorHandler.js';
 export const serviceSource: ServiceSource = Object.values(services);
 
 export const apiConfig: PluginApiConfig = {
+  error: {
+    statuses: errorStatuses,
+  },
   routes: {
     urlPrefix: '/api',
     source: combineAsyncFactories(

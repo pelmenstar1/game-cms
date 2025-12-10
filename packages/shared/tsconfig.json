@@ -7,8 +7,6 @@
     "target": "esnext",
     "types": ["node"],
 
-    "exactOptionalPropertyTypes": true,
-
     "strict": true,
     "jsx": "react-jsx",
     "verbatimModuleSyntax": true,

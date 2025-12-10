@@ -1,10 +1,10 @@
+import type { ApiErrorCode, ApiErrorCodeTypeMap } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
 import {
   refreshUserSession,
   type RequestContext,
   type RequestFn,
 } from '@game-cms/client';
-import type { ApiErrorCode } from '@game-cms/types';
-import { ApiError } from '@game-cms/utils';
 import type { NavigateFunction } from 'react-router';
 
 export interface ApiRedirectOptions {
@@ -24,7 +24,7 @@ type RedirectConfig = {
   route: string;
 };
 
-const redirectConfigMap: Partial<Record<ApiErrorCode, RedirectConfig>> = {
+const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
   'base::access/unauthorized': {
     key: 'redirectOnUnauthorized',
     defaultValue: true,

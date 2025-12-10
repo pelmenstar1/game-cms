@@ -6,10 +6,14 @@ import type {
   SharedAssetsConfig,
 } from '@game-cms/types';
 
+export interface ApiEnvironment {
+  routes: ApiRoute[];
+}
+
 export type BaseCmsEnvironment = {
   config: ResolvedCmsConfig;
   components: ComponentStaticConfigMap;
-  apiRoutes: ApiRoute[];
+  api: ApiEnvironment;
   services: Service[];
   sharedAssets: SharedAssetsConfig;
 };

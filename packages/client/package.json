@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",
-    "@game-cms/utils": "workspace:*"
+    "@game-cms/utils": "workspace:*",
+    "@game-cms/base-utils": "workspace:*"
   }
 }
