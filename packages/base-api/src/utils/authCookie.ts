@@ -2,10 +2,11 @@ import { serialize } from 'cookie';
 
 import type { JwtResult } from '../services/auth.js';
 
-export function createSessionAuthCookie(info: JwtResult) {
-  const cookieName = cms.service('base::auth').SESSION_JWT_COOKIE_NAME;
+export const SESSION_JWT_COOKIE_NAME = 'sjwt';
+export const REFRESH_JWT_COOKIE_NAME = 'rjwt';
 
-  return serialize(cookieName, info.token, {
+export function createSessionAuthCookie(info: JwtResult) {
+  return serialize(SESSION_JWT_COOKIE_NAME, info.token, {
     httpOnly: true,
     path: '/api',
     maxAge: info.expirationTime,
@@ -14,9 +15,7 @@ export function createSessionAuthCookie(info: JwtResult) {
 }
 
 export function createRefreshAuthCookie(info: JwtResult) {
-  const cookieName = cms.service('base::auth').REFRESH_JWT_COOKIE_NAME;
-
-  return serialize(cookieName, info.token, {
+  return serialize(REFRESH_JWT_COOKIE_NAME, info.token, {
     httpOnly: true,
     path: '/api/auth/user/refresh',
     maxAge: info.expirationTime,

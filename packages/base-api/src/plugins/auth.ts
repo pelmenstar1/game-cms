@@ -2,6 +2,7 @@ import { type ApiRouteContextConfig } from '@game-cms/types';
 import { ApiError } from '@game-cms/utils';
 import type { FastifyPluginCallback, RouteGenericInterface } from 'fastify';
 
+import { SESSION_JWT_COOKIE_NAME } from '../utils/authCookie.js';
 import { getRequestJwt, type JwtSourceOptions } from '../utils/jwtSource.js';
 import { hydrateRouteId } from '../utils/routeId.js';
 
@@ -14,7 +15,7 @@ export const auth: FastifyPluginCallback = (instance) => {
       // If a route has id, it means it's protected.
       if (id !== undefined) {
         const jwtOptions: JwtSourceOptions = {
-          cookieName: cms.service('base::auth').SESSION_JWT_COOKIE_NAME,
+          cookieName: SESSION_JWT_COOKIE_NAME,
         };
 
         const token = getRequestJwt(req, jwtOptions);

@@ -4,7 +4,7 @@ import { apiRoute } from '@game-cms/utils';
 import {
   createRefreshAuthCookie,
   createSessionAuthCookie,
-} from '../../../utils/cookie.js';
+} from '../../../utils/authCookie.js';
 
 export default apiRoute({
   url: '/auth/user/signin',

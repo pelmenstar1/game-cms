@@ -4,11 +4,11 @@ import {
 } from '@game-cms/api-testing';
 import { describe, expect, test } from 'vitest';
 
-import authService from '../services/auth.js';
+import { SESSION_JWT_COOKIE_NAME } from './authCookie.js';
 import { getRequestJwt, type JwtSourceOptions } from './jwtSource.js';
 
 const sourceOptions: JwtSourceOptions = {
-  cookieName: authService.SESSION_JWT_COOKIE_NAME,
+  cookieName: SESSION_JWT_COOKIE_NAME,
 };
 
 function getRequestJwtViaFastify(options: MakeRequestInjectOptions) {
@@ -35,12 +35,11 @@ describe('getRequestJwt', () => {
   });
 
   test('cookie', async () => {
-    const name = authService.SESSION_JWT_COOKIE_NAME;
     const expectedJwt = 'token';
 
     const actual = await getRequestJwtViaFastify({
       headers: {
-        cookie: `${name}=${expectedJwt}; smth=123`,
+        cookie: `${SESSION_JWT_COOKIE_NAME}=${expectedJwt}; smth=123`,
       },
     });
 

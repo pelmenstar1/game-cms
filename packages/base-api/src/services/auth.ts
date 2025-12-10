@@ -23,9 +23,6 @@ import { verifyPassword } from '../utils/password.js';
 
 export type JwtResult = { token: string; expirationTime: number };
 
-const SESSION_JWT_COOKIE_NAME = 'sjwt';
-const REFRESH_JWT_COOKIE_NAME = 'rjwt';
-
 const defaultExpirationTimes: Record<ExpirationTimeType, RelativeTime> = {
   userSession: '15m',
   userRefresh: '1w',
@@ -102,8 +99,6 @@ async function parseJwtWithSchema<T>(token: string, schema: ZodType<T>) {
 
 export default service({
   id: 'base::auth',
-  SESSION_JWT_COOKIE_NAME,
-  REFRESH_JWT_COOKIE_NAME,
   signUserIn: async (payload: SignInPayload) => {
     const user = await cms
       .service('base::user')
