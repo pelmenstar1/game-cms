@@ -1,0 +1,26 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+  border-radius: 0.5em;
+
+  &:hover {
+    background: var(--color-background-dark-variant);
+  }
+
+  &-selected {
+    background: var(--color-background-dark) !important;
+  }
+}
+
+.thumbnail {
+  $color: var(--color-text-on-background);
+
+  align-self: center;
+  width: 80%;
+  min-height: 3em;
+  margin-bottom: 0.5em;
+
+  color: $color;
+  fill: $color;
+}

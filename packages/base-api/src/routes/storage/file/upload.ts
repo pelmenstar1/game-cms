@@ -4,7 +4,7 @@ import { ApiError } from '@game-cms/base-utils';
 import { parseJsonOptional } from '@game-cms/shared';
 import { apiRoute } from '@game-cms/utils';
 
-import { apiValidateValue } from '../../utils/validate.js';
+import { apiValidateValue } from '../../../utils/validate.js';
 
 function getInfo(data: MultipartFile) {
   const infoField = data.fields.info;
@@ -29,10 +29,10 @@ function getInfo(data: MultipartFile) {
 }
 
 export default apiRoute({
-  url: `/file`,
+  url: `/storage/file`,
   method: 'POST',
   config: {
-    id: 'file$upload',
+    id: 'storage/file$upload',
   },
   schema: {
     response: {
@@ -47,7 +47,7 @@ export default apiRoute({
 
     const info = getInfo(data);
 
-    const result = await cms.service('base::file').upload({
+    const result = await cms.service('base::storage').uploadFile({
       name: data.filename,
       content: data.file,
       mime: data.mimetype,

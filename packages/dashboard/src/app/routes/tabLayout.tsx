@@ -11,6 +11,7 @@ export default function Layout() {
         items={[
           { href: '/', icon: <HomeIcon />, text: 'Home' },
           { href: '/entities', icon: <AppsIcon />, text: 'Entities' },
+          { href: '/files', icon: <AppsIcon />, text: 'Files' },
           { href: '/settings', icon: <SettingsIcon />, text: 'Settings' },
         ]}
       />

@@ -16,21 +16,20 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "12.1.4",
-    "@storybook/addon-a11y": "9.1.10",
-    "@storybook/addon-links": "9.1.10",
-    "@storybook/react": "9.1.10",
-    "@storybook/react-vite": "9.1.10",
-    "@types/copyfiles": "^2.4.4",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-links": "catalog:",
+    "@storybook/react": "catalog:",
+    "@storybook/react-vite": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "5.0.4",
-    "copyfiles": "2.4.1",
-    "glob": "13.0.0",
+    "@vitejs/plugin-react": "catalog:",
+    "@game-cms/codegen": "workspace:*",
+    "glob": "catalog:",
     "react-router": "catalog:",
     "rollup": "catalog:",
     "sass-embedded": "1.93.2",
-    "storybook": "9.1.10",
+    "storybook": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
@@ -43,6 +42,9 @@
     "./theme/global": {
       "import": "./dist/src/theme/global.scss",
       "types": "./dist/src/theme/global.d.ts"
+    },
+    "./theme/breakpoints.scss": {
+      "import": "./dist/src/theme/_breakpoints.scss"
     }
   }
 }

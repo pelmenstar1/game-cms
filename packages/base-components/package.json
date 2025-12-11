@@ -21,8 +21,8 @@
     "@rollup/plugin-commonjs": "20.0.0",
     "@rollup/plugin-replace": "6.0.3",
     "@types/node": "catalog:",
-    "@vitejs/plugin-react": "5.1.2",
-    "glob": "13.0.0",
+    "@vitejs/plugin-react": "catalog:",
+    "glob": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-dts": "4.5.4"

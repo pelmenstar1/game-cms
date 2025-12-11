@@ -5,35 +5,47 @@
   "main": "./build/client/index.html",
   "scripts": {
     "build": "react-router build",
+    "storybook:start": "storybook dev --port 6006",
     "dev": "react-router dev",
-    "typegen": "react-router typegen"
+    "typegen": "react-router typegen",
+    "new-component": "tsx ./scripts/newComponent.ts"
   },
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
     "@game-cms/build": "workspace:*",
+    "@game-cms/codegen": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
+    "@react-router/dev": "catalog:",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-links": "catalog:",
+    "@storybook/react": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "@types/lodash": "^4.17.21",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "sass-embedded": "1.93.2",
+    "storybook": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:"
   },
   "dependencies": {
+    "@game-cms/base-types": "workspace:*",
+    "@game-cms/base-utils": "workspace:*",
     "@game-cms/client": "workspace:*",
     "@game-cms/react": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
     "@game-cms/utils": "workspace:*",
-    "@react-router/dev": "catalog:",
     "@react-router/node": "catalog:",
-    "@game-cms/base-types": "workspace:*",
-    "@game-cms/base-utils": "workspace:*",
     "isbot": "5.1.31",
+    "lodash": "^4.17.21",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router": "catalog:",
-    "vite": "catalog:",
-    "vite-tsconfig-paths": "catalog:"
+    "react-router": "catalog:"
   }
 }

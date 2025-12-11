@@ -3,7 +3,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 
-import type { ServerStorageFile, StorageProvider } from '@game-cms/base-types';
+import type { StorageFileItem, StorageProvider } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
 import { sendFile } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
@@ -40,7 +40,7 @@ function getFileRoute(storagePath: string) {
   });
 }
 
-function getFilePath(storagePath: string, file: ServerStorageFile | string) {
+function getFilePath(storagePath: string, file: StorageFileItem | string) {
   const url = typeof file === 'string' ? file : file.url;
 
   const fileName = path.basename(url);

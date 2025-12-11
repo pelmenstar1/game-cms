@@ -12,7 +12,7 @@ import type {
   SuccessApiQueryResult,
 } from '@/hooks/useApiQuery';
 
-import styles from './DataLoader.module.scss';
+import styles from './MultipleDataLoader.module.scss';
 
 type InferValues<T extends ApiQueryResult[]> = {
   [K in keyof T]: InferApiQueryResult<T[K]>;

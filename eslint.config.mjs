@@ -21,6 +21,8 @@ export default defineConfig(
       'node_modules',
       'eslint.config.mts',
       'vitest.config.ts',
+      'packages/dashboard/.storybook',
+      'packages/dashboard/vite.storybook.config.ts',
       'packages/ui/.storybook',
       'packages/ui/vite.storybook.config.ts',
       'packages/base-api/scripts/*',

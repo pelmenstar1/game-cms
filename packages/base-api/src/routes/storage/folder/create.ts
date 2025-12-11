@@ -5,10 +5,10 @@ import {
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
-  url: '/folder',
+  url: '/storage/folder',
   method: 'POST',
   config: {
-    id: 'folder$create',
+    id: 'storage/folder$create',
   },
   schema: {
     body: createFolderPayload,
@@ -17,7 +17,7 @@ export default apiRoute({
     },
   },
   handler: async (req) => {
-    const { id } = await cms.service('base::folder').create(req.body);
+    const id = await cms.service('base::storage').createFolder(req.body);
 
     return { id };
   },

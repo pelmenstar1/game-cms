@@ -7,7 +7,7 @@ import { glob } from 'glob';
 const srcDir = path.join(import.meta.dirname, '../src');
 
 async function findFiles(): Promise<string[]> {
-  return glob(path.join(srcDir, '**', '*.scss'));
+  return glob(path.join(srcDir, '**/*.scss').replaceAll('\\', '/'));
 }
 
 async function copyStyles(files: string[]) {

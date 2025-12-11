@@ -9,15 +9,18 @@ import { ModalOverlay, ModalOverlayEffect } from '../ModalOverlay';
 import { Typography } from '../Typography';
 import styles from './ModalDialog.module.scss';
 
-type ModalDialogProps = {
+export interface TransitiveModalDialogProps {
+  onClose?: () => void;
+}
+
+interface ModalDialogProps extends TransitiveModalDialogProps {
   title?: string;
   contentClassName?: string;
   footer?: ReactElement;
-  onClose?: () => void;
   tightLayout?: boolean;
   effect?: ModalOverlayEffect;
   children: ReactNode;
-};
+}
 
 export function ModalDialog({
   title,

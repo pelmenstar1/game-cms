@@ -1,11 +1,11 @@
 import type {
   ClientFileUploadMeta,
-  ClientListFilesOptions,
-  ClientListFilesResponse,
-  ClientStorageFileMeta,
-  DeleteFileOptions,
+  DeleteStorageItemOptions,
+  ListStorageItemsOptions,
+  ListStorageItemsResponse,
   UploadFileResponse,
 } from '@game-cms/base-types';
+import type { ToClientType } from '@game-cms/types';
 
 import { request, url } from '../internal/utils.js';
 import { json } from '../responseParser.js';
@@ -17,35 +17,29 @@ export interface ClientUploadFilePayload {
   folderId?: string;
 }
 
-export const getFileMetaById = (context: RequestContext, fileId: string) =>
-  request(context, {
-    url: `/file/byId/${fileId}`,
-    response: json<ClientStorageFileMeta>(),
-  });
-
-export const deleteFileById = (
+export const deleteStorageItemById = (
   context: RequestContext,
   fileId: string,
-  options?: DeleteFileOptions
+  options?: DeleteStorageItemOptions
 ) =>
   request(context, {
     url: url({
-      path: `/file/byId/${fileId}`,
+      path: `/storage/byId/${fileId}`,
       search: options,
     }),
     method: 'DELETE',
   });
 
-export const listFiles = (
+export const listStorageItems = (
   context: RequestContext,
-  options: ClientListFilesOptions
+  options: ToClientType<ListStorageItemsOptions>
 ) =>
   request(context, {
     url: url({
-      path: `/file/list`,
+      path: `/storage/list`,
       search: options,
     }),
-    response: json<ClientListFilesResponse>(),
+    response: json<ToClientType<ListStorageItemsResponse>>(),
   });
 
 export const uploadFile = (
@@ -53,7 +47,7 @@ export const uploadFile = (
   payload: ClientUploadFilePayload
 ): Promise<UploadFileResponse> =>
   request(context, {
-    url: '/file',
+    url: '/storage/file',
     method: 'POST',
     body: (init) => {
       const { content, filename, folderId } = payload;

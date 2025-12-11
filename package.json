@@ -43,6 +43,6 @@
     "vitest-browser-react": "1.0.1"
   },
   "dependencies": {
-    "glob": "13.0.0"
+    "glob": "catalog:"
   }
 }

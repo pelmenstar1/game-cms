@@ -1,9 +1,4 @@
-import type {
-  ApiToken,
-  ServerStorageFile,
-  ServerUser,
-  StorageFolder,
-} from '@game-cms/base-types';
+import type { ApiToken, ServerUser, StorageItem } from '@game-cms/base-types';
 import type { FromEntries } from '@game-cms/types';
 
 type ServiceExport = typeof import('./index.js');
@@ -23,7 +18,6 @@ declare module '@game-cms/base-types' {
   interface DatabaseEntityMap {
     'base::users': ServerUser;
     'base::apiTokens': ApiToken;
-    'base::files': ServerStorageFile;
-    'base::folders': StorageFolder;
+    'base::storage': StorageItem;
   }
 }

@@ -3,7 +3,7 @@ import type { Readable } from 'node:stream';
 import type { MaybePromise } from '@game-cms/shared';
 import type { UnknownApiRoute } from '@game-cms/types';
 
-import type { ServerStorageFile } from './file.js';
+import type { StorageFileItem, UploadFileMeta } from './storage.js';
 
 export type UploadFileToProviderInfo = {
   name: string;
@@ -15,19 +15,19 @@ export type StorageProviderFileMeta = {
   size: number;
 };
 
-export interface StorageProviderProtocol<Meta = unknown> {
-  upload: (
-    info: UploadFileToProviderInfo
-  ) => Promise<{ url: string; meta?: Meta }>;
+export type UploadFilePayload = UploadFileToProviderInfo & UploadFileMeta;
+
+export interface StorageProviderProtocol {
+  upload: (info: UploadFileToProviderInfo) => Promise<{ url: string }>;
   delete: (url: string) => Promise<void>;
 
-  getMeta: (file: ServerStorageFile<Meta>) => Promise<StorageProviderFileMeta>;
-  getContent?: (file: ServerStorageFile<Meta>) => Promise<Buffer>;
+  getMeta: (file: StorageFileItem) => Promise<StorageProviderFileMeta>;
+  getContent?: (file: StorageFileItem) => Promise<Buffer>;
 }
 
-export interface StorageProvider<Meta = unknown> {
+export interface StorageProvider {
   init?: () => MaybePromise<void>;
 
   routes?: UnknownApiRoute[];
-  protocol: StorageProviderProtocol<Meta>;
+  protocol: StorageProviderProtocol;
 }

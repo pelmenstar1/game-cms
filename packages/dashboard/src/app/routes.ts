@@ -12,6 +12,7 @@ export default [
     route('entities/:name?', 'routes/entities/route.tsx'),
     route('entities/:name/+', 'routes/entities/+/route.tsx'),
     route('entities/:name/edit/:id', 'routes/entities/edit/route.tsx'),
+    route('files', 'routes/files/route.tsx'),
     route('settings', 'routes/settings/route.tsx'),
   ]),
 ] satisfies RouteConfig;
