@@ -1,13 +1,14 @@
 import { ComponentProps, PropsWithChildren } from 'react';
 import { Link, LinkProps } from 'react-router';
 
+import { PageUrl } from '../../types/options';
 import { classNames } from '../../utils/classNames';
 import { Button, ButtonProps } from '../Button';
 import styles from './LinkButton.module.scss';
 
 export type LinkButtonProps = PropsWithChildren<
   (
-    | (LinkProps & { realNavigation?: false })
+    | (Omit<LinkProps, 'to'> & { to: PageUrl; realNavigation?: false })
     | (ComponentProps<'a'> & { realNavigation: true })
   ) &
     ButtonProps

@@ -18,6 +18,7 @@ export default [
       ...prefix('/settings', [
         index('routes/settings/route.tsx'),
         route('api-tokens', 'routes/settings/api-tokens/route.tsx'),
+        route('users', 'routes/settings/users/route.tsx'),
       ]),
     ]),
   ]),

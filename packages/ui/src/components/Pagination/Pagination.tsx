@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { ArrowLeftIcon, ArrowRightIcon } from '../../icons';
+import { PageUrl } from '../../types/options';
 import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import { getViewPages } from './pages';
@@ -12,12 +13,12 @@ export type PaginationProps = {
   current: number;
   total: number;
 
-  getLink: (page: number) => string;
+  getLink: (page: number) => PageUrl;
 };
 
 type PageItemProps = {
   page: number;
-  href: string;
+  href: PageUrl;
   current: boolean;
 };
 
@@ -49,7 +50,7 @@ function Delimiter() {
 }
 
 type BackForwardButtonProps = {
-  href: string;
+  href: PageUrl;
   className?: string;
   children: ReactNode;
 };

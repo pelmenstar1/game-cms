@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
+import { PageUrl } from '../../types/options';
 import { classNames } from '../../utils/classNames';
 import { Link } from '../Link';
 import styles from './NavTabs.module.scss';
@@ -8,7 +9,7 @@ import styles from './NavTabs.module.scss';
 export type NavTabInfo = {
   icon?: ReactNode;
   text: string;
-  href: string;
+  href: PageUrl;
 };
 
 export interface NavTabsProps {
