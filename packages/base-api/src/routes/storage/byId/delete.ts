@@ -1,4 +1,5 @@
 import { deleteStorageItemOptions } from '@game-cms/base-types/schema';
+import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
@@ -19,6 +20,6 @@ export default apiRoute({
     const { id } = req.params;
     const options = req.query;
 
-    await cms.service('base::storage').deleteById(id, options);
+    await cms().service('base::storage').deleteById(id, options);
   },
 });

@@ -1,4 +1,5 @@
 import { ApiError } from '@game-cms/base-utils';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
@@ -23,7 +24,7 @@ export default apiRoute({
       throw new ApiError(body.error.message, 'base::schema/validation');
     }
 
-    const result = await cms
+    const result = await cms()
       .service('base::entity')
       .create(req.params.entityId, body.data);
 

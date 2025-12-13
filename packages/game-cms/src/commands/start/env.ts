@@ -2,7 +2,7 @@ import {
   type BaseCmsEnvironment,
   type CmsEnvironment,
   initializeEnv,
-} from '@game-cms/env';
+} from '@game-cms/global';
 import { loadEnvFileIfExists } from '@game-cms/shared';
 import { mergeObjects, resolveObject } from '@game-cms/shared/object';
 import type {

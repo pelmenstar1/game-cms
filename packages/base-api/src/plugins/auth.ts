@@ -1,4 +1,5 @@
 import { ApiError } from '@game-cms/base-utils';
+import { cms } from '@game-cms/global';
 import { type ApiRouteContextConfig } from '@game-cms/types';
 import type { FastifyPluginCallback, RouteGenericInterface } from 'fastify';
 
@@ -25,7 +26,7 @@ export const auth: FastifyPluginCallback = (instance) => {
 
         const hydratedId = hydrateRouteId(id, req.params);
 
-        await cms.service('base::auth').verifySessionJwt(token, hydratedId);
+        await cms().service('base::auth').verifySessionJwt(token, hydratedId);
       }
     }
   );

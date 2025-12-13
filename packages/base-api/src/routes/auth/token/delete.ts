@@ -1,4 +1,5 @@
 import { deleteApiTokenPayload } from '@game-cms/base-types/schema';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
@@ -13,7 +14,7 @@ export default apiRoute({
   handler: async (req, res) => {
     const { token } = req.body;
 
-    await cms.service('base::auth::apiToken').delete(token);
+    await cms().service('base::auth::apiToken').delete(token);
 
     res.status(200);
   },

@@ -1,10 +1,10 @@
 import type { CreateApiTokenPayload } from '@game-cms/base-types';
-import { env } from '@game-cms/env';
+import { cms, env } from '@game-cms/global';
 import { randomBytes } from '@game-cms/shared/crypto';
 import { service } from '@game-cms/utils';
 
 function collection() {
-  return cms.service('base::database').collection('base::apiTokens');
+  return cms().service('base::database').collection('base::apiTokens');
 }
 
 async function generateToken() {
@@ -21,7 +21,7 @@ export default service({
     await collection().createIndex({ token: 1 }, { unique: true });
   },
   get: (token: string) => {
-    return cms
+    return cms()
       .service('base::database')
       .collection('base::apiTokens')
       .findOne({ $and: [{ token }] });

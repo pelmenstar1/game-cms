@@ -1,11 +1,11 @@
-import { env } from '@game-cms/env';
+import { cms, env } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import type { ComponentRenderManifest } from '@game-cms/types';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 function getFileAndType(filePath: string, manifest: ComponentRenderManifest) {
-  const { RENDERER_FILE } = cms.service('base::component');
+  const { RENDERER_FILE } = cms().service('base::component');
 
   if (filePath === RENDERER_FILE) {
     return { source: manifest.main, mime: 'text/javascript' };

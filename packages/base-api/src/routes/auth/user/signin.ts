@@ -1,4 +1,5 @@
 import { signInPayload } from '@game-cms/base-types/schema';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 
 import {
@@ -15,7 +16,7 @@ export default apiRoute({
   handler: async (req, res) => {
     const payload = req.body;
 
-    const { session, refresh } = await cms
+    const { session, refresh } = await cms()
       .service('base::auth')
       .signUserIn(payload);
 

@@ -1,4 +1,5 @@
 import { ApiError } from '@game-cms/base-utils';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 import cookie from 'cookie';
 import type { FastifyRequest } from 'fastify';
@@ -26,7 +27,7 @@ export default apiRoute({
       throw new ApiError('No refresh token', 'base::access/unauthorized');
     }
 
-    const userSession = await cms
+    const userSession = await cms()
       .service('base::auth')
       .refreshUserSession(refreshToken);
 

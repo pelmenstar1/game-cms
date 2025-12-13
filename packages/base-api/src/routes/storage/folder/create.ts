@@ -2,6 +2,7 @@ import {
   createFolderPayload,
   createFolderResponse,
 } from '@game-cms/base-types/schema';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
@@ -17,7 +18,7 @@ export default apiRoute({
     },
   },
   handler: async (req) => {
-    const id = await cms.service('base::storage').createFolder(req.body);
+    const id = await cms().service('base::storage').createFolder(req.body);
 
     return { id };
   },

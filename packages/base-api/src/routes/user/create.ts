@@ -1,4 +1,5 @@
 import { createUserPayload } from '@game-cms/base-types/schema';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
@@ -13,7 +14,7 @@ export default apiRoute({
   handler: async (req, res) => {
     const payload = req.body;
 
-    const { id } = await cms.service('base::user').create(payload);
+    const { id } = await cms().service('base::user').create(payload);
 
     res.status(201).send({ id });
   },

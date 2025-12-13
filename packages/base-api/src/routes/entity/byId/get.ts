@@ -1,4 +1,5 @@
 import type { ConditionalValueInput } from '@game-cms/conditional';
+import { cms } from '@game-cms/global';
 import { objectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
 import qs from 'qs';
@@ -26,7 +27,7 @@ export default apiRoute({
     const { search } = new URL(req.url, 'http://localhost');
     const filter = qs.parse(search);
 
-    const result = await cms
+    const result = await cms()
       .service('base::entity')
       .getById(entityId, id, filter as ConditionalValueInput);
 

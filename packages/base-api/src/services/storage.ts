@@ -7,14 +7,14 @@ import {
   type StorageItemWithMeta,
   type UploadFilePayload,
 } from '@game-cms/base-types';
-import { env } from '@game-cms/env';
+import { cms, env } from '@game-cms/global';
 import { service } from '@game-cms/utils';
 import type { ClientSession, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
 function collection() {
-  return cms.service('base::database').collection('base::storage');
+  return cms().service('base::database').collection('base::storage');
 }
 
 function storageProvider() {

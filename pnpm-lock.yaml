@@ -239,9 +239,9 @@ importers:
       '@game-cms/build':
         specifier: workspace:*
         version: link:../build
-      '@game-cms/env':
+      '@game-cms/global':
         specifier: workspace:*
-        version: link:../env
+        version: link:../global
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -377,9 +377,9 @@ importers:
 
   packages/base-types:
     dependencies:
-      '@game-cms/env':
+      '@game-cms/global':
         specifier: workspace:*
-        version: link:../env
+        version: link:../global
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -580,19 +580,6 @@ importers:
         specifier: 'catalog:'
         version: 5.1.4(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(sass-embedded@1.96.0)(sass@1.96.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
 
-  packages/env:
-    dependencies:
-      '@game-cms/types':
-        specifier: workspace:*
-        version: link:../types
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 25.0.1
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-
   packages/game-cms:
     dependencies:
       '@fastify/multipart':
@@ -616,9 +603,9 @@ importers:
       '@game-cms/dashboard':
         specifier: workspace:*
         version: link:../dashboard
-      '@game-cms/env':
+      '@game-cms/global':
         specifier: workspace:*
-        version: link:../env
+        version: link:../global
       '@game-cms/react':
         specifier: workspace:*
         version: link:../react
@@ -665,6 +652,19 @@ importers:
       tsx:
         specifier: 'catalog:'
         version: 4.21.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/global:
+    dependencies:
+      '@game-cms/types':
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.0.1
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

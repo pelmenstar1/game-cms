@@ -1,4 +1,5 @@
 import { ApiError } from '@game-cms/base-utils';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
@@ -13,7 +14,10 @@ export default apiRoute({
   handler: (req) => {
     const { id } = req.params;
 
-    const manifest = cms.service('base::component').getClientRenderManifest(id);
+    const manifest = cms()
+      .service('base::component')
+      .getClientRenderManifest(id);
+
     if (!manifest) {
       throw new ApiError('Unknown component', 'base::entity/notFound');
     }

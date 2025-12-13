@@ -1,4 +1,4 @@
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import type { ValueSourceContext } from '@game-cms/types';
 
 import { compiledFilePath } from '../../utils/localPath.js';

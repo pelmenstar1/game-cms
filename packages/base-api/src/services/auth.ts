@@ -9,7 +9,7 @@ import {
   sessionJwtPayloadSchema,
 } from '@game-cms/base-types/schema';
 import { ApiError } from '@game-cms/base-utils';
-import { env } from '@game-cms/env';
+import { cms, env } from '@game-cms/global';
 import {
   parseRelativeTimeToTotalSeconds,
   type RelativeTime,
@@ -102,7 +102,7 @@ async function parseJwtWithSchema<T>(token: string, schema: ZodType<T>) {
 export default service({
   id: 'base::auth',
   signUserIn: async (payload: SignInPayload) => {
-    const user = await cms
+    const user = await cms()
       .service('base::user')
       .fullGetBy({ email: payload.email });
 
@@ -127,7 +127,9 @@ export default service({
   refreshUserSession: async (token: string) => {
     const { userId } = await parseJwtWithSchema(token, refreshJwtPayloadSchema);
 
-    const user = await cms.service('base::user').getById(new ObjectId(userId));
+    const user = await cms()
+      .service('base::user')
+      .getById(new ObjectId(userId));
 
     if (user === null) {
       throw new ApiError('Unknown user', 'base::entity/notFound');
@@ -136,7 +138,7 @@ export default service({
     return createSessionToken('userSession', user);
   },
   signApiTokenIn: async (token: string) => {
-    const tokenInfo = await cms.service('base::auth::apiToken').get(token);
+    const tokenInfo = await cms().service('base::auth::apiToken').get(token);
     if (tokenInfo === null) {
       throw new ApiError('Unknown token', 'base::access/unauthorized');
     }

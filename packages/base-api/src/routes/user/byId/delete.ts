@@ -1,3 +1,4 @@
+import { cms } from '@game-cms/global';
 import { objectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
@@ -16,7 +17,7 @@ export default apiRoute({
   handler: async (req, res) => {
     const { id } = req.params;
 
-    await cms.service('base::user').delete(id);
+    await cms().service('base::user').delete(id);
 
     res.status(200);
   },

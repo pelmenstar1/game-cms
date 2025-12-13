@@ -2,7 +2,7 @@ import type {
   ClientEntitySchema,
   ServerEntitySchema,
 } from '@game-cms/base-types';
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import { service } from '@game-cms/utils';
 
 function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {

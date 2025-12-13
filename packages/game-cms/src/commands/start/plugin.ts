@@ -1,4 +1,4 @@
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import type { Plugin, PluginApiFastifyConfig } from '@game-cms/types';
 import type { FastifyInstance } from 'fastify';
 

@@ -1,7 +1,7 @@
 import send from '@fastify/send';
 import { ApiError } from '@game-cms/base-utils';
 import { SHARED_ASSET_PREFIX } from '@game-cms/build';
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 

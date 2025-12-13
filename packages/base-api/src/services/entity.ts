@@ -4,6 +4,7 @@ import {
   type EntityConditionalDataById,
   resolveConditionalEntity,
 } from '@game-cms/conditional';
+import { cms } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { service } from '@game-cms/utils';
 import type { Filter, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
@@ -11,7 +12,7 @@ import type { Filter, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
 import { getPage } from '../utils/paging.js';
 
 function collection<T extends EntityId>(id: T) {
-  return cms.service('base::database').entityCollection(id);
+  return cms().service('base::database').entityCollection(id);
 }
 
 function idFilter<T>(id: ObjectId) {

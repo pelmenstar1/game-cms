@@ -1,4 +1,5 @@
 import { ApiError } from '@game-cms/base-utils';
+import { cms } from '@game-cms/global';
 import { objectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
@@ -27,6 +28,6 @@ export default apiRoute({
       throw new ApiError(body.error.message, 'base::schema/validation');
     }
 
-    await cms.service('base::entity').update(entityId, id, body.data);
+    await cms().service('base::entity').update(entityId, id, body.data);
   },
 });

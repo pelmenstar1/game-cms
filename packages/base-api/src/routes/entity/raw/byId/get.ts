@@ -1,3 +1,4 @@
+import { cms } from '@game-cms/global';
 import { objectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
@@ -17,7 +18,7 @@ export default apiRoute({
   handler: async (req) => {
     const { entityId, id } = req.params;
 
-    const result = await cms.service('base::entity').getRawById(entityId, id);
+    const result = await cms().service('base::entity').getRawById(entityId, id);
 
     return result;
   },

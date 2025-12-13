@@ -1,4 +1,4 @@
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import type { GameCmsController, Service, ServiceMap } from '@game-cms/types';
 
 function createServiceMap(services: Service[]) {

@@ -1,4 +1,4 @@
-import type { ApiEnvironment } from '@game-cms/env';
+import type { ApiEnvironment } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { mergeObjects } from '@game-cms/shared/object';

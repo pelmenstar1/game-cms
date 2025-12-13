@@ -1,5 +1,5 @@
 import { ApiError } from '@game-cms/base-utils';
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import type {
   ComponentClientRenderManifest,
   ComponentId,

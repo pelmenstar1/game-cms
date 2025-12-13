@@ -1,6 +1,6 @@
 import type { ApiErrorCode } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import { isErrorWithCode } from '@game-cms/shared/errors';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 

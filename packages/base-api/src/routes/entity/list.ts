@@ -1,3 +1,4 @@
+import { cms } from '@game-cms/global';
 import { pagingOptionsSchema } from '@game-cms/types/schema';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
@@ -20,7 +21,7 @@ export default apiRoute({
     const { entityId } = req.params;
     const options = req.query;
 
-    const result = await cms.service('base::entity').list(entityId, options);
+    const result = await cms().service('base::entity').list(entityId, options);
 
     return result;
   },

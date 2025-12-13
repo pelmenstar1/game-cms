@@ -2,6 +2,7 @@ import {
   createApiTokenPayload,
   createApiTokenResponse,
 } from '@game-cms/base-types/schema';
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
@@ -17,7 +18,7 @@ export default apiRoute({
   handler: async (req) => {
     const payload = req.body;
 
-    const result = await cms.service('base::auth::apiToken').create(payload);
+    const result = await cms().service('base::auth::apiToken').create(payload);
 
     return result;
   },

@@ -1,6 +1,6 @@
 import type { CreateUserPayload, ServerUser } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
-import { env } from '@game-cms/env';
+import { cms, env } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { isDuplicateKeyError } from '@game-cms/shared/mongo';
 import { service } from '@game-cms/utils';
@@ -15,7 +15,7 @@ export type NoPasswordUser = Omit<
 >;
 
 function users() {
-  return cms.service('base::database').collection('base::users');
+  return cms().service('base::database').collection('base::users');
 }
 
 async function updatePassword(
@@ -122,7 +122,7 @@ export default service({
     oldPassword: string,
     newPassword: string
   ) => {
-    return await cms
+    return await cms()
       .service('base::database')
       .withTransaction(async (session) => {
         const passwordMatch = await verifyUserPassword(

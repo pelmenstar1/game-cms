@@ -4,7 +4,7 @@
     { "path": "./packages/types" },
     { "path": "./packages/storage-provider-local" },
     { "path": "./packages/storage-provider-s3" },
-    { "path": "./packages/env" },
+    { "path": "./packages/global" },
     { "path": "./packages/shared" },
     { "path": "./packages/ui" },
     { "path": "./packages/build" },

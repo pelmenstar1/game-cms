@@ -8,7 +8,7 @@
     "@game-cms/types": "workspace:*"
   },
   "dependencies": {
-    "@game-cms/env": "workspace:*",
+    "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "mongodb": "catalog:",
     "zod": "catalog:"

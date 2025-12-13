@@ -4,6 +4,7 @@ import {
   uploadFileResponse,
 } from '@game-cms/base-types/schema';
 import { ApiError } from '@game-cms/base-utils';
+import { cms } from '@game-cms/global';
 import { parseJsonOptional } from '@game-cms/shared';
 import { apiRoute } from '@game-cms/utils';
 
@@ -50,7 +51,7 @@ export default apiRoute({
 
     const info = getInfo(data);
 
-    const result = await cms.service('base::storage').uploadFile({
+    const result = await cms().service('base::storage').uploadFile({
       name: data.filename,
       content: data.file,
       mime: data.mimetype,

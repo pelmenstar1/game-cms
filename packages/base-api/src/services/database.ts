@@ -4,7 +4,7 @@ import type {
   EntityId,
 } from '@game-cms/base-types';
 import type { EntityConditionalDataById } from '@game-cms/conditional';
-import { env } from '@game-cms/env';
+import { env } from '@game-cms/global';
 import { service } from '@game-cms/utils';
 import { ClientSession, MongoClient, type TransactionOptions } from 'mongodb';
 

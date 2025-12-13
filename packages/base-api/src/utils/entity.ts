@@ -3,6 +3,7 @@ import {
   type ConditionalChoices,
   type EntityConditionalData,
 } from '@game-cms/conditional';
+import { cms } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
 import type { ComponentData, ServerComponentSchema } from '@game-cms/types';
 import { z, ZodType } from 'zod';
@@ -25,7 +26,7 @@ function getValidatorForComponent<Data extends ComponentData>(
 export function getEntityValidationType<T extends EntityConditionalData>(
   id: string
 ) {
-  const schema = cms.service('base::entitySchema').getById(id);
+  const schema = cms().service('base::entitySchema').getById(id);
 
   if (schema === null) {
     throw new Error(`Unknown schema: ${id}`);

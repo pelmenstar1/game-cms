@@ -23,7 +23,7 @@
     { "path": "../build" },
     { "path": "../codegen" },
     { "path": "../conditional" },
-    { "path": "../env" },
+    { "path": "../global" },
     { "path": "../shared" },
     { "path": "../utils" },
     { "path": "../types" },

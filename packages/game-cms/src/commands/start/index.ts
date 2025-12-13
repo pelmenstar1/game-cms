@@ -1,6 +1,5 @@
 import multipart from '@fastify/multipart';
-import { env } from '@game-cms/env';
-import { setCmsController } from '@game-cms/utils';
+import { env, setCmsController } from '@game-cms/global';
 import {
   serializerCompiler,
   validatorCompiler,

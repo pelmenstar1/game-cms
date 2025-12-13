@@ -1,3 +1,4 @@
+import { cms } from '@game-cms/global';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
@@ -7,7 +8,7 @@ export default apiRoute({
     id: 'entitySchema$get',
   },
   handler: () => {
-    const schemas = cms.service('base::entitySchema').getClientAll();
+    const schemas = cms().service('base::entitySchema').getClientAll();
 
     return schemas;
   },
