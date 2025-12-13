@@ -3,9 +3,9 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 
+import send from '@fastify/send';
 import type { StorageFileItem, StorageProvider } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
-import { sendFile } from '@game-cms/shared';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
@@ -16,7 +16,7 @@ export type LocalStorageProviderConfig = {
   storagePath?: string;
 };
 
-const GET_ROUTE = `/file/provider/get`;
+const GET_ROUTE = `/storage/provider/get`;
 
 function getFileRoute(storagePath: string) {
   return apiRoute({
@@ -29,13 +29,17 @@ function getFileRoute(storagePath: string) {
     },
     handler: async (req, res) => {
       const { fileName } = req.params;
-      if (fileName.includes('/') || fileName.includes('\\')) {
-        throw new ApiError('Unknown file', 'base::entity/notFound');
+
+      const { headers, statusCode, stream } = await send(req.raw, fileName, {
+        root: storagePath,
+      });
+
+      if (statusCode === 404) {
+        throw new ApiError('File not found', 'base::entity/notFound');
       }
 
-      const filePath = path.join(storagePath, fileName);
-
-      await sendFile(res, filePath);
+      res.raw.writeHead(statusCode, headers);
+      stream.pipe(res.raw);
     },
   });
 }

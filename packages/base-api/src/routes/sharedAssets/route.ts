@@ -1,7 +1,7 @@
+import send from '@fastify/send';
+import { ApiError } from '@game-cms/base-utils';
 import { SHARED_ASSET_PREFIX } from '@game-cms/build';
 import { env } from '@game-cms/env';
-import { sendFile } from '@game-cms/shared';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
@@ -26,17 +26,18 @@ export default apiRoute({
     const filePath = paths[scope]?.[name] as string | undefined;
 
     if (filePath !== undefined) {
-      try {
-        await sendFile(res, filePath, 'text/javascript');
+      const { headers, statusCode, stream } = await send(req.raw, filePath, {
+        contentType: false,
+      });
 
-        return;
-      } catch (error: unknown) {
-        if (!isFileNotFoundError(error)) {
-          throw error;
-        }
+      if (statusCode !== 404) {
+        res.raw.writeHead(statusCode, headers);
+        res.header('content-type', 'text/javascript');
+
+        stream.pipe(res.raw);
       }
     }
 
-    res.callNotFound();
+    throw new ApiError('File not found', 'base::entity/notFound');
   },
 });

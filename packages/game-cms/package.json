@@ -7,7 +7,7 @@
   "devDependencies": {
     "@types/http-proxy": "^1.17.17",
     "@types/node": "catalog:",
-    "fastify-type-provider-zod": "6.1.0",
+    "fastify-type-provider-zod": "catalog:",
     "pino-pretty": "13.1.2",
     "tsx": "catalog:",
     "typescript": "catalog:"

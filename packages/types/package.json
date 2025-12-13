@@ -15,7 +15,7 @@
   "dependencies": {
     "@game-cms/build": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "fastify-type-provider-zod": "6.1.0",
+    "fastify-type-provider-zod": "catalog:",
     "zod": "catalog:"
   },
   "peerDependencies": {

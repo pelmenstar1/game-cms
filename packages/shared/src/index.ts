@@ -2,7 +2,6 @@ export * from './collections/maybeArray.js';
 export * from './delay.js';
 export * from './env.js';
 export * from './envAccessor.js';
-export * from './fastify.js';
 export * from './import.js';
 export * from './json.js';
 export * from './maybeFactory.js';
