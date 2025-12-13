@@ -22,4 +22,5 @@ export default [
       ]),
     ]),
   ]),
+  route('*', 'routes/notFound/route.tsx'),
 ] satisfies RouteConfig;
