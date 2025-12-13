@@ -1,10 +1,14 @@
-export function meta() {
-  return [
-    { title: 'New React Router App' },
-    { name: 'description', content: 'Welcome to React Router!' },
-  ];
-}
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
-export default function Home() {
+import { items } from './items';
+
+export default function Page() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    void navigate(items[0].href);
+  });
+
   return <div></div>;
 }

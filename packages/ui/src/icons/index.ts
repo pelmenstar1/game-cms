@@ -19,6 +19,7 @@ export * from './EditIcon';
 export * from './ErrorIcon';
 export * from './EventIcon';
 export * from './ExclamationIcon';
+export * from './FilesIcon';
 export * from './FolderIcon';
 export * from './GoogleSpreadsheetIcon';
 export * from './HomeIcon';

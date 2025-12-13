@@ -5,13 +5,15 @@ import { classNames } from '../../utils/classNames';
 import { Link } from '../Link';
 import styles from './NavTabs.module.scss';
 
+export type NavTabInfo = {
+  icon?: ReactNode;
+  text: string;
+  href: string;
+};
+
 export interface NavTabsProps {
   className?: string;
-  items: {
-    icon?: ReactNode;
-    text: string;
-    href: string;
-  }[];
+  items: NavTabInfo[];
 }
 
 export function NavTabs({ className, items }: NavTabsProps) {

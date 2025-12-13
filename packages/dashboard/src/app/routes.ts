@@ -1,6 +1,7 @@
 import {
   index,
   layout,
+  prefix,
   route,
   type RouteConfig,
 } from '@react-router/dev/routes';
@@ -13,6 +14,11 @@ export default [
     route('entities/:name/+', 'routes/entities/+/route.tsx'),
     route('entities/:name/edit/:id', 'routes/entities/edit/route.tsx'),
     route('files', 'routes/files/route.tsx'),
-    route('settings', 'routes/settings/route.tsx'),
+    layout('routes/settings/layout.tsx', [
+      ...prefix('/settings', [
+        index('routes/settings/route.tsx'),
+        route('api-tokens', 'routes/settings/api-tokens/route.tsx'),
+      ]),
+    ]),
   ]),
 ] satisfies RouteConfig;
