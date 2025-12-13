@@ -1,8 +1,7 @@
-import { NotificationWrapper } from '@game-cms/ui';
+import { NotificationWrapper, useModal } from '@game-cms/ui';
 import type { PropsWithChildren } from 'react';
 
 import { useApiClient } from '../hooks/useApiClient';
-import { useModal } from '../hooks/useModal';
 import { useStylesheetInject } from '../hooks/useStylesheetInject';
 
 export function Providers({ children }: PropsWithChildren) {

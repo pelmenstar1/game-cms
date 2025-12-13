@@ -1,4 +1,4 @@
-import { signInPayload } from '@game-cms/base-types';
+import { signInPayload } from '@game-cms/base-types/schema';
 import { apiRoute } from '@game-cms/utils';
 
 import {

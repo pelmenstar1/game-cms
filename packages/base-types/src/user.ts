@@ -1,11 +1,6 @@
-import z from 'zod';
+import type z from 'zod';
 
-export const createUserPayload = z.object({
-  name: z.string().min(1),
-  email: z.email(),
-  password: z.string(),
-  permissions: z.array(z.string()),
-});
+import type { createUserPayload } from './schema/user.js';
 
 export type CreateUserPayload = z.infer<typeof createUserPayload>;
 

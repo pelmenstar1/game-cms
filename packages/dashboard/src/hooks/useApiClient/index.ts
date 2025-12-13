@@ -1,4 +1,5 @@
-import { createContextHook } from '../../utils/hookContext';
+import { createContextHook } from '@game-cms/ui';
+
 import { ApiClientContext } from './context';
 import { ApiClientProvider } from './provider';
 

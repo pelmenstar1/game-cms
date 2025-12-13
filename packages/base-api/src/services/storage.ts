@@ -83,35 +83,35 @@ export default service({
     return insertedId;
   },
   list: async (options: ListStorageItemsOptions) => {
-    const { items, meta } = await getPage(collection(), options);
+    const { items, meta } = await getPage(collection(), options, [
+      { $match: { folderId: options.folderId } },
+    ]);
 
     return {
-      items: await Promise.all(items.map(async (item) => hydrateItem(item))),
+      items: await Promise.all(items.map((item) => hydrateItem(item))),
       meta,
     };
   },
   deleteById: async (id: ObjectId, options?: DeleteStorageItemOptions) => {
-    await cms.service('base::database').withTransaction(async (session) => {
-      const item = await collection().findOne(
-        { _id: id },
-        { session, projection: { url: 1 } }
-      );
+    const item = await collection().findOne(
+      { _id: id },
+      { projection: { url: 1 } }
+    );
 
-      if (item) {
-        if (item.type === StorageItemType.FILE) {
-          try {
-            await storageProvider().protocol.delete(item.url);
-          } catch (error) {
-            if (!options?.force) {
-              throw error;
-            }
+    if (item) {
+      if (item.type === StorageItemType.FILE) {
+        try {
+          await storageProvider().protocol.delete(item.url);
+        } catch (error) {
+          if (!options?.force) {
+            throw error;
           }
-        } else {
-          await moveItemsToRoot(id, session);
         }
+      } else {
+        await moveItemsToRoot(id);
       }
 
-      await collection().deleteOne({ _id: id }, { session });
-    });
+      await collection().deleteOne({ _id: id });
+    }
   },
 });

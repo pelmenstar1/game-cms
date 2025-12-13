@@ -3,6 +3,7 @@
   flex-direction: column;
   padding: 0.5em;
   border-radius: 0.5em;
+  user-select: none;
 
   &:hover {
     background: var(--color-background-dark-variant);

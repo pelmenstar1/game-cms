@@ -3,8 +3,11 @@
 .root {
   --columns: 2;
 
-  display: grid;
-  grid-template-columns: repeat(var(--columns), calc(100% / var(--columns)));
+  /// display: grid;
+  /// grid-template-columns: repeat(var(--columns), calc(100% / var(--columns)));
+  /// grid-tem
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5em;
 
   @include breakpoint-up(md) {
@@ -13,5 +16,9 @@
 
   @include breakpoint-up(lg) {
     --columns: 12;
+  }
+
+  > * {
+    height: fit-content;
   }
 }

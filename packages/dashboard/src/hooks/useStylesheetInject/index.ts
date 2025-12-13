@@ -1,4 +1,5 @@
-import { createContextHook } from '../../utils/hookContext';
+import { createContextHook } from '@game-cms/ui';
+
 import { StylesheetInjectContext } from './context';
 import { StylesheetInjectProvider } from './provider';
 

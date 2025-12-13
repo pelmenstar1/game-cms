@@ -21,5 +21,15 @@
   "peerDependencies": {
     "@types/react": "*",
     "mongodb": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./schema": {
+      "import": "./dist/schema/index.js",
+      "types": "./dist/schema/index.d.ts"
+    }
   }
 }

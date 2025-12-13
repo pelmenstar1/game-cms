@@ -1,5 +1,6 @@
 import type {
   ClientFileUploadMeta,
+  CreateFolderPayload,
   DeleteStorageItemOptions,
   ListStorageItemsOptions,
   ListStorageItemsResponse,
@@ -8,6 +9,7 @@ import type {
 import type { ToClientType } from '@game-cms/types';
 
 import { request, url } from '../internal/utils.js';
+import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
 import type { RequestContext } from '../types.js';
 
@@ -64,5 +66,16 @@ export const uploadFile = (
 
       init.body = formData;
     },
+    response: json(),
+  });
+
+export const createFolder = (
+  context: RequestContext,
+  payload: ToClientType<CreateFolderPayload>
+) =>
+  request(context, {
+    url: '/storage/folder',
+    method: 'POST',
+    body: jsonInit(payload),
     response: json(),
   });

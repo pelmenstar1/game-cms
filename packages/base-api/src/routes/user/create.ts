@@ -1,4 +1,4 @@
-import { createUserPayload } from '@game-cms/base-types';
+import { createUserPayload } from '@game-cms/base-types/schema';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({

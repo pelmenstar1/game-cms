@@ -1,7 +1,7 @@
 import {
   listStorageItemsOptions,
   listStorageItemsResponse,
-} from '@game-cms/base-types';
+} from '@game-cms/base-types/schema';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
@@ -14,9 +14,9 @@ export default apiRoute({
     querystring: listStorageItemsOptions,
     response: { 200: listStorageItemsResponse },
   },
-  handler: async (req) => {
+  handler: (req) => {
     const options = req.query;
 
-    return await cms.service('base::storage').list(options);
+    return cms.service('base::storage').list(options);
   },
 });

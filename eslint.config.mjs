@@ -64,6 +64,12 @@ export default defineConfig(
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/exhaustive-deps': [
+        'warn',
+        {
+          additionalHooks: '(useAsyncCallback)',
+        },
+      ],
 
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',

@@ -1,7 +1,7 @@
 import {
   createFolderPayload,
   createFolderResponse,
-} from '@game-cms/base-types';
+} from '@game-cms/base-types/schema';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({

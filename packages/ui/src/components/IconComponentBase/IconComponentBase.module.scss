@@ -5,6 +5,8 @@ $roundings: (
 );
 
 .root {
+  --color: var(--color-text-on-background);
+
   background: none;
   outline: none;
 
@@ -18,13 +20,14 @@ $roundings: (
   align-items: center;
   justify-content: center;
 
-  color: var(--color-text-on-background);
-  fill: var(--color-text-on-background);
+  color: var(--color);
+  fill: var(--color);
 
   user-select: none;
   cursor: pointer;
 
   &:disabled {
+    --color: var(--color-text-on-background-dark);
     cursor: auto;
   }
 
@@ -34,7 +37,7 @@ $roundings: (
     }
 
     &.root-hover-fill {
-      fill: var(--color-text-on-background-dark);
+      --color: var(--color-text-on-background-dark);
     }
   }
 

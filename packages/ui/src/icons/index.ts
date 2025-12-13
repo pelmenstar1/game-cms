@@ -30,6 +30,7 @@ export * from './LinkIcon';
 export * from './MagicWandIcon';
 export * from './MailIcon';
 export * from './MenuIcon';
+export * from './NewFolderIcon';
 export * from './NumberedListIcon';
 export * from './PlaceIcon';
 export * from './PlusIcon';

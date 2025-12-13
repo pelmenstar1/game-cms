@@ -7,7 +7,8 @@
     "storybook:start": "storybook dev --port 6006",
     "new-component": "tsx ./scripts/newComponent.ts",
     "new-google-icon": "tsx ./scripts/newGoogleIcon.ts",
-    "copy-styles": "tsx ./scripts/copyStyles.ts"
+    "copy-styles": "tsx ./scripts/copyStyles.ts",
+    "generate-rexports": "tsx ./scripts/generateReExports.ts"
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",

@@ -1,4 +1,4 @@
-import { pagingOptionsSchema } from '@game-cms/types';
+import { pagingOptionsSchema } from '@game-cms/types/schema';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({

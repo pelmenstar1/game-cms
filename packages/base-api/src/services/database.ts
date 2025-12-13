@@ -14,7 +14,7 @@ function client(): MongoClient {
   if (_client === undefined) {
     const { url, ...rest } = env().config.database.mongo;
 
-    _client = new MongoClient(url, rest);
+    _client = new MongoClient(url, { ...rest, ignoreUndefined: true });
   }
 
   return _client;

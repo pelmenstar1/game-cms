@@ -17,5 +17,8 @@ export async function getPage<T extends Document, R = T>(
     return { meta: { totalCount: 0 }, items: [] };
   }
 
-  return result;
+  return {
+    items: result.items,
+    meta: Array.isArray(result.meta) ? { totalCount: 0 } : result.meta,
+  };
 }

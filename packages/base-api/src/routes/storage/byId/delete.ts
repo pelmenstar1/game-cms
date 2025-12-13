@@ -1,5 +1,5 @@
-import { deleteStorageItemOptions } from '@game-cms/base-types';
-import { objectId } from '@game-cms/shared/mongo';
+import { deleteStorageItemOptions } from '@game-cms/base-types/schema';
+import { stringObjectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
@@ -11,7 +11,7 @@ export default apiRoute({
   },
   schema: {
     params: z.object({
-      id: objectId,
+      id: stringObjectId,
     }),
     querystring: deleteStorageItemOptions,
   },

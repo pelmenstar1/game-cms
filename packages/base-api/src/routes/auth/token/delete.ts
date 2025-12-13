@@ -1,4 +1,4 @@
-import { deleteApiTokenPayload } from '@game-cms/base-types';
+import { deleteApiTokenPayload } from '@game-cms/base-types/schema';
 import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({

@@ -1,11 +1,13 @@
-import {
-  type ExpirationTimeType,
-  type RefreshJwtPayload,
-  refreshJwtPayloadSchema,
-  type SessionJwtPayload,
-  sessionJwtPayloadSchema,
-  type SignInPayload,
+import type {
+  ExpirationTimeType,
+  RefreshJwtPayload,
+  SessionJwtPayload,
+  SignInPayload,
 } from '@game-cms/base-types';
+import {
+  refreshJwtPayloadSchema,
+  sessionJwtPayloadSchema,
+} from '@game-cms/base-types/schema';
 import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/env';
 import {

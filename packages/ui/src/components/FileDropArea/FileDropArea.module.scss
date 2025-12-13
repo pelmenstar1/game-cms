@@ -1,0 +1,13 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+
+  transition: background-color 0.1s linear;
+
+  &[data-over='true'] {
+    background-color: var(--color-background-dark);
+  }
+}

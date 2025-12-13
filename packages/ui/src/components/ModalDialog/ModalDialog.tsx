@@ -2,6 +2,7 @@ import { ReactElement, ReactNode, useId } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useScrollbar } from '../../hooks';
+import { ModalProps } from '../../hooks/useModal/context';
 import { CloseIcon } from '../../icons';
 import { classNames } from '../../utils/classNames';
 import { IconButton } from '../IconButton';
@@ -9,11 +10,7 @@ import { ModalOverlay, ModalOverlayEffect } from '../ModalOverlay';
 import { Typography } from '../Typography';
 import styles from './ModalDialog.module.scss';
 
-export interface TransitiveModalDialogProps {
-  onClose?: () => void;
-}
-
-interface ModalDialogProps extends TransitiveModalDialogProps {
+interface ModalDialogProps extends ModalProps {
   title?: string;
   contentClassName?: string;
   footer?: ReactElement;
@@ -54,7 +51,9 @@ export function ModalDialog({
 
           <IconButton
             className={styles.close}
-            onClick={onClose}
+            onClick={() => {
+              onClose(undefined);
+            }}
             title="Закрити діалог"
           >
             <CloseIcon />
