@@ -1,5 +1,4 @@
 import {
-  Attributes,
   type ComponentType,
   type FC,
   type PropsWithChildren,

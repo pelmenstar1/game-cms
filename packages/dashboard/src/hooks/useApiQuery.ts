@@ -67,7 +67,7 @@ export function useApiQuery<Args extends unknown[], R>(
       abortController?.abort();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...resolvedArgs, client, queryFn, navigate]);
+  }, [...resolvedArgs, client, navigate]);
 
   useEffect(worker, [worker]);
 

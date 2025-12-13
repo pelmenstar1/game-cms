@@ -18,7 +18,9 @@ type RouteInfo = {
 async function scanRoutes(): Promise<string[]> {
   const result = await glob('./src/routes/**/*.ts');
 
-  return result.filter((filePath) => !filePath.endsWith(outFileName));
+  return result
+    .filter((filePath) => !filePath.endsWith(outFileName))
+    .toSorted();
 }
 
 async function transformRoute(filePath: string): Promise<RouteInfo> {

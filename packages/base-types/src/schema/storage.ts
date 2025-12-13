@@ -15,12 +15,12 @@ export const storageFileItem = z.object({
   name,
   mime: z.string(),
   url: z.string(),
-  folderId: objectId.optional(),
+  parent: objectId.optional(),
 });
 
 export const storageFolderItem = z.object({
   name,
-  folderId: objectId.optional(),
+  parent: objectId.optional(),
 });
 
 export const storageItem = z.discriminatedUnion('type', [
@@ -50,7 +50,7 @@ export const storageItemWithMeta = z.discriminatedUnion('type', [
 
 export const createFolderPayload = z.object({
   name: z.string(),
-  folderId: objectId.optional(),
+  parent: objectId.optional(),
 });
 
 export const createFolderResponse = z.object({
@@ -58,7 +58,7 @@ export const createFolderResponse = z.object({
 });
 
 export const uploadFileMeta = z.object({
-  folderId: stringObjectId.optional(),
+  parent: stringObjectId.optional(),
 });
 
 export const uploadFileResponse = z.object({
@@ -68,7 +68,7 @@ export const uploadFileResponse = z.object({
 
 export const listStorageItemsOptions = z.object({
   ...pagingOptionsSchema.shape,
-  folderId: stringObjectId.optional(),
+  parent: stringObjectId.optional(),
 });
 
 export const listStorageItemsResponse = z.object({

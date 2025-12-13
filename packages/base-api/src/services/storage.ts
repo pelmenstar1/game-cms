@@ -37,11 +37,11 @@ async function hydrateItem(
       id: item._id,
       type: StorageItemType.FOLDER,
       name: item.name,
-      folderId: item.folderId,
+      parent: item.parent,
     };
   }
 
-  const { _id, mime, name, url, folderId } = item;
+  const { _id, mime, name, url, parent } = item;
   const { size } = await storageProvider().protocol.getMeta(item);
 
   return {
@@ -51,14 +51,14 @@ async function hydrateItem(
     name,
     url,
     size,
-    folderId,
+    parent,
   };
 }
 
 export default service({
   id: 'base::storage',
   uploadFile: async (payload: UploadFilePayload) => {
-    const { mime, name, folderId } = payload;
+    const { mime, name, parent } = payload;
     const { url } = await storageProvider().protocol.upload(payload);
 
     const { insertedId } = await collection().insertOne({
@@ -66,26 +66,34 @@ export default service({
       url,
       mime,
       name,
-      folderId,
+      parent,
     });
 
     return { id: insertedId, url };
   },
   createFolder: async (payload: CreateFolderPayload) => {
-    const { name, folderId } = payload;
+    const { name, parent } = payload;
 
     const { insertedId } = await collection().insertOne({
       type: StorageItemType.FOLDER,
       name,
-      folderId,
+      parent,
     });
 
     return insertedId;
   },
+  getInfo: async (id: ObjectId): Promise<StorageItemWithMeta | null> => {
+    const result = await collection().findOne({ _id: id });
+
+    return result && hydrateItem(result);
+  },
   list: async (options: ListStorageItemsOptions) => {
-    const { items, meta } = await getPage(collection(), options, [
-      { $match: { folderId: options.folderId } },
-    ]);
+    const { parent } = options;
+    const { items, meta } = await getPage(
+      collection(),
+      options,
+      parent ? [{ $match: { parent } }] : []
+    );
 
     return {
       items: await Promise.all(items.map((item) => hydrateItem(item))),

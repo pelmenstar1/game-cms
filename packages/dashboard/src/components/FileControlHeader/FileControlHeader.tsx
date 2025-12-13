@@ -1,4 +1,5 @@
 import {
+  ArrowLeftIcon,
   classNames,
   DeleteIcon,
   IconButton,
@@ -13,20 +14,37 @@ export interface FileControlHeaderProps {
   className?: string;
 
   isDeleteEnabled?: boolean;
+  hasParent?: boolean;
+
   onDelete?: () => void;
   onUpload?: () => void;
   onCreateFolder?: () => void;
+  onGoToParent?: () => void;
 }
 
 export function FileControlHeader({
   className,
   isDeleteEnabled,
+  hasParent,
   onDelete,
   onUpload,
   onCreateFolder,
+  onGoToParent,
 }: FileControlHeaderProps) {
   return (
     <List className={classNames(styles.root, className)}>
+      <IconButton
+        title="Back"
+        onClick={onGoToParent}
+        disabled={!hasParent}
+        className={classNames(
+          styles['back'],
+          !hasParent && styles['back-hidden']
+        )}
+      >
+        <ArrowLeftIcon />
+      </IconButton>
+
       <IconButton
         title="Delete"
         disabled={!isDeleteEnabled}

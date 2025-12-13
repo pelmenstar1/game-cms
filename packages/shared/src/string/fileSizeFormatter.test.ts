@@ -10,6 +10,7 @@ test.each([
   [2048, '2 KB'],
   [2548, '2.49 KB'],
   [1024 * 1024, '1 MB'],
+  [1024 * 1024 * 1024 + 1, '1 GB'],
 ])('formatFileSize', (size, expected) => {
   const actual = formatFileSize(size);
 

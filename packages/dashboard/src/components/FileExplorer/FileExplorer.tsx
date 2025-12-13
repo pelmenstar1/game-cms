@@ -1,13 +1,15 @@
 import {
-  type ClientStorageItemWithMeta,
   StorageItemType,
+  type StorageItemWithMeta,
 } from '@game-cms/base-types';
 import {
   createFolder,
   deleteStorageItemById,
+  getStorageItemInfo,
   listStorageItems,
   uploadFile,
 } from '@game-cms/client';
+import type { ToClientType } from '@game-cms/types';
 import {
   classNames,
   useAsyncCallback,
@@ -27,13 +29,15 @@ import { FolderNameModal } from '../FolderNameModal';
 import { UploadFileDialog } from '../UploadFileDialog';
 import styles from './FileExplorer.module.scss';
 
+type FolderId = string | undefined;
+
 export interface FileExplorerProps {
   className?: string;
-  folderId: string | undefined;
-  onFolderChanged: (value: string | undefined) => void;
+  folderId: FolderId;
+  onFolderChanged: (value: FolderId) => void;
 }
 
-function transformItems(items: ClientStorageItemWithMeta[]) {
+function transformItems(items: ToClientType<StorageItemWithMeta>[]) {
   return items.map((item): FileItem => {
     if (item.type === StorageItemType.FILE) {
       return { ...item, type: 'file' };
@@ -51,9 +55,16 @@ export function FileExplorer({
   const showModal = useModal();
   const notification = useNotification();
 
-  const listOptions = useMemo(() => ({ size: 20, folderId }), [folderId]);
+  const listOptions = useMemo(
+    () => ({ size: 20, parent: folderId }),
+    [folderId]
+  );
   const [selectedItem, setSelectedItem] = useState<FileItem>();
 
+  const [itemInfo] = useApiQuery(
+    async (context, id) => (id ? getStorageItemInfo(context, id) : null),
+    [folderId]
+  );
   const [itemsResult, refreshItems] = useApiQuery(listStorageItems, [
     listOptions,
   ]);
@@ -69,7 +80,11 @@ export function FileExplorer({
       if (files && files.length > 0) {
         await Promise.all(
           files.map((file) =>
-            doUploadFile({ content: file, filename: file.name, folderId })
+            doUploadFile({
+              content: file,
+              filename: file.name,
+              parent: folderId,
+            })
           )
         );
 
@@ -103,7 +118,7 @@ export function FileExplorer({
       const name = await showModal(FolderNameModal, {});
 
       if (name) {
-        await doCreateFolder({ name, folderId });
+        await doCreateFolder({ name, parent: folderId });
 
         notification.info('Folder created');
 
@@ -120,6 +135,14 @@ export function FileExplorer({
     }
   }, [onFolderChanged, selectedItem]);
 
+  const onGoToParent = useCallback(() => {
+    if (itemInfo.status === 'success' && itemInfo.value) {
+      const { parent } = itemInfo.value;
+
+      onFolderChanged(parent);
+    }
+  }, [itemInfo, onFolderChanged]);
+
   return (
     <DataLoader
       className={classNames(styles.root, className)}
@@ -129,9 +152,11 @@ export function FileExplorer({
         <>
           <FileControlHeader
             isDeleteEnabled={selectedItem !== undefined}
+            hasParent={folderId !== undefined}
             onDelete={onDelete}
             onUpload={onUpload}
             onCreateFolder={onCreateFolder}
+            onGoToParent={onGoToParent}
           />
           <FileGrid
             className={styles.grid}

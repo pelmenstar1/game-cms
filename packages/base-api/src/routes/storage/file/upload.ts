@@ -54,7 +54,7 @@ export default apiRoute({
       name: data.filename,
       content: data.file,
       mime: data.mimetype,
-      folderId: info?.folderId,
+      parent: info?.parent,
     });
 
     return result;

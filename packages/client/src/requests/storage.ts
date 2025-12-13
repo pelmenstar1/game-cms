@@ -1,9 +1,10 @@
 import type {
-  ClientFileUploadMeta,
   CreateFolderPayload,
   DeleteStorageItemOptions,
   ListStorageItemsOptions,
   ListStorageItemsResponse,
+  StorageItemWithMeta,
+  UploadFileMeta,
   UploadFileResponse,
 } from '@game-cms/base-types';
 import type { ToClientType } from '@game-cms/types';
@@ -16,8 +17,18 @@ import type { RequestContext } from '../types.js';
 export interface ClientUploadFilePayload {
   content: Blob;
   filename: string;
-  folderId?: string;
+  parent?: string;
 }
+
+export const getStorageItemInfo = (
+  context: RequestContext,
+  id: string
+): Promise<ToClientType<StorageItemWithMeta>> =>
+  request(context, {
+    url: `/storage/byId/${id}`,
+    method: 'GET',
+    response: json(),
+  });
 
 export const deleteStorageItemById = (
   context: RequestContext,
@@ -52,14 +63,13 @@ export const uploadFile = (
     url: '/storage/file',
     method: 'POST',
     body: (init) => {
-      const { content, filename, folderId } = payload;
+      const { content, filename, parent } = payload;
 
       const formData = new FormData();
-
       formData.set('file', content, filename);
 
-      if (folderId !== undefined) {
-        const fileMeta: ClientFileUploadMeta = { folderId };
+      if (parent !== undefined) {
+        const fileMeta: ToClientType<UploadFileMeta> = { parent };
 
         formData.set('meta', JSON.stringify(fileMeta));
       }

@@ -1,8 +1,17 @@
 .root {
   display: flex;
-  justify-content: end;
   align-items: center;
   padding: 1em;
 
   gap: 0.5em;
+}
+
+.back {
+  margin-right: auto;
+
+  transition: transform 0.05s linear;
+
+  &-hidden {
+    transform: scale(0);
+  }
 }
