@@ -8,7 +8,7 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
     "typescript": "catalog:",
-    "vitest": "3.2.4"
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "fastify": "*"

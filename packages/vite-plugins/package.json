@@ -5,11 +5,11 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "devDependencies": {
+    "@game-cms/build": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
-    "@game-cms/build": "workspace:*",
     "@types/espree": "10.1.0",
-    "chokidar": "4.0.3",
+    "chokidar": "5.0.0",
     "rollup": "catalog:"
   },
   "peerDependencies": {

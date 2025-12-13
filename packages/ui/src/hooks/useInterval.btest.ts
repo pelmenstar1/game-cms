@@ -3,19 +3,19 @@ import { renderHook } from 'vitest-browser-react';
 
 import { useInterval } from './useInterval';
 
-test('should cleanup pending timer', () => {
+test('should cleanup pending timer', async () => {
   vi.stubGlobal('setInterval', vi.fn());
   vi.stubGlobal('clearInterval', vi.fn());
 
-  const { act, unmount } = renderHook(() => {
+  const { act, unmount } = await renderHook(() => {
     useInterval(1000, () => {});
   });
 
-  act(() => {
+  await act(() => {
     expect(setInterval).toHaveBeenCalledOnce();
   });
 
-  unmount();
+  await unmount();
 
   expect(clearInterval).toHaveBeenCalledOnce();
 

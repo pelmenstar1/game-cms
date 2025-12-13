@@ -13,12 +13,14 @@
     "clean": "tsx ./scripts/clean.ts"
   },
   "devDependencies": {
-    "@eslint/js": "9.39.1",
+    "@eslint/js": "9.39.2",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitest/browser": "3.2.4",
-    "eslint": "9.39.1",
+    "@vitejs/plugin-react": "catalog:",
+    "@vitest/browser": "4.0.15",
+    "@vitest/browser-playwright": "^4.0.15",
+    "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
@@ -27,7 +29,7 @@
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-unicorn": "62.0.0",
-    "playwright": "1.55.1",
+    "playwright": "1.57.0",
     "postcss": "8.5.6",
     "prettier": "3.7.4",
     "react": "catalog:",
@@ -37,10 +39,10 @@
     "stylelint-scss": "6.13.0",
     "tsx": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "8.45.0",
+    "typescript-eslint": "8.49.0",
     "vite-tsconfig-paths": "catalog:",
-    "vitest": "3.2.4",
-    "vitest-browser-react": "1.0.1"
+    "vitest": "catalog:",
+    "vitest-browser-react": "2.0.2"
   },
   "dependencies": {
     "glob": "catalog:"

@@ -16,7 +16,8 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "12.1.4",
+    "@game-cms/codegen": "workspace:*",
+    "@rollup/plugin-typescript": "12.3.0",
     "@storybook/addon-a11y": "catalog:",
     "@storybook/addon-links": "catalog:",
     "@storybook/react": "catalog:",
@@ -25,11 +26,10 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "@game-cms/codegen": "workspace:*",
     "glob": "catalog:",
     "react-router": "catalog:",
     "rollup": "catalog:",
-    "sass-embedded": "1.93.2",
+    "sass-embedded": "1.96.0",
     "storybook": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",

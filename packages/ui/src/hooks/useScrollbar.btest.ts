@@ -7,28 +7,28 @@ function expectOverlowY(value: string) {
   expect(document.body.style.overflowY).toBe(value);
 }
 
-test('enabled/true', () => {
-  const { act, unmount } = renderHook(() => {
+test('enabled/true', async () => {
+  const { act, unmount } = await renderHook(() => {
     useScrollbar(true);
   });
 
-  act(() => {
+  await act(() => {
     expectOverlowY('auto');
   });
 
-  unmount();
+  await unmount();
   expectOverlowY('auto');
 });
 
-test('enabled/false', () => {
-  const { act, unmount } = renderHook(() => {
+test('enabled/false', async () => {
+  const { act, unmount } = await renderHook(() => {
     useScrollbar(false);
   });
 
-  act(() => {
+  await act(() => {
     expectOverlowY('hidden');
   });
 
-  unmount();
+  await unmount();
   expectOverlowY('auto');
 });
