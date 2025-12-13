@@ -12,15 +12,13 @@ import tseslint from 'typescript-eslint';
 export default defineConfig(
   {
     ignores: [
-      '**/*/worker-configuration.d.ts',
       '*/**/dist/',
       '*/**/vite.config.ts',
-      '*/**/.wrangler',
-      '*/**/build',
       '**/.react-router',
       'node_modules',
       'eslint.config.mts',
       'vitest.config.ts',
+      'packages/dashboard/build',
       'packages/dashboard/.storybook',
       'packages/dashboard/vite.storybook.config.ts',
       'packages/ui/.storybook',
