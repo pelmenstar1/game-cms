@@ -1,6 +1,6 @@
 import {
-  DependencyList,
-  Dispatch,
+  type DependencyList,
+  type Dispatch,
   useCallback,
   useEffect,
   useMemo,

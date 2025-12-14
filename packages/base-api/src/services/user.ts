@@ -1,4 +1,8 @@
-import type { CreateUserPayload, ServerUser } from '@game-cms/base-types';
+import type {
+  CreateUserPayload,
+  PermissionId,
+  ServerUser,
+} from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
 import { cms, env } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
@@ -141,7 +145,7 @@ export default service({
       });
   },
   verifyPassword: verifyUserPassword,
-  updatePermissions: async (email: string, permissions: string[]) => {
+  updatePermissions: async (email: string, permissions: PermissionId[]) => {
     await users().updateOne({ email }, { $set: { permissions } });
   },
 });

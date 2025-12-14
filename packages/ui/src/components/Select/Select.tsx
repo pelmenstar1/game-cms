@@ -1,12 +1,12 @@
-import { ComponentProps, useCallback, useState } from 'react';
+import { type ComponentProps, useCallback, useState } from 'react';
 
-import { SelectBase } from '../SelectBase';
+import { SelectBase, type SelectItem, type SelectItemKey } from '../SelectBase';
 import { Typography } from '../Typography';
 
 export interface SelectProps<
   T extends string = string,
 > extends ComponentProps<'div'> {
-  items: { key: T; title: string }[];
+  items: readonly SelectItem<T>[];
   selectedItem?: T;
   placeholder: string;
   disabled?: boolean;
@@ -14,7 +14,7 @@ export interface SelectProps<
   onItemSelected?: (value: T) => void;
 }
 
-export function Select<T extends string>({
+export function Select<T extends SelectItemKey>({
   items,
   placeholder,
   selectedItem,

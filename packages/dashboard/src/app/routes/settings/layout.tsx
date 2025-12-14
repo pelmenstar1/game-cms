@@ -8,7 +8,10 @@ export default function Layout() {
   return (
     <div className={styles.root}>
       <NavTabs className={styles['nav-tabs']} items={items} />
-      <Outlet />
+
+      <div className={styles.content}>
+        <Outlet />
+      </div>
     </div>
   );
 }

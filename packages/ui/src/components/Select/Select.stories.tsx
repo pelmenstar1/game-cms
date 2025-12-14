@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
-import { Select, SelectProps } from '.';
+import { Select, type SelectProps } from '.';
 
 function SelectWithState(props: SelectProps) {
   const [selectedItem, setSelectedItem] = useState(props.selectedItem);

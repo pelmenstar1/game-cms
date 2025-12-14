@@ -1,4 +1,4 @@
-import { ChangeEvent, ComponentProps, useMemo } from 'react';
+import { type ChangeEvent, type ComponentProps, useMemo } from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';

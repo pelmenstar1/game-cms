@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 import { useScrollbar } from '../../hooks';
 import { classNames } from '../../utils/classNames';

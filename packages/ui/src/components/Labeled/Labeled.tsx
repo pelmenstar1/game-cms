@@ -1,6 +1,6 @@
-import { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 
-import { Typography, TypographyVariant } from '../Typography';
+import { Typography, type TypographyVariant } from '../Typography';
 import styles from './Labeled.module.scss';
 
 export interface LabeledProps extends ComponentProps<'div'> {

@@ -1,6 +1,6 @@
 // Base unstyled (only functional) building block for file drop areas.
 
-import { ComponentProps, useCallback } from 'react';
+import { type ComponentProps, useCallback } from 'react';
 
 import { FileDrop } from '../FileDrop';
 import { Typography } from '../Typography';

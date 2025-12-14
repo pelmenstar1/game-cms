@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Typography, TypographyVariant } from '.';
+import { Typography, type TypographyVariant } from '.';
 
 export default {
   component: Typography,

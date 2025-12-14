@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Key, useState } from 'react';
+import { type Key, useState } from 'react';
 
 import { Typography } from '../Typography';
-import { SelectableList, SelectableListProps } from '.';
+import { SelectableList, type SelectableListProps } from '.';
 
 type Item = {
   id: Key;

@@ -13,5 +13,5 @@ export function usePreventLeaving(enabled: boolean = true) {
         event.returnValue = true;
       });
     }
-  });
+  }, [enabled]);
 }

@@ -1,8 +1,10 @@
 import z from 'zod';
 
+import { permissionId } from './auth.js';
+
 export const createUserPayload = z.object({
   name: z.string().min(1),
   email: z.email(),
   password: z.string(),
-  permissions: z.array(z.string()),
+  permissions: z.array(permissionId),
 });

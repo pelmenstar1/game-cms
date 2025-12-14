@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
-import { TextArea, TextAreaProps } from '.';
+import { TextArea, type TextAreaProps } from '.';
 
 function StatefulTextArea({ value, ...rest }: TextAreaProps) {
   const [text, setText] = useState(value);

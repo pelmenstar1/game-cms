@@ -1,20 +1,9 @@
 import { isNonNullObject } from '@game-cms/shared';
 import type { ApiRouteId } from '@game-cms/types';
+import { parseApiRouteId } from '@game-cms/utils';
 
 export function entityRouteId(action: string): ApiRouteId {
   return `entity/[entityId]$${action}`;
-}
-
-export function parseApiRouteId(id: ApiRouteId) {
-  const delimiterIndex = id.indexOf('$');
-  if (delimiterIndex == -1) {
-    throw new Error(`Invalid API route ID: ${id}`);
-  }
-
-  return {
-    namespace: id.slice(0, delimiterIndex),
-    action: id.slice(delimiterIndex + 1),
-  };
 }
 
 export function hydrateRouteId(id: ApiRouteId, params: unknown): ApiRouteId {

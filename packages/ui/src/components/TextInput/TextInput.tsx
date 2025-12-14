@@ -1,4 +1,4 @@
-import { ComponentProps, ReactNode, Ref } from 'react';
+import type { ComponentProps, ReactNode, Ref } from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';

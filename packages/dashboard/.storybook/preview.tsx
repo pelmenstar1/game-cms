@@ -8,10 +8,10 @@ import { createRoutesStub } from 'react-router';
 const preview: Preview = {
   decorators: [
     (Story) => {
-       const Stub = createRoutesStub([
+      const Stub = createRoutesStub([
         {
           path: '/',
-          Component: Story ,
+          Component: Story,
         },
       ]);
 

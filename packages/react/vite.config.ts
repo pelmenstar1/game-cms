@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 
 const exports = ['react', 'react-dom', 'react-jsx-runtime'];
 
@@ -9,11 +9,13 @@ export default defineConfig({
     outDir: './dist/src',
     lib: {
       formats: ['es'],
-      entry: Object.fromEntries(exports.map((name) => [`re-${name}`, `./src/re-${name}.ts`]))
+      entry: Object.fromEntries(
+        exports.map((name) => [`re-${name}`, `./src/re-${name}.ts`])
+      ),
     },
   },
   define: {
     'process.env.NODE_ENV': '"production"',
-    'process': 'undefined',
-  }
+    process: 'undefined',
+  },
 });

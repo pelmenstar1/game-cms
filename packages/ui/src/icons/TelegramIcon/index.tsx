@@ -1,4 +1,4 @@
-import { SvgProps } from '../types';
+import type { SvgProps } from '../types';
 
 export function TelegramIcon(props: SvgProps) {
   return (

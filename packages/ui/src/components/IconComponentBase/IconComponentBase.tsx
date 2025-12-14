@@ -1,4 +1,4 @@
-import { createElement, ReactNode } from 'react';
+import { createElement, type ReactNode } from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { impersonatedComponent } from '../../utils/impersonation';

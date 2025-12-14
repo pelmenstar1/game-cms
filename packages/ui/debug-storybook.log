@@ -1,0 +1,50 @@
+[16:41:14.284] [INFO] storybook v10.1.8
+[16:41:14.420] [INFO] Loading main config failed as the file does not seem to be valid ESM. Trying a temporary fix, please ensure the main config is valid ESM.
+[16:41:15.228] [DEBUG] Getting package.json info for C:/KPI/7_semestr/bachelor/game-cms/packages/ui/package.json...
+[16:41:15.240] [ERROR] [38;2;241;97;97mSB_CORE-SERVER_0002 (CriticalPresetLoadError): Storybook failed to load the following preset: C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts.
+
+Please check whether your setup is correct, the Storybook dependencies (and their peer dependencies) are installed correctly and there are no package version clashes.
+
+If you believe this is a bug, please open an issue on Github.
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+    at getAbsolutePath (file:///C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts:3:23)
+    at file:///C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts:8:15
+    at Array.map (<anonymous>)
+    at file:///C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts:7:63
+    at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+    at async importModule (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-MOOIRZDT.js:732:11)
+    at async loadMainConfig (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-76UP3JOL.js:11670:12)
+    at async buildDevStandalone (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/core-server/index.js:7149:16)
+    at async withTelemetry (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-6CJUCYYK.js:209:12)
+
+More info: 
+[39m
+    at loadPreset (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-76UP3JOL.js:10101:13)
+    at async Promise.all (index 1)
+    at async loadPresets (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-76UP3JOL.js:10110:73)
+    at async getPresets (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-76UP3JOL.js:10141:23)
+    at async buildDevStandalone (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/core-server/index.js:7163:17)
+    at async withTelemetry (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-6CJUCYYK.js:209:12)
+    at async dev (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/bin/core.js:2734:3)
+    at async _Command.<anonymous> (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/bin/core.js:2801:92)
+[16:41:15.244] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.
+[16:41:15.247] [WARN]   Failed to load preset: "C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts"
+[16:41:15.248] [ERROR] [38;2;241;97;97mReferenceError: require is not defined in ES module scope, you can use import instead[39m
+    at getAbsolutePath (file:///C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts:3:23)
+    at file:///C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts:8:15
+    at Array.map (<anonymous>)
+    at file:///C:/KPI/7_semestr/bachelor/game-cms/packages/ui/.storybook/main.ts:7:63
+    at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+    at async importModule (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-MOOIRZDT.js:732:11)
+    at async loadMainConfig (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-76UP3JOL.js:11670:12)
+    at async buildDevStandalone (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/core-server/index.js:7149:16)
+    at async withTelemetry (file:///C:/KPI/7_semestr/bachelor/game-cms/node_modules/.pnpm/storybook@10.1.8_@testing-l_728ccad08ff6996159df47605770a625/node_modules/storybook/dist/_node-chunks/chunk-6CJUCYYK.js:209:12)
+[16:41:18.041] [PROMPT] Would you like to send anonymous crash reports to improve Storybook and fix bugs faster? {"choice":false}
+[16:41:18.044] [INFO] Storybook collects completely anonymous usage telemetry. We use it to shape Storybook's roadmap and prioritize features. You can learn more, including how to opt out, at https://storybook.js.org/telemetry
+[16:41:18.047] [INFO] Loading main config failed as the file does not seem to be valid ESM. Trying a temporary fix, please ensure the main config is valid ESM.
+[16:41:18.348] [INFO] Loading main config failed as the file does not seem to be valid ESM. Trying a temporary fix, please ensure the main config is valid ESM.
+[16:41:18.363] [INFO] Loading main config failed as the file does not seem to be valid ESM. Trying a temporary fix, please ensure the main config is valid ESM.

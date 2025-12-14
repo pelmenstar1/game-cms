@@ -1,4 +1,4 @@
-import { ValidationResult } from '../../hooks';
+import { type ValidationResult } from '../../hooks';
 import { ExclamationIcon } from '../../icons';
 import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';

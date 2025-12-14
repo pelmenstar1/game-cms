@@ -56,6 +56,7 @@ export default defineConfig(
       'unicorn/prefer-global-this': 'off',
       'unicorn/no-null': 'off',
       'unicorn/no-negated-condition': 'off',
+      'unicorn/prefer-at': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
 

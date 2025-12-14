@@ -1,9 +1,7 @@
 import { pnpm } from './process';
 
 const STYLELINT_PATTERN = `**/*.{css,scss}`;
-
-// Only check files that ESLint prettier plugin doesn't check.
-const PRETTIER_PATTERN = '**.{json,css,scss,md,yml}';
+const PRETTIER_PATTERN = '**.{ts,tsx,js,mjs,mts,json,css,scss,md,yml}';
 
 async function phase(name: string, args: string[]) {
   try {

@@ -1,7 +1,7 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 
 import { classNames } from '../../utils/classNames';
-import { Button, ButtonProps } from '../Button';
+import { Button, type ButtonProps } from '../Button';
 import styles from './UploadFileButton.module.scss';
 
 export type UploadFileButtonProps = ButtonProps &

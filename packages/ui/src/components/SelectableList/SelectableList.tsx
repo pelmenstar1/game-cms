@@ -1,4 +1,10 @@
-import { ChangeEvent, Key, ReactNode, useCallback, useId } from 'react';
+import {
+  type ChangeEvent,
+  type Key,
+  type ReactNode,
+  useCallback,
+  useId,
+} from 'react';
 
 import { classNames } from '../../utils/classNames';
 import styles from './SelectableList.module.scss';

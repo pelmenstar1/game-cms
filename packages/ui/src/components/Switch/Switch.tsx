@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode, useCallback } from 'react';
+import { type ChangeEvent, type ReactNode, useCallback } from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';

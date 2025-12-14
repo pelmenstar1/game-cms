@@ -1,8 +1,8 @@
 import react from '@vitejs/plugin-react';
-import { NodePackageImporter } from 'sass-embedded';
 import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   publicDir: false,
-  plugins: [react()],
+  plugins: [react(), tsconfigPaths()],
 });

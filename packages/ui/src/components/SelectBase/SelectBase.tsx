@@ -1,14 +1,26 @@
-import { ComponentProps, MouseEvent, useCallback, useState } from 'react';
+import {
+  type ComponentProps,
+  type MouseEvent,
+  useCallback,
+  useState,
+} from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { SelectHeader } from '../SelectHeader';
 import { SelectItems } from '../SelectItems';
 import styles from './SelectBase.module.scss';
 
+export type SelectItemKey = string;
+
+export type SelectItem<K extends SelectItemKey = SelectItemKey> = {
+  key: K;
+  title: string;
+};
+
 export interface SelectBaseProps<
-  T extends string = string,
+  T extends SelectItemKey = SelectItemKey,
 > extends ComponentProps<'div'> {
-  items: { key: T; title: string }[];
+  items: readonly SelectItem<T>[];
   selectedItem?: T;
 
   disabled?: boolean;
@@ -22,7 +34,7 @@ export interface SelectBaseProps<
   onItemSelected?: (value: T) => void;
 }
 
-export function SelectBase<K extends string>({
+export function SelectBase<K extends SelectItemKey>({
   items,
   selectedItem,
   disabled,

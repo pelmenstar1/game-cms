@@ -1,0 +1,57 @@
+@use '../../theme/utils' as *;
+
+.root {
+  --tick-color: var(--color-text-on-background);
+
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  gap: 0.3em;
+
+  height: fit-content;
+
+  line-height: 1;
+
+  input {
+    $input-size: 0.9em;
+
+    appearance: none;
+
+    // For iOS < 15 to remove gradient background
+    background-color: var(--color-background);
+
+    // Not removed via appearance
+    margin: 0;
+
+    font: inherit;
+    color: currentColor;
+
+    @include size($input-size);
+
+    border: 2px solid currentColor;
+
+    display: grid;
+    place-content: center;
+
+    &::before {
+      $padding: 0.2em;
+
+      @include size($input-size - 2 * $padding);
+
+      content: '';
+      background-color: var(--tick-color);
+
+      transform: scale(0);
+      transition: 0.05s transform ease-in-out;
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+  }
+
+  &[data-disabled='true'] {
+    --tick-color: var(--color-text-on-background-dark);
+    color: var(--color-text-on-background-dark);
+  }
+}

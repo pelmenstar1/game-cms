@@ -1,5 +1,5 @@
 import type { MaybeArray } from '@game-cms/shared';
-import { ReactElement, useId, useState } from 'react';
+import { type ReactElement, useId, useState } from 'react';
 import React from 'react';
 
 import { classNames } from '../../utils/classNames';

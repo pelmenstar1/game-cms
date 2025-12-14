@@ -10,6 +10,9 @@ import type {
   RouteOptions,
 } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
+import type z from 'zod';
+
+import type { apiRouteId } from './schema/api.js';
 
 export const httpMethods = [
   'OPTIONS',
@@ -28,7 +31,7 @@ export type HttpMethod = (typeof httpMethods)[number];
 export type HttpMethodWithBody = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type HttpMethodWithNoBody = Exclude<HttpMethod, HttpMethodWithBody>;
 
-export type ApiRouteId = `${string}$${string}`;
+export type ApiRouteId = z.infer<typeof apiRouteId>;
 
 export type ApiRouteContextConfig = {
   exact?: boolean;

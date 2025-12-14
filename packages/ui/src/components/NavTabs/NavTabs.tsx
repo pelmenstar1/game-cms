@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useLocation } from 'react-router';
 
-import { PageUrl } from '../../types/options';
+import type { PageUrl } from '../../types/options';
 import { classNames } from '../../utils/classNames';
 import { Link } from '../Link';
 import styles from './NavTabs.module.scss';
@@ -18,22 +18,24 @@ export interface NavTabsProps {
 }
 
 export function NavTabs({ className, items }: NavTabsProps) {
-  const currentLocation = useLocation();
+  const { pathname } = useLocation();
 
   return (
     <div className={classNames(styles.root, className)}>
-      {items.map((item) => (
+      {items.map(({ href, text, icon }) => (
         <Link
-          key={item.href}
+          key={href}
           className={classNames(
             styles.item,
-            currentLocation.pathname === item.href && styles['item-active']
+            (href !== '/' || pathname === href) &&
+              pathname.startsWith(href) &&
+              styles['item-active']
           )}
-          to={item.href}
-          title={item.text}
+          to={href}
+          title={text}
         >
-          {item.icon}
-          {item.text}
+          {icon}
+          {text}
         </Link>
       ))}
     </div>

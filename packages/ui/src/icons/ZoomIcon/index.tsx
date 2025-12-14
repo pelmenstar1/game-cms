@@ -1,6 +1,6 @@
 //
 
-import { SvgProps } from '../types';
+import type { SvgProps } from '../types';
 
 export function ZoomIcon(props: SvgProps) {
   return (

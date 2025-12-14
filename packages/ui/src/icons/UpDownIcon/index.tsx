@@ -1,5 +1,5 @@
 import { classNames } from '../../utils/classNames';
-import { SvgProps } from '../types';
+import type { SvgProps } from '../types';
 import styles from './index.module.scss';
 
 export interface UpDownIconProps extends SvgProps {

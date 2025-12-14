@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 
 import { ArrowDownIcon } from '../../icons';
 import { classNames } from '../../utils/classNames';

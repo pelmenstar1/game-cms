@@ -1,4 +1,11 @@
-import { FC, ReactNode, Ref, useEffect, useLayoutEffect, useRef } from 'react';
+import {
+  type FC,
+  type ReactNode,
+  type Ref,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { IndeterminateCircularProgress } from '../IndeterminateCircularProgress';

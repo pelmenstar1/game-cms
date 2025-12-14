@@ -1,4 +1,9 @@
-import { cloneElement, DOMAttributes, ReactElement, useState } from 'react';
+import {
+  cloneElement,
+  type DOMAttributes,
+  type ReactElement,
+  useState,
+} from 'react';
 
 type Events = Pick<
   DOMAttributes<HTMLElement>,

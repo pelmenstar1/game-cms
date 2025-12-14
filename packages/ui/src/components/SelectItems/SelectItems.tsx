@@ -1,17 +1,18 @@
-import { MouseEvent, useLayoutEffect, useRef } from 'react';
+import { type MouseEvent, useLayoutEffect, useRef } from 'react';
 
+import type { SelectItem, SelectItemKey } from '../SelectBase';
 import { Typography } from '../Typography';
 import styles from './SelectItems.module.scss';
 
-export interface SelectItemsProps<K extends string> {
-  items: { key: K; title: string }[];
+export interface SelectItemsProps<K extends SelectItemKey> {
+  items: readonly SelectItem<K>[];
   selectedKey?: K;
   scrollY: number;
   onRetainScrollY: (value: number) => void;
   onItemClick: (event: MouseEvent) => void;
 }
 
-export function SelectItems<K extends string>({
+export function SelectItems<K extends SelectItemKey>({
   items,
   scrollY,
   selectedKey,

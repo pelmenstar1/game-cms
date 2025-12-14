@@ -10,7 +10,7 @@ import {
 import React from 'react';
 
 import {
-  InferModalResult,
+  type InferModalResult,
   ModalContext,
   type ModalContextType,
   type ModalProps,

@@ -1,10 +1,13 @@
 import { Link } from 'react-router';
 
-import { TitleRequiredProps } from '../../types/react';
-import { ImpersonatedName, ImpersonatedProps } from '../../utils/impersonation';
+import type { TitleRequiredProps } from '../../types/react';
+import type {
+  ImpersonatedName,
+  ImpersonatedProps,
+} from '../../utils/impersonation';
 import {
   IconComponentBase,
-  IconComponentBaseProps,
+  type IconComponentBaseProps,
 } from '../IconComponentBase';
 
 type PropsOf<T extends ImpersonatedName> = Omit<

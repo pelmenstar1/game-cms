@@ -1,4 +1,4 @@
-import { Context, useContext } from 'react';
+import { type Context, useContext } from 'react';
 
 export function contextUseFactory<T>(
   context: Context<T | null>,

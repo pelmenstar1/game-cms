@@ -1,5 +1,6 @@
 export * from './BaseFileDropArea';
 export * from './Button';
+export * from './Checkbox';
 export * from './ErrorBoard';
 export * from './ErrorMessage';
 export * from './FileDrop';
@@ -17,6 +18,7 @@ export * from './ModalDialog';
 export * from './ModalOverlay';
 export * from './NavTabs';
 export * from './Notification';
+export * from './OptionBase';
 export * from './Pagination';
 export * from './PasswordInput';
 export * from './Prefixed';

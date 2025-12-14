@@ -1,0 +1,17 @@
+@use '../../theme/utils' as *;
+
+.root {
+  input {
+    border-radius: 0.25em;
+
+    &::before {
+      background-color: var(--tick-color) !important;
+
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    }
+
+    &:checked::before {
+      transform: scale(1);
+    }
+  }
+}

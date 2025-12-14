@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { NotificationType, NotificationWrapper, useNotification } from '.';
+import { type NotificationType, NotificationWrapper, useNotification } from '.';
 
 function Component({ type }: { type: NotificationType }) {
   const notification = useNotification();

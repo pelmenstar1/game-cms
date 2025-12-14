@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 
 import { classNames } from '../../utils/classNames';
 import styles from './IndeterminateCircularProgress.module.scss';

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { SeePasswordIcon } from '../../icons/SeePasswordIcon';
 import { classNames } from '../../utils/classNames';
 import { IconButton } from '../IconButton';
-import { TextInput, TextInputProps } from '../TextInput';
+import { TextInput, type TextInputProps } from '../TextInput';
 import styles from './PasswordInput.module.scss';
 
 interface PasswordInputProps extends Omit<

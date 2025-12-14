@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import type { FC } from 'react';
 
-import { SvgProps } from './types';
+import type { SvgProps } from './types';
 
 /*@__NO_SIDE_EFFECTS__*/
 export function googleIcon(d: string) {

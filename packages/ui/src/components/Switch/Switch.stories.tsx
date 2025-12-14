@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
 import { Typography } from '../Typography';
-import { Switch, SwitchProps } from '.';
+import { Switch, type SwitchProps } from '.';
 
 function Component(props: SwitchProps) {
   const [checked, setChecked] = useState(false);

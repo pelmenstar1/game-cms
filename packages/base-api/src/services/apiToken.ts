@@ -1,4 +1,5 @@
 import type { CreateApiTokenPayload } from '@game-cms/base-types';
+import { ApiError } from '@game-cms/base-utils';
 import { cms, env } from '@game-cms/global';
 import { randomBytes } from '@game-cms/shared/crypto';
 import { service } from '@game-cms/utils';
@@ -15,6 +16,12 @@ async function generateToken() {
   return buffer.toString('base64url');
 }
 
+function isValidPermissions(permissions: string[]) {
+  const allPermissions = cms().service('base::auth').getAllPermissions();
+
+  return permissions.every((name) => allPermissions.includes(name));
+}
+
 export default service({
   id: 'base::auth::apiToken',
   init: async () => {
@@ -27,6 +34,10 @@ export default service({
       .findOne({ $and: [{ token }] });
   },
   create: async (payload: CreateApiTokenPayload) => {
+    if (!isValidPermissions(payload.permissions)) {
+      throw new ApiError('Unknown permissions', 'base::schema/validation');
+    }
+
     const token = await generateToken();
 
     const now = Date.now();

@@ -1,4 +1,4 @@
-import { SvgProps } from '../types';
+import type { SvgProps } from '../types';
 
 export function BulletListIcon(props: SvgProps) {
   return (

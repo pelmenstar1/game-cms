@@ -4,10 +4,10 @@ import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/entity/:entityid/raw/byId/:id',
+  url: '/entity/:entityId/raw/byId/:id',
   method: 'GET',
   config: {
-    id: 'entity$get',
+    id: 'entity/[entityId]$get',
   },
   schema: {
     params: z.object({

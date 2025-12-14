@@ -37,7 +37,6 @@ export function getViewPages(
       result.splice(1, 0, null);
     }
 
-    // eslint-disable-next-line unicorn/prefer-at
     if (pages[pages.length - 1] - pages[pages.length - 2] > 1) {
       result.splice(pages.length - 1, 0, null);
     }

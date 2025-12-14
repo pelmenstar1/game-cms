@@ -1,5 +1,6 @@
 import type {
   ExpirationTimeType,
+  PermissionId,
   RefreshJwtPayload,
   SessionJwtPayload,
   SignInPayload,
@@ -63,7 +64,7 @@ async function createSessionToken(
   actor: {
     _id: ObjectId | string;
     name: string;
-    permissions: string[];
+    permissions: PermissionId[];
   }
 ) {
   return createJwtToken<SessionJwtPayload>(type, {
@@ -97,6 +98,16 @@ async function parseJwtWithSchema<T>(token: string, schema: ZodType<T>) {
   }
 
   return payloadResult.data;
+}
+
+function hydratePermission(routeId: ApiRouteId, entities: string[]) {
+  if (routeId.includes('[entityId]')) {
+    return entities.map(
+      (entityName) => routeId.replaceAll('[entityId]', entityName) as ApiRouteId
+    );
+  }
+
+  return routeId;
 }
 
 export default service({
@@ -177,10 +188,18 @@ export default service({
     }
   },
   getAllPermissions: () => {
+    const entities = cms()
+      .service('base::entitySchema')
+      .getAll()
+      .map((schema) => schema.id);
+
     const { routes } = env().api;
 
-    return routes
+    const result = routes
       .map((route) => route.config?.id)
-      .filter((id) => id !== undefined);
+      .filter((id) => id !== undefined)
+      .flatMap((permission) => hydratePermission(permission, entities));
+
+    return [...new Set(result)];
   },
 });

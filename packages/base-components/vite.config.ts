@@ -1,4 +1,4 @@
-import { defineConfig, UserConfig } from "vite";
+import { defineConfig, UserConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { componentPlugin } from '@game-cms/vite-plugins';
@@ -8,6 +8,6 @@ export default defineConfig({
   plugins: [
     componentPlugin({ cmsPluginName: packageName, registryModulePath: '' }),
     react(),
-    dts()
+    dts(),
   ],
 });

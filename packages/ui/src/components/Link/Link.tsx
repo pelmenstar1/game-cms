@@ -1,9 +1,9 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 import { Link as RouterLink } from 'react-router';
 
-import { PageUrl } from '../../types/options';
+import type { PageUrl } from '../../types/options';
 import { classNames } from '../../utils/classNames';
-import { Typography, TypographyProps } from '../Typography';
+import { Typography, type TypographyProps } from '../Typography';
 import styles from './Link.module.scss';
 
 type AnchorProps = ComponentProps<typeof RouterLink>;

@@ -16,6 +16,13 @@ export function useValidation<K extends string>(
   return useMemo(() => value, deps);
 }
 
+export function isValidItem<K extends string>(
+  result: ValidationResult<K>,
+  key: K
+) {
+  return result[key][0];
+}
+
 export function testValidationResult(result: ValidationResult) {
   return Object.values(result).every(([condition]) => condition);
 }

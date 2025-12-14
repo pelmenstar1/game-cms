@@ -1,8 +1,8 @@
-import { TitleRequiredProps } from '../../types/react';
-import { ImpersonatedProps } from '../../utils/impersonation';
+import type { TitleRequiredProps } from '../../types/react';
+import type { ImpersonatedProps } from '../../utils/impersonation';
 import {
   IconComponentBase,
-  IconComponentBaseProps,
+  type IconComponentBaseProps,
 } from '../IconComponentBase';
 
 export type BaseIconButtonProps = Omit<

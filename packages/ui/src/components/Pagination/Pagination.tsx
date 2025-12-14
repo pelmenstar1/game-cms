@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { ArrowLeftIcon, ArrowRightIcon } from '../../icons';
-import { PageUrl } from '../../types/options';
+import type { PageUrl } from '../../types/options';
 import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import { getViewPages } from './pages';

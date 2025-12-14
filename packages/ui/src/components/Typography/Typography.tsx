@@ -1,4 +1,4 @@
-import React, { Attributes, ReactNode } from 'react';
+import React, { type Attributes, type ReactNode } from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { impersonatedComponent } from '../../utils/impersonation';
