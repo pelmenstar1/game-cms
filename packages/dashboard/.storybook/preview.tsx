@@ -1,11 +1,16 @@
 import '@game-cms/ui/theme/global';
 
-import type { Preview } from '@storybook/react';
+import {
+  definePreview,
+  type ReactPreview,
+  type ReactTypes,
+} from '@storybook/react-vite';
 import { Providers } from '../src/app/providers';
 
 import { createRoutesStub } from 'react-router';
 
-const preview: Preview = {
+const preview: ReactPreview<ReactTypes & { csf4: true }> = definePreview({
+  addons: [],
   decorators: [
     (Story) => {
       const Stub = createRoutesStub([
@@ -22,6 +27,6 @@ const preview: Preview = {
       );
     },
   ],
-};
+});
 
 export default preview;

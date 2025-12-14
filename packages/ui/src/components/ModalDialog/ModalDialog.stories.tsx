@@ -1,19 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { Button } from '../Button';
 import { Typography } from '../Typography';
 import { ModalDialog } from '.';
 
-export default {
-  component: ModalDialog,
-} satisfies Meta<typeof ModalDialog>;
+const meta = preview.meta({ component: ModalDialog });
 
-type Story = StoryObj<typeof ModalDialog>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     title: 'Title',
     children: <Typography>Content</Typography>,
+    onClose: () => {},
     footer: (
       <>
         <Button>Cancel</Button>
@@ -21,4 +18,4 @@ export const Primary: Story = {
       </>
     ),
   },
-};
+});

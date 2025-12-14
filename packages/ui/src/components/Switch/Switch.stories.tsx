@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+
+import preview from '#storybook/preview';
 
 import { Typography } from '../Typography';
 import { Switch, type SwitchProps } from '.';
@@ -10,29 +11,27 @@ function Component(props: SwitchProps) {
   return <Switch {...props} checked={checked} onCheckedChanged={setChecked} />;
 }
 
-export default {
-  component: Component,
-} satisfies Meta<typeof Component>;
+const meta = preview.meta({ component: Component });
 
-type Story = StoryObj<typeof Component>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
+    checked: false,
     children: <Typography>Text</Typography>,
   },
-};
+});
 
-export const Disabled: Story = {
+export const Disabled = meta.story({
   args: {
+    checked: false,
     disabled: true,
     children: <Typography>Text</Typography>,
   },
-};
+});
 
-export const DisabledChecked: Story = {
+export const DisabledChecked = meta.story({
   args: {
     disabled: true,
     checked: true,
     children: <Typography>Text</Typography>,
   },
-};
+});

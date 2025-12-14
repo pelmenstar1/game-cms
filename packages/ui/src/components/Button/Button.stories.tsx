@@ -1,54 +1,50 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { Button } from '.';
 
-export default {
-  component: Button,
-} satisfies Meta<typeof Button>;
+const meta = preview.meta({ component: Button });
 
-type Story = StoryObj<typeof Button>;
-
-export const Solid: Story = {
+export const Solid = meta.story({
   args: {
     buttonVariant: 'solid',
     children: 'Solid',
   },
-};
+});
 
-export const SolidDisabled: Story = {
+export const SolidDisabled = meta.story({
   args: {
     buttonVariant: 'solid',
     disabled: true,
     children: 'Solid',
   },
-};
+});
 
-export const Outlined: Story = {
+export const Outlined = meta.story({
   args: {
     buttonVariant: 'outlined',
     children: 'Outlined',
   },
-};
+});
 
-export const OutlinedDisabled: Story = {
+export const OutlinedDisabled = meta.story({
   args: {
     buttonVariant: 'outlined',
     disabled: true,
     children: 'Outlined',
   },
-};
+});
 
-export const Flat: Story = {
+export const Flat = meta.story({
   args: {
     buttonVariant: 'flat',
     children: 'Flat',
   },
-};
+});
 
-export const FlatDisabled: Story = {
+export const FlatDisabled = meta.story({
   args: {
     buttonVariant: 'flat',
     disabled: true,
     children: 'Flat',
   },
-};
+});

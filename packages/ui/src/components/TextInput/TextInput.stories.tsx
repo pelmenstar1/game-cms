@@ -1,34 +1,30 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { TextInput } from '.';
 
-export default {
-  component: TextInput,
-} satisfies Meta<typeof TextInput>;
+const meta = preview.meta({ component: TextInput });
 
-type Story = StoryObj<typeof TextInput>;
-
-export const Bordered: Story = {
+export const Bordered = meta.story({
   args: {
     value: 'Text',
   },
-};
+});
 
-export const Underline: Story = {
+export const Underline = meta.story({
   args: {
     variant: 'underline',
     value: 'Text',
   },
-};
+});
 
-export const Disabled: Story = {
+export const Disabled = meta.story({
   args: {
     disabled: true,
   },
-};
+});
 
-export const Error: Story = {
+export const Error = meta.story({
   args: {
     error: 'Error',
   },
-};
+});

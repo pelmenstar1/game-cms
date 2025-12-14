@@ -1,15 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { SeePasswordIcon } from '.';
 
-export default {
-  component: SeePasswordIcon,
-} satisfies Meta<typeof SeePasswordIcon>;
+const meta = preview.meta({ component: SeePasswordIcon });
 
-type Story = StoryObj<typeof SeePasswordIcon>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     active: true,
   },
-};
+});

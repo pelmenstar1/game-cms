@@ -1,12 +1,18 @@
 import '../src/theme/global.scss';
 
-import type { Preview } from '@storybook/react';
 import { useModal } from '../src/hooks/useModal';
 
 import { NotificationWrapper } from '../src/components/Notification';
 import { createRoutesStub } from 'react-router';
 
-const preview: Preview = {
+import {
+  definePreview,
+  type ReactPreview,
+  type ReactTypes,
+} from '@storybook/react-vite';
+
+const preview: ReactPreview<ReactTypes & { csf4: true }> = definePreview({
+  addons: [],
   decorators: [
     (Story) => {
       const Stub = createRoutesStub([
@@ -25,6 +31,6 @@ const preview: Preview = {
       );
     },
   ],
-};
+});
 
 export default preview;

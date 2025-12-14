@@ -1,17 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { Pagination } from '.';
 
-export default {
-  component: Pagination,
-} satisfies Meta<typeof Pagination>;
+const meta = preview.meta({ component: Pagination });
 
-type Story = StoryObj<typeof Pagination>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     current: 2,
     total: 5,
     getLink: () => '#',
   },
-};
+});

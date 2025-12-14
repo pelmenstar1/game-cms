@@ -1,13 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { ErrorBoard } from '.';
 
-export default {
-  component: ErrorBoard,
-} satisfies Meta<typeof ErrorBoard>;
+const meta = preview.meta({ component: ErrorBoard });
 
-type Story = StoryObj<typeof ErrorBoard>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: { items: ['Error 1', 'Error 2'] },
-};
+});

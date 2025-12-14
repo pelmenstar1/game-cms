@@ -1,29 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { Table } from '.';
 
-export default {
-  component: Table,
-} satisfies Meta<typeof Table>;
+const meta = preview.meta({ component: Table });
 
-type Story = StoryObj<typeof Table>;
-
-export const Empty: Story = {
+export const Empty = meta.story({
   args: {
     columns: ['Column 1', 'Column 2', 'Column 3'],
     data: [],
   },
-};
+});
 
-export const EmptyNumbered: Story = {
+export const EmptyNumbered = meta.story({
   args: {
     numbered: true,
     columns: ['Column 1', 'Column 2', 'Column 3'],
     data: [],
   },
-};
+});
 
-export const WithContent: Story = {
+export const WithContent = meta.story({
   args: {
     columns: ['Column 1', 'Column 2', 'Column 3'],
     data: [
@@ -32,9 +28,9 @@ export const WithContent: Story = {
       ['Column 1 value 3', 'Column 2 value 3', 'Column 3 value 3'],
     ],
   },
-};
+});
 
-export const WithContentNumbered: Story = {
+export const WithContentNumbered = meta.story({
   args: {
     numbered: true,
     columns: ['Column 1', 'Column 2', 'Column 3'],
@@ -44,4 +40,4 @@ export const WithContentNumbered: Story = {
       ['Column 1 value 3', 'Column 2 value 3', 'Column 3 value 3'],
     ],
   },
-};
+});

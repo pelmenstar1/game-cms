@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+
+import preview from '#storybook/preview';
 
 import { TextArea, type TextAreaProps } from '.';
 
@@ -9,14 +10,10 @@ function StatefulTextArea({ value, ...rest }: TextAreaProps) {
   return <TextArea value={text} onTextChanged={setText} {...rest} />;
 }
 
-export default {
-  component: StatefulTextArea,
-} satisfies Meta<typeof StatefulTextArea>;
+const meta = preview.meta({ component: StatefulTextArea });
 
-type Story = StoryObj<typeof StatefulTextArea>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     value: 'Some text',
   },
-};
+});

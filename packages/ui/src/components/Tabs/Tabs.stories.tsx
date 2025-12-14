@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { Tab } from '../Tab';
 import { Typography } from '../Typography';
@@ -22,10 +22,6 @@ function Component() {
   );
 }
 
-export default {
-  component: Component,
-} satisfies Meta<typeof Component>;
+const meta = preview.meta({ component: Component });
 
-type Story = StoryObj<typeof Component>;
-
-export const Primary: Story = {};
+export const Primary = meta.story({});

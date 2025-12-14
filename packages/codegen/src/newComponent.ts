@@ -6,6 +6,58 @@ type CreateNewComponentOptions = {
   reExport?: boolean;
 };
 
+type StepContext = {
+  componentName: string;
+  options?: CreateNewComponentOptions;
+};
+
+type Step = {
+  name: (context: StepContext) => string;
+  content: (context: StepContext) => string;
+  condition?: (context: StepContext) => boolean | undefined;
+};
+
+const steps: Step[] = [
+  {
+    name: ({ componentName }) => `${componentName}.tsx`,
+    content: ({ componentName }) =>
+      `import styles from './${componentName}.module.scss';
+
+export interface ${componentName}Props {
+  className?: string;
+}
+
+export function ${componentName}({ className }: ${componentName}Props) {
+}
+
+`,
+  },
+  {
+    name: ({ componentName }) => `${componentName}.module.scss`,
+    content: () => '',
+  },
+  {
+    name: ({ componentName }) => `${componentName}.stories.tsx`,
+    condition: ({ options }) => options?.storybook,
+    content: ({ componentName }) =>
+      `import preview from '#storybook/preview';
+
+import { ${componentName} } from './${componentName}';
+
+const meta = preview.meta({ component: ${componentName} });
+
+export const Primary = meta.story({
+  args: {
+  },
+});
+`,
+  },
+  {
+    name: () => 'index.ts',
+    content: ({ componentName }) => `export * from './${componentName}';\n`,
+  },
+];
+
 export async function createNewComponent(
   baseDir: string,
   componentPath: string,
@@ -18,55 +70,21 @@ export async function createNewComponent(
   );
 
   const componentName = path.basename(componentPath);
+  const context: StepContext = { componentName, options };
 
   await fsp.mkdir(fullComponentPath);
-  await fsp.writeFile(
-    path.join(fullComponentPath, `${componentName}.tsx`),
-    `import styles from './${componentName}.module.scss';
 
-export interface ${componentName}Props {
-  className?: string;
-}
+  await Promise.all(
+    steps.map(async (step) => {
+      if (!step.condition || step.condition(context)) {
+        const name = step.name(context);
 
-export function ${componentName}({ className }: ${componentName}Props) {
-}
-
-`,
-    'utf8'
-  );
-
-  await fsp.writeFile(
-    path.join(fullComponentPath, `${componentName}.module.scss`),
-    '',
-    'utf8'
-  );
-
-  if (options?.storybook) {
-    await fsp.writeFile(
-      path.join(fullComponentPath, `${componentName}.stories.tsx`),
-      `import type { Meta, StoryObj } from '@storybook/react';
-
-import { ${componentName} } from './${componentName}';
-
-export default {
-  component: ${componentName},
-} satisfies Meta<typeof ${componentName}>;
-
-type Story = StoryObj<typeof ${componentName}>;
-
-export const Primary: Story = {
-  args: {
-  },
-};
-`,
-      'utf8'
-    );
-  }
-
-  await fsp.writeFile(
-    path.join(fullComponentPath, 'index.ts'),
-    `export * from './${componentName}';\n`,
-    'utf8'
+        await fsp.writeFile(
+          path.join(fullComponentPath, name),
+          step.content(context)
+        );
+      }
+    })
   );
 
   if (options?.reExport) {

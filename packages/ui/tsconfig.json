@@ -18,8 +18,11 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "composite": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "#storybook/*": ["./.storybook/*"]
+    }
   },
   "references": [{ "path": "../shared" }, { "path": "../codegen" }],
-  "include": ["./src", "./scripts"]
+  "include": ["src", "scripts", ".storybook/main.ts", ".storybook/preview.tsx"]
 }

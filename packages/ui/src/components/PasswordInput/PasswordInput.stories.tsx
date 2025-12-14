@@ -1,13 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { PasswordInput } from '.';
 
-export default {
-  component: PasswordInput,
-} satisfies Meta<typeof PasswordInput>;
+const meta = preview.meta({ component: PasswordInput });
 
-type Story = StoryObj<typeof PasswordInput>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {},
-};
+});

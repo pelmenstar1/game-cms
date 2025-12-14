@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { Typography } from '../Typography';
 import { ModalOverlay } from '.';
@@ -13,16 +13,12 @@ function Component({ effect }: { effect: 'tint' | 'blur' }) {
   );
 }
 
-export default {
-  component: Component,
-} satisfies Meta<typeof Component>;
+const meta = preview.meta({ component: Component });
 
-type Story = StoryObj<typeof Component>;
-
-export const Tint: Story = {
+export const Tint = meta.story({
   args: { effect: 'tint' },
-};
+});
 
-export const Blur: Story = {
+export const Blur = meta.story({
   args: { effect: 'blur' },
-};
+});

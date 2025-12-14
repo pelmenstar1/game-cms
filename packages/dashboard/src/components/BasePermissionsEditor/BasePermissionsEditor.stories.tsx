@@ -1,13 +1,14 @@
 import type { ApiRouteId } from '@game-cms/types';
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+
+import preview from '#storybook/preview';
 
 import {
   BasePermissionsEditor,
   type BasePermissionsEditorProps,
 } from './BasePermissionsEditor';
 
-function Component(props: BasePermissionsEditorProps) {
+function Component(props: Pick<BasePermissionsEditorProps, 'permissions'>) {
   const [selectedPermissions, setSelectedPermissions] = useState<ApiRouteId[]>(
     []
   );
@@ -21,13 +22,9 @@ function Component(props: BasePermissionsEditorProps) {
   );
 }
 
-export default {
-  component: Component,
-} satisfies Meta;
+const meta = preview.meta({ component: Component });
 
-type Story = StoryObj<typeof Component>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     permissions: [
       'auth/token$create',
@@ -41,4 +38,4 @@ export const Primary: Story = {
       'storage/folder$create5',
     ],
   },
-};
+});

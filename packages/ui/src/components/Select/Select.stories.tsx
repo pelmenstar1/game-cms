@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+
+import preview from '#storybook/preview';
 
 import { Select, type SelectProps } from '.';
 
@@ -17,13 +18,9 @@ function SelectWithState(props: SelectProps) {
   );
 }
 
-export default {
-  component: SelectWithState,
-} satisfies Meta<typeof SelectWithState>;
+const meta = preview.meta({ component: SelectWithState });
 
-type Story = StoryObj<typeof SelectWithState>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     placeholder: 'Select something',
     style: { width: 'fit-content' },
@@ -36,9 +33,9 @@ export const Primary: Story = {
       },
     ],
   },
-};
+});
 
-export const Disabled: Story = {
+export const Disabled = meta.story({
   args: {
     placeholder: 'Select something',
     disabled: true,
@@ -52,9 +49,9 @@ export const Disabled: Story = {
       },
     ],
   },
-};
+});
 
-export const Long: Story = {
+export const Long = meta.story({
   args: {
     placeholder: 'Select something',
     style: { width: 'fit-content' },
@@ -67,4 +64,4 @@ export const Long: Story = {
       },
     ],
   },
-};
+});

@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { type Key, useState } from 'react';
+
+import preview from '#storybook/preview';
 
 import { Typography } from '../Typography';
 import { SelectableList, type SelectableListProps } from '.';
@@ -21,15 +22,11 @@ function SelectableListWithState(props: SelectableListProps<Item>) {
   );
 }
 
-export default {
-  component: SelectableListWithState,
-} satisfies Meta<typeof SelectableListWithState>;
-
-type Story = StoryObj<typeof SelectableListWithState>;
+const meta = preview.meta({ component: SelectableListWithState });
 
 const renderTypography = ({ title }: Item) => <Typography>{title}</Typography>;
 
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     items: [
       { id: 'item1', title: 'Item 1' },
@@ -38,9 +35,9 @@ export const Primary: Story = {
     ],
     children: renderTypography,
   },
-};
+});
 
-export const Disabled: Story = {
+export const Disabled = meta.story({
   args: {
     disabled: true,
     items: [
@@ -50,4 +47,4 @@ export const Disabled: Story = {
     ],
     children: renderTypography,
   },
-};
+});

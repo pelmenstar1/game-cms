@@ -1,13 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { FileDropArea } from '.';
 
-export default {
-  component: FileDropArea,
-} satisfies Meta<typeof FileDropArea>;
+const meta = preview.meta({ component: FileDropArea });
 
-type Story = StoryObj<typeof FileDropArea>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {},
-};
+});

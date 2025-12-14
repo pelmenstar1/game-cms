@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { range } from 'lodash';
 import { useState } from 'react';
+
+import preview from '#storybook/preview';
 
 import { FileGrid, type FileGridProps, type FileItem } from './FileGrid';
 
@@ -16,11 +17,7 @@ function Component(props: FileGridProps) {
   );
 }
 
-export default {
-  component: Component,
-} satisfies Meta;
-
-type Story = StoryObj<typeof Component>;
+const meta = preview.meta({ component: Component });
 
 function createFile(index: number, thumbnail?: string): FileItem {
   return {
@@ -32,17 +29,17 @@ function createFile(index: number, thumbnail?: string): FileItem {
   };
 }
 
-export const SingleFile: Story = {
+export const SingleFile = meta.story({
   args: {
     items: [createFile(1)],
   },
-};
+});
 
-export const MultipleFiles: Story = {
+export const MultipleFiles = meta.story({
   args: {
     items: [
       ...range(10).map((i) => createFile(i)),
       createFile(11, 'https://i.imgur.com/OEuYkKXl.png'),
     ],
   },
-};
+});

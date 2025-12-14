@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { type NotificationType, NotificationWrapper, useNotification } from '.';
 
@@ -18,20 +18,16 @@ function Component({ type }: { type: NotificationType }) {
   );
 }
 
-export default {
-  component: Component,
-} satisfies Meta<typeof Component>;
+const meta = preview.meta({ component: Component });
 
-type Story = StoryObj<typeof Component>;
-
-export const Plain: Story = {
+export const Plain = meta.story({
   args: {
     type: 'info',
   },
-};
+});
 
-export const Error: Story = {
+export const Error = meta.story({
   args: {
     type: 'error',
   },
-};
+});

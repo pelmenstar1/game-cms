@@ -1,15 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { IndeterminateCircularProgress } from '.';
 
-export default {
-  component: IndeterminateCircularProgress,
-} satisfies Meta<typeof IndeterminateCircularProgress>;
+const meta = preview.meta({ component: IndeterminateCircularProgress });
 
-type Story = StoryObj<typeof IndeterminateCircularProgress>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     style: { width: '200px', height: '200px' },
   },
-};
+});

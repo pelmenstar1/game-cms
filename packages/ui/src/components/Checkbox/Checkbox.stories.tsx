@@ -1,29 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { Checkbox } from '.';
 
-export default {
-  component: Checkbox,
-} satisfies Meta<typeof Checkbox>;
+const meta = preview.meta({ component: Checkbox });
 
-type Story = StoryObj<typeof Checkbox>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     children: 'text',
   },
-};
+});
 
-export const PrimaryDisabled: Story = {
+export const PrimaryDisabled = meta.story({
   args: {
     disabled: true,
     children: 'text',
   },
-};
+});
 
-export const PrimaryH4: Story = {
+export const PrimaryH4 = meta.story({
   args: {
     variant: 'h4',
     children: 'text',
   },
-};
+});

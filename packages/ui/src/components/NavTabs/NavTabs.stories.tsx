@@ -1,15 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import preview from '#storybook/preview';
 
 import { InfoIcon } from '../../icons';
 import { NavTabs } from './NavTabs';
 
-export default {
-  component: NavTabs,
-} satisfies Meta<typeof NavTabs>;
+const meta = preview.meta({ component: NavTabs });
 
-type Story = StoryObj<typeof NavTabs>;
-
-export const Primary: Story = {
+export const Primary = meta.story({
   args: {
     items: [
       {
@@ -29,4 +25,4 @@ export const Primary: Story = {
       },
     ],
   },
-};
+});
