@@ -1,8 +1,15 @@
-import type { CreateApiTokenPayload } from '@game-cms/base-types';
+import type {
+  CreateApiTokenPayload,
+  OpaqueApiToken,
+} from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
 import { cms, env } from '@game-cms/global';
+import type { PagingOptions } from '@game-cms/shared';
 import { randomBytes } from '@game-cms/shared/crypto';
 import { service } from '@game-cms/utils';
+import type { ObjectId } from 'mongodb';
+
+import { getPage } from '../utils/paging.js';
 
 function collection() {
   return cms().service('base::database').collection('base::apiTokens');
@@ -22,16 +29,30 @@ function isValidPermissions(permissions: string[]) {
   return permissions.every((name) => allPermissions.includes(name));
 }
 
+const opaqueProjection = { name: 1, expirationDate: 1, permissions: 1 };
+
 export default service({
   id: 'base::auth::apiToken',
   init: async () => {
     await collection().createIndex({ token: 1 }, { unique: true });
   },
-  get: (token: string) => {
-    return cms()
-      .service('base::database')
-      .collection('base::apiTokens')
-      .findOne({ $and: [{ token }] });
+  getByToken: (token: string) => {
+    return collection().findOne({ token });
+  },
+  getById: (id: ObjectId): Promise<OpaqueApiToken | null> => {
+    return collection().findOne({ _id: id }, { projection: opaqueProjection });
+  },
+  list: async (options: PagingOptions) => {
+    const page = await getPage(collection(), options, [
+      {
+        $project: {
+          items: opaqueProjection,
+          meta: 1,
+        },
+      },
+    ]);
+
+    return page;
   },
   create: async (payload: CreateApiTokenPayload) => {
     if (!isValidPermissions(payload.permissions)) {
@@ -50,7 +71,7 @@ export default service({
 
     return { token };
   },
-  delete: async (token: string) => {
-    await collection().deleteOne({ token });
+  deleteById: async (id: ObjectId) => {
+    await collection().deleteOne({ _id: id });
   },
 });

@@ -1,4 +1,4 @@
-export * from './collections/maybeArray.js';
+export * from './clipboard.js';
 export * from './delay.js';
 export * from './env.js';
 export * from './envAccessor.js';

@@ -1,11 +1,12 @@
 import type z from 'zod';
 
 import type {
+  apiToken,
   createApiTokenPayload,
   createApiTokenResponse,
-  deleteApiTokenPayload,
   getApiTokenJwtResponse,
   getPermissionsResponse,
+  opaqueApiToken,
   permissionId,
   refreshJwtPayloadSchema,
   sessionJwtPayloadSchema,
@@ -13,12 +14,8 @@ import type {
   signTokenInPayload,
 } from './schema/auth.js';
 
-export type ApiToken = {
-  token: string;
-  name: string;
-  expirationDate: Date;
-  permissions: PermissionId[];
-};
+export type OpaqueApiToken = z.infer<typeof opaqueApiToken>;
+export type ApiToken = z.infer<typeof apiToken>;
 
 export type PermissionId = z.infer<typeof permissionId>;
 
@@ -30,5 +27,4 @@ export type GetApiTokenJwtResponse = z.infer<typeof getApiTokenJwtResponse>;
 export type CreateApiTokenPayload = z.infer<typeof createApiTokenPayload>;
 export type CreateApiTokenResponse = z.infer<typeof createApiTokenResponse>;
 export type SignTokenInPayload = z.infer<typeof signTokenInPayload>;
-export type DeleteApiTokenPayload = z.infer<typeof deleteApiTokenPayload>;
 export type GetPermissionsResponse = z.infer<typeof getPermissionsResponse>;

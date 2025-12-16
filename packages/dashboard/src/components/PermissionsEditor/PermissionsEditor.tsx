@@ -19,6 +19,7 @@ export interface PermissionsEditorProps extends Omit<
 
 export function PermissionsEditor({
   className,
+  readOnly,
   selectedPermissions,
   onPermissionsSelected,
 }: PermissionsEditorProps) {
@@ -32,6 +33,7 @@ export function PermissionsEditor({
       {({ permissions }) => (
         <BasePermissionsEditor
           permissions={permissions}
+          readOnly={readOnly}
           selectedPermissions={selectedPermissions}
           onPermissionsSelected={onPermissionsSelected}
         />

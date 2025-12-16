@@ -10,17 +10,19 @@ import styles from './PermissionGroupEditor.module.scss';
 
 export interface PermissionGroupEditorProps {
   className?: string;
+  readOnly?: boolean;
   group: PermissionGroup;
   groupName: string;
-  selectedPermissions: ApiRouteId[];
-  onPermissionsSelected: (value: ApiRouteId[]) => void;
+  selectedPermissions?: ApiRouteId[];
+  onPermissionsSelected?: (value: ApiRouteId[]) => void;
 }
 
 export function PermissionGroupEditor({
   className,
+  readOnly = false,
   group,
   groupName,
-  selectedPermissions,
+  selectedPermissions = [],
   onPermissionsSelected,
 }: PermissionGroupEditorProps) {
   const { actions, children } = group;
@@ -35,11 +37,13 @@ export function PermissionGroupEditor({
               const permission = `${groupName}$${action}` as const;
 
               const onCheckedChanged = (state: boolean) => {
-                const newPermissions = state
-                  ? [...selectedPermissions, permission]
-                  : selectedPermissions.filter((name) => name !== permission);
+                if (!readOnly) {
+                  const newPermissions = state
+                    ? [...selectedPermissions, permission]
+                    : selectedPermissions.filter((name) => name !== permission);
 
-                onPermissionsSelected(newPermissions);
+                  onPermissionsSelected?.(newPermissions);
+                }
               };
 
               return (
@@ -62,6 +66,7 @@ export function PermissionGroupEditor({
             <Labeled key={key} title={formatPermissionName(key)}>
               <PermissionGroupEditor
                 group={value}
+                readOnly={readOnly}
                 groupName={`${groupName}/${key}`}
                 selectedPermissions={selectedPermissions}
                 onPermissionsSelected={onPermissionsSelected}

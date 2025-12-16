@@ -58,7 +58,7 @@ export const listStorageItems = (
 export const uploadFile = (
   context: RequestContext,
   payload: ClientUploadFilePayload
-): Promise<UploadFileResponse> =>
+): Promise<ToClientType<UploadFileResponse>> =>
   request(context, {
     url: '/storage/file',
     method: 'POST',

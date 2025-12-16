@@ -12,6 +12,7 @@ export * from './BulletListIcon';
 export * from './CalendarIcon';
 export * from './CheckIcon';
 export * from './CloseIcon';
+export * from './CopyIcon';
 export * from './CopyrightIcon';
 export * from './DeleteIcon';
 export * from './DragHandleIcon';

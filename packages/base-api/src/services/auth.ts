@@ -149,7 +149,10 @@ export default service({
     return createSessionToken('userSession', user);
   },
   signApiTokenIn: async (token: string) => {
-    const tokenInfo = await cms().service('base::auth::apiToken').get(token);
+    const tokenInfo = await cms()
+      .service('base::auth::apiToken')
+      .getByToken(token);
+
     if (tokenInfo === null) {
       throw new ApiError('Unknown token', 'base::access/unauthorized');
     }

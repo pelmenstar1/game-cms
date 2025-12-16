@@ -1,4 +1,9 @@
 import { createApiToken } from '@game-cms/client';
+import {
+  parseTimeSpec,
+  type RelativeTime,
+  type TimeSpec,
+} from '@game-cms/shared/chrono';
 import type { ApiRouteId } from '@game-cms/types';
 import {
   Button,
@@ -7,23 +12,36 @@ import {
   Labeled,
   testValidationResult,
   TextInput,
+  TimeSelect,
+  useModal,
+  useNotification,
   usePreventLeaving,
   useValidation,
 } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
 
+import { DisplayApiTokenDialog } from '@/components/DisplayApiTokenDialog';
 import { PermissionsEditor } from '@/components/PermissionsEditor';
 import { useApiAction } from '@/hooks/useApiAction';
 
 import styles from './route.module.scss';
+
+const EXPIRATION_TIME_SUGGESTIONS: RelativeTime[] = ['30d', '60d', '90d'];
 
 export default function Page() {
   const [name, setName] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState<ApiRouteId[]>(
     []
   );
+  const [expirationTime, setExpirationTime] = useState<TimeSpec>(
+    EXPIRATION_TIME_SUGGESTIONS[0]
+  );
 
   const doCreateApiToken = useApiAction(createApiToken);
+  const notification = useNotification();
+  const showModal = useModal();
+
+  usePreventLeaving();
 
   const validation = useValidation({
     emptyName: [name.length > 0, 'Name cannot be empty'],
@@ -36,10 +54,25 @@ export default function Page() {
   const isValidInput = testValidationResult(validation);
 
   const onCreate = useCallback(() => {
-    doCreateApiToken({});
-  }, [doCreateApiToken]);
-
-  usePreventLeaving();
+    doCreateApiToken({
+      name,
+      expirationTime: parseTimeSpec(expirationTime),
+      permissions: selectedPermissions,
+    })
+      .then(({ token }) => {
+        void showModal(DisplayApiTokenDialog, { token });
+      })
+      .catch(() => {
+        notification.error('Failed to create token');
+      });
+  }, [
+    doCreateApiToken,
+    showModal,
+    expirationTime,
+    name,
+    notification,
+    selectedPermissions,
+  ]);
 
   return (
     <div className={styles.root}>
@@ -50,6 +83,12 @@ export default function Page() {
           onTextChanged={setName}
         />
       </Labeled>
+
+      <TimeSelect
+        suggestions={EXPIRATION_TIME_SUGGESTIONS}
+        selectedItem={expirationTime}
+        onItemSelected={setExpirationTime}
+      />
 
       <PermissionsEditor
         selectedPermissions={selectedPermissions}
@@ -62,6 +101,7 @@ export default function Page() {
         disabled={!isValidInput}
         buttonVariant="solid"
         className={styles.create}
+        onClick={onCreate}
       >
         Create
       </Button>

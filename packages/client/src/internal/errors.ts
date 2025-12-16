@@ -9,22 +9,18 @@ export async function handleResponseError(response: Response) {
   }
 
   const body = parseJsonOptional(bodyString);
-  if (isNonNullObject(body) && 'error' in body) {
-    const { error } = body;
+  if (isNonNullObject(body)) {
+    const { error } = body as { error?: unknown };
 
-    if (isNonNullObject(error) && 'message' in error) {
-      const { message } = error;
+    if (isNonNullObject(error)) {
+      const { message, code } = error as { message?: unknown; code?: unknown };
 
       if (typeof message === 'string') {
-        if ('code' in error) {
-          const { code } = error;
-
-          if (typeof code === 'string') {
-            throw new ApiError(message, {
-              api: code as ApiErrorCode,
-              http: response.status,
-            });
-          }
+        if (typeof code === 'string') {
+          throw new ApiError(message, {
+            api: code as ApiErrorCode,
+            http: response.status,
+          });
         }
 
         throw new ApiError(message, { http: response.status });

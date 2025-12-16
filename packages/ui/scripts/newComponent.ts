@@ -4,4 +4,5 @@ const componentPath = process.argv[2];
 
 void createNewComponent(import.meta.dirname, componentPath, {
   storybook: true,
+  reExport: true,
 });

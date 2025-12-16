@@ -1,6 +1,6 @@
 import type { ObjectId } from 'mongodb';
 
-export type ToClientType<T> = T extends ObjectId
+export type ToClientType<T> = T extends ObjectId | Date
   ? string
   : T extends object
     ? {

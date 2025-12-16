@@ -88,10 +88,7 @@ export async function createNewComponent(
   );
 
   if (options?.reExport) {
-    const indexFilePath = path.join(
-      import.meta.dirname,
-      '../src/components/index.ts'
-    );
+    const indexFilePath = path.join(baseDir, '../src/components/index.ts');
     let indexContent = await fsp.readFile(indexFilePath, 'utf8');
     indexContent += `export * from './${componentName}';\n`;
 

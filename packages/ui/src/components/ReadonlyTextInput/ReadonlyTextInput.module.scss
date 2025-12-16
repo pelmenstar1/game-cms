@@ -1,0 +1,26 @@
+.root {
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 2em;
+
+  border: 2px solid var(--color-text-on-background);
+  border-radius: 0.5em;
+}
+
+.input {
+  background: transparent;
+  outline: none;
+  border: none;
+  align-self: stretch;
+  color: var(--color-text-on-background);
+  padding-left: 0.5em;
+
+  font-weight: 700;
+}
+
+.copy {
+  position: absolute;
+  right: 0;
+  margin-right: 0.25em;
+}

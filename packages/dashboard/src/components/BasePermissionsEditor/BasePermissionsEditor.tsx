@@ -9,13 +9,15 @@ import styles from './BasePermissionsEditor.module.scss';
 
 export interface BasePermissionsEditorProps {
   className?: string;
+  readOnly?: boolean;
   permissions: ApiRouteId[];
-  selectedPermissions: ApiRouteId[];
-  onPermissionsSelected: (value: ApiRouteId[]) => void;
+  selectedPermissions?: ApiRouteId[];
+  onPermissionsSelected?: (value: ApiRouteId[]) => void;
 }
 
 export function BasePermissionsEditor({
   className,
+  readOnly,
   permissions,
   selectedPermissions,
   onPermissionsSelected,
@@ -30,6 +32,7 @@ export function BasePermissionsEditor({
             key={key}
             group={group}
             groupName={key}
+            readOnly={readOnly}
             selectedPermissions={selectedPermissions}
             onPermissionsSelected={onPermissionsSelected}
           />

@@ -34,7 +34,7 @@ export function TimeSelect({
       })
     );
 
-    const isCustomItem = suggestionItems.some(
+    const isCustomItem = !suggestionItems.some(
       ({ key }) => key === selectedItem
     );
 
@@ -71,7 +71,7 @@ export function TimeSelect({
     <Select
       className={classNames(styles.root, className)}
       items={items}
-      selectedItem={isCustomItem ? selectedItem : CUSTOM_ITEM}
+      selectedItem={isCustomItem ? CUSTOM_ITEM : selectedItem}
       onItemSelected={onBaseItemSelected}
       placeholder=""
     />

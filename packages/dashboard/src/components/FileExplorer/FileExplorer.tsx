@@ -12,6 +12,7 @@ import {
 import type { ToClientType } from '@game-cms/types';
 import {
   classNames,
+  ConfirmationDialog,
   useAsyncCallback,
   useModal,
   useNotification,
@@ -23,7 +24,6 @@ import { useApiQuery } from '@/hooks/useApiQuery';
 
 import { DataLoader } from '../DataLoader';
 import { FileControlHeader } from '../FileControlHeader';
-import { FileDeleteWarningDialog } from '../FileDeleteWarningDialog';
 import { FileGrid, type FileItem } from '../FileGrid';
 import { FolderNameModal } from '../FolderNameModal';
 import { UploadFileDialog } from '../UploadFileDialog';
@@ -100,7 +100,10 @@ export function FileExplorer({
   const onDelete = useAsyncCallback(async () => {
     try {
       if (selectedItem) {
-        const proceed = await showModal(FileDeleteWarningDialog, {});
+        const proceed = await showModal(ConfirmationDialog, {
+          prompt:
+            'Do you want to delete this file? This action is irreversible',
+        });
 
         if (proceed) {
           await doDeleteItem(selectedItem.id);

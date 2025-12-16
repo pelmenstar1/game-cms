@@ -20,6 +20,7 @@ export default [
         ...prefix('api-tokens', [
           index('routes/settings/api-tokens/route.tsx'),
           route('+', 'routes/settings/api-tokens/+/route.tsx'),
+          route(':id', 'routes/settings/api-tokens/[id]/route.tsx'),
         ]),
         route('users', 'routes/settings/users/route.tsx'),
       ]),

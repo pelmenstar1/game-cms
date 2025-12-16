@@ -2,14 +2,19 @@ import type { PageData, PagingOptions } from '@game-cms/shared';
 import { pagingAggregatePipeline } from '@game-cms/shared/mongo';
 import type { Collection, Document, WithId } from 'mongodb';
 
+type MongoPageData<T> = {
+  items: WithId<T>[];
+  meta: [{ totalCount: number }];
+};
+
 export async function getPage<T extends Document, R = T>(
   collection: Collection<T>,
   options: PagingOptions,
   operators: Document[] = []
-) {
+): Promise<PageData<WithId<R>>> {
   const result = await collection
     .aggregate<
-      PageData<WithId<R>>
+      MongoPageData<R>
     >([pagingAggregatePipeline(options), ...operators])
     .next();
 
@@ -19,6 +24,6 @@ export async function getPage<T extends Document, R = T>(
 
   return {
     items: result.items,
-    meta: Array.isArray(result.meta) ? { totalCount: 0 } : result.meta,
+    meta: result.meta[0],
   };
 }
