@@ -594,6 +594,9 @@ importers:
       '@game-cms/base-plugin':
         specifier: workspace:*
         version: link:../base-plugin
+      '@game-cms/base-types':
+        specifier: workspace:*
+        version: link:../base-types
       '@game-cms/base-utils':
         specifier: workspace:*
         version: link:../base-utils
