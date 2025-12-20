@@ -4,9 +4,11 @@ import { scanDirectory } from '@game-cms/shared/io';
 import type { ValueSourceContext } from '@game-cms/types';
 
 async function importEntitySchema(filePath: string) {
-  const result = await importFile<{ default: ServerEntitySchema }>(filePath);
+  if (filePath.endsWith('.js')) {
+    const result = await importFile<{ default: ServerEntitySchema }>(filePath);
 
-  return result.default;
+    return result.default;
+  }
 }
 
 export async function scanEntitySchemas(

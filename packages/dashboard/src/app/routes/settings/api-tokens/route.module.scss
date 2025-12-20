@@ -1,3 +1,9 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
 .header {
   display: flex;
   justify-content: end;
@@ -9,4 +15,14 @@
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.page-view {
+  padding-bottom: 0.5em;
+  
+  &, &-loader, &-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
 }

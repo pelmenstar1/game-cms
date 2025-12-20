@@ -1,3 +1,4 @@
+import { objectId } from '@game-cms/shared/mongo';
 import { apiRouteId } from '@game-cms/types/schema';
 import z from 'zod';
 
@@ -22,6 +23,11 @@ export const opaqueApiToken = z.object({
   name: z.string(),
   expirationDate: z.instanceof(Date),
   permissions: z.array(apiRouteId),
+});
+
+export const opaqueApiTokenWithId = z.object({
+  ...opaqueApiToken.shape,
+  id: objectId,
 });
 
 export const apiToken = z.object({

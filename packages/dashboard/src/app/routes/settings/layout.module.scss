@@ -1,9 +1,12 @@
 .root {
-  display: flex;
   gap: 0.5em;
-  flex-grow: 1;
 }
 
 .content {
+  flex-direction: column;
+}
+
+.root, .content {
+  display: flex;
   flex-grow: 1;
 }

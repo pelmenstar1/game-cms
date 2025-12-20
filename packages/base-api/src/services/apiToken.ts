@@ -1,10 +1,11 @@
 import type {
   CreateApiTokenPayload,
   OpaqueApiToken,
+  OpaqueApiTokenWithId,
 } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
 import { cms, env } from '@game-cms/global';
-import type { PagingOptions } from '@game-cms/shared';
+import type { PageData, PagingOptions } from '@game-cms/shared';
 import { randomBytes } from '@game-cms/shared/crypto';
 import { service } from '@game-cms/utils';
 import type { ObjectId } from 'mongodb';
@@ -30,6 +31,7 @@ function isValidPermissions(permissions: string[]) {
 }
 
 const opaqueProjection = { name: 1, expirationDate: 1, permissions: 1 };
+const opaqueProjectionWithId = { _id: 1, ...opaqueProjection };
 
 export default service({
   id: 'base::auth::apiToken',
@@ -42,17 +44,22 @@ export default service({
   getById: (id: ObjectId): Promise<OpaqueApiToken | null> => {
     return collection().findOne({ _id: id }, { projection: opaqueProjection });
   },
-  list: async (options: PagingOptions) => {
-    const page = await getPage(collection(), options, [
+  list: async (
+    options: PagingOptions
+  ): Promise<PageData<OpaqueApiTokenWithId>> => {
+    const { items, meta } = await getPage(collection(), options, [
       {
         $project: {
-          items: opaqueProjection,
+          items: opaqueProjectionWithId,
           meta: 1,
         },
       },
     ]);
 
-    return page;
+    return {
+      items: items.map(({ _id, ...rest }) => ({ id: _id, ...rest })),
+      meta,
+    };
   },
   create: async (payload: CreateApiTokenPayload) => {
     if (!isValidPermissions(payload.permissions)) {

@@ -4,7 +4,7 @@ import type { Collection, Document, WithId } from 'mongodb';
 
 type MongoPageData<T> = {
   items: WithId<T>[];
-  meta: [{ totalCount: number }];
+  meta: [] | [{ totalCount: number }];
 };
 
 export async function getPage<T extends Document, R = T>(
@@ -24,6 +24,6 @@ export async function getPage<T extends Document, R = T>(
 
   return {
     items: result.items,
-    meta: result.meta[0],
+    meta: result.meta[0] ?? { totalCount: 0 },
   };
 }

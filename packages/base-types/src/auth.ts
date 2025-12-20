@@ -7,6 +7,7 @@ import type {
   getApiTokenJwtResponse,
   getPermissionsResponse,
   opaqueApiToken,
+  opaqueApiTokenWithId,
   permissionId,
   refreshJwtPayloadSchema,
   sessionJwtPayloadSchema,
@@ -15,6 +16,7 @@ import type {
 } from './schema/auth.js';
 
 export type OpaqueApiToken = z.infer<typeof opaqueApiToken>;
+export type OpaqueApiTokenWithId = z.infer<typeof opaqueApiTokenWithId>;
 export type ApiToken = z.infer<typeof apiToken>;
 
 export type PermissionId = z.infer<typeof permissionId>;

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { ArrowLeftIcon, ArrowRightIcon } from '../../icons';
-import type { PageUrl } from '../../types/options';
+import type { PageUrlWithMaybeSearchParams } from '../../types/options';
 import { classNames } from '../../utils/classNames';
 import { Typography } from '../Typography';
 import { getViewPages } from './pages';
@@ -13,12 +13,12 @@ export type PaginationProps = {
   current: number;
   total: number;
 
-  getLink: (page: number) => PageUrl;
+  getLink: (page: number) => PageUrlWithMaybeSearchParams;
 };
 
 type PageItemProps = {
   page: number;
-  href: PageUrl;
+  href: PageUrlWithMaybeSearchParams;
   current: boolean;
 };
 
@@ -50,7 +50,7 @@ function Delimiter() {
 }
 
 type BackForwardButtonProps = {
-  href: PageUrl;
+  href: PageUrlWithMaybeSearchParams;
   className?: string;
   children: ReactNode;
 };

@@ -4,3 +4,5 @@ export type RequiredProperty<T, K extends keyof T> = Replace<
   T,
   Required<Record<K, NonNullable<T[K]>>>
 >;
+
+export type MaybeConcat<T extends string, U extends string> = T | `${T}${U}`;

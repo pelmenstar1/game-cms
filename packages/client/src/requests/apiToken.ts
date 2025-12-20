@@ -4,6 +4,7 @@ import type {
   GetApiTokenJwtResponse,
   GetPermissionsResponse,
   OpaqueApiToken,
+  OpaqueApiTokenWithId,
   SignTokenInPayload,
 } from '@game-cms/base-types';
 import type { PageData, PagingOptions } from '@game-cms/shared';
@@ -40,7 +41,7 @@ export const listApiTokens = (
       path: '/auth/token/list',
       search: options,
     }),
-    response: json<ToClientType<PageData<OpaqueApiToken>>>(),
+    response: json<ToClientType<PageData<OpaqueApiTokenWithId>>>(),
   });
 
 export const createApiToken = (
