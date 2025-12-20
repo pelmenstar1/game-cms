@@ -1,8 +1,10 @@
-export function mapObject<K extends PropertyKey, T, R>(
-  obj: Record<K, T>,
-  mapping: (value: T) => R
+export function mapObject<T extends Record<PropertyKey, unknown>, R>(
+  obj: T,
+  mapping: (value: T[keyof T]) => R
 ) {
   return Object.fromEntries(
-    Object.entries<T>(obj).map(([key, value]) => [key, mapping(value)] as const)
-  ) as Record<K, R>;
+    Object.entries(obj).map(
+      ([key, value]) => [key, mapping(value as T[keyof T])] as const
+    )
+  ) as Record<keyof T, R>;
 }

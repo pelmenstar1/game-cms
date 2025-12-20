@@ -99,7 +99,9 @@ export async function trackRendererDependencies(
   rendererChunk: OutputChunk
 ): Promise<ComponentRendererDependencies> {
   const js = trackAllJsDependencies(bundle, rendererChunk);
-  const css = js.flatMap((chunk) => getCssDependencies(bundle, chunk));
+  const css = [...js, rendererChunk].flatMap((chunk) =>
+    getCssDependencies(bundle, chunk)
+  );
 
   const jsEntries = await Promise.all(
     js.map(

@@ -1,3 +1,5 @@
+import { pipeline } from 'node:stream/promises';
+
 import send from '@fastify/send';
 import { ApiError } from '@game-cms/base-utils';
 import { SHARED_ASSET_PREFIX } from '@game-cms/build';
@@ -26,15 +28,21 @@ export default apiRoute({
     const filePath = paths[scope]?.[name] as string | undefined;
 
     if (filePath !== undefined) {
-      const { headers, statusCode, stream } = await send(req.raw, filePath, {
-        contentType: false,
-      });
+      const { type, headers, statusCode, stream } = await send(
+        req.raw,
+        filePath,
+        {
+          contentType: false,
+        }
+      );
 
-      if (statusCode !== 404) {
-        res.raw.writeHead(statusCode, headers);
-        res.header('content-type', 'text/javascript');
+      if (type === 'file') {
+        res.raw.writeHead(statusCode, {
+          ...headers,
+          'content-type': 'text/javascript',
+        });
 
-        stream.pipe(res.raw);
+        await pipeline(stream, res.raw);
       }
     }
 

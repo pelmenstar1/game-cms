@@ -1,53 +1,13 @@
-import z from 'zod';
+import type z from 'zod';
 
-export const conditionalBinaryOperator = z.enum([
-  'and',
-  'or',
-  'eq',
-  'neq',
-  'lt',
-  'lte',
-  'gt',
-  'gte',
-]);
-
-export const conditionalUnaryOperator = z.literal('not');
-
-export const condtionalAstVariableExpression = z.object({
-  $type: z.literal('var'),
-  name: z.string(),
-});
-
-export const condtionalAstLiteralExpression = z.object({
-  $type: z.literal('literal'),
-  value: z.string(),
-});
-
-export const condtionalAstBinaryExpression = z.object({
-  $type: z.literal('binary'),
-  operator: conditionalBinaryOperator,
-  get lhs() {
-    return conditionalAstExpression;
-  },
-  get rhs() {
-    return conditionalAstExpression;
-  },
-});
-
-export const condtionalAstUnaryExpression = z.object({
-  $type: z.literal('unary'),
-  operator: conditionalUnaryOperator,
-  get expr() {
-    return conditionalAstExpression;
-  },
-});
-
-export const conditionalAstExpression = z.union([
-  condtionalAstVariableExpression,
-  condtionalAstLiteralExpression,
-  condtionalAstBinaryExpression,
-  condtionalAstUnaryExpression,
-]);
+import type {
+  conditionalAstBinaryExpression,
+  conditionalAstLiteralExpression,
+  conditionalAstUnaryExpression,
+  conditionalAstVariableExpression,
+  conditionalBinaryOperator,
+  conditionalUnaryOperator,
+} from './schema/ast.js';
 
 export type ConditionalBinaryOperator = z.infer<
   typeof conditionalBinaryOperator
@@ -56,19 +16,19 @@ export type ConditionalBinaryOperator = z.infer<
 export type ConditionalUnaryOperator = z.infer<typeof conditionalUnaryOperator>;
 
 export type ConditionalAstVariableExpression = z.infer<
-  typeof condtionalAstVariableExpression
+  typeof conditionalAstVariableExpression
 >;
 
 export type ConditionalAstLiteralExpression = z.infer<
-  typeof condtionalAstLiteralExpression
+  typeof conditionalAstLiteralExpression
 >;
 
 export type ConditionalAstBinaryExpression = z.infer<
-  typeof condtionalAstBinaryExpression
+  typeof conditionalAstBinaryExpression
 >;
 
 export type ConditionalAstUnaryExpression = z.infer<
-  typeof condtionalAstUnaryExpression
+  typeof conditionalAstUnaryExpression
 >;
 
 export type ConditionalAstExpression =

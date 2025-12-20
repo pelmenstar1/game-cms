@@ -9,17 +9,19 @@
     "types": ["node"],
 
     "declaration": true,
-    "noUncheckedIndexedAccess": true,
 
     "strict": true,
     "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
-    "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
     "composite": true
   },
   "include": ["./src"],
-  "references": [{ "path": "../types" }, { "path": "../base-types" }]
+  "references": [
+    { "path": "../types" },
+    { "path": "../base-types" },
+    { "path": "../shared" }
+  ]
 }

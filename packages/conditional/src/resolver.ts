@@ -1,4 +1,5 @@
 import type { EntityData } from '@game-cms/base-types';
+import { mapObject } from '@game-cms/shared/object';
 
 import { evaluateConditionalExpression } from './eval.js';
 import type {
@@ -12,7 +13,7 @@ function resolveConditionalField<T>(
   input: ConditionalValueInput
 ) {
   if (choices.alternative) {
-    for (const [condition, value] of choices.alternative) {
+    for (const { condition, value } of choices.alternative) {
       if (evaluateConditionalExpression(condition, input)) {
         return value;
       }
@@ -25,12 +26,8 @@ function resolveConditionalField<T>(
 export function resolveConditionalEntity<T extends EntityData>(
   entity: EntityConditionalData<T>,
   input: ConditionalValueInput
-): T {
-  return Object.fromEntries(
-    Object.entries(entity).map(([key, value]) => [
-      key,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      resolveConditionalField(value, input),
-    ])
+) {
+  return mapObject(entity, (value) =>
+    resolveConditionalField(value, input)
   ) as T;
 }

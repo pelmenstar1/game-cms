@@ -27,6 +27,7 @@
     { "path": "../base-components" },
     { "path": "../base-plugin" },
     { "path": "../base-utils" },
+    { "path": "../base-types" },
     { "path": "../build" }
   ]
 }

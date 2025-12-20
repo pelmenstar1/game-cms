@@ -1,0 +1,11 @@
+$border-value: var(--color-primary) 2px solid;
+
+.edge {
+  &-top {
+    border-top: $border-value;
+  }
+
+  &-bottom {
+    border-bottom: $border-value;
+  }
+}

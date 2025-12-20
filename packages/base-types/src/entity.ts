@@ -38,16 +38,15 @@ export type ServerEntitySchema<
   }
 >;
 
+export type ClientEntitySchemaComponents<T extends EntityData> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [K in keyof T]: ClientComponentSchema<any, T[K]>;
+};
+
 export type ClientEntitySchema<
   T extends EntityData = EntityData,
   Id extends string = string,
-> = BaseEntitySchema<
-  Id,
-  {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [K in keyof T]: ClientComponentSchema<any, T[K]>;
-  }
->;
+> = BaseEntitySchema<Id, ClientEntitySchemaComponents<T>>;
 
 export type InferDataFromServerEntitySchema<T> =
   T extends ServerEntitySchema<infer Data> ? Data : never;

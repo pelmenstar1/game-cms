@@ -15,16 +15,15 @@ type UnaryOperatorMap = Record<
 
 type Binary<T> = (x: T, y: T) => boolean;
 
+type BinaryOperatorOnly<T, Only> = {
+  action: Binary<T>;
+  only: Only;
+};
+
 type BinaryOperator =
-  | { action: Binary<ConditionalValueInputAtom>; only?: false }
-  | {
-      action: Binary<number>;
-      only: 'number';
-    }
-  | {
-      action: Binary<boolean>;
-      only: 'boolean';
-    };
+  | { action: Binary<ConditionalValueInputAtom>; only?: never }
+  | BinaryOperatorOnly<number, 'number'>
+  | BinaryOperatorOnly<boolean, 'boolean'>;
 
 type BinaryOperatorMap = Record<ConditionalBinaryOperator, BinaryOperator>;
 
@@ -118,7 +117,7 @@ export function evaluateConditionalExpression(
             throwUnexpectedType(expression.operator, lhs, rhs);
           }
 
-          break;
+          return operator.action(lhsCoerced, rhsCoerced);
         }
       }
 

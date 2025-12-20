@@ -2,6 +2,8 @@ export * from './BaseFileDropArea';
 export * from './Button';
 export * from './Checkbox';
 export * from './ConfirmationDialog';
+export * from './DraggableList';
+export * from './DragHandle';
 export * from './ErrorBoard';
 export * from './ErrorMessage';
 export * from './FileDrop';

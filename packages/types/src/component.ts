@@ -22,6 +22,7 @@ export type BaseComponentSchema<
   Controller,
 > = {
   name: string;
+  config?: ComponentControllerConfig;
   options: Options;
   controller: Controller;
 };
@@ -88,11 +89,18 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
 
 export type ComponentControllerMeta<Id extends string = string> = { id: Id };
 
+export type ComponentControllerConfig = {
+  ui?: {
+    compact?: boolean;
+  };
+};
+
 export interface ComponentController<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
   Id extends string = string,
 > extends ComponentControllerMeta<Id> {
+  config?: ComponentControllerConfig;
   validation: {
     options: ZodType<Options>;
     data: MaybeFactory<ZodType<Data>, [Options]>;

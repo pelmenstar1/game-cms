@@ -4,9 +4,22 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@game-cms/shared": "workspace:*"
+  },
   "devDependencies": {
     "@game-cms/base-types": "workspace:*",
     "@game-cms/types": "workspace:*",
     "typescript": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./schema": {
+      "import": "./dist/schema/index.js",
+      "types": "./dist/schema.index.d.ts"
+    }
   }
 }

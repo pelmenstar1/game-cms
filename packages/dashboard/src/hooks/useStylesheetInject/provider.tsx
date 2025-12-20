@@ -15,6 +15,9 @@ export function StylesheetInjectProvider({ children }: PropsWithChildren) {
           values.includes(url) ? values : [...values, url]
         );
       },
+      addStylesheets: (urls) => {
+        setStylesheets((values) => [...new Set([...values, ...urls])]);
+      },
     }),
     []
   );

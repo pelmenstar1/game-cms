@@ -1,12 +1,13 @@
-import {
-  conditionalAstExpression,
-  type ConditionalChoices,
-  type EntityConditionalData,
+import type {
+  ConditionalChoices,
+  EntityConditionalData,
 } from '@game-cms/conditional';
+import { conditionalAstExpression } from '@game-cms/conditional/schema';
 import { cms } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
+import { mapObject } from '@game-cms/shared/object';
 import type { ComponentData, ServerComponentSchema } from '@game-cms/types';
-import { z, ZodType } from 'zod';
+import { z, type ZodType } from 'zod';
 
 function getValidatorForComponent<Data extends ComponentData>(
   component: ServerComponentSchema<ComponentData, Data>
@@ -18,7 +19,12 @@ function getValidatorForComponent<Data extends ComponentData>(
   return z.object({
     default: dataValidator,
     alternative: z
-      .array(z.tuple([conditionalAstExpression, dataValidator]))
+      .array(
+        z.object({
+          condition: conditionalAstExpression,
+          value: dataValidator,
+        })
+      )
       .optional(),
   });
 }
@@ -33,10 +39,6 @@ export function getEntityValidationType<T extends EntityConditionalData>(
   }
 
   return z.strictObject(
-    Object.fromEntries(
-      Object.entries(schema.components).map(([key, component]) => {
-        return [key, getValidatorForComponent(component)];
-      })
-    )
+    mapObject(schema.components, getValidatorForComponent)
   ) as unknown as ZodType<T>;
 }

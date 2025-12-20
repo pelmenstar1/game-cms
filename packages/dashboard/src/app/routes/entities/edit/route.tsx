@@ -1,4 +1,4 @@
-import { getEntityById, getEntitySchema } from '@game-cms/client';
+import { getEntitySchema, getRawEntityById } from '@game-cms/client';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
 import { MultipleDataLoader } from '@/components/MultipleDataLoader';
@@ -12,7 +12,7 @@ export default function Page({ params }: Route.ComponentProps) {
     redirectOnNotFound: true,
   });
 
-  const [entity] = useApiQuery(getEntityById, [params.name, params.id], {
+  const [entity] = useApiQuery(getRawEntityById, [params.name, params.id], {
     redirectOnNotFound: true,
   });
 

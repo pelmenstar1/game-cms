@@ -1,36 +1,119 @@
-import type { ConditionalAstExpression } from './ast.js';
+import type {
+  ConditionalAstExpression,
+  ConditionalBinaryOperator,
+  ConditionalUnaryOperator,
+} from './ast.js';
+import { type Token, TokenType } from './internal/token.js';
+import { tokenizeText } from './internal/tokenizer.js';
 import {
   findClosingBracketIndex,
-  parseRhsAsBinaryExpression,
-} from './utils.js';
+  getBinaryOperatorFromToken,
+  getUnaryOperatorFromToken,
+} from './internal/utils.js';
 
-export function parseConditionalToAst(input: string): ConditionalAstExpression {
-  input = input.trim();
+function invalidExpression(message: string): never {
+  throw new Error(`Invalid expression: ${message}`);
+}
 
-  if (input.length === 0) {
-    throw new Error('Invalid input');
-  }
+function parseTokens(tokens: Token[]): ConditionalAstExpression {
+  let lastExpression: ConditionalAstExpression | undefined;
+  let lastBinaryOperator: ConditionalBinaryOperator | undefined;
+  let lastUnaryOperator: ConditionalUnaryOperator | undefined;
 
-  const firstChar = input[0];
-  if (firstChar === '(') {
-    const lhsEnd = findClosingBracketIndex(input);
-    const operatorResult = parseRhsAsBinaryExpression(input.slice(lhsEnd));
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+    const prevToken = tokens[i - 1] as Token | undefined;
 
-    if (operatorResult === null) {
-      throw new Error('Expected operator');
+    let currentExpression: ConditionalAstExpression | undefined;
+
+    // Skip VAR_START and check literal of the next token.
+    if (token === TokenType.VAR_START) {
+      continue;
     }
 
-    const { operator, rhs } = operatorResult;
+    const isPrevVarStart = prevToken === TokenType.VAR_START;
+    const isLiteral = typeof token === 'string';
 
-    const lhs = input.slice(0, lhsEnd + 1);
+    if (isPrevVarStart && !isLiteral) {
+      invalidExpression('expected literal after $');
+    }
 
-    return {
-      $type: 'binary',
-      lhs: parseConditionalToAst(lhs),
-      rhs: parseConditionalToAst(rhs),
-      operator,
-    };
+    if (isLiteral) {
+      currentExpression = isPrevVarStart
+        ? { $type: 'var', name: token }
+        : { $type: 'literal', value: token };
+    }
+
+    if (token === TokenType.OPEN_BRACKET) {
+      const lastIndex = findClosingBracketIndex(tokens, i);
+
+      currentExpression = parseTokens(tokens.slice(i + 1, lastIndex));
+
+      i = lastIndex - 1;
+    }
+
+    if (lastBinaryOperator !== undefined) {
+      if (lastExpression === undefined || currentExpression === undefined) {
+        invalidExpression('invalid sequence of tokens');
+      }
+
+      lastExpression = {
+        $type: 'binary',
+        operator: lastBinaryOperator,
+        lhs: lastExpression,
+        rhs: currentExpression,
+      };
+
+      lastBinaryOperator = undefined;
+
+      continue;
+    }
+
+    if (lastUnaryOperator !== undefined) {
+      if (currentExpression === undefined) {
+        invalidExpression('invalid sequence of tokens');
+      }
+
+      lastExpression = {
+        $type: 'unary',
+        operator: lastUnaryOperator,
+        expr: currentExpression,
+      };
+
+      lastUnaryOperator = undefined;
+
+      continue;
+    }
+
+    if (currentExpression !== undefined) {
+      lastExpression = currentExpression;
+    }
+
+    const binaryOperator = getBinaryOperatorFromToken(token);
+    if (binaryOperator !== undefined) {
+      lastBinaryOperator = binaryOperator;
+
+      continue;
+    }
+
+    const unaryOperator = getUnaryOperatorFromToken(token);
+    if (unaryOperator !== undefined) {
+      lastUnaryOperator = unaryOperator;
+
+      continue;
+    }
   }
 
-  return { $type: 'literal', value: '' };
+  if (lastExpression === undefined) {
+    throw new Error('Tokens are empty');
+  }
+
+  return lastExpression;
+}
+
+export function parseConditionalNotation(
+  input: string
+): ConditionalAstExpression {
+  const tokens = tokenizeText(input);
+  return parseTokens(tokens);
 }

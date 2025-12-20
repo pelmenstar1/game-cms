@@ -5,6 +5,11 @@ import { id } from './meta.js';
 
 export default component({
   id,
+  config: {
+    ui: {
+      compact: true,
+    },
+  },
   validation: {
     data: z.string(),
     options: z.object(),

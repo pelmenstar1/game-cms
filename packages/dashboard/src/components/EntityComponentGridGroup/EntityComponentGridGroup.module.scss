@@ -1,0 +1,10 @@
+.root {
+  padding: 1em;
+  background: var(--color-background-dark);
+  border-radius: 0.5em;
+
+  &-multiple-children {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+  }
+}

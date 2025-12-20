@@ -56,7 +56,7 @@ function getGenericErrorResponse(error: unknown): {
     status: 500,
     body: {
       message: 'Internal Server Error',
-      code: 'base::server/interalError',
+      code: 'base::server/internalError',
     },
   };
 }

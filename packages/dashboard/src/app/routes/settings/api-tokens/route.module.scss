@@ -19,8 +19,10 @@
 
 .page-view {
   padding-bottom: 0.5em;
-  
-  &, &-loader, &-list {
+
+  &,
+  &-loader,
+  &-list {
     display: flex;
     flex-direction: column;
     flex-grow: 1;

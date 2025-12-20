@@ -1,5 +1,11 @@
 import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
 import {
+  conditionalAstExpressionToString,
+  type EntityConditionalData,
+  type RawEntityConditionalData,
+} from '@game-cms/conditional';
+import { mapObject } from '@game-cms/shared/object';
+import {
   Button,
   classNames,
   DeleteIcon,
@@ -14,7 +20,7 @@ import styles from './AccessEntityView.module.scss';
 export interface AccessEntityViewProps<T extends EntityData> {
   className?: string;
   schema: ClientEntitySchema<T>;
-  initialValue?: T;
+  initialValue?: EntityConditionalData<T>;
   onSave?: (value: T) => void;
   onDelete?: () => void;
 }
@@ -26,7 +32,17 @@ export function AccessEntityView<T extends EntityData>({
   onSave,
   onDelete,
 }: AccessEntityViewProps<T>) {
-  const [currentValue, setCurrentValue] = useState(initialValue);
+  const [currentValue, setCurrentValue] = useState(() => {
+    if (initialValue) {
+      return mapObject(initialValue, (value) => ({
+        default: value.default,
+        alternative: value.alternative?.map((choice) => ({
+          condition: conditionalAstExpressionToString(choice.condition),
+          value: choice.value,
+        })),
+      })) as RawEntityConditionalData<T>;
+    }
+  });
 
   return (
     <div className={classNames(styles.root, className)}>

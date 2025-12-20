@@ -6,7 +6,7 @@ declare module '@game-cms/base-types' {
       entity: ['notFound', 'duplicate'];
       schema: ['validation'];
       access: ['unauthorized', 'expired'];
-      server: ['interalError'];
+      server: ['internalError'];
     };
   }
 }
@@ -16,5 +16,5 @@ export const errorStatuses: ApiErrorStatusMap = {
   'base::access/unauthorized': 401,
   'base::entity/duplicate': 409,
   'base::entity/notFound': 404,
-  'base::server/interalError': 500,
+  'base::server/internalError': 500,
 };
