@@ -14,30 +14,38 @@ export type NavTabInfo = {
 
 export interface NavTabsProps {
   className?: string;
+  collapsable?: boolean;
   items: NavTabInfo[];
 }
 
-export function NavTabs({ className, items }: NavTabsProps) {
+export function NavTabs({ className, collapsable, items }: NavTabsProps) {
   const { pathname } = useLocation();
 
   return (
-    <div className={classNames(styles.root, className)}>
-      {items.map(({ href, text, icon }) => (
-        <Link
-          key={href}
-          className={classNames(
-            styles.item,
-            (href !== '/' || pathname === href) &&
-              pathname.startsWith(href) &&
-              styles['item-active']
-          )}
-          to={href}
-          title={text}
-        >
-          {icon}
-          {text}
-        </Link>
-      ))}
+    <div
+      className={classNames(
+        styles.root,
+        collapsable && styles['root-collapsable'],
+        className
+      )}
+    >
+      {items.map(({ href, text, icon }) => {
+        const isActive =
+          (href !== '/' || pathname === href) && pathname.startsWith(href);
+
+        const className = classNames(
+          styles.item,
+
+          isActive && styles['item-active']
+        );
+
+        return (
+          <Link key={href} className={className} to={href} title={text}>
+            {icon}
+            <span className={styles['item-text']}>{text}</span>
+          </Link>
+        );
+      })}
     </div>
   );
 }

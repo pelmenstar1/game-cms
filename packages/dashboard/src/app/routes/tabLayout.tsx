@@ -20,7 +20,7 @@ const items: NavTabInfo[] = [
 export default function Layout() {
   return (
     <div className={styles.root}>
-      <NavTabs className={styles['nav-tabs']} items={items} />
+      <NavTabs collapsable className={styles['nav-tabs']} items={items} />
 
       <div className={styles.content}>
         <Outlet />
