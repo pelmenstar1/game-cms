@@ -1,39 +1,5 @@
 $base-width: 6em;
 
-.root {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-
-  &-collapsable {
-    .item {
-      gap: 0;
-      width: 3em;
-
-      &-text {
-        transform: scale(0);
-      }
-
-      &,
-      &-text {
-        $duration: .2s;
-        $delay: .05s;
-
-        transition: transform $duration linear $delay,
-          width $duration linear $delay;
-      }
-    }
-
-    &:hover .item {
-      width: $base-width;
-      
-      &-text {
-        transform: scale(1);
-      }
-    }
-  }
-}
-
 .item {
   display: flex;
   flex-direction: column;
@@ -64,5 +30,40 @@ $base-width: 6em;
 
   &-active {
     background: var(--color-background-dark-variant);
+  }
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  &-collapsable {
+    .item {
+      gap: 0;
+      width: 3em;
+
+      &-text {
+        transform: scale(0);
+      }
+
+      &,
+      &-text {
+        $duration: 0.2s;
+        $delay: 0.05s;
+
+        transition:
+          transform $duration linear $delay,
+          width $duration linear $delay;
+      }
+    }
+
+    &:hover .item {
+      width: $base-width;
+
+      &-text {
+        transform: scale(1);
+      }
+    }
   }
 }

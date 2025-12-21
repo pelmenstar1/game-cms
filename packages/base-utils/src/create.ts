@@ -5,6 +5,6 @@ import type { ComponentData } from '@game-cms/types';
 export function entity<
   T extends Record<string, ComponentData>,
   Id extends string,
->(value: ServerEntitySchema<T, Id>): ServerEntitySchema<T, Id> {
+>(value: ServerEntitySchema<T, Id>) {
   return value;
 }

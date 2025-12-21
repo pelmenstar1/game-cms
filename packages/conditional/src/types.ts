@@ -13,17 +13,12 @@ export interface ConditionalValueInput extends Record<
 
 export type RawConditionalNotation = string;
 
-export type RawConditionalAlternativeChoice<T> = {
-  condition: string;
-  value: T;
-};
-
 export type ConditionalAlternativeChoice<T> = {
   condition: ConditionalAstExpression;
   value: T;
 };
 
-type BaseConditionalChoices<T, Choice> = {
+export type BaseConditionalChoices<T, Choice> = {
   default: T;
   alternative?: Choice[];
 };
@@ -33,21 +28,9 @@ export type ConditionalChoices<T> = BaseConditionalChoices<
   ConditionalAlternativeChoice<T>
 >;
 
-export type RawConditionalChoices<T> = BaseConditionalChoices<
-  T,
-  RawConditionalAlternativeChoice<T>
->;
-
 export type EntityConditionalData<T extends EntityData = EntityData> = {
   [K in keyof T]: ConditionalChoices<T[K]>;
 };
-
-export type RawEntityConditionalData<T extends EntityData = EntityData> = {
-  [K in keyof T]: RawConditionalChoices<T[K]>;
-};
-
-export type RawConditionalChoicesById<T extends ComponentId> =
-  RawConditionalChoices<ComponentDataById<T>>;
 
 export type ConditionalChoicesById<T extends ComponentId> = ConditionalChoices<
   ComponentDataById<T>
@@ -55,6 +38,3 @@ export type ConditionalChoicesById<T extends ComponentId> = ConditionalChoices<
 
 export type EntityConditionalDataById<T extends EntityId> =
   EntityConditionalData<GetEntityById<T>>;
-
-export type RawEntityConditionalDataById<T extends EntityId> =
-  RawEntityConditionalData<GetEntityById<T>>;

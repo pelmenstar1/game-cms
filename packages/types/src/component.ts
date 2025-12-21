@@ -1,4 +1,4 @@
-import type { MaybeAsyncFactory, MaybeFactory } from '@game-cms/shared';
+import type { MaybeAsyncFactory } from '@game-cms/shared';
 import type { FC } from 'react';
 import type { ZodType } from 'zod';
 
@@ -30,8 +30,9 @@ export type BaseComponentSchema<
 export type ServerComponentSchema<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
+  Error = unknown,
   Id extends string = string,
-> = BaseComponentSchema<Options, ComponentController<Options, Data, Id>>;
+> = BaseComponentSchema<Options, ComponentController<Options, Data, Error, Id>>;
 
 export interface ClientComponentSchema<
   Options extends ComponentOptions = ComponentOptions,
@@ -43,9 +44,11 @@ export interface ClientComponentSchema<
 export type ComponentProps<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
+  Error = unknown,
 > = {
   data: Data;
   options: Options;
+  error?: Error;
   onDataChanged?: (data: Data) => void;
 };
 
@@ -53,10 +56,16 @@ export type GetComponentControllerById<Id extends ComponentId> =
   ComponentMap[Id];
 
 type InferControllerParams<Controller> =
-  Controller extends ComponentController<infer Options, infer Data, infer Id>
+  Controller extends ComponentController<
+    infer Options,
+    infer Data,
+    infer Error,
+    infer Id
+  >
     ? {
         options: Options;
         data: Data;
+        error: Error;
         id: Id;
       }
     : never;
@@ -67,6 +76,9 @@ export type InferComponentOptions<Controller> =
 export type InferComponentData<Controller> =
   InferControllerParams<Controller>['data'];
 
+export type InferComponentError<Controller> =
+  InferControllerParams<Controller>['error'];
+
 export type ComponentDataById<T extends ComponentId> = InferComponentData<
   GetComponentControllerById<T>
 >;
@@ -75,9 +87,13 @@ export type ComponentOptionsById<T extends ComponentId> = InferComponentOptions<
   GetComponentControllerById<T>
 >;
 
+export type ComponentErrorById<T extends ComponentId> = InferComponentError<
+  GetComponentControllerById<T>
+>;
+
 type ComponentPropsFromController<Controller> =
-  Controller extends ComponentController<infer Options, infer Data>
-    ? ComponentProps<Options, Data>
+  Controller extends ComponentController<infer Options, infer Data, infer Error>
+    ? ComponentProps<Options, Data, Error>
     : ComponentProps;
 
 export type ComponentPropsById<Id extends ComponentId = ComponentId> =
@@ -87,27 +103,33 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
   ComponentPropsById<Id>
 >;
 
-export type ComponentControllerMeta<Id extends string = string> = { id: Id };
-
 export type ComponentControllerConfig = {
   ui?: {
     compact?: boolean;
   };
 };
 
+export type ComponentDataValidator<
+  Options extends ComponentOptions = ComponentOptions,
+  Data extends ComponentData = ComponentData,
+  Error = unknown,
+> = (data: Data, options: Options) => Error | undefined;
+
 export interface ComponentController<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
+  Error = unknown,
   Id extends string = string,
-> extends ComponentControllerMeta<Id> {
+> {
+  id: Id;
   config?: ComponentControllerConfig;
   validation: {
     options: ZodType<Options>;
-    data: MaybeFactory<ZodType<Data>, [Options]>;
+    data: ComponentDataValidator<Options, Data, Error>;
   };
   default: {
     options(): Options;
-    data(): Data;
+    data(): NoInfer<Data>;
   };
 }
 
@@ -142,3 +164,12 @@ export type ComponentStaticConfigMap<K extends string | number = ComponentId> =
 
 export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
   IdArrayToMap<T>;
+
+export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
+  validator?: ComponentDataValidator<
+    ComponentOptionsById<Id>,
+    ComponentDataById<Id>,
+    ComponentErrorById<Id>
+  >;
+  renderer: ComponentRenderer<Id>;
+};

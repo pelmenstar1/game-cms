@@ -4,10 +4,12 @@ import dts from 'vite-plugin-dts';
 import { componentPlugin } from '@game-cms/vite-plugins';
 import { name as packageName } from './package.json';
 
-export default defineConfig({
+export default defineConfig((env) => ({
   plugins: [
     componentPlugin({ cmsPluginName: packageName, registryModulePath: '' }),
-    react(),
-    dts(),
+    react({
+      babel: {},
+    }),
+    env.isSsrBuild && dts(),
   ],
-});
+}));

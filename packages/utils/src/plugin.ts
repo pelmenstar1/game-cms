@@ -1,4 +1,4 @@
-import { importFile } from '@game-cms/shared';
+import { importFile } from '@game-cms/shared/io';
 import { scanDirectory } from '@game-cms/shared/io';
 import type { PluginValueSource } from '@game-cms/types';
 

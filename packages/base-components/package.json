@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
-    "build": "vite build"
+    "build": " vite build --outDir dist/client && vite build --ssr src/index.ts --outDir dist/node"
   },
   "dependencies": {
     "@game-cms/types": "workspace:*",
@@ -29,19 +29,19 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/node/index.js",
+      "types": "./dist/node/index.d.ts"
     },
     "./source": {
-      "import": "./dist/source.js",
-      "types": "./src/source.d.ts"
+      "import": "./dist/node/source.js",
+      "types": "./src/node/source.d.ts"
     },
     "./types": {
-      "import": "./dist/types.js",
-      "types": "./dist/types.d.ts"
-    },
-    "./vite-manifest.json": {
-      "import": "./dist/.vite/manifest.json"
+      "import": "./dist/node/types.js",
+      "types": "./dist/node/types.d.ts"
     }
-  }
+  },
+  "browserslist": [
+    "since 2020-01-01"
+  ]
 }

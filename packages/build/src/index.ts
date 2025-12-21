@@ -5,6 +5,10 @@ export const sharedAssets = {
 type SharedAssetsMap = typeof sharedAssets;
 export type SharedAssetScope = keyof SharedAssetsMap;
 
+export type ExternalSharedAsset<
+  Scope extends SharedAssetScope = SharedAssetScope,
+> = SharedAssetsMap[Scope][number];
+
 export type SharedAssetDerivativeMap<T> = {
   [K in SharedAssetScope]: {
     [U in SharedAssetsMap[K][number]]: T;
@@ -23,11 +27,11 @@ export const SHARED_ASSETS_PATHS = Object.fromEntries(
   )
 );
 
-export const COMPONENT_RENDERER_SUFFIX = '-renderer';
+export const COMPONENT_CLIENT_SUFFIX = '-client';
 
 export function getSharedAssetPath<S extends SharedAssetScope>(
   scope: S,
-  name: SharedAssetsMap[S][number]
+  name: ExternalSharedAsset<S>
 ): string {
   return `/assets/${SHARED_ASSET_PREFIX}/${scope}/${name.replaceAll('/', '')}.js`;
 }

@@ -1,9 +1,9 @@
 import type { EntityId } from '@game-cms/base-types';
 import type {
-  RawConditionalAlternativeChoice,
-  RawConditionalChoicesById,
-} from '@game-cms/conditional';
-import type { ComponentDataById, ComponentId } from '@game-cms/types';
+  ComponentDataById,
+  ComponentId,
+  ComponentOptionsById,
+} from '@game-cms/types';
 import {
   classNames,
   DraggableList,
@@ -13,19 +13,23 @@ import {
   Typography,
 } from '@game-cms/ui';
 
+import type {
+  RawConditionalAlternativeChoiceById,
+  RawConditionalChoicesById,
+} from '@/types/conditional';
+
 import { EntityComponentChoice } from '../EntityComponentChoice';
-import { RemoteComponent, type RemoteComponentProps } from '../RemoteComponent';
+import { RemoteComponentWithErrorReporting } from '../RemoteComponentWithErrorReporting';
 import styles from './EntityComponent.module.scss';
 
-export interface EntityComponentProps<T extends ComponentId> extends Omit<
-  RemoteComponentProps<T>,
-  'data' | 'onDataChanged'
-> {
+export interface EntityComponentProps<T extends ComponentId> {
+  className?: string;
+  title: string;
+  componentId: T;
+  options: ComponentOptionsById<T>;
   data: RawConditionalChoicesById<T>;
   defaultData: ComponentDataById<T>;
   onDataChanged: (data: RawConditionalChoicesById<T>) => void;
-  className?: string;
-  title: string;
 }
 
 export function EntityComponent<T extends EntityId>({
@@ -37,22 +41,23 @@ export function EntityComponent<T extends EntityId>({
   data,
   onDataChanged,
 }: EntityComponentProps<T>) {
-  const alternative = data.alternative ?? [];
+  const { alternative } = data;
   const alternativeItems = alternative.map((choice, i) => ({
     key: i,
     ...choice,
   }));
 
-  const onItemsChanged = (
-    items: RawConditionalAlternativeChoice<ComponentDataById<T>>[]
-  ) => {
+  const onItemsChanged = (items: RawConditionalAlternativeChoiceById<T>[]) => {
     onDataChanged({ default: data.default, alternative: items });
   };
 
   const onAddItem = () => {
     onDataChanged({
       default: data.default,
-      alternative: [...alternative, { condition: '', value: defaultData }],
+      alternative: [
+        ...alternative,
+        { condition: '', error: undefined, value: defaultData },
+      ],
     });
   };
 
@@ -62,13 +67,15 @@ export function EntityComponent<T extends EntityId>({
         <Typography className={styles['default-choice-label']}>
           Default
         </Typography>
-        <RemoteComponent
+
+        <RemoteComponentWithErrorReporting
           componentId={componentId}
           options={options}
-          data={data.default}
-          onDataChanged={(newDefault) => {
+          data={data.default.value}
+          error={data.default.error}
+          onDataChanged={(newDefault, error) => {
             onDataChanged({
-              default: newDefault,
+              default: { value: newDefault, error },
               alternative: data.alternative,
             });
           }}

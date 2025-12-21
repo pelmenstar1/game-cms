@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-magic-array-flat-depth */
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
@@ -55,12 +56,12 @@ export function traceEntryPointStyles(
 
   const styles = [
     entryInfo.css,
-    entryInfo.imports?.flatMap((importPath) =>
+    entryInfo.imports?.map((importPath) =>
       traceEntryPointStyles(manifest, importPath)
     ),
   ];
 
-  return styles.flat().filter((value) => value !== undefined);
+  return styles.flat(2).filter((value) => value !== undefined);
 }
 
 export function traceEntryPointJsDependencies(
@@ -77,11 +78,11 @@ export function traceEntryPointJsDependencies(
   }
 
   const imports =
-    entryInfo.imports?.flatMap((importPath) =>
+    entryInfo.imports?.map((importPath) =>
       traceEntryPointJsDependencies(manifest, importPath)
     ) ?? [];
 
   return typeof entryPoint === 'string'
-    ? [entryInfo.file, ...imports]
-    : imports;
+    ? [entryInfo.file, imports].flat(2)
+    : imports.flat();
 }

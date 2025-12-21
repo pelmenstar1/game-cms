@@ -2,6 +2,7 @@ import { component } from '@game-cms/utils';
 import z from 'zod';
 
 import { id } from './meta.js';
+import { validator } from './validator.js';
 
 export default component({
   id,
@@ -11,11 +12,17 @@ export default component({
     },
   },
   validation: {
-    data: z.string(),
-    options: z.object(),
+    data: validator,
+    options: z.object({
+      minLength: z.number().optional(),
+      maxLength: z.number().optional(),
+    }),
   },
   default: {
     data: () => '',
-    options: () => ({}),
+    options: () => ({
+      minLength: undefined,
+      maxLength: undefined,
+    }),
   },
 });

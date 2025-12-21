@@ -1,20 +1,23 @@
 /* eslint-disable react-hooks/static-components */
-import { type GameCmsClient, getComponentManifest } from '@game-cms/client';
+import type { GameCmsClient } from '@game-cms/client';
+import { createInMemoryCache } from '@game-cms/shared';
 import type {
   ComponentDataById,
+  ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
-  ComponentProps,
 } from '@game-cms/types';
-import React, { type FC, Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo } from 'react';
 
 import { useApiClient } from '@/hooks/useApiClient';
 import { useStylesheetInject } from '@/hooks/useStylesheetInject';
 import type { StylesheetInjectContextType } from '@/hooks/useStylesheetInject/context';
-import { getRendererFromModule } from '@/utils/component';
+import { getCachedClientModule } from '@/services/component/clientModule';
+import { getCachedComponentManifest } from '@/services/component/manifest';
 
 export type RemoteComponentProps<T extends ComponentId = ComponentId> = {
   componentId: T;
+  error?: ComponentErrorById<T>;
   options: ComponentOptionsById<T>;
   data: ComponentDataById<T>;
   onDataChanged?: (data: ComponentDataById<T>) => void;
@@ -22,45 +25,30 @@ export type RemoteComponentProps<T extends ComponentId = ComponentId> = {
 
 type CreateLazyComponentContext = {
   client: GameCmsClient;
-  componentId: ComponentId;
   stylesheetInject: StylesheetInjectContextType;
 };
 
-const componentCache: Record<ComponentId, FC<ComponentProps> | undefined> = {};
+const componentCache = createInMemoryCache(
+  (componentId: ComponentId, context: CreateLazyComponentContext) => {
+    return React.lazy(async () => {
+      const { stylesheetInject } = context;
 
-function createLazyComponent(context: CreateLazyComponentContext) {
-  return React.lazy(async () => {
-    const { client, componentId, stylesheetInject } = context;
+      try {
+        const manifest = await getCachedComponentManifest(componentId, context);
 
-    try {
-      const manifest = await getComponentManifest({ client }, componentId);
-      stylesheetInject.addStylesheets(manifest.dependencies.css);
+        stylesheetInject.addStylesheets(manifest.dependencies.css);
 
-      const component: unknown = await import(
-        /* @vite-ignore */
-        manifest.main
-      );
+        const clientModule = await getCachedClientModule(componentId, context);
 
-      return { default: getRendererFromModule(component) };
-    } catch (error: unknown) {
-      console.error(error);
+        return { default: clientModule.renderer };
+      } catch (error: unknown) {
+        console.error(error);
 
-      return { default: () => <p>Failed to import component</p> };
-    }
-  });
-}
-
-function getCachedLazyComponent(context: CreateLazyComponentContext) {
-  const { componentId } = context;
-
-  let result = componentCache[componentId];
-  if (result === undefined) {
-    result = createLazyComponent(context);
-    componentCache[componentId] = result;
+        return { default: () => <p>Failed to import component</p> };
+      }
+    });
   }
-
-  return result;
-}
+);
 
 export function RemoteComponent<T extends ComponentId>({
   componentId,
@@ -70,7 +58,7 @@ export function RemoteComponent<T extends ComponentId>({
   const client = useApiClient();
 
   const Component = useMemo(
-    () => getCachedLazyComponent({ client, componentId, stylesheetInject }),
+    () => componentCache.get(componentId, { client, stylesheetInject }),
     [stylesheetInject, client, componentId]
   );
 

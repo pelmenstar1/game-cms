@@ -4,17 +4,24 @@ import type {
 } from '@game-cms/conditional';
 import { conditionalAstExpression } from '@game-cms/conditional/schema';
 import { cms } from '@game-cms/global';
-import { resolveMaybeFactory } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
-import type { ComponentData, ServerComponentSchema } from '@game-cms/types';
+import type {
+  ComponentData,
+  ComponentOptions,
+  ServerComponentSchema,
+} from '@game-cms/types';
 import { z, type ZodType } from 'zod';
 
 function getValidatorForComponent<Data extends ComponentData>(
-  component: ServerComponentSchema<ComponentData, Data>
+  component: ServerComponentSchema<ComponentOptions, Data>
 ): ZodType<ConditionalChoices<Data>> {
   const { validation } = component.controller;
 
-  const dataValidator = resolveMaybeFactory(validation.data, component.options);
+  const dataValidator = z.custom<Data>((data) => {
+    const error = validation.data(data as Data, component.options);
+
+    return error === undefined;
+  });
 
   return z.object({
     default: dataValidator,

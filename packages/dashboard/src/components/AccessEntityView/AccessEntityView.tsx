@@ -2,7 +2,6 @@ import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
 import {
   conditionalAstExpressionToString,
   type EntityConditionalData,
-  type RawEntityConditionalData,
 } from '@game-cms/conditional';
 import { mapObject } from '@game-cms/shared/object';
 import {
@@ -12,7 +11,10 @@ import {
   IconButton,
   Typography,
 } from '@game-cms/ui';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+import { entityDataHasErrors } from '@/services/entity/error';
+import type { RawEntityConditionalData } from '@/types/conditional';
 
 import { EntityComponentGrid } from '../EntityComponentGrid';
 import styles from './AccessEntityView.module.scss';
@@ -35,7 +37,7 @@ export function AccessEntityView<T extends EntityData>({
   const [currentValue, setCurrentValue] = useState(() => {
     if (initialValue) {
       return mapObject(initialValue, (value) => ({
-        default: value.default,
+        default: { value: value.default },
         alternative: value.alternative?.map((choice) => ({
           condition: conditionalAstExpressionToString(choice.condition),
           value: choice.value,
@@ -43,6 +45,13 @@ export function AccessEntityView<T extends EntityData>({
       })) as RawEntityConditionalData<T>;
     }
   });
+
+  const hasErrors = useMemo(
+    () => currentValue !== undefined && entityDataHasErrors(currentValue),
+    [currentValue]
+  );
+
+  console.log('hasErrors', hasErrors);
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -71,7 +80,7 @@ export function AccessEntityView<T extends EntityData>({
         />
 
         <div className={styles['action-block']}>
-          <Button buttonVariant="solid" onClick={onSave}>
+          <Button buttonVariant="solid" onClick={onSave} disabled={hasErrors}>
             Save
           </Button>
         </div>

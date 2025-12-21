@@ -1,6 +1,7 @@
 import { basePlugin } from '@game-cms/base-plugin';
-import { importFile, resolveMaybeFactory } from '@game-cms/shared';
-import { createEnvAccessor } from '@game-cms/shared';
+import { resolveMaybeFactory } from '@game-cms/shared';
+import { importFile } from '@game-cms/shared/io';
+import { createEnvAccessor } from '@game-cms/shared/io';
 import type { ResolvedCmsConfig } from '@game-cms/types';
 
 import type { ConfigInit } from '../../types/config.js';

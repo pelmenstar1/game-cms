@@ -1,6 +1,6 @@
-import { type RawConditionalAlternativeChoice } from '@game-cms/conditional';
 import type {
   ComponentDataById,
+  ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
 } from '@game-cms/types';
@@ -13,19 +13,25 @@ import {
 } from '@game-cms/ui';
 import type { RefObject } from 'react';
 
+import type { RawConditionalAlternativeChoice } from '@/types/conditional';
+
 import { ConditionalInput } from '../ConditionalInput';
-import { RemoteComponent } from '../RemoteComponent';
+import { RemoteComponentWithErrorReporting } from '../RemoteComponentWithErrorReporting';
 import styles from './EntityComponentChoice.module.scss';
+
+type RawConditionalAlternativeChoiceById<Id extends ComponentId> =
+  RawConditionalAlternativeChoice<
+    ComponentDataById<Id>,
+    ComponentErrorById<Id>
+  >;
 
 export interface EntityComponentChoiceProps<Id extends ComponentId> {
   className?: string;
   handleRef?: RefObject<HTMLButtonElement | null>;
   componentId: Id;
   options: ComponentOptionsById<Id>;
-  choice: RawConditionalAlternativeChoice<ComponentDataById<Id>>;
-  onChoiceChanged?: (
-    value: RawConditionalAlternativeChoice<ComponentDataById<Id>>
-  ) => void;
+  choice: RawConditionalAlternativeChoiceById<Id>;
+  onChoiceChanged?: (value: RawConditionalAlternativeChoiceById<Id>) => void;
   onDelete?: () => void;
 }
 
@@ -34,7 +40,7 @@ export function EntityComponentChoice<Id extends ComponentId>({
   handleRef,
   componentId,
   options,
-  choice: { condition, value },
+  choice: { condition, value, error },
   onChoiceChanged,
   onDelete,
 }: EntityComponentChoiceProps<Id>) {
@@ -59,15 +65,16 @@ export function EntityComponentChoice<Id extends ComponentId>({
       <ConditionalInput
         value={condition}
         onValueChanged={(newCondition) => {
-          onChoiceChanged?.({ condition: newCondition, value });
+          onChoiceChanged?.({ condition: newCondition, error, value });
         }}
       />
-      <RemoteComponent
+      <RemoteComponentWithErrorReporting
         componentId={componentId}
         data={value}
         options={options}
-        onDataChanged={(newData) => {
-          onChoiceChanged?.({ condition, value: newData });
+        error={error}
+        onDataChanged={(newData, error) => {
+          onChoiceChanged?.({ condition, error, value: newData });
         }}
       />
     </div>

@@ -1,13 +1,28 @@
-import { COMPONENT_RENDERER_SUFFIX } from '@game-cms/build';
-import type { Replace } from '@game-cms/shared';
-import type { ComponentId, ComponentStaticConfig } from '@game-cms/types';
-import type { OutputBundle, OutputChunk } from 'rollup';
+import fsp from 'node:fs/promises';
+import path from 'node:path';
 
+import { COMPONENT_CLIENT_SUFFIX } from '@game-cms/build';
+import type { Replace } from '@game-cms/shared';
 import {
-  getComponentIdFromMetaChunk,
-  trackRendererDependencies,
-} from './analysis.js';
+  getViteManifest,
+  traceEntryPointJsDependencies,
+  traceEntryPointStyles,
+  type ViteManifest,
+  type ViteManifestEntry,
+} from '@game-cms/shared/vite';
+import type {
+  ComponentId,
+  ComponentRendererDependencies,
+  ComponentStaticConfig,
+} from '@game-cms/types';
+import type { OutputBundle } from 'rollup';
+
+import { getComponentIdFromMetaChunk } from './analysis.js';
 import { findChunkWithName, minifyCode } from './utils.js';
+
+type ViteManifestEntryWithName = Replace<ViteManifestEntry, { name: string }>;
+
+const CLIENT_DIR = './dist/client';
 
 export type ComponentBuildStaticConfig = Replace<
   ComponentStaticConfig,
@@ -21,51 +36,96 @@ export type ComponentBuildStaticConfigMap = Record<
   ComponentBuildStaticConfig
 >;
 
-function getBundleRenderers(bundle: OutputBundle) {
-  return Object.values(bundle).filter(
-    (value): value is OutputChunk =>
-      value.type === 'chunk' && value.name.endsWith(COMPONENT_RENDERER_SUFFIX)
+function getClientBundles(manifest: ViteManifest) {
+  return Object.values(manifest).filter(
+    (value): value is ViteManifestEntryWithName =>
+      value.name?.endsWith(COMPONENT_CLIENT_SUFFIX) ?? false
   );
 }
 
-function findControllerForRenderer(bundle: OutputBundle, name: string) {
-  const controllerChunkName = name.slice(0, -COMPONENT_RENDERER_SUFFIX.length);
-
-  return findChunkWithName(bundle, controllerChunkName);
+function findControllerByClientBundle(
+  bundle: OutputBundle,
+  componentName: string
+) {
+  return findChunkWithName(bundle, componentName);
 }
 
-function findMetaFileChunk(bundle: OutputBundle, rendererName: string) {
-  const chuckName = `${rendererName.slice(0, -COMPONENT_RENDERER_SUFFIX.length)}-meta`;
+function findMetaFileChunk(bundle: OutputBundle, componentName: string) {
+  const chunkName = `${componentName}-meta`;
 
-  return findChunkWithName(bundle, chuckName);
+  return findChunkWithName(bundle, chunkName);
+}
+
+async function readClientBundleFile(fileName: string) {
+  return fsp.readFile(path.join(CLIENT_DIR, fileName), 'utf8');
+}
+
+async function traceClientBundleDependencies(
+  manifest: ViteManifest,
+  clientEntry: ViteManifestEntry
+): Promise<ComponentRendererDependencies> {
+  const jsEntries = traceEntryPointJsDependencies(manifest, clientEntry);
+  const cssEntries = traceEntryPointStyles(manifest, clientEntry);
+
+  const jsObjectEntries = await Promise.all(
+    jsEntries.map(async (entry) => {
+      let code = await readClientBundleFile(entry);
+      code = await minifyCode(code);
+
+      return [entry, code] as const;
+    })
+  );
+
+  const cssObjectEntries = await Promise.all(
+    cssEntries.map(async (entry) => {
+      const code = await readClientBundleFile(entry);
+
+      return [entry, code] as const;
+    })
+  );
+
+  return {
+    js: Object.fromEntries(jsObjectEntries),
+    css: Object.fromEntries(cssObjectEntries),
+  };
 }
 
 async function getRenderManifest(
-  bundle: OutputBundle,
-  rendererChuck: OutputChunk
+  manifest: ViteManifest,
+  clientEntry: ViteManifestEntryWithName
 ) {
+  const clientCode = await readClientBundleFile(clientEntry.file);
+
   return {
-    main: await minifyCode(rendererChuck.code),
-    dependencies: await trackRendererDependencies(bundle, rendererChuck),
+    main: await minifyCode(clientCode),
+    dependencies: await traceClientBundleDependencies(manifest, clientEntry),
   };
 }
 
 async function getComponentStaticConfig(
-  bundle: OutputBundle,
-  rendererChuck: OutputChunk
+  manifest: ViteManifest,
+  serverBundle: OutputBundle,
+  clientEntry: ViteManifestEntryWithName
 ) {
-  const controllerChunk = findControllerForRenderer(bundle, rendererChuck.name);
-  const metaChunk = findMetaFileChunk(bundle, rendererChuck.name);
+  const componentName = clientEntry.name.slice(
+    0,
+    -COMPONENT_CLIENT_SUFFIX.length
+  );
+  const controllerChunk = findControllerByClientBundle(
+    serverBundle,
+    componentName
+  );
+  const metaChunk = findMetaFileChunk(serverBundle, componentName);
 
   if (!controllerChunk) {
     throw new Error(
-      `Cannot find a controller for renderer: ${rendererChuck.name}`
+      `Cannot find a controller for renderer: ${clientEntry.name}`
     );
   }
 
   if (!metaChunk) {
     throw new Error(
-      `Cannot find a meta file for renderer: ${rendererChuck.name}`
+      `Cannot find a meta file for renderer: ${clientEntry.name}`
     );
   }
 
@@ -73,18 +133,23 @@ async function getComponentStaticConfig(
 
   const config: ComponentBuildStaticConfig = {
     controller: { filePath: controllerChunk.fileName },
-    renderManifest: await getRenderManifest(bundle, rendererChuck),
+    renderManifest: await getRenderManifest(manifest, clientEntry),
   };
 
   return { id, config };
 }
 
-export async function getComponentStaticConfigMap(bundle: OutputBundle) {
-  const renderers = getBundleRenderers(bundle);
+export async function getComponentStaticConfigMap(serverBundle: OutputBundle) {
+  const viteManifest = await getViteManifest('./dist/client');
+  const clientBundles = getClientBundles(viteManifest);
 
   const entries = await Promise.all(
-    renderers.map(async (chunk) => {
-      const { id, config } = await getComponentStaticConfig(bundle, chunk);
+    clientBundles.map(async (chunk) => {
+      const { id, config } = await getComponentStaticConfig(
+        viteManifest,
+        serverBundle,
+        chunk
+      );
 
       return [id, config] as const;
     })

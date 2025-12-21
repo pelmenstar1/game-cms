@@ -2,7 +2,7 @@ import fsp from 'node:fs/promises';
 // eslint-disable-next-line unicorn/import-style
 import util from 'node:util';
 
-import { isFileNotFoundError } from './errors/index.js';
+import { isFileNotFoundError } from '../errors/index.js';
 
 export async function loadEnvFileIfExists() {
   try {

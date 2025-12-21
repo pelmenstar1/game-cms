@@ -6,7 +6,7 @@ import { id } from './meta.js';
 export default component({
   id,
   validation: {
-    data: z.number(),
+    data: () => '',
     options: z.object(),
   },
   default: {

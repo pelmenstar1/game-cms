@@ -6,7 +6,9 @@ export default entity({
   components: {
     field1: text({
       name: 'Field 1',
-      options: [],
+      options: {
+        minLength: 3,
+      },
     }),
   },
 });

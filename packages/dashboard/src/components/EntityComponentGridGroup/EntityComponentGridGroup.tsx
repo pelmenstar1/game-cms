@@ -2,9 +2,13 @@ import type {
   ClientEntitySchemaComponents,
   EntityData,
 } from '@game-cms/base-types';
-import type { RawEntityConditionalData } from '@game-cms/conditional';
-import type { ClientComponentSchema } from '@game-cms/types';
+import type { ClientComponentSchema, ComponentId } from '@game-cms/types';
 import { classNames } from '@game-cms/ui';
+
+import type {
+  RawConditionalChoicesById,
+  RawEntityConditionalData,
+} from '@/types/conditional';
 
 import { EntityComponent } from '../EntityComponent';
 import styles from './EntityComponentGridGroup.module.scss';
@@ -32,21 +36,32 @@ export function EntityComponentGridGroup<T extends EntityData>({
         className
       )}
     >
-      {entries.map(([key, schemaEntry]) => (
-        <EntityComponent
-          key={key}
-          title={key}
-          componentId={schemaEntry.controller}
-          options={schemaEntry.options}
-          defaultData={schemaEntry.defaultData}
-          data={value?.[key] ?? { default: schemaEntry.defaultData }}
-          onDataChanged={(newData) => {
-            const newValue = { ...value, [key]: newData };
+      {entries.map(([key, schemaEntry]) => {
+        type Data = RawConditionalChoicesById<ComponentId>;
 
-            onValueChanged(newValue as RawEntityConditionalData<T>);
-          }}
-        />
-      ))}
+        const data: Data = value?.[key] ?? {
+          default: { value: schemaEntry.defaultData },
+          alternative: [],
+        };
+
+        const onDataChanged = (newData: Data) => {
+          const newValue = { ...value, [key]: newData };
+
+          onValueChanged(newValue as RawEntityConditionalData<T>);
+        };
+
+        return (
+          <EntityComponent
+            key={key}
+            title={key}
+            componentId={schemaEntry.controller}
+            options={schemaEntry.options}
+            defaultData={schemaEntry.defaultData}
+            data={data}
+            onDataChanged={onDataChanged}
+          />
+        );
+      })}
     </div>
   );
 }

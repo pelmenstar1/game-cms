@@ -3,11 +3,11 @@ import type {
   ClientEntitySchemaComponents,
   EntityData,
 } from '@game-cms/base-types';
-import type { RawEntityConditionalData } from '@game-cms/conditional';
 import { classNames } from '@game-cms/ui';
 import { useMemo } from 'react';
 
-import { splitEntitySchemaComponentsToGroups } from '@/utils/entitySchema';
+import { splitEntitySchemaComponentsToGroups } from '@/services/entity/entitySchema';
+import type { RawEntityConditionalData } from '@/types/conditional';
 
 import { EntityComponentGridGroup } from '../EntityComponentGridGroup';
 import styles from './EntityComponentGrid.module.scss';

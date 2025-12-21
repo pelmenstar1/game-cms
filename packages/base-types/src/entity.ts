@@ -34,7 +34,7 @@ export type ServerEntitySchema<
   Id,
   {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [K in keyof T]: ServerComponentSchema<any, T[K]>;
+    [K in keyof T]: ServerComponentSchema<any, T[K], any>;
   }
 >;
 
@@ -51,14 +51,14 @@ export type ClientEntitySchema<
 export type InferDataFromServerEntitySchema<T> =
   T extends ServerEntitySchema<infer Data> ? Data : never;
 
-type EntityToEntry<T extends ServerEntitySchema> = [
+type EntityToEntry<T extends { id: string }> = [
   T['id'],
   InferDataFromServerEntitySchema<T>,
 ];
 
-export type EntitiesToEntries<T extends DefaultExport<ServerEntitySchema>[]> = {
+export type EntitiesToEntries<T extends DefaultExport<{ id: string }>[]> = {
   [K in keyof T]: EntityToEntry<T[K]['default']>;
 }[number];
 
-export type ResolveEntities<T extends DefaultExport<ServerEntitySchema>[]> =
+export type ResolveEntities<T extends DefaultExport<{ id: string }>[]> =
   FromEntries<EntitiesToEntries<T>>;

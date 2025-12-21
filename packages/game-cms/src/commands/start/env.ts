@@ -3,7 +3,7 @@ import {
   type CmsEnvironment,
   initializeEnv,
 } from '@game-cms/global';
-import { loadEnvFileIfExists } from '@game-cms/shared';
+import { loadEnvFileIfExists } from '@game-cms/shared/io';
 import { mergeObjects, resolveObject } from '@game-cms/shared/object';
 import type {
   EnvResolver,

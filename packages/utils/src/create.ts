@@ -1,4 +1,5 @@
-import type { EnvAccessor, MaybePromise } from '@game-cms/shared';
+import type { MaybePromise } from '@game-cms/shared';
+import type { EnvAccessor } from '@game-cms/shared/io';
 import type {
   ApiRoute,
   ComponentController,
@@ -55,8 +56,9 @@ export function service<const T extends Service>(value: T): T {
 export function component<
   Options extends ComponentOptions,
   Data extends ComponentData,
+  Error,
   Id extends string,
->(value: ComponentController<Options, Data, Id>) {
+>(value: ComponentController<Options, Data, Error, Id>) {
   return value;
 }
 

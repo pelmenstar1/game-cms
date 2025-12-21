@@ -1,5 +1,5 @@
 import type { ServerEntitySchema } from '@game-cms/base-types';
-import { importFile } from '@game-cms/shared';
+import { importFile } from '@game-cms/shared/io';
 import { scanDirectory } from '@game-cms/shared/io';
 import type { ValueSourceContext } from '@game-cms/types';
 
