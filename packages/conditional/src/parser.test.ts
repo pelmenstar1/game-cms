@@ -104,8 +104,25 @@ test.each<[string, ConditionalAstExpression]>([
       },
     },
   ],
-])('parseTextConditionalAst', (input, expected) => {
+])('parseConditionalNotation/success', (input, expected) => {
   const actual = parseConditionalNotation(input);
 
   expect(actual).toEqual(expected);
+});
+
+test.each<[string]>([
+  ['$'],
+  ['&&'],
+  ['$a=='],
+  ['($a==1'],
+  ['()'],
+  ['$$'],
+  ['$a=1'],
+  ['$$a==1'],
+])('parseConditionalNotation/error', (input) => {
+  expect(() => {
+    const value = parseConditionalNotation(input);
+
+    console.log(value);
+  }).toThrow();
 });

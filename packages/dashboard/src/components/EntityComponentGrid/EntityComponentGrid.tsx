@@ -3,8 +3,9 @@ import type {
   ClientEntitySchemaComponents,
   EntityData,
 } from '@game-cms/base-types';
+import { resolveMaybeFactory } from '@game-cms/shared';
 import { classNames } from '@game-cms/ui';
-import { useMemo } from 'react';
+import { type SetStateAction, useMemo } from 'react';
 
 import { splitEntitySchemaComponentsToGroups } from '@/services/entity/entitySchema';
 import type { RawEntityConditionalData } from '@/types/conditional';
@@ -16,7 +17,7 @@ export interface EntityComponentGridProps<T extends EntityData> {
   className?: string;
   schema: ClientEntitySchema<T>;
   value: RawEntityConditionalData<T>;
-  onValueChanged: (value: RawEntityConditionalData<T>) => void;
+  onValueChanged: (value: SetStateAction<RawEntityConditionalData<T>>) => void;
 }
 
 export function EntityComponentGrid<T extends EntityData>({
@@ -38,7 +39,10 @@ export function EntityComponentGrid<T extends EntityData>({
           schema={group as ClientEntitySchemaComponents<T>}
           value={value}
           onValueChanged={(newValue) => {
-            onValueChanged({ ...value, ...newValue });
+            onValueChanged((value) => ({
+              ...value,
+              ...resolveMaybeFactory(newValue, value),
+            }));
           }}
         />
       ))}

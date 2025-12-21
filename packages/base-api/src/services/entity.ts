@@ -42,9 +42,11 @@ export default service({
   update: async <T extends EntityId>(
     entityId: T,
     id: ObjectId,
-    data: OptionalUnlessRequiredId<EntityConditionalDataById<T>>
+    data: EntityConditionalDataById<T>
   ) => {
-    const result = await collection(entityId).updateOne(idFilter(id), data);
+    const result = await collection(entityId).updateOne(idFilter(id), {
+      $set: data,
+    });
 
     return result.matchedCount > 0;
   },

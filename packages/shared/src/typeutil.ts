@@ -6,3 +6,5 @@ export type RequiredProperty<T, K extends keyof T> = Replace<
 >;
 
 export type MaybeConcat<T extends string, U extends string> = T | `${T}${U}`;
+
+export type InferSetValue<T> = T extends Set<infer R> ? R : never;

@@ -24,6 +24,8 @@ export interface RemoteComponentWithErrorReportingProps<
   ) => void;
 }
 
+const VALIDATOR_NOT_LOADED = Symbol();
+
 export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
   componentId,
   data,
@@ -33,8 +35,11 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
 }: RemoteComponentWithErrorReportingProps<Id>) {
   const client = useApiClient();
 
-  const validatorRef = useRef<ComponentDataValidator | undefined>(null);
+  const validatorRef = useRef<
+    ComponentDataValidator | undefined | typeof VALIDATOR_NOT_LOADED
+  >(VALIDATOR_NOT_LOADED);
   const dataRef = useRef(data);
+  const onDataChangedRef = useRef(onDataChanged);
 
   const fixedOnDataChanged = useCallback(
     (data: ComponentDataById<Id>) => {
@@ -42,9 +47,9 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
 
       const validator = validatorRef.current;
 
-      if (validator) {
-        onDataChanged?.(data, validator(data, options));
-      } else if (validator !== undefined) {
+      if (validator === undefined || validator !== VALIDATOR_NOT_LOADED) {
+        onDataChanged?.(data, validator?.(data, options));
+      } else {
         const worker = async () => {
           const { validator } = await getCachedClientModule(componentId, {
             client,
@@ -52,20 +57,17 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
 
           validatorRef.current = validator;
 
-          if (validator) {
-            const data = dataRef.current;
+          const data = dataRef.current;
+          const onDataChanged = onDataChangedRef.current;
 
-            onDataChanged?.(data, validator(data, options));
-          } else {
-            onDataChanged?.(data, undefined);
-          }
+          const error = validator?.(data, options);
+
+          onDataChanged?.(data, error);
         };
 
         onDataChanged?.(data, ComponentErrorPending);
 
         void worker();
-      } else {
-        onDataChanged?.(data, undefined);
       }
     },
     [client, componentId, onDataChanged, options]
@@ -75,6 +77,14 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
     fixedOnDataChanged(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
+
+  useEffect(() => {
+    onDataChangedRef.current = onDataChanged;
+  }, [onDataChanged]);
 
   return (
     <RemoteComponent

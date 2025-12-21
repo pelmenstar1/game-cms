@@ -1,4 +1,5 @@
 import type { EntityId } from '@game-cms/base-types';
+import { resolveMaybeFactory } from '@game-cms/shared';
 import type {
   ComponentDataById,
   ComponentId,
@@ -12,7 +13,9 @@ import {
   PlusIcon,
   Typography,
 } from '@game-cms/ui';
+import type { SetStateAction } from 'react';
 
+import { ComponentErrorPending } from '@/services/entity/error';
 import type {
   RawConditionalAlternativeChoiceById,
   RawConditionalChoicesById,
@@ -29,7 +32,7 @@ export interface EntityComponentProps<T extends ComponentId> {
   options: ComponentOptionsById<T>;
   data: RawConditionalChoicesById<T>;
   defaultData: ComponentDataById<T>;
-  onDataChanged: (data: RawConditionalChoicesById<T>) => void;
+  onDataChanged: (data: SetStateAction<RawConditionalChoicesById<T>>) => void;
 }
 
 export function EntityComponent<T extends EntityId>({
@@ -41,24 +44,29 @@ export function EntityComponent<T extends EntityId>({
   data,
   onDataChanged,
 }: EntityComponentProps<T>) {
-  const { alternative } = data;
-  const alternativeItems = alternative.map((choice, i) => ({
+  const alternativeItems = data.alternative.map((choice, i) => ({
     key: i,
     ...choice,
   }));
 
   const onItemsChanged = (items: RawConditionalAlternativeChoiceById<T>[]) => {
-    onDataChanged({ default: data.default, alternative: items });
+    onDataChanged((data) => ({ default: data.default, alternative: items }));
   };
 
   const onAddItem = () => {
-    onDataChanged({
+    onDataChanged((data) => ({
       default: data.default,
       alternative: [
-        ...alternative,
-        { condition: '', error: undefined, value: defaultData },
+        ...data.alternative,
+        {
+          condition: { raw: '', expression: null, error: 'Condition is empty' },
+          data: {
+            value: defaultData,
+            error: ComponentErrorPending,
+          },
+        },
       ],
-    });
+    }));
   };
 
   return (
@@ -73,11 +81,11 @@ export function EntityComponent<T extends EntityId>({
           options={options}
           data={data.default.value}
           error={data.default.error}
-          onDataChanged={(newDefault, error) => {
-            onDataChanged({
-              default: { value: newDefault, error },
+          onDataChanged={(value, error) => {
+            onDataChanged((data) => ({
+              default: { value, error },
               alternative: data.alternative,
-            });
+            }));
           }}
         />
       </div>
@@ -88,32 +96,47 @@ export function EntityComponent<T extends EntityId>({
           items={alternativeItems}
           onItemsChanged={onItemsChanged}
         >
-          {({ key, ...choice }, _, handleRef) => (
-            <EntityComponentChoice
-              componentId={componentId}
-              choice={choice}
-              options={options}
-              handleRef={handleRef}
-              onChoiceChanged={(newChoice) => {
-                const newAlternative = [...alternative];
-                newAlternative[key] = newChoice;
+          {({ key, ...choice }, _, handleRef) => {
+            const onChoiceChanged = (
+              choice: SetStateAction<RawConditionalAlternativeChoiceById<T>>
+            ) => {
+              onDataChanged((data) => {
+                const newAlternative = [...data.alternative];
+                newAlternative[key] = resolveMaybeFactory(
+                  choice,
+                  data.alternative[key]
+                );
 
-                onDataChanged({
+                return {
                   default: data.default,
                   alternative: newAlternative,
-                });
-              }}
-              onDelete={() => {
-                const newAlternative = [...alternative];
+                };
+              });
+            };
+
+            const onDelete = () => {
+              onDataChanged((data) => {
+                const newAlternative = [...data.alternative];
                 newAlternative.splice(key, 1);
 
-                onDataChanged({
+                return {
                   default: data.default,
                   alternative: newAlternative,
-                });
-              }}
-            />
-          )}
+                };
+              });
+            };
+
+            return (
+              <EntityComponentChoice
+                componentId={componentId}
+                choice={choice}
+                options={options}
+                handleRef={handleRef}
+                onChoiceChanged={onChoiceChanged}
+                onDelete={onDelete}
+              />
+            );
+          }}
         </DraggableList>
       )}
 

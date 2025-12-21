@@ -1,6 +1,7 @@
 import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
 import {
   conditionalAstExpressionToString,
+  type ConditionalChoices,
   type EntityConditionalData,
 } from '@game-cms/conditional';
 import { mapObject } from '@game-cms/shared/object';
@@ -13,23 +14,34 @@ export function transformEntityConditionalDataToRaw<T extends EntityData>(
   schema: ClientEntitySchema<T>,
   data: EntityConditionalData<T> | undefined
 ) {
-  const result = data
-    ? mapObject(data, (value) => ({
+  const result = mapObject(schema.components, (propSchema, key) => {
+    if (data !== undefined) {
+      const value = data[key];
+
+      return {
         default: { value: value.default, error: ComponentErrorPending },
         alternative:
-          value.alternative?.map((choice) => ({
-            condition: conditionalAstExpressionToString(choice.condition),
-            error: ComponentErrorPending,
-            value: choice.value,
+          value.alternative?.map(({ value, condition }) => ({
+            condition: {
+              raw: conditionalAstExpressionToString(condition),
+              expression: condition,
+            },
+            data: {
+              value,
+              error: ComponentErrorPending,
+            },
           })) ?? [],
-      }))
-    : mapObject(schema.components, (propSchema) => ({
-        default: {
-          value: propSchema.defaultData,
-          error: ComponentErrorPending,
-        },
-        alternative: [],
-      }));
+      };
+    }
+
+    return {
+      default: {
+        value: propSchema.defaultData,
+        error: ComponentErrorPending,
+      },
+      alternative: [],
+    };
+  });
 
   return result as RawEntityConditionalData<T>;
 }
@@ -37,11 +49,21 @@ export function transformEntityConditionalDataToRaw<T extends EntityData>(
 export function transformEntityConditionalDataFromRaw<T extends EntityData>(
   data: RawEntityConditionalData<T>
 ) {
-  return mapObject(data, (value) => ({
-    default: value.default.value,
-    alternative: value.alternative.map((choice) => ({
-      condition: choice.condition,
-      value: choice.value,
-    })),
-  })) as unknown as EntityConditionalData<T>;
+  return mapObject(data, (value): ConditionalChoices<T[keyof T]> => {
+    const alternative = value.alternative.map(({ condition, data }) => {
+      if (condition.expression === null) {
+        throw new Error('Condition expression is null');
+      }
+
+      return {
+        condition: condition.expression,
+        value: data.value,
+      };
+    });
+
+    return {
+      default: value.default.value,
+      alternative: alternative.length > 0 ? alternative : undefined,
+    };
+  }) as EntityConditionalData<T>;
 }

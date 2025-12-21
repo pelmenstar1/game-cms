@@ -104,8 +104,16 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
     }
   }
 
+  if (lastBinaryOperator !== undefined) {
+    invalidExpression('expected expression after binary operator');
+  }
+
+  if (lastUnaryOperator !== undefined) {
+    invalidExpression('expected expression after unary operator');
+  }
+
   if (lastExpression === undefined) {
-    throw new Error('Tokens are empty');
+    invalidExpression('empty text');
   }
 
   return lastExpression;
@@ -115,5 +123,6 @@ export function parseConditionalNotation(
   input: string
 ): ConditionalAstExpression {
   const tokens = tokenizeText(input);
+
   return parseTokens(tokens);
 }

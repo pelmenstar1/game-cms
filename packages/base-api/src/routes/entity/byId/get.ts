@@ -1,6 +1,6 @@
 import type { ConditionalValueInput } from '@game-cms/conditional';
 import { cms } from '@game-cms/global';
-import { objectId } from '@game-cms/shared/mongo';
+import { stringObjectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
 import qs from 'qs';
 import z from 'zod';
@@ -16,7 +16,7 @@ export default apiRoute({
   schema: {
     params: z.object({
       entityId: z.string(),
-      id: objectId,
+      id: stringObjectId,
     }),
   },
   handler: async (req) => {

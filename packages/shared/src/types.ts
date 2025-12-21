@@ -6,4 +6,8 @@ declare global {
   interface ReadonlyArray<T> {
     includes(value: unknown): value is T;
   }
+
+  interface Set<T> {
+    has(value: unknown): value is T;
+  }
 }

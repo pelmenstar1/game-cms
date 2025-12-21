@@ -2,8 +2,10 @@ import type {
   ClientEntitySchemaComponents,
   EntityData,
 } from '@game-cms/base-types';
+import { resolveMaybeFactory } from '@game-cms/shared';
 import type { ClientComponentSchema, ComponentId } from '@game-cms/types';
 import { classNames } from '@game-cms/ui';
+import type { SetStateAction } from 'react';
 
 import type {
   RawConditionalChoicesById,
@@ -17,7 +19,7 @@ export interface EntityComponentGridGroupProps<T extends EntityData> {
   className?: string;
   schema: ClientEntitySchemaComponents<T>;
   value: RawEntityConditionalData<T>;
-  onValueChanged: (value: RawEntityConditionalData<T>) => void;
+  onValueChanged: (value: SetStateAction<RawEntityConditionalData<T>>) => void;
 }
 
 export function EntityComponentGridGroup<T extends EntityData>({
@@ -39,10 +41,11 @@ export function EntityComponentGridGroup<T extends EntityData>({
       {entries.map(([key, schemaEntry]) => {
         type Data = RawConditionalChoicesById<ComponentId>;
 
-        const onDataChanged = (newData: Data) => {
-          const newValue = { ...value, [key]: newData };
-
-          onValueChanged(newValue as RawEntityConditionalData<T>);
+        const onDataChanged = (newData: SetStateAction<Data>) => {
+          onValueChanged((value) => ({
+            ...value,
+            [key]: resolveMaybeFactory(newData, value[key]),
+          }));
         };
 
         return (

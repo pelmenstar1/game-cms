@@ -48,5 +48,8 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router": "catalog:"
-  }
+  },
+  "browserslist": [
+    "since 2020-01-01"
+  ]
 }

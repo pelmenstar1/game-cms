@@ -1,4 +1,5 @@
 import type { EntityData, EntityId, GetEntityById } from '@game-cms/base-types';
+import type { ConditionalAstExpression } from '@game-cms/conditional';
 import type {
   ComponentData,
   ComponentDataById,
@@ -6,23 +7,30 @@ import type {
   ComponentId,
 } from '@game-cms/types';
 
+export type RawConditionInfo = {
+  raw: string;
+  expression: ConditionalAstExpression | null;
+  error?: string;
+};
+
+export type ValueWithError<T, Error = unknown> = {
+  value: T;
+  error?: Error;
+};
+
 export type RawConditionalAlternativeChoice<
   Data extends ComponentData,
   Error,
 > = {
-  condition: string;
-  error?: Error;
-  value: Data;
+  condition: RawConditionInfo;
+  data: ValueWithError<Data, Error>;
 };
 
 export type RawConditionalChoices<
   Data extends ComponentData = ComponentData,
   Error = unknown,
 > = {
-  default: {
-    value: Data;
-    error?: Error;
-  };
+  default: ValueWithError<Data, Error>;
   alternative: RawConditionalAlternativeChoice<Data, Error>[];
 };
 

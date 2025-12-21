@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { InferSetValue } from '@game-cms/shared';
+
 import { type StringReader, stringReader } from './reader.js';
 import { type Token, TokenType } from './token.js';
 
@@ -22,10 +24,9 @@ const repeatingTokens: TokenMap = {
   '=': TokenType.EQ,
 };
 
-const borrowedTokens = ['&', '|', '<', '>', '=', '!'] as const;
-const borrowedTokenSet = new Set<string>(borrowedTokens);
+const borrowedTokenSet = new Set(['&', '|', '<', '>', '=', '!'] as const);
 
-type BorrowedToken = (typeof borrowedTokens)[number];
+type BorrowedToken = InferSetValue<typeof borrowedTokenSet>;
 
 function parseTwoCharacterToken(
   reader: StringReader,
@@ -102,7 +103,7 @@ export function tokenizeText(text: string): Token[] {
     } else if (borrowedTokenSet.has(c)) {
       emitLiteralToken();
 
-      borrowedToken = c as BorrowedToken;
+      borrowedToken = c;
     } else if (c === "'") {
       emitLiteralToken();
 

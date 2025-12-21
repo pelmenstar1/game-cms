@@ -11,7 +11,7 @@ import {
   IconButton,
   Typography,
 } from '@game-cms/ui';
-import type { RefObject } from 'react';
+import type { RefObject, SetStateAction } from 'react';
 
 import type { RawConditionalAlternativeChoice } from '@/types/conditional';
 
@@ -31,7 +31,9 @@ export interface EntityComponentChoiceProps<Id extends ComponentId> {
   componentId: Id;
   options: ComponentOptionsById<Id>;
   choice: RawConditionalAlternativeChoiceById<Id>;
-  onChoiceChanged?: (value: RawConditionalAlternativeChoiceById<Id>) => void;
+  onChoiceChanged?: (
+    value: SetStateAction<RawConditionalAlternativeChoiceById<Id>>
+  ) => void;
   onDelete?: () => void;
 }
 
@@ -40,7 +42,7 @@ export function EntityComponentChoice<Id extends ComponentId>({
   handleRef,
   componentId,
   options,
-  choice: { condition, value, error },
+  choice: { condition, data },
   onChoiceChanged,
   onDelete,
 }: EntityComponentChoiceProps<Id>) {
@@ -63,18 +65,25 @@ export function EntityComponentChoice<Id extends ComponentId>({
       </div>
 
       <ConditionalInput
-        value={condition}
-        onValueChanged={(newCondition) => {
-          onChoiceChanged?.({ condition: newCondition, error, value });
+        value={condition.raw}
+        error={condition.error}
+        onValueChanged={(raw, expression, error) => {
+          onChoiceChanged?.((choice) => ({
+            condition: { raw, expression, error },
+            data: choice.data,
+          }));
         }}
       />
       <RemoteComponentWithErrorReporting
         componentId={componentId}
-        data={value}
+        data={data.value}
         options={options}
-        error={error}
-        onDataChanged={(newData, error) => {
-          onChoiceChanged?.({ condition, error, value: newData });
+        error={data.error}
+        onDataChanged={(value, error) => {
+          onChoiceChanged?.((choice) => ({
+            condition: choice.condition,
+            data: { value, error },
+          }));
         }}
       />
     </div>

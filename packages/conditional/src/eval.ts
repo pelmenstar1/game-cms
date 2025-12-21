@@ -15,15 +15,14 @@ type UnaryOperatorMap = Record<
 
 type Binary<T> = (x: T, y: T) => boolean;
 
-type BinaryOperatorOnly<T, Only> = {
-  action: Binary<T>;
-  only: Only;
-};
-
 type BinaryOperator =
-  | { action: Binary<ConditionalValueInputAtom>; only?: never }
-  | BinaryOperatorOnly<number, 'number'>
-  | BinaryOperatorOnly<boolean, 'boolean'>;
+  | {
+      action: Binary<ConditionalValueInputAtom>;
+      onlyNumber?: false;
+      onlyBoolean?: false;
+    }
+  | { action: Binary<number>; onlyNumber: true; onlyBoolean?: false }
+  | { action: Binary<boolean>; onlyBoolean: true; onlyNumber?: false };
 
 type BinaryOperatorMap = Record<ConditionalBinaryOperator, BinaryOperator>;
 
@@ -32,12 +31,12 @@ const unaryOperators: UnaryOperatorMap = {
 };
 
 const binaryOperators: BinaryOperatorMap = {
-  and: { action: (x, y) => x && y, only: 'boolean' },
-  or: { action: (x, y) => x || y, only: 'boolean' },
-  lt: { action: (x, y) => x < y, only: 'number' },
-  gt: { action: (x, y) => x > y, only: 'number' },
-  lte: { action: (x, y) => x <= y, only: 'number' },
-  gte: { action: (x, y) => x >= y, only: 'number' },
+  and: { action: (x, y) => x && y, onlyBoolean: true },
+  or: { action: (x, y) => x || y, onlyBoolean: true },
+  lt: { action: (x, y) => x < y, onlyNumber: true },
+  gt: { action: (x, y) => x > y, onlyNumber: true },
+  lte: { action: (x, y) => x <= y, onlyNumber: true },
+  gte: { action: (x, y) => x >= y, onlyNumber: true },
   eq: { action: (x, y) => x === y },
   neq: { action: (x, y) => x !== y },
 };
@@ -101,27 +100,23 @@ export function evaluateConditionalExpression(
       const lhs = evaluateConditionalExpression(expression.lhs, input);
       const rhs = evaluateConditionalExpression(expression.rhs, input);
 
-      switch (operator.only) {
-        case 'boolean': {
-          if (typeof lhs !== 'boolean' || typeof rhs === 'boolean') {
-            throwUnexpectedType(expression.operator, lhs, rhs);
-          }
-
-          break;
+      if (operator.onlyBoolean) {
+        if (typeof lhs !== 'boolean' || typeof rhs === 'boolean') {
+          throwUnexpectedType(expression.operator, lhs, rhs);
         }
-        case 'number': {
-          const lhsCoerced = coerceToNumber(lhs);
-          const rhsCoerced = coerceToNumber(rhs);
+      } else if (operator.onlyNumber) {
+        const lhsCoerced = coerceToNumber(lhs);
 
-          if (Number.isNaN(lhsCoerced) || Number.isNaN(rhsCoerced)) {
-            throwUnexpectedType(expression.operator, lhs, rhs);
-          }
+        const rhsCoerced = coerceToNumber(rhs);
 
-          return operator.action(lhsCoerced, rhsCoerced);
+        if (Number.isNaN(lhsCoerced) || Number.isNaN(rhsCoerced)) {
+          throwUnexpectedType(expression.operator, lhs, rhs);
         }
+
+        return operator.action(lhsCoerced, rhsCoerced);
       }
 
-      return operator.action(lhs as never, rhs as never);
+      return operator.action(lhs as boolean, rhs as boolean);
     }
   }
 }

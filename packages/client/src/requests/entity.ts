@@ -63,6 +63,18 @@ export const getEntityById = <T extends EntityId>(
     response: json<EntityDataByIdWithId<T>>(),
   });
 
+export const updateEntityById = <T extends EntityId>(
+  context: RequestContext,
+  entityId: T,
+  id: string,
+  data: EntityConditionalDataById<T>
+) =>
+  request(context, {
+    url: `/entity/${entityId}/byId/${id}`,
+    method: 'PUT',
+    body: jsonInit(data),
+  });
+
 export const getRawEntityById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
@@ -86,7 +98,7 @@ export const deleteEntityById = (
 export const listEntities = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
-  options?: PagingOptions
+  options: PagingOptions
 ) =>
   request(context, {
     url: url({ path: `/entity/${entityId}/list`, search: options }),
