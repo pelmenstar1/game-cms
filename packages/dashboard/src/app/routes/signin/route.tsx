@@ -11,9 +11,9 @@ import {
   useTestRegex,
 } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useApiAction } from '@/hooks/useApiAction';
+import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 
 import styles from './route.module.scss';
 
@@ -26,7 +26,7 @@ export default function Page() {
 
   const doSignIn = useApiAction(signUserIn, { redirectOnUnauthorized: false });
 
-  const redirect = useNavigate();
+  const redirect = useTypedNavigate();
   const notification = useNotification();
 
   const signIn = useCallback(() => {

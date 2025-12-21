@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
+
+import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 
 import { items } from './items';
 
 export default function Page() {
-  const navigate = useNavigate();
+  const navigate = useTypedNavigate();
 
   useEffect(() => {
     void navigate(items[0].href);

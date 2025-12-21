@@ -1,6 +1,5 @@
 import type { RequestFn } from '@game-cms/client';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import { createAbortController } from '@/utils/abortController';
 import {
@@ -10,6 +9,7 @@ import {
 } from '@/utils/api';
 
 import { useApiClient } from './useApiClient';
+import { useTypedNavigate } from './useTypedNavigate';
 
 export type SuccessApiQueryResult<T = unknown> = {
   status: 'success';
@@ -40,7 +40,7 @@ export function useApiQuery<Args extends unknown[], R>(
   redirectOptions?: ApiQueryOptions
 ): UseApiQueryResult<R> {
   const client = useApiClient();
-  const navigate = useNavigate();
+  const navigate = useTypedNavigate();
 
   const [result, setResult] = useState<ApiQueryResult<R>>({
     status: 'pending',

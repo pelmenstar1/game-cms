@@ -4,10 +4,14 @@ import type {
   ComponentErrorById,
   ComponentId,
 } from '@game-cms/types';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { useApiClient } from '@/hooks/useApiClient';
 import { getCachedClientModule } from '@/services/component/clientModule';
+import {
+  ComponentErrorPending,
+  resolveComponentError,
+} from '@/services/entity/error';
 
 import { RemoteComponent, type RemoteComponentProps } from '../RemoteComponent';
 
@@ -40,37 +44,44 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
 
       if (validator) {
         onDataChanged?.(data, validator(data, options));
+      } else if (validator !== undefined) {
+        const worker = async () => {
+          const { validator } = await getCachedClientModule(componentId, {
+            client,
+          });
+
+          validatorRef.current = validator;
+
+          if (validator) {
+            const data = dataRef.current;
+
+            onDataChanged?.(data, validator(data, options));
+          } else {
+            onDataChanged?.(data, undefined);
+          }
+        };
+
+        onDataChanged?.(data, ComponentErrorPending);
+
+        void worker();
       } else {
         onDataChanged?.(data, undefined);
-
-        if (validator !== undefined) {
-          const worker = async () => {
-            const { validator } = await getCachedClientModule(componentId, {
-              client,
-            });
-
-            validatorRef.current = validator;
-
-            if (validator) {
-              const data = dataRef.current;
-
-              onDataChanged?.(data, validator(data, options));
-            }
-          };
-
-          void worker();
-        }
       }
     },
     [client, componentId, onDataChanged, options]
   );
+
+  useEffect(() => {
+    fixedOnDataChanged(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <RemoteComponent
       componentId={componentId}
       data={data}
       options={options}
-      error={error}
+      error={resolveComponentError(error)}
       onDataChanged={fixedOnDataChanged}
     />
   );

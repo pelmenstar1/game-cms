@@ -1,9 +1,9 @@
 import { getEntitySchemas } from '@game-cms/client';
 import { LinkButton, NavTabs, PlusIcon } from '@game-cms/ui';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
 
 import { useApiQuery } from '@/hooks/useApiQuery';
+import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';
@@ -21,7 +21,7 @@ export default function Home({ params }: Route.ComponentProps) {
   const schemas =
     schemasResult.status === 'success' ? schemasResult.value : undefined;
 
-  const navigate = useNavigate();
+  const navigate = useTypedNavigate();
 
   useEffect(() => {
     if (schemas && schemas.length > 0 && selectedEntity === undefined) {

@@ -5,7 +5,9 @@ import {
   type RequestContext,
   type RequestFn,
 } from '@game-cms/client';
-import type { NavigateFunction } from 'react-router';
+import type { PageUrl } from '@game-cms/ui';
+
+import type { TypedNavigateFunction } from '@/hooks/useTypedNavigate';
 
 export interface ApiRedirectOptions {
   redirectOnUnauthorized?: boolean;
@@ -15,13 +17,13 @@ export interface ApiRedirectOptions {
 export type MakeApiRequestContext = {
   requestContext: RequestContext;
 
-  navigate: NavigateFunction;
+  navigate: TypedNavigateFunction;
 };
 
 type RedirectConfig = {
   key: keyof ApiRedirectOptions;
   defaultValue?: boolean;
-  route: string;
+  route: PageUrl;
 };
 
 const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
@@ -32,6 +34,7 @@ const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
   },
   'base::entity/notFound': {
     key: 'redirectOnNotFound',
+    // It can be any URL really
     route: '/404',
   },
 };

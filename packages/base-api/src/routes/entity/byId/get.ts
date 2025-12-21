@@ -22,8 +22,6 @@ export default apiRoute({
   handler: async (req) => {
     const { entityId, id } = req.params;
 
-    console.log(req.raw.url);
-
     const { search } = new URL(req.url, 'http://localhost');
     const filter = qs.parse(search);
 

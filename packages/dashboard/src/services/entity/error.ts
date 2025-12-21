@@ -3,6 +3,12 @@ import type {
   RawEntityConditionalData,
 } from '@/types/conditional';
 
+export const ComponentErrorPending = Symbol();
+
+export function resolveComponentError(error: unknown) {
+  return error !== ComponentErrorPending ? error : undefined;
+}
+
 export function entityDataHasErrors(data: RawEntityConditionalData) {
   return Object.values<RawConditionalChoices>(data).some(
     (value) =>

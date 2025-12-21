@@ -30,8 +30,6 @@ export default service({
   ): ComponentClientRenderManifest | null => {
     const staticConfig = env().components[id];
 
-    console.log(env().components);
-
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (staticConfig === undefined) {
       return null;

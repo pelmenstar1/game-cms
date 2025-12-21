@@ -16,7 +16,7 @@ import styles from './EntityComponentGridGroup.module.scss';
 export interface EntityComponentGridGroupProps<T extends EntityData> {
   className?: string;
   schema: ClientEntitySchemaComponents<T>;
-  value?: RawEntityConditionalData<T>;
+  value: RawEntityConditionalData<T>;
   onValueChanged: (value: RawEntityConditionalData<T>) => void;
 }
 
@@ -39,11 +39,6 @@ export function EntityComponentGridGroup<T extends EntityData>({
       {entries.map(([key, schemaEntry]) => {
         type Data = RawConditionalChoicesById<ComponentId>;
 
-        const data: Data = value?.[key] ?? {
-          default: { value: schemaEntry.defaultData },
-          alternative: [],
-        };
-
         const onDataChanged = (newData: Data) => {
           const newValue = { ...value, [key]: newData };
 
@@ -57,7 +52,7 @@ export function EntityComponentGridGroup<T extends EntityData>({
             componentId={schemaEntry.controller}
             options={schemaEntry.options}
             defaultData={schemaEntry.defaultData}
-            data={data}
+            data={value[key]}
             onDataChanged={onDataChanged}
           />
         );

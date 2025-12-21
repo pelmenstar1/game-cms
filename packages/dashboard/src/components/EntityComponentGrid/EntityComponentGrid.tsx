@@ -15,7 +15,7 @@ import styles from './EntityComponentGrid.module.scss';
 export interface EntityComponentGridProps<T extends EntityData> {
   className?: string;
   schema: ClientEntitySchema<T>;
-  value?: RawEntityConditionalData<T>;
+  value: RawEntityConditionalData<T>;
   onValueChanged: (value: RawEntityConditionalData<T>) => void;
 }
 

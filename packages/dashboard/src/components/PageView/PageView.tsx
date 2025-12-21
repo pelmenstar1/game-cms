@@ -1,8 +1,4 @@
-import {
-  classNames,
-  type PageUrlWithMaybeSearchParams,
-  Pagination,
-} from '@game-cms/ui';
+import { classNames, type PageUrl, Pagination } from '@game-cms/ui';
 import type { ReactNode } from 'react';
 
 import styles from './PageView.module.scss';
@@ -12,7 +8,7 @@ export interface PageViewProps {
   page: number;
   pageSize: number;
   totalItems: number;
-  getLink: (page: number) => PageUrlWithMaybeSearchParams;
+  getLink: (page: number) => PageUrl;
   children: ReactNode;
 }
 

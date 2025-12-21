@@ -1,6 +1,5 @@
 import type { RequestFn } from '@game-cms/client';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router';
 
 import {
   type ApiRedirectOptions,
@@ -9,6 +8,7 @@ import {
 } from '@/utils/api';
 
 import { useApiClient } from './useApiClient';
+import { useTypedNavigate } from './useTypedNavigate';
 
 type ApiActionOptions = ApiRedirectOptions;
 
@@ -17,7 +17,7 @@ export function useApiAction<Args extends unknown[], R>(
   redirectOptions?: ApiActionOptions
 ) {
   const client = useApiClient();
-  const navigate = useNavigate();
+  const navigate = useTypedNavigate();
 
   const makeAction = useMemo(() => {
     const context: MakeApiRequestContext = {

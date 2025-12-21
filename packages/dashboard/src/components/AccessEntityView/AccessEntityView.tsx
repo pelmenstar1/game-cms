@@ -1,9 +1,5 @@
 import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
-import {
-  conditionalAstExpressionToString,
-  type EntityConditionalData,
-} from '@game-cms/conditional';
-import { mapObject } from '@game-cms/shared/object';
+import type { EntityConditionalData } from '@game-cms/conditional';
 import {
   Button,
   classNames,
@@ -11,10 +7,13 @@ import {
   IconButton,
   Typography,
 } from '@game-cms/ui';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { entityDataHasErrors } from '@/services/entity/error';
-import type { RawEntityConditionalData } from '@/types/conditional';
+import {
+  transformEntityConditionalDataFromRaw,
+  transformEntityConditionalDataToRaw,
+} from '@/services/entity/transform';
 
 import { EntityComponentGrid } from '../EntityComponentGrid';
 import styles from './AccessEntityView.module.scss';
@@ -23,7 +22,7 @@ export interface AccessEntityViewProps<T extends EntityData> {
   className?: string;
   schema: ClientEntitySchema<T>;
   initialValue?: EntityConditionalData<T>;
-  onSave?: (value: T) => void;
+  onSave?: (value: EntityConditionalData<T>) => void;
   onDelete?: () => void;
 }
 
@@ -34,24 +33,18 @@ export function AccessEntityView<T extends EntityData>({
   onSave,
   onDelete,
 }: AccessEntityViewProps<T>) {
-  const [currentValue, setCurrentValue] = useState(() => {
-    if (initialValue) {
-      return mapObject(initialValue, (value) => ({
-        default: { value: value.default },
-        alternative: value.alternative?.map((choice) => ({
-          condition: conditionalAstExpressionToString(choice.condition),
-          value: choice.value,
-        })),
-      })) as RawEntityConditionalData<T>;
-    }
-  });
+  const [currentValue, setCurrentValue] = useState(() =>
+    transformEntityConditionalDataToRaw(schema, initialValue)
+  );
 
   const hasErrors = useMemo(
-    () => currentValue !== undefined && entityDataHasErrors(currentValue),
+    () => entityDataHasErrors(currentValue),
     [currentValue]
   );
 
-  console.log('hasErrors', hasErrors);
+  const onSaveTransformed = useCallback(() => {
+    onSave?.(transformEntityConditionalDataFromRaw(currentValue));
+  }, [currentValue, onSave]);
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -80,7 +73,11 @@ export function AccessEntityView<T extends EntityData>({
         />
 
         <div className={styles['action-block']}>
-          <Button buttonVariant="solid" onClick={onSave} disabled={hasErrors}>
+          <Button
+            buttonVariant="solid"
+            onClick={onSaveTransformed}
+            disabled={hasErrors}
+          >
             Save
           </Button>
         </div>

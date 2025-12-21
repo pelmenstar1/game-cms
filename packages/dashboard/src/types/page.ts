@@ -12,7 +12,7 @@ type ProcessUrl<T> = T extends `${infer First}/${infer Rest}`
     : BuildUrl<First, Rest>
   : ProcessPart<T>;
 
-type PageUrl = ProcessUrl<keyof Register['pages']>;
+type PageUrl = ProcessUrl<keyof Register['pages']> | '/404';
 
 declare module '@game-cms/ui' {
   interface UIOptions {

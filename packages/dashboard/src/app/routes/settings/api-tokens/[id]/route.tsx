@@ -9,12 +9,12 @@ import {
   useModal,
   useNotification,
 } from '@game-cms/ui';
-import { useNavigate } from 'react-router';
 
 import { DataLoader } from '@/components/DataLoader';
 import { PermissionsEditor } from '@/components/PermissionsEditor';
 import { useApiAction } from '@/hooks/useApiAction';
 import { useApiQuery } from '@/hooks/useApiQuery';
+import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 import { formatExpirationDate } from '@/utils/expirationDate';
 
 import type { Route } from './+types/route';
@@ -25,7 +25,7 @@ export default function Page({ params }: Route.ComponentProps) {
   const [tokenResult] = useApiQuery(getApiTokenInfo, [id]);
 
   const showModal = useModal();
-  const redirect = useNavigate();
+  const redirect = useTypedNavigate();
   const notification = useNotification();
 
   const doDeleteApiToken = useApiAction(deleteApiToken);
