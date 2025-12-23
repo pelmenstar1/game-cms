@@ -1,6 +1,5 @@
 import type { MaybeAsyncFactory } from '@game-cms/shared';
 import type { FC } from 'react';
-import type { ZodType } from 'zod';
 
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
 
@@ -21,7 +20,6 @@ export type BaseComponentSchema<
   Options extends ComponentOptions,
   Controller,
 > = {
-  name: string;
   config?: ComponentControllerConfig;
   options: Options;
   controller: Controller;
@@ -41,11 +39,19 @@ export interface ClientComponentSchema<
   defaultData: Data;
 }
 
+export type ComponentApi = {
+  getDefaultData: <Id extends ComponentId>(id: Id) => ComponentDataById<Id>;
+  getComponent: <Id extends ComponentId>(
+    id: Id
+  ) => ForeignComponentRenderer<Id>;
+};
+
 export type ComponentProps<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
   Error = unknown,
 > = {
+  api: ComponentApi;
   data: Data;
   options: Options;
   error?: Error;
@@ -91,16 +97,19 @@ export type ComponentErrorById<T extends ComponentId> = InferComponentError<
   GetComponentControllerById<T>
 >;
 
-type ComponentPropsFromController<Controller> =
-  Controller extends ComponentController<infer Options, infer Data, infer Error>
-    ? ComponentProps<Options, Data, Error>
-    : ComponentProps;
-
 export type ComponentPropsById<Id extends ComponentId = ComponentId> =
-  ComponentPropsFromController<GetComponentControllerById<Id>>;
+  ComponentProps<
+    ComponentOptionsById<Id>,
+    ComponentDataById<Id>,
+    ComponentErrorById<Id>
+  >;
 
 export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
   ComponentPropsById<Id>
+>;
+
+export type ForeignComponentRenderer<Id extends ComponentId = ComponentId> = FC<
+  Omit<ComponentPropsById<Id>, 'api'>
 >;
 
 export type ComponentControllerConfig = {
@@ -109,11 +118,44 @@ export type ComponentControllerConfig = {
   };
 };
 
+export type ForeignComponentContext = {
+  validation: {
+    data: <Id extends ComponentId>(id: Id) => ComponentDataValidatorById<Id>;
+  };
+  default: {
+    data: <Id extends ComponentId>(id: Id) => ComponentDataById<Id>;
+  };
+};
+
 export type ComponentDataValidator<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
   Error = unknown,
-> = (data: Data, options: Options) => Error | undefined;
+> = (
+  data: Data,
+  options: Options,
+  context: Pick<ForeignComponentContext, 'validation'>
+) => Error | undefined;
+
+export type ComponentDataValidatorById<Id extends ComponentId> =
+  ComponentDataValidator<
+    ComponentOptionsById<Id>,
+    ComponentDataById<Id>,
+    ComponentErrorById<Id>
+  >;
+
+export interface ComponentControllerProtocol<
+  Options extends ComponentOptions = ComponentOptions,
+  Data extends ComponentData = ComponentData,
+  Error = unknown,
+> {
+  validation: {
+    data: ComponentDataValidator<Options, Data, Error>;
+  };
+  default: {
+    data: (context: Pick<ForeignComponentContext, 'default'>) => NoInfer<Data>;
+  };
+}
 
 export interface ComponentController<
   Options extends ComponentOptions = ComponentOptions,
@@ -124,11 +166,9 @@ export interface ComponentController<
   id: Id;
   config?: ComponentControllerConfig;
   validation: {
-    options: ZodType<Options>;
     data: ComponentDataValidator<Options, Data, Error>;
   };
   default: {
-    options(): Options;
     data(): NoInfer<Data>;
   };
 }
@@ -145,11 +185,18 @@ export interface ComponentRenderManifest {
   dependencies: ComponentRendererDependencies;
 }
 
-export type ComponentClientRenderManifest = {
-  main: string;
-  dependencies: {
-    css: string[];
+export type ComponentClientManifest<Id extends ComponentId> = {
+  defaultData: ComponentDataById<Id>;
+  source: {
+    main: string;
+    dependencies: {
+      css: string[];
+    };
   };
+};
+
+export type ComponentClientManifestMap = {
+  [Id in ComponentId]: ComponentClientManifest<Id>;
 };
 
 export type ComponentStaticConfig<Id extends ComponentId = ComponentId> = {
@@ -166,10 +213,6 @@ export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
   IdArrayToMap<T>;
 
 export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
-  validator?: ComponentDataValidator<
-    ComponentOptionsById<Id>,
-    ComponentDataById<Id>,
-    ComponentErrorById<Id>
-  >;
+  validator?: ComponentDataValidatorById<Id>;
   renderer: ComponentRenderer<Id>;
 };

@@ -15,10 +15,18 @@ import { z, type ZodType } from 'zod';
 function getValidatorForComponent<Data extends ComponentData>(
   component: ServerComponentSchema<ComponentOptions, Data>
 ): ZodType<ConditionalChoices<Data>> {
+  const foreignContext = cms()
+    .service('base::component')
+    .foreignComponentContext();
+
   const { validation } = component.controller;
 
   const dataValidator = z.custom<Data>((data) => {
-    const error = validation.data(data as Data, component.options);
+    const error = validation.data(
+      data as Data,
+      component.options,
+      foreignContext
+    );
 
     return error === undefined;
   });

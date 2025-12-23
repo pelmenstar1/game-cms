@@ -4,10 +4,16 @@ import type { ComponentRenderManifest } from '@game-cms/types';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
-function getFileAndType(filePath: string, manifest: ComponentRenderManifest) {
-  const { RENDERER_FILE } = cms().service('base::component');
+function getFilePath(url: string) {
+  const result = url.match(/^\/api\/components\/(?:.*?)\/assets\/([^?]+)\??/);
 
-  if (filePath === RENDERER_FILE) {
+  return result?.[1];
+}
+
+function getFileAndType(filePath: string, manifest: ComponentRenderManifest) {
+  const { CLIENT_BUNDLE_FILE } = cms().service('base::component');
+
+  if (filePath === CLIENT_BUNDLE_FILE) {
     return { source: manifest.main, mime: 'text/javascript' };
   }
 
@@ -25,7 +31,7 @@ function getFileAndType(filePath: string, manifest: ComponentRenderManifest) {
 }
 
 export default apiRoute({
-  url: '/_components/:id/assets/*',
+  url: '/components/:id/assets/*',
   method: 'GET',
   schema: {
     params: z.object({
@@ -34,15 +40,13 @@ export default apiRoute({
   },
   handler: async (req, res) => {
     const { id } = req.params;
+    const filePath = getFilePath(req.url);
 
     const staticConfig = env().components[id];
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (staticConfig !== undefined) {
+    if (staticConfig !== undefined && filePath) {
       const { renderManifest } = staticConfig;
-
-      const { pathname } = new URL(req.url, 'http://a.com');
-      const [, filePath] = pathname.split('assets/', 2);
 
       const fileAndType = getFileAndType(filePath, renderManifest);
 

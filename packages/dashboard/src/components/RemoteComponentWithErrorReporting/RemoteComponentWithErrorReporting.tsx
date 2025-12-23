@@ -1,30 +1,25 @@
 import type {
   ComponentDataById,
-  ComponentDataValidator,
   ComponentErrorById,
   ComponentId,
+  ComponentOptionsById,
 } from '@game-cms/types';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 
-import { useApiClient } from '@/hooks/useApiClient';
-import { getCachedClientModule } from '@/services/component/clientModule';
-import {
-  ComponentErrorPending,
-  resolveComponentError,
-} from '@/services/entity/error';
-
-import { RemoteComponent, type RemoteComponentProps } from '../RemoteComponent';
+import { useComponentHub } from '@/hooks/useComponentHub';
 
 export interface RemoteComponentWithErrorReportingProps<
   Id extends ComponentId,
-> extends Omit<RemoteComponentProps<Id>, 'onDataChanged'> {
+> {
+  componentId: Id;
+  data: ComponentDataById<Id>;
+  options: ComponentOptionsById<Id>;
+  error?: ComponentErrorById<Id>;
   onDataChanged?: (
     data: ComponentDataById<Id>,
     error: ComponentErrorById<Id> | undefined
   ) => void;
 }
-
-const VALIDATOR_NOT_LOADED = Symbol();
 
 export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
   componentId,
@@ -33,44 +28,16 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
   error,
   onDataChanged,
 }: RemoteComponentWithErrorReportingProps<Id>) {
-  const client = useApiClient();
-
-  const validatorRef = useRef<
-    ComponentDataValidator | undefined | typeof VALIDATOR_NOT_LOADED
-  >(VALIDATOR_NOT_LOADED);
-  const dataRef = useRef(data);
-  const onDataChangedRef = useRef(onDataChanged);
+  const { validationContext, api } = useComponentHub();
 
   const fixedOnDataChanged = useCallback(
     (data: ComponentDataById<Id>) => {
-      dataRef.current = data;
+      const validator = validationContext.validation.data(componentId);
+      const error = validator(data, options, validationContext);
 
-      const validator = validatorRef.current;
-
-      if (validator === undefined || validator !== VALIDATOR_NOT_LOADED) {
-        onDataChanged?.(data, validator?.(data, options));
-      } else {
-        const worker = async () => {
-          const { validator } = await getCachedClientModule(componentId, {
-            client,
-          });
-
-          validatorRef.current = validator;
-
-          const data = dataRef.current;
-          const onDataChanged = onDataChangedRef.current;
-
-          const error = validator?.(data, options);
-
-          onDataChanged?.(data, error);
-        };
-
-        onDataChanged?.(data, ComponentErrorPending);
-
-        void worker();
-      }
+      onDataChanged?.(data, error);
     },
-    [client, componentId, onDataChanged, options]
+    [componentId, validationContext, onDataChanged, options]
   );
 
   useEffect(() => {
@@ -78,20 +45,13 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    dataRef.current = data;
-  }, [data]);
-
-  useEffect(() => {
-    onDataChangedRef.current = onDataChanged;
-  }, [onDataChanged]);
+  const Component = api.getComponent(componentId);
 
   return (
-    <RemoteComponent
-      componentId={componentId}
+    <Component
       data={data}
       options={options}
-      error={resolveComponentError(error)}
+      error={error}
       onDataChanged={fixedOnDataChanged}
     />
   );

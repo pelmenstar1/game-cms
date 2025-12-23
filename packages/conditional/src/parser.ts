@@ -26,16 +26,16 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
 
     let currentExpression: ConditionalAstExpression | undefined;
 
-    // Skip VAR_START and check literal of the next token.
-    if (token === TokenType.VAR_START) {
-      continue;
-    }
-
     const isPrevVarStart = prevToken === TokenType.VAR_START;
     const isLiteral = typeof token === 'string';
 
     if (isPrevVarStart && !isLiteral) {
       invalidExpression('expected literal after $');
+    }
+
+    // Skip VAR_START and check literal of the next token.
+    if (token === TokenType.VAR_START) {
+      continue;
     }
 
     if (isLiteral) {

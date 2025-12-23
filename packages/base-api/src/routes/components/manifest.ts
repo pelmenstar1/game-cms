@@ -1,27 +1,17 @@
-import { ApiError } from '@game-cms/base-utils';
-import { cms } from '@game-cms/global';
+import { cms, env } from '@game-cms/global';
+import { mapObject } from '@game-cms/shared/object';
 import { apiRoute } from '@game-cms/utils';
-import z from 'zod';
 
 export default apiRoute({
-  url: '/_components/:id/manifest.json',
+  url: '/components/manifest',
   method: 'GET',
-  schema: {
-    params: z.object({
-      id: z.string(),
-    }),
-  },
-  handler: (req) => {
-    const { id } = req.params;
+  handler: () => {
+    const service = cms().service('base::component');
 
-    const manifest = cms()
-      .service('base::component')
-      .getClientRenderManifest(id);
+    const result = mapObject(env().components, (_, id) =>
+      service.getClientRenderManifest(id)
+    );
 
-    if (!manifest) {
-      throw new ApiError('Unknown component', 'base::entity/notFound');
-    }
-
-    return manifest;
+    return result;
   },
 });

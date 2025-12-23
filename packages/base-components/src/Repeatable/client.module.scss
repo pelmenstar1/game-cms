@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.add {
+  margin-top: 1em;
+}

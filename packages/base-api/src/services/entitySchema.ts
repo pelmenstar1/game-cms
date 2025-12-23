@@ -15,6 +15,7 @@ function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
         key,
         {
           ...value,
+          config: value.controller.config,
           defaultData: value.controller.default.data(),
           controller: value.controller.id,
         },

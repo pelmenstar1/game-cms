@@ -1,14 +1,20 @@
-import { entity, text } from 'game-cms';
+import { entity, repeatable, text } from 'game-cms';
 
 export default entity({
   id: 'demo::test',
   title: 'Test',
   components: {
     field1: text({
-      name: 'Field 1',
       options: {
         minLength: 3,
       },
     }),
+    field2: repeatable(
+      text({
+        options: {
+          minLength: 1,
+        },
+      })
+    ),
   },
 });

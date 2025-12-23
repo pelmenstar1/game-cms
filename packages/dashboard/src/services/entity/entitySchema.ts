@@ -15,7 +15,7 @@ export function splitEntitySchemaComponentsToGroups<T extends EntityData>(
   const nonCompactGroups: GroupItem<T>[] = [];
 
   for (const [key, schema] of entries) {
-    const compact = schema.config?.ui?.compact ?? true;
+    const compact = schema.config?.ui?.compact ?? false;
 
     if (compact) {
       compactGroup[key as keyof T] =
@@ -25,5 +25,8 @@ export function splitEntitySchemaComponentsToGroups<T extends EntityData>(
     }
   }
 
-  return [compactGroup, ...nonCompactGroups];
+  return [
+    ...(Object.keys(compactGroup).length > 0 ? [compactGroup] : []),
+    ...nonCompactGroups,
+  ];
 }

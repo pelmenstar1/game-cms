@@ -1,48 +1,58 @@
 import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/global';
 import type {
-  ComponentClientRenderManifest,
+  ComponentClientManifest,
+  ComponentDataValidatorById,
   ComponentId,
+  ForeignComponentContext,
 } from '@game-cms/types';
 import { service } from '@game-cms/utils';
 
 function assetsPath(id: ComponentId, filePath: string) {
-  return `/api/_components/${id}/assets/${filePath}`;
+  return `/api/components/${id}/assets/${filePath}`;
 }
 
-const RENDERER_FILE = 'renderer.js';
+function getController<T extends ComponentId>(id: T) {
+  const staticConfig = env().components[id];
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (staticConfig === undefined) {
+    throw new ApiError(`Unknown component: ${id}`, 'base::entity/notFound');
+  }
+
+  return staticConfig.controller;
+}
+
+const CLIENT_BUNDLE_FILE = 'main.js';
 
 export default service({
   id: 'base::component',
-  RENDERER_FILE,
-  getController: <T extends ComponentId>(id: T) => {
-    const staticConfig = env().components[id];
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (staticConfig === undefined) {
-      throw new ApiError(`Unknown component: ${id}`, 'base::entity/notFound');
-    }
-
-    return staticConfig.controller;
-  },
-  getClientRenderManifest: (
-    id: ComponentId
-  ): ComponentClientRenderManifest | null => {
-    const staticConfig = env().components[id];
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (staticConfig === undefined) {
-      return null;
-    }
-
-    const { renderManifest } = staticConfig;
+  CLIENT_BUNDLE_FILE,
+  getController,
+  foreignComponentContext: (): ForeignComponentContext => ({
+    validation: {
+      data: <Id extends ComponentId>(id: Id) =>
+        getController(id).validation.data as ComponentDataValidatorById<Id>,
+    },
+    default: {
+      data: (id) => getController(id).default.data(),
+    },
+  }),
+  getClientRenderManifest: <Id extends ComponentId>(
+    id: Id
+  ): ComponentClientManifest<Id> | null => {
+    const { renderManifest } = env().components[id];
+    const controller = getController(id);
 
     return {
-      main: assetsPath(id, RENDERER_FILE),
-      dependencies: {
-        css: Object.keys(renderManifest.dependencies.css).map((filePath) =>
-          assetsPath(id, filePath)
-        ),
+      defaultData: controller.default.data(),
+      source: {
+        main: assetsPath(id, CLIENT_BUNDLE_FILE),
+        dependencies: {
+          css: Object.keys(renderManifest.dependencies.css).map((filePath) =>
+            assetsPath(id, filePath)
+          ),
+        },
       },
     };
   },
