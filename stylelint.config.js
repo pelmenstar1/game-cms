@@ -4,6 +4,7 @@ export default {
   ignoreFiles: [
     '**/node_modules',
     'packages/dashboard/build/**',
+    'demo-app/build/**',
     'packages/base-components/dist/**',
     'packages/**/storybook-static',
     'coverage/**',

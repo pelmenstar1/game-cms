@@ -1,51 +1,56 @@
+import fs from 'node:fs';
+import fsp from 'node:fs/promises';
 import path from 'node:path';
 
+import httProxy from '@fastify/http-proxy';
 import staticPlugin from '@fastify/static';
 import { getImportDirectory } from '@game-cms/shared/node';
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
-import httpProxy from 'http-proxy';
-
-import type { StartOptions } from '../commands/start/types.js';
-
-export function getDashboardBuildPath() {
-  return getImportDirectory(import.meta.resolve('@game-cms/dashboard'));
-}
 
 export function getDashboardPackagePath() {
-  return getImportDirectory(import.meta.resolve('@game-cms/dashboard/config'));
+  return getImportDirectory(
+    import.meta.resolve('@game-cms/dashboard/package.json')
+  );
+}
+
+function getLocalDashboardBuildPath() {
+  const dashboardPath = path.resolve('./build');
+  if (!fs.existsSync(dashboardPath)) {
+    throw new Error('Dashboard build does not exist');
+  }
+
+  return dashboardPath;
+}
+
+async function initLocalIndexFile(app: FastifyInstance, dashboardPath: string) {
+  const content = await fsp.readFile(path.join(dashboardPath, 'index.html'));
+
+  app.get('/*', (_req, res) => {
+    res.header('content-type', 'text/html');
+
+    return content;
+  });
 }
 
 async function initLocalDashboard(app: FastifyInstance) {
-  const dashboardPath = getDashboardBuildPath();
+  const dashboardPath = getLocalDashboardBuildPath();
 
   await staticPlugin(app, { root: dashboardPath, wildcard: false });
-
-  app.get('/*', (_req, res) => {
-    res.sendFile(path.join(dashboardPath, 'index.html'));
-  });
+  await initLocalIndexFile(app, dashboardPath);
 }
 
 function initProxyDashboard(app: FastifyInstance, url: string) {
-  const proxy = httpProxy.createProxyServer({
-    target: url,
-    ws: true,
-    proxyTimeout: 0,
-    timeout: 0,
-  });
-
-  app.all('/*', (req, res) => {
-    proxy.web(req.raw, res.raw);
-  });
-
-  app.server.on('upgrade', (req, socket, head) => {
-    proxy.ws(req, socket, head);
+  app.register(httProxy, {
+    upstream: url,
+    websocket: true,
   });
 }
 
-export const dashboardPlugin: FastifyPluginAsync<StartOptions> = async (
-  app,
-  options
-) => {
+export type DashboardPluginOptions = { dashboard?: string };
+
+export const dashboardPlugin: FastifyPluginAsync<
+  DashboardPluginOptions
+> = async (app, options) => {
   if (options.dashboard !== undefined) {
     initProxyDashboard(app, options.dashboard);
   } else {

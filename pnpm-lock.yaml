@@ -571,6 +571,9 @@ importers:
 
   packages/game-cms:
     dependencies:
+      '@fastify/http-proxy':
+        specifier: ^11.4.1
+        version: 11.4.1
       '@fastify/multipart':
         specifier: 9.3.0
         version: 9.3.0
@@ -613,9 +616,6 @@ importers:
       fastify:
         specifier: 'catalog:'
         version: 5.6.2
-      http-proxy:
-        specifier: 1.18.1
-        version: 1.18.1
       pino:
         specifier: 10.1.0
         version: 10.1.0
@@ -629,9 +629,6 @@ importers:
       '@react-router/dev':
         specifier: 'catalog:'
         version: 7.10.1(@types/node@25.0.1)(react-router@7.10.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(sass-embedded@1.96.0)(sass@1.96.0)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(sass-embedded@1.96.0)(sass@1.96.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
-      '@types/http-proxy':
-        specifier: ^1.17.17
-        version: 1.17.17
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.1
@@ -1629,6 +1626,9 @@ packages:
   '@fastify/forwarded@3.0.1':
     resolution: {integrity: sha512-JqDochHFqXs3C3Ml3gOY58zM7OqO9ENqPo0UqAjAjH8L01fRZqwX9iLeX34//kiJubF7r2ZQHtBRU36vONbLlw==}
 
+  '@fastify/http-proxy@11.4.1':
+    resolution: {integrity: sha512-sMYEIB0c7qCYutpZyS12c8xnVgmEMSUUVU2XjcNq2JzHf6Hta1BWcpnG5FXxR3WEm48uZNCi0MxnIYtwjwd21Q==}
+
   '@fastify/merge-json-schemas@0.2.1':
     resolution: {integrity: sha512-OA3KGBCy6KtIvLf8DINC5880o5iBlDX4SxzLQS8HorJAbqluzLRn80UXU0bxZn7UOFhFgpRJDasfwn9nG4FG4A==}
 
@@ -1637,6 +1637,9 @@ packages:
 
   '@fastify/proxy-addr@5.1.0':
     resolution: {integrity: sha512-INS+6gh91cLUjB+PVHfu1UqcB76Sqtpyp7bnL+FYojhjygvOPA9ctiD/JDKsyD9Xgu4hUhCSJBPig/w7duNajw==}
+
+  '@fastify/reply-from@12.5.0':
+    resolution: {integrity: sha512-m7mTGjgtnpnZBk4I8r6eFJY8WB4kyvXJo2nAf5PBm5f3mj3P7G6H2D7mhmF25os/n6EGMWVyw/bpTUehvy0i8g==}
 
   '@fastify/send@4.1.0':
     resolution: {integrity: sha512-TMYeQLCBSy2TOFmV95hQWkiTYgC/SEx7vMdV+wnZVX4tt8VBLKzmH8vV9OzJehV0+XBfg+WxPMt5wp+JBUKsVw==}
@@ -2426,9 +2429,6 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
-
-  '@types/http-proxy@1.17.17':
-    resolution: {integrity: sha512-ED6LB+Z1AVylNTu7hdzuBqOgMnvG/ld6wGCG8wFnAzKX5uyW2K3WD52v0gnLCTK/VLpXtKckgWuyScYK6cSPaw==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -3250,9 +3250,6 @@ packages:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
 
-  eventemitter3@4.0.7:
-    resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
-
   exit-hook@2.2.1:
     resolution: {integrity: sha512-eNTPlAD67BmP31LDINZ3U7HSF8l57TxOY2PmBJ1shpCvpnxBF93mWCE8YHBnXs8qiUZJc9WDcWIeC3a2HIAMfw==}
     engines: {node: '>=6'}
@@ -3263,6 +3260,9 @@ packages:
 
   exsolve@1.0.8:
     resolution: {integrity: sha512-LmDxfWXwcTArk8fUEnOfSZpHOJ6zOMUJKOtFLFqJLoKJetuQG874Uc7/Kki7zFLzYybmZhp1M7+98pfMqeX8yA==}
+
+  fast-content-type-parse@3.0.0:
+    resolution: {integrity: sha512-ZvLdcY8P+N8mGQJahJV5G4U88CSvT1rP8ApL6uETe88MBXrBHAkZlSEySdUlyztF7ccb+Znos3TFqaepHxdhBg==}
 
   fast-copy@4.0.1:
     resolution: {integrity: sha512-+uUOQlhsaswsizHFmEFAQhB3lSiQ+lisxl50N6ZP0wywlZeWsIESxSi9ftPEps8UGfiBzyYP7x27zA674WUvXw==}
@@ -3364,15 +3364,6 @@ packages:
 
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
-
-  follow-redirects@1.15.11:
-    resolution: {integrity: sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
 
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
@@ -3526,10 +3517,6 @@ packages:
   http-errors@2.0.1:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
     engines: {node: '>= 0.8'}
-
-  http-proxy@1.18.1:
-    resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
-    engines: {node: '>=8.0.0'}
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -4297,9 +4284,6 @@ packages:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
 
-  requires-port@1.0.0:
-    resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
-
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
@@ -4869,6 +4853,10 @@ packages:
 
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+
+  undici@7.16.0:
+    resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
+    engines: {node: '>=20.18.1'}
 
   unplugin@2.3.11:
     resolution: {integrity: sha512-5uKD0nqiYVzlmCRs01Fhs2BdkEgBS3SAVP6ndrBsuK42iC2+JHyxM05Rm9G8+5mkmRtzMZGY8Ct5+mliZxU/Ww==}
@@ -6067,6 +6055,16 @@ snapshots:
 
   '@fastify/forwarded@3.0.1': {}
 
+  '@fastify/http-proxy@11.4.1':
+    dependencies:
+      '@fastify/reply-from': 12.5.0
+      fast-querystring: 1.1.2
+      fastify-plugin: 5.1.0
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@fastify/merge-json-schemas@0.2.1':
     dependencies:
       dequal: 2.0.3
@@ -6083,6 +6081,16 @@ snapshots:
     dependencies:
       '@fastify/forwarded': 3.0.1
       ipaddr.js: 2.3.0
+
+  '@fastify/reply-from@12.5.0':
+    dependencies:
+      '@fastify/error': 4.2.0
+      end-of-stream: 1.4.5
+      fast-content-type-parse: 3.0.0
+      fast-querystring: 1.1.2
+      fastify-plugin: 5.1.0
+      toad-cache: 3.7.0
+      undici: 7.16.0
 
   '@fastify/send@4.1.0':
     dependencies:
@@ -6968,10 +6976,6 @@ snapshots:
       eslint-visitor-keys: 4.2.1
 
   '@types/estree@1.0.8': {}
-
-  '@types/http-proxy@1.17.17':
-    dependencies:
-      '@types/node': 25.0.1
 
   '@types/json-schema@7.0.15': {}
 
@@ -8020,13 +8024,13 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  eventemitter3@4.0.7: {}
-
   exit-hook@2.2.1: {}
 
   expect-type@1.3.0: {}
 
   exsolve@1.0.8: {}
+
+  fast-content-type-parse@3.0.0: {}
 
   fast-copy@4.0.1: {}
 
@@ -8144,8 +8148,6 @@ snapshots:
       hookified: 1.14.0
 
   flatted@3.3.3: {}
-
-  follow-redirects@1.15.11: {}
 
   for-each@0.3.5:
     dependencies:
@@ -8309,14 +8311,6 @@ snapshots:
       setprototypeof: 1.2.0
       statuses: 2.0.2
       toidentifier: 1.0.1
-
-  http-proxy@1.18.1:
-    dependencies:
-      eventemitter3: 4.0.7
-      follow-redirects: 1.15.11
-      requires-port: 1.0.0
-    transitivePeerDependencies:
-      - debug
 
   ignore@5.3.2: {}
 
@@ -9025,8 +9019,6 @@ snapshots:
 
   require-from-string@2.0.2: {}
 
-  requires-port@1.0.0: {}
-
   resolve-from@4.0.0: {}
 
   resolve-from@5.0.0: {}
@@ -9686,6 +9678,8 @@ snapshots:
       which-boxed-primitive: 1.1.1
 
   undici-types@7.16.0: {}
+
+  undici@7.16.0: {}
 
   unplugin@2.3.11:
     dependencies:

@@ -11,10 +11,10 @@ import type {
   ValueSourceContext,
 } from '@game-cms/types';
 
-import { getAllComponentControllers } from '../../services/components.js';
-import { resolveConfig } from '../../services/config.js';
-import { compiledFilePath } from '../../services/localPath.js';
 import { getAllServices, getApiConfig } from './api.js';
+import { getAllComponentControllers } from './components.js';
+import { resolveConfig } from './config.js';
+import { compiledFilePath } from './localPath.js';
 
 type BaseEnvResolvers = EnvResolver<Omit<BaseCmsEnvironment, 'config'>>;
 

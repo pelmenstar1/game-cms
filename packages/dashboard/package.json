@@ -52,8 +52,8 @@
     "since 2020-01-01"
   ],
   "exports": {
-    "./config": {
-      "import": "./react-router.config.ts"
+    "./package.json": {
+      "import": "./package.json"
     }
   }
 }

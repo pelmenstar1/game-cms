@@ -5,12 +5,11 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 
-import { initPlugins } from '../commands/start/plugin.js';
-import type { StartOptions } from '../commands/start/types.js';
-import { dashboardPlugin } from './dashboard.js';
+import { dashboardPlugin, type DashboardPluginOptions } from './dashboard.js';
 import { createFastifyApp } from './fastify.js';
+import { initPlugins } from './plugin.js';
 
-export async function startServer(options: StartOptions = {}) {
+export async function startServer(options: DashboardPluginOptions = {}) {
   const {
     config: { server },
     api: { routes },
