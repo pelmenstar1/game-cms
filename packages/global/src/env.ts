@@ -1,9 +1,8 @@
 import type {
   ApiRoute,
-  ComponentStaticConfigMap,
+  ComponentControllerMap,
   ResolvedCmsConfig,
   Service,
-  SharedAssetsConfig,
 } from '@game-cms/types';
 
 export interface ApiEnvironment {
@@ -12,10 +11,9 @@ export interface ApiEnvironment {
 
 export type BaseCmsEnvironment = {
   config: ResolvedCmsConfig;
-  components: ComponentStaticConfigMap;
+  components: ComponentControllerMap;
   api: ApiEnvironment;
   services: Service[];
-  sharedAssets: SharedAssetsConfig;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type

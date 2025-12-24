@@ -1,2 +1,2 @@
-export * from './component/plugin.js';
+export * from './dashboardComponents/plugin.js';
 export * from './libraryWatcher.js';

@@ -3,6 +3,7 @@ import type {
   ServerEntitySchema,
 } from '@game-cms/base-types';
 import { env } from '@game-cms/global';
+import { resolveMaybeFactory } from '@game-cms/shared';
 import { service } from '@game-cms/utils';
 
 function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
@@ -16,7 +17,7 @@ function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
         {
           ...value,
           config: value.controller.config,
-          defaultData: value.controller.default.data(),
+          defaultData: resolveMaybeFactory(value.controller.default.data),
           controller: value.controller.id,
         },
       ])

@@ -1,4 +1,4 @@
-import type { MaybeAsyncFactory } from '@game-cms/shared';
+import type { MaybeAsyncFactory, MaybeFactory } from '@game-cms/shared';
 import type { FC } from 'react';
 
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
@@ -169,7 +169,7 @@ export interface ComponentController<
     data: ComponentDataValidator<Options, Data, Error>;
   };
   default: {
-    data(): NoInfer<Data>;
+    data: MaybeFactory<NoInfer<Data>>;
   };
 }
 
@@ -204,6 +204,9 @@ export type ComponentStaticConfig<Id extends ComponentId = ComponentId> = {
   renderManifest: ComponentRenderManifest;
 };
 
+export type ComponentControllerMap<K extends string | number = ComponentId> =
+  Pick<ComponentMap, K>;
+
 export type ComponentStaticConfigMap<K extends string | number = ComponentId> =
   {
     [Id in K]: ComponentStaticConfig<Id>;
@@ -215,4 +218,8 @@ export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
 export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
   validator?: ComponentDataValidatorById<Id>;
   renderer: ComponentRenderer<Id>;
+};
+
+export type ComponentsFsInfo = {
+  distributions: string[];
 };

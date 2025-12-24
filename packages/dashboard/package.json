@@ -36,7 +36,6 @@
     "@game-cms/base-types": "workspace:*",
     "@game-cms/base-utils": "workspace:*",
     "@game-cms/client": "workspace:*",
-    "@game-cms/react": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
@@ -51,5 +50,10 @@
   },
   "browserslist": [
     "since 2020-01-01"
-  ]
+  ],
+  "exports": {
+    "./config": {
+      "import": "./react-router.config.ts"
+    }
+  }
 }

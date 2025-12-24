@@ -3,7 +3,8 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
-    "build": " vite build --outDir dist/client && vite build --ssr src/index.ts --outDir dist/node"
+    "copy-styles": "tsx ./scripts/copyStyles.ts",
+    "build": "pnpm copy-styles && tsc"
   },
   "dependencies": {
     "@game-cms/types": "workspace:*",
@@ -17,28 +18,23 @@
   },
   "devDependencies": {
     "@game-cms/build": "workspace:*",
-    "@game-cms/vite-plugins": "workspace:*",
-    "@rollup/plugin-commonjs": "29.0.0",
-    "@rollup/plugin-replace": "6.0.3",
+    "@game-cms/codegen": "workspace:*",
     "@types/node": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "glob": "catalog:",
-    "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-plugin-dts": "4.5.4"
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {
-      "import": "./dist/node/index.js",
-      "types": "./dist/node/index.d.ts"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./source": {
-      "import": "./dist/node/source.js",
-      "types": "./src/node/source.d.ts"
+      "import": "./dist/source.js",
+      "types": "./src//source.d.ts"
     },
     "./types": {
-      "import": "./dist/node/types.js",
-      "types": "./dist/node/types.d.ts"
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
     }
   },
   "browserslist": [

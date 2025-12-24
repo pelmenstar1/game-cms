@@ -6,6 +6,11 @@
     "@types/node": "catalog:",
     "typescript": "catalog:"
   },
+  "dependencies": {
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/types": "workspace:*",
+    "glob": "catalog:"
+  },
   "exports": {
     "./apiRequestTypes": {
       "import": "./dist/apiRequestTypes.js",
@@ -14,11 +19,10 @@
     "./newComponent": {
       "import": "./dist/newComponent.js",
       "types": "./dist/newComponent.d.ts"
+    },
+    "./copyStyles": {
+      "import": "./dist/copyStyles.js",
+      "types": "./dist/copyStyles.d.ts"
     }
-  },
-  "dependencies": {
-    "@game-cms/shared": "workspace:*",
-    "@game-cms/types": "workspace:*",
-    "glob": "catalog:"
   }
 }

@@ -21,7 +21,6 @@
   "references": [
     { "path": "../types" },
     { "path": "../global" },
-    { "path": "../react" },
     { "path": "../shared" },
     { "path": "../utils" },
     { "path": "../base-components" },

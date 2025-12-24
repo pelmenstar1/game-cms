@@ -15,7 +15,6 @@
     { "path": "./packages/client" },
     { "path": "./packages/utils" },
     { "path": "./packages/codegen" },
-    { "path": "./packages/react" },
     { "path": "./packages/api-testing" },
     { "path": "./packages/base-plugin" },
     { "path": "./packages/base-api" },

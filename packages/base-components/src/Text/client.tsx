@@ -3,7 +3,7 @@ import { TextInput } from '@game-cms/ui';
 
 import styles from './client.module.scss';
 
-export * from './validator';
+export * from './validator.js';
 
 export const renderer: ComponentRenderer<'base::text'> = ({
   data,

@@ -56,6 +56,10 @@
       "import": "./dist/collections/index.js",
       "types": "./dist/collections/index.d.ts"
     },
+    "./node": {
+      "import": "./dist/node/index.js",
+      "types": "./dist/node/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }

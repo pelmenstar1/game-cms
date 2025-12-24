@@ -1,6 +1,6 @@
 import { component } from '@game-cms/utils';
 
-import { id } from './meta.js';
+import { defaultData, id } from './meta.js';
 
 export default component({
   id,
@@ -8,6 +8,6 @@ export default component({
     data: () => '',
   },
   default: {
-    data: () => 0,
+    data: defaultData,
   },
 });

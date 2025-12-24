@@ -1,6 +1,6 @@
 import type { FromEntries } from '@game-cms/types';
 
-type ExportedComponents = typeof import('./index');
+type ExportedComponents = typeof import('./index.js');
 
 type Components = {
   [K in keyof ExportedComponents]: ReturnType<

@@ -6,10 +6,10 @@ import {
 } from '@game-cms/types';
 import { componentAccessor } from '@game-cms/utils';
 
-import Number from './Number';
-import Repeatable from './Repeatable';
-import { RepeatableOptions } from './Repeatable/types';
-import Text from './Text';
+import Number from './Number/index.js';
+import Repeatable from './Repeatable/index.js';
+import { RepeatableOptions } from './Repeatable/types.js';
+import Text from './Text/index.js';
 
 export const text = componentAccessor(Text);
 export const number = componentAccessor(Number);

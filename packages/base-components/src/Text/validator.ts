@@ -1,6 +1,6 @@
 import { componentDataValidator } from '@game-cms/utils';
 
-import { ComponentData, ComponentOptions } from './types';
+import { ComponentData, ComponentOptions } from './types.js';
 
 export const validator = componentDataValidator(
   (text: ComponentData, options: ComponentOptions) => {

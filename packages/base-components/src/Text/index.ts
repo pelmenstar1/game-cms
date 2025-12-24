@@ -1,6 +1,6 @@
 import { component } from '@game-cms/utils';
 
-import { id } from './meta.js';
+import { defaultData, id } from './meta.js';
 import { validator } from './validator.js';
 
 export default component({
@@ -14,6 +14,6 @@ export default component({
     data: validator,
   },
   default: {
-    data: () => '',
+    data: defaultData,
   },
 });

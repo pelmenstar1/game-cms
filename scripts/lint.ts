@@ -51,7 +51,7 @@ async function main() {
         phase('build', ['tsc', '--build', 'tsconfig.ref.json']),
       ]);
     } catch {
-      // Messages about errors are alrady in the terminal
+      // Messages about errors are already in the terminal
     }
   }
 }

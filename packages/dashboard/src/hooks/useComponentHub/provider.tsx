@@ -1,4 +1,3 @@
-import { getComponentManifest } from '@game-cms/client';
 import type {
   ComponentApi,
   ComponentClientModule,
@@ -8,15 +7,17 @@ import type {
 } from '@game-cms/types';
 import {
   type PropsWithChildren,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
+import {
+  getComponentDefaultData,
+  getComponentIds,
+  importComponent,
+} from 'virtual:dashboard/componentConnector';
 
-import { useApiQuery } from '../useApiQuery';
-import { useStylesheetInject } from '../useStylesheetInject';
 import { type ComponentHub, ComponentHubContext } from './context';
 
 type ClientModuleMap = {
@@ -28,9 +29,6 @@ type ComponentMap = {
 };
 
 export function ComponentHubProvider({ children }: PropsWithChildren) {
-  const [manifestResult] = useApiQuery(getComponentManifest);
-
-  const stylesheetInject = useStylesheetInject();
   const [clientBundles, setClientBundles] = useState<ClientModuleMap | null>(
     null
   );
@@ -40,50 +38,25 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const loaded = clientBundles !== null;
 
   useEffect(() => {
-    if (manifestResult.status === 'success') {
-      const manifestMap = manifestResult.value;
+    const worker = async () => {
+      const entries = await Promise.all(
+        getComponentIds().map(async (id) => {
+          const clientModule = await importComponent(id);
 
-      const worker = async () => {
-        const entries = await Promise.all(
-          Object.entries(manifestMap).map(async ([id, manifest]) => {
-            const clientModule: unknown = await import(manifest.source.main);
+          return [id, clientModule as ComponentClientModule] as const;
+        })
+      );
 
-            return [id, clientModule as ComponentClientModule] as const;
-          })
-        );
+      setClientBundles(Object.fromEntries(entries));
+    };
 
-        setClientBundles(Object.fromEntries(entries));
-      };
-
-      void worker();
-    }
-  }, [manifestResult]);
-
-  const getLoadedComponentManifest = useCallback(
-    <Id extends ComponentId>(id: Id) => {
-      const manifest =
-        manifestResult.status === 'success'
-          ? manifestResult.value[id]
-          : undefined;
-
-      if (!manifest) {
-        throw new Error('Hub is not loaded');
-      }
-      return manifest;
-    },
-    [manifestResult]
-  );
+    void worker();
+  }, []);
 
   const api = useMemo(
     (): ComponentApi => ({
-      getDefaultData: (id) => {
-        const manifest = getLoadedComponentManifest(id);
-
-        return manifest.defaultData;
-      },
+      getDefaultData: getComponentDefaultData,
       getComponent: <Id extends ComponentId>(id: Id) => {
-        const manifest = getLoadedComponentManifest(id);
-
         const bundle = clientBundles?.[id];
         if (!bundle) {
           throw new Error('Hub is not loaded');
@@ -94,14 +67,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
         if (!result) {
           result = (props) => {
-            const componentProps = { api, ...props };
-
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            useEffect(() => {
-              stylesheetInject.addStylesheets(manifest.source.dependencies.css);
-            }, []);
-
-            return <BaseComponent {...componentProps} />;
+            return <BaseComponent api={api} {...props} />;
           };
 
           componentCache.current[id] = result;
@@ -110,7 +76,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
         return result;
       },
     }),
-    [clientBundles, getLoadedComponentManifest, stylesheetInject]
+    [clientBundles]
   );
 
   const validationContext = useMemo(

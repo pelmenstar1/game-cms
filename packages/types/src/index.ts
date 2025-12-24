@@ -4,5 +4,4 @@ export * from './config.js';
 export * from './controller.js';
 export * from './plugin.js';
 export * from './service.js';
-export * from './sharedAssets.js';
 export type { DefaultExport, FromEntries, ToClientType } from './typeutil.js';

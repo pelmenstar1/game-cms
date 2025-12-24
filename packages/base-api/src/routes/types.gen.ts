@@ -8,8 +8,6 @@ declare module '@game-cms/types' {
     'POST /auth/token/jwt': typeof import('./auth/token/signin.js');
     'POST /auth/user/refresh': typeof import('./auth/user/refresh.js');
     'POST /auth/user/signin': typeof import('./auth/user/signin.js');
-    'GET /components/:id/assets/*': typeof import('./components/assets.js');
-    'GET /components/manifest': typeof import('./components/manifest.js');
     'GET /entitySchema/byId/:id': typeof import('./entitySchema/get.js');
     'GET /entitySchema/list': typeof import('./entitySchema/list.js');
     'DELETE /entity/:entityId/byId/:id': typeof import('./entity/byId/delete.js');
@@ -18,7 +16,6 @@ declare module '@game-cms/types' {
     'POST /entity/:entityId': typeof import('./entity/create.js');
     'GET /entity/:entityId/list': typeof import('./entity/list.js');
     'GET /entity/:entityId/raw/byId/:id': typeof import('./entity/raw/byId/get.js');
-    'GET /assets/_s/:scope/:name.js': typeof import('./sharedAssets/route.js');
     'DELETE /storage/byId/:id': typeof import('./storage/byId/delete.js');
     'GET /storage/byId/:id': typeof import('./storage/byId/get.js');
     'POST /storage/file': typeof import('./storage/file/upload.js');

@@ -3,8 +3,8 @@
     "outDir": "./dist",
     "rootDir": "./src",
 
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "esnext",
     "types": ["node", "vite/client"],
 
@@ -24,7 +24,8 @@
     { "path": "../types" },
     { "path": "../ui" },
     { "path": "../utils" },
-    { "path": "../vite-plugins" }
+    { "path": "../codegen" }
   ],
-  "include": ["./src", "./scripts"]
+  "include": ["./src", "./scripts"],
+  "exclude": ["./scripts"]
 }

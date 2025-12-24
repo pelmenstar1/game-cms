@@ -1,5 +1,3 @@
-//
-
 import type { SvgProps } from '../types';
 
 export function ZoomIcon(props: SvgProps) {

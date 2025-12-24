@@ -11,19 +11,17 @@ import type {
   ValueSourceContext,
 } from '@game-cms/types';
 
-import { compiledFilePath } from '../../utils/localPath.js';
+import { getAllComponentControllers } from '../../services/components.js';
+import { resolveConfig } from '../../services/config.js';
+import { compiledFilePath } from '../../services/localPath.js';
 import { getAllServices, getApiConfig } from './api.js';
-import { getAllComponents } from './components.js';
-import { resolveConfig } from './config.js';
-import { getSharedAssetsConfig } from './sharedAssets.js';
 
 type BaseEnvResolvers = EnvResolver<Omit<BaseCmsEnvironment, 'config'>>;
 
 const baseEnvResolvers: BaseEnvResolvers = {
   api: getApiConfig,
-  components: getAllComponents,
+  components: getAllComponentControllers,
   services: getAllServices,
-  sharedAssets: getSharedAssetsConfig,
 };
 
 function getPluginEnvResolvers(config: ResolvedCmsConfig) {

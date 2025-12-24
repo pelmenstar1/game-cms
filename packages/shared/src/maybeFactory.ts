@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import type { MaybePromise } from './typeutil.js';
 
 export type MaybeFactory<T, Args extends unknown[] = []> =
@@ -8,19 +9,19 @@ export type MaybeAsyncFactory<T, Args extends unknown[] = []> =
   | T
   | ((...args: Args) => MaybePromise<T>);
 
-export function resolveMaybeFactory<T extends object, Args extends unknown[]>(
+export function resolveMaybeFactory<T, Args extends unknown[]>(
   factory: MaybeFactory<T, Args>,
   ...args: Args
 ): T {
+  // @ts-expect-error Typescript doesn't let to call a function :(
   return typeof factory === 'function' ? factory(...args) : factory;
 }
 
-export async function resolveAsyncMaybeFactory<
-  T extends object | string,
-  Args extends unknown[],
->(factory: MaybeAsyncFactory<T, Args>, ...args: Args): Promise<T> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return typeof factory === 'function' ? await factory(...args) : factory;
+export async function resolveAsyncMaybeFactory<T, Args extends unknown[]>(
+  factory: MaybeAsyncFactory<T, Args>,
+  ...args: Args
+): Promise<T> {
+  return await resolveMaybeFactory(factory, ...args);
 }
 
 export function combineAsyncFactories<T, Args extends unknown[]>(

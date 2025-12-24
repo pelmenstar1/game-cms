@@ -1,7 +1,7 @@
 import { ComponentData } from '@game-cms/types';
 import { componentDataValidator } from '@game-cms/utils';
 
-import { RepeatableOptions } from './types';
+import { RepeatableOptions } from './types.js';
 
 export const validator = componentDataValidator(
   (data: ComponentData[], options: RepeatableOptions, context) => {

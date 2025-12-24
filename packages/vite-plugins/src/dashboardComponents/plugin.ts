@@ -1,0 +1,47 @@
+import type { Plugin } from 'vite';
+
+import { emitComponentConnector } from './connector.js';
+import { readComponentsFsInfo } from './fsInfo.js';
+import { type ComponentClientChunkMap, gatherComponents } from './gather.js';
+
+const COMPONENT_PROTOCOL = 'component:';
+const CONNECTOR_ID = 'virtual:dashboard/componentConnector';
+
+export function dashboardComponentsPlugin(): Plugin {
+  let components: ComponentClientChunkMap;
+
+  return {
+    name: 'game-cms:dashboard-components',
+    async buildStart() {
+      const fsInfo = await readComponentsFsInfo();
+
+      components = await gatherComponents(fsInfo);
+    },
+    resolveId(source) {
+      if (source === CONNECTOR_ID) {
+        return CONNECTOR_ID;
+      }
+
+      if (source.startsWith(COMPONENT_PROTOCOL)) {
+        const componentId = source.slice(COMPONENT_PROTOCOL.length);
+        const entry = components[componentId];
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        if (!entry) {
+          throw new Error(`Unknown component: ${componentId}`);
+        }
+
+        return entry.client;
+      }
+
+      return null;
+    },
+    load(id) {
+      if (id === CONNECTOR_ID) {
+        const code = emitComponentConnector(components);
+
+        return { code };
+      }
+    },
+  };
+}

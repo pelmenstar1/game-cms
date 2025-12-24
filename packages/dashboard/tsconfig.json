@@ -8,7 +8,12 @@
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["node", "vite/client", "@game-cms/base-api/clientTypes"],
+    "types": [
+      "node",
+      "vite/client",
+      "@game-cms/base-api/clientTypes",
+      "./src/types/componentConnector.d.ts"
+    ],
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
@@ -32,7 +37,6 @@
   "references": [
     { "path": "../build" },
     { "path": "../client" },
-    { "path": "../react" },
     { "path": "../shared" },
     { "path": "../types" },
     { "path": "../ui" },

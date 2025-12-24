@@ -1,9 +1,9 @@
 import { ComponentData } from '@game-cms/types';
 import { component } from '@game-cms/utils';
 
-import { id } from './meta';
-import { RepeatableOptions } from './types';
-import { validator } from './validator';
+import { defaultData, id } from './meta.js';
+import { RepeatableOptions } from './types.js';
+import { validator } from './validator.js';
 
 export default component<
   RepeatableOptions,
@@ -16,6 +16,6 @@ export default component<
     data: validator,
   },
   default: {
-    data: () => [],
+    data: defaultData,
   },
 });

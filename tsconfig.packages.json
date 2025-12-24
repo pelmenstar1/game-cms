@@ -17,7 +17,8 @@
     { "path": "./packages/base-plugin" },
     { "path": "./packages/base-api" },
     { "path": "./packages/base-types" },
-    { "path": "./packages/base-utils" }
+    { "path": "./packages/base-utils" },
+    { "path": "./packages/base-components" }
   ],
   "include": []
 }

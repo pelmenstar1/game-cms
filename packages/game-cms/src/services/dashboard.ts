@@ -1,16 +1,18 @@
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import staticPlugin from '@fastify/static';
+import { getImportDirectory } from '@game-cms/shared/node';
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import httpProxy from 'http-proxy';
 
-import type { StartOptions } from './types.js';
+import type { StartOptions } from '../commands/start/types.js';
 
-function getDashboardBuildPath() {
-  const dashboardImportUrl = import.meta.resolve('@game-cms/dashboard');
+export function getDashboardBuildPath() {
+  return getImportDirectory(import.meta.resolve('@game-cms/dashboard'));
+}
 
-  return path.dirname(fileURLToPath(dashboardImportUrl));
+export function getDashboardPackagePath() {
+  return getImportDirectory(import.meta.resolve('@game-cms/dashboard/config'));
 }
 
 async function initLocalDashboard(app: FastifyInstance) {
@@ -40,7 +42,7 @@ function initProxyDashboard(app: FastifyInstance, url: string) {
   });
 }
 
-export const dashboard: FastifyPluginAsync<StartOptions> = async (
+export const dashboardPlugin: FastifyPluginAsync<StartOptions> = async (
   app,
   options
 ) => {
