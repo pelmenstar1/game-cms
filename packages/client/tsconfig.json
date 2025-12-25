@@ -5,7 +5,7 @@
     "outDir": "./dist",
 
     "types": ["@game-cms/base-api/clientTypes"],
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": true
   },
   "include": ["./src"],
   "references": [

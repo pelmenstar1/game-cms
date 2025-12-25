@@ -4,15 +4,12 @@ import path from 'node:path';
 import { expect, test } from 'vitest';
 
 import { readJson } from '../packages/shared/src/io/file';
+import { TsConfig } from './types';
 
 type PackageInfo = {
   name: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
-};
-
-type TsConfig = {
-  references?: { path: string }[];
 };
 
 type PackageRegistry = Awaited<ReturnType<typeof createPackageRegistry>>;

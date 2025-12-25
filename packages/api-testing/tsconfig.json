@@ -4,6 +4,6 @@
   "references": [{ "path": "../shared" }, { "path": "../types" }],
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist",
-  },
+    "outDir": "./dist"
+  }
 }

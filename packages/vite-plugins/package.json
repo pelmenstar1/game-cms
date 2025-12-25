@@ -14,10 +14,5 @@
   },
   "peerDependencies": {
     "vite": "*"
-  },
-  "dependencies": {
-    "espree": "11.0.0",
-    "terser": "5.44.1",
-    "zod": "catalog:"
   }
 }

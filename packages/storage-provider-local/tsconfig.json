@@ -1,4 +1,3 @@
-
 {
   "extends": "../../configs/tsconfig.lib.json",
   "compilerOptions": {
@@ -6,7 +5,7 @@
     "outDir": "./dist",
     "types": ["node", "@game-cms/base-api/clientTypes"],
 
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": true
   },
   "include": ["./src"],
   "references": [

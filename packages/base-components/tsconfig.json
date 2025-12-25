@@ -5,7 +5,7 @@
     "rootDir": "./src",
     "verbatimModuleSyntax": false,
 
-    "types": ["node", "vite/client"],
+    "types": ["node", "vite/client"]
   },
   "references": [
     { "path": "../build" },

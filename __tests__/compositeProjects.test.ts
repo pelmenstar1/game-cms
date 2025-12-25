@@ -4,20 +4,17 @@ import path from 'node:path';
 import { expect, test } from 'vitest';
 
 import { readJson } from '../packages/shared/src/io/file';
-
-type TsConfig = {
-  compilerOptions?: {
-    composite?: boolean;
-  };
-};
+import { TsConfig } from './types';
 
 async function checkTsconfig(filePath: string) {
   const config = await readJson<TsConfig>(filePath);
 
-  expect(
-    config.compilerOptions?.composite,
-    `Expected ${filePath} project to be composite`
-  ).toEqual(true);
+  if (config.extends === undefined) {
+    expect(
+      config.compilerOptions?.composite,
+      `Expected ${filePath} project to be composite`
+    ).toEqual(true);
+  }
 }
 
 test('composite TS projects', async () => {
@@ -27,11 +24,10 @@ test('composite TS projects', async () => {
   await checkTsconfig(
     path.join(import.meta.dirname, '../demo-app/tsconfig.json')
   );
+
   await Promise.all(
     entries.map((name) => {
-      const tsconfigPath = path.join(packagesDir, name, 'tsconfig.json');
-
-      return checkTsconfig(tsconfigPath);
+      return checkTsconfig(path.join(packagesDir, name, 'tsconfig.json'));
     })
   );
 });

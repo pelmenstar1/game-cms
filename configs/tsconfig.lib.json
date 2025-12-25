@@ -13,6 +13,6 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "composite": true,
-  },
+    "composite": true
+  }
 }
