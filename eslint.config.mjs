@@ -59,6 +59,7 @@ export default defineConfig(
       'unicorn/no-null': 'off',
       'unicorn/no-negated-condition': 'off',
       'unicorn/prefer-at': 'off',
+      'unicorn/no-for-loop': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
 
