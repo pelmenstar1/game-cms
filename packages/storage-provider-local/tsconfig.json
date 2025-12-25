@@ -1,23 +1,12 @@
+
 {
+  "extends": "../../configs/tsconfig.lib.json",
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-
-    "module": "nodenext",
-    "target": "esnext",
     "types": ["node", "@game-cms/base-api/clientTypes"],
 
     "noUncheckedIndexedAccess": true,
-
-    "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
-
-    "composite": true
   },
   "include": ["./src"],
   "references": [

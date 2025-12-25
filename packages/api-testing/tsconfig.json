@@ -1,23 +1,9 @@
 {
+  "extends": "../../configs/tsconfig.lib.json",
+  "include": ["./src"],
+  "references": [{ "path": "../shared" }, { "path": "../types" }],
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-
-    "module": "nodenext",
-    "target": "esnext",
-    "moduleResolution": "nodenext",
-
-    "declaration": true,
-    "noUncheckedIndexedAccess": true,
-
-    "strict": true,
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
-    "composite": true
   },
-  "include": ["./src"],
-  "references": [{ "path": "../shared" }, { "path": "../types" }]
 }

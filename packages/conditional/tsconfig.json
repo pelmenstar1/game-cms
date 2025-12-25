@@ -1,21 +1,10 @@
 {
+  "extends": "../../configs/tsconfig.lib.json",
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-
-    "module": "nodenext",
-    "target": "esnext",
-    "moduleResolution": "nodenext",
     "types": ["node", "@game-cms/shared/types"],
-
-    "declaration": true,
-
-    "strict": true,
-    "jsx": "react-jsx",
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
-    "composite": true
+    "verbatimModuleSyntax": false
   },
   "include": ["./src"],
   "references": [

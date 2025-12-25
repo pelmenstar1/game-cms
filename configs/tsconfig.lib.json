@@ -1,23 +1,18 @@
 {
-  "extends": "../../configs/tsconfig.lib.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist",
-
     "module": "nodenext",
     "target": "esnext",
-    "types": ["node"],
+    "moduleResolution": "nodenext",
 
-    "strict": true,
+    "declaration": true,
+
     "jsx": "react-jsx",
+    "strict": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
-    "noUncheckedIndexedAccess": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-
-    "composite": true
+    "composite": true,
   },
-  "include": ["./src"]
 }
