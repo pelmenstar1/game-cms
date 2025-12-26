@@ -1,5 +1,5 @@
 import { reactRouter } from '@react-router/dev/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import {
   libraryWatcherPlugin,
@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     reactRouter(),
     tsconfigPaths(),
-    libraryWatcherPlugin('ui'),
-    dashboardComponentsPlugin(),
+    libraryWatcherPlugin('ui') as Plugin,
+    dashboardComponentsPlugin() as Plugin,
   ],
 });

@@ -4,15 +4,14 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
-  "devDependencies": {
+  "dependencies": {
     "@game-cms/build": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "@game-cms/types": "workspace:*",
-    "@types/espree": "10.1.0",
-    "chokidar": "5.0.0",
+    "chokidar": "^3.6.0",
     "rollup": "catalog:"
   },
-  "peerDependencies": {
-    "vite": "*"
+  "devDependencies": {
+    "@game-cms/types": "workspace:*",
+    "typescript": "catalog:"
   }
 }

@@ -1,0 +1,5 @@
+import { googleIcon } from '../google';
+
+export const PlayIcon = googleIcon(
+  'M320-200v-560l440 280-440 280Zm80-280Zm0 134 210-134-210-134v268Z'
+);

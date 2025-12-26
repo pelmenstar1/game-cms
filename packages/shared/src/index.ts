@@ -1,6 +1,7 @@
 export * from './clipboard.js';
 export * from './delay.js';
 export * from './json.js';
+export * from './math.js';
 export * from './maybeFactory.js';
 export * from './memoryCache.js';
 export * from './paging.js';

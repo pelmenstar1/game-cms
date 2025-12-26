@@ -1,0 +1,22 @@
+.root {
+  margin-left: 0.25em;
+
+  &-item {
+    display: block;
+    padding: 0.5em 1em;
+    text-wrap: nowrap;
+    border-radius: 0.5em;
+
+    &:hover:not(&-checked) {
+      background: var(--color-background-dark-variant);
+    }
+
+    &-checked {
+      background: var(--color-background-dark);
+    }
+  }
+
+  input {
+    appearance: none;
+  }
+}

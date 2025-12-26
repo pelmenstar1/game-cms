@@ -1,0 +1,36 @@
+.root {
+  $child-width: calc(100% / var(--children-count));
+
+  display: grid;
+  position: relative;
+  grid-template-columns: repeat(var(--children-count), #{$child-width});
+
+  clip-path: inset(0 0 0 0 round 1em);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--selected-index) * #{$child-width});
+    top: 0;
+    width: $child-width;
+    height: 100%;
+
+    transition: left 0.15s ease;
+    background: var(--color-background-dark);
+  }
+}
+
+.item {
+  display: block;
+  cursor: pointer;
+  user-select: none;
+  z-index: 1;
+
+  &-disabled {
+    cursor: auto;
+  }
+
+  &-input {
+    appearance: none;
+  }
+}

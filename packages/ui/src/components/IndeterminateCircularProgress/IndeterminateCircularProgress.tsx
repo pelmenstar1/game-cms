@@ -10,7 +10,7 @@ export interface IndeterminateCircularProgressProps extends ComponentProps<'svg'
 const STROKE_WIDTH = 3;
 const RADIUS = 20;
 const SIZE = (RADIUS + STROKE_WIDTH) * 2;
-const VIEWBOX = `0 0 ${SIZE} ${SIZE}`;
+const VIEW_BOX = `0 0 ${SIZE} ${SIZE}`;
 
 export function IndeterminateCircularProgress({
   className,
@@ -26,7 +26,7 @@ export function IndeterminateCircularProgress({
         styles[`root-size-${size}`],
         className
       )}
-      viewBox={VIEWBOX}
+      viewBox={VIEW_BOX}
       {...rest}
     >
       <circle

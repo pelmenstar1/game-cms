@@ -1,0 +1,56 @@
+$thumb-size: 10px;
+$track-height: 2px;
+
+.root {
+  position: relative;
+  height: $thumb-size;
+}
+
+.track {
+  width: 100%;
+  height: $track-height;
+  top: ($thumb-size - $track-height) * 0.5;
+
+  background: var(--color-background-dark);
+
+  &,
+  &::before {
+    position: absolute;
+    border-radius: $track-height * 0.5;
+  }
+
+  &::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    transform: scaleX(var(--progress));
+    transform-origin: 0 0;
+
+    background: var(--color-background-dark-variant);
+  }
+}
+
+.thumb {
+  --scale: 1;
+
+  position: absolute;
+  left: calc(var(--progress) * 100%);
+  top: 0;
+  width: $thumb-size;
+  height: $thumb-size;
+
+  border-radius: $thumb-size * 0.5;
+  background: var(--color-primary);
+  transform: translateX(-50%) scale(var(--scale));
+
+  transition: transform 0.1s linear;
+
+  &:hover {
+    --scale: 1.1;
+  }
+
+  &:active {
+    --scale: 1.2;
+    box-shadow: 0 0 5px var(--color-primary);
+  }
+}

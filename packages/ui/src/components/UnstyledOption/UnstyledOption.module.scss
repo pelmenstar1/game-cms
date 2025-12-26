@@ -1,0 +1,11 @@
+.root {
+  cursor: pointer;
+
+  &-disabled {
+    cursor: auto;
+  }
+}
+
+.input {
+  appearance: none;
+}

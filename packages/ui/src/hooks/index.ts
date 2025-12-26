@@ -1,5 +1,6 @@
 export * from './nativeEventListener';
 export * from './useAsyncCallback';
+export * from './useBounds';
 export * from './useCacheInvalidate';
 export * from './useDataLoader';
 export * from './useInterval';
