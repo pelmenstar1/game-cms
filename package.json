@@ -10,7 +10,8 @@
     "prebuild": "pnpm run --filter @game-cms/ui build && tsc --build tsconfig.packages.json --declaration",
     "prebuild:watch": "pnpm run -filter @game-cms/ui build && tsc --build tsconfig.packages.json --declaration --watch",
     "test": "vitest --run",
-    "clean": "tsx ./scripts/clean.ts"
+    "clean": "tsx ./scripts/clean.ts",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",
@@ -29,6 +30,7 @@
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-unicorn": "62.0.0",
+    "husky": "^9.1.7",
     "playwright": "1.57.0",
     "postcss": "8.5.6",
     "prettier": "3.7.4",
