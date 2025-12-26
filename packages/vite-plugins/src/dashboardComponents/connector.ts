@@ -1,7 +1,27 @@
-import type {
-  ComponentClientChunkEntry,
-  ComponentClientChunkMap,
-} from './gather.js';
+import type { ComponentClientChunkMap } from './gather.js';
+
+function filePath(value: string) {
+  return `file://${value.replaceAll('\\', '/')}`;
+}
+
+function metaImportName(componentId: string) {
+  const sanitizedId = componentId.replaceAll(/[^\w\d]/g, '_');
+
+  return `${sanitizedId}_meta`;
+}
+
+function emitHelperImports() {
+  return `import { resolveMaybeFactory } from '@game-cms/shared';`;
+}
+
+function emitMetaImports(info: ComponentClientChunkMap) {
+  return Object.entries(info)
+    .map(
+      ([componentId, entry]) =>
+        `import ${metaImportName(componentId)} from '${filePath(entry.metaFilePath)}';`
+    )
+    .join('');
+}
 
 function emitGetComponentsIds(info: ComponentClientChunkMap) {
   const componentIds = Object.keys(info);
@@ -10,31 +30,30 @@ function emitGetComponentsIds(info: ComponentClientChunkMap) {
   return `export const getComponentIds = () => [${array}];`;
 }
 
-function getClientBundlePath(entry: ComponentClientChunkEntry) {
-  return `file://${entry.client.replaceAll('\\', '\\\\')}`;
-}
-
 function emitImportComponent(info: ComponentClientChunkMap) {
   const mapEntries = Object.entries(info)
     .map(
-      ([key, entry]) =>
-        `'${key}': () => import('${getClientBundlePath(entry)}')`
+      ([key, entry]) => `'${key}': () => import('${filePath(entry.client)}')`
     )
     .join(',');
 
-  return `export const importMap = {${mapEntries}}; export const importComponent = (id) => importMap[id]();`;
+  return `const importMap = {${mapEntries}}; export const importComponent = (id) => importMap[id]();`;
 }
 
 function emitGetComponentDefaultData(info: ComponentClientChunkMap) {
   const mapEntries = Object.entries(info)
-    .map(([key, entry]) => `'${key}': ${JSON.stringify(entry.defaultData)}`)
+    .map(([componentId]) => `'${componentId}': ${metaImportName(componentId)}`)
     .join(',');
 
-  return `export const defaultDataMap = {${mapEntries}}; export const getComponentDefaultData = (id) => defaultDataMap[id];`;
+  return `const metaMap = {${mapEntries}};
+  export const getComponentDefaultData = (id, options) => 
+    resolveMaybeFactory(metaMap[id], options)`;
 }
 
 export function emitComponentConnector(info: ComponentClientChunkMap) {
-  let result = emitGetComponentsIds(info);
+  let result = emitMetaImports(info);
+  result += emitHelperImports();
+  result += emitGetComponentsIds(info);
   result += emitImportComponent(info);
   result += emitGetComponentDefaultData(info);
 

@@ -2,26 +2,27 @@ import type {
   ClientEntitySchema,
   ServerEntitySchema,
 } from '@game-cms/base-types';
-import { env } from '@game-cms/global';
-import { resolveMaybeFactory } from '@game-cms/shared';
+import { cms, env } from '@game-cms/global';
+import { mapObject } from '@game-cms/shared/object';
 import { service } from '@game-cms/utils';
 
 function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
   const { components } = schema;
+  const { foreignComponentContext } = cms().service('base::component');
 
   return {
     ...schema,
-    components: Object.fromEntries(
-      Object.entries(components).map(([key, value]) => [
-        key,
-        {
-          ...value,
-          config: value.controller.config,
-          defaultData: resolveMaybeFactory(value.controller.default.data),
-          controller: value.controller.id,
-        },
-      ])
-    ),
+    components: mapObject(components, (value) => {
+      const { id } = value.controller.meta;
+
+      return {
+        ...value,
+        config: value.controller.config,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        defaultData: foreignComponentContext.default.data(id, value.options),
+        controller: id,
+      };
+    }),
   };
 }
 

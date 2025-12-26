@@ -1,15 +1,16 @@
-import { ComponentData } from '@game-cms/types';
 import { component } from '@game-cms/utils';
 
 import meta from './meta.js';
-import { RepeatableOptions } from './types.js';
+import { ComposeData, ComposeError, ComposeOptions } from './types.js';
 import { validator } from './validator.js';
 
+export * from './types.js';
+
 export default component<
-  RepeatableOptions,
-  ComponentData[],
-  unknown[],
-  (typeof meta)['id']
+  ComposeOptions,
+  ComposeData,
+  ComposeError,
+  'base::compose'
 >({
   meta,
   validation: {

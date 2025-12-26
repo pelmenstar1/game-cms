@@ -1,2 +1,6 @@
-export const id = 'base::list';
-export const defaultData = [];
+import { componentMeta } from '@game-cms/utils';
+
+export default componentMeta({
+  id: 'base::list',
+  defaultData: [],
+});

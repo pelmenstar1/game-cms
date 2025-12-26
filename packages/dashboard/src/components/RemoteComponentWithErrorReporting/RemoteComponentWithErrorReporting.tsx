@@ -32,8 +32,7 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
 
   const fixedOnDataChanged = useCallback(
     (data: ComponentDataById<Id>) => {
-      const validator = validationContext.validation.data(componentId);
-      const error = validator(data, options, validationContext);
+      const error = validationContext.data(componentId, data, options);
 
       onDataChanged?.(data, error);
     },

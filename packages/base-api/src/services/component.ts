@@ -19,19 +19,26 @@ function getController<T extends ComponentId>(id: T) {
   return controller;
 }
 
-const CLIENT_BUNDLE_FILE = 'main.js';
+const foreignComponentContext: ForeignComponentContext = {
+  validation: {
+    data: <Id extends ComponentId>(id: Id) =>
+      getController(id).validation.data as ComponentDataValidatorById<Id>,
+  },
+  default: {
+    data: (id, options) => {
+      const factory = getController(id).meta.defaultData;
+
+      return resolveMaybeFactory(
+        factory,
+        options,
+        foreignComponentContext.default
+      );
+    },
+  },
+};
 
 export default service({
   id: 'base::component',
-  CLIENT_BUNDLE_FILE,
+  foreignComponentContext,
   getController,
-  foreignComponentContext: (): ForeignComponentContext => ({
-    validation: {
-      data: <Id extends ComponentId>(id: Id) =>
-        getController(id).validation.data as ComponentDataValidatorById<Id>,
-    },
-    default: {
-      data: (id) => resolveMaybeFactory(getController(id).default.data),
-    },
-  }),
 });

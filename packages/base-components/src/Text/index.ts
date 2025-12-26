@@ -1,10 +1,10 @@
 import { component } from '@game-cms/utils';
 
-import { defaultData, id } from './meta.js';
+import meta from './meta.js';
 import { validator } from './validator.js';
 
 export default component({
-  id,
+  meta,
   config: {
     ui: {
       compact: true,
@@ -12,8 +12,5 @@ export default component({
   },
   validation: {
     data: validator,
-  },
-  default: {
-    data: defaultData,
   },
 });

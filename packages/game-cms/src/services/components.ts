@@ -37,7 +37,7 @@ async function getDistributionControllers(distPath: string) {
         const controllerPath = path.join(distPath, entry.name, 'index.js');
 
         if (fs.existsSync(controllerPath)) {
-          return importFile<ComponentController>(controllerPath);
+          return importFile<{ default: ComponentController }>(controllerPath);
         }
       }
     })
@@ -56,8 +56,10 @@ export async function getAllComponentControllers(context: ValueSourceContext) {
   );
 
   return Object.fromEntries(
-    controllers.flat().map((controller) => [controller.id, controller])
-  ) as unknown as ComponentControllerMap;
+    controllers
+      .flat()
+      .map(({ default: controller }) => [controller.meta.id, controller])
+  ) as ComponentControllerMap;
 }
 
 export async function generateComponentsFsInfo(): Promise<ComponentsFsInfo> {

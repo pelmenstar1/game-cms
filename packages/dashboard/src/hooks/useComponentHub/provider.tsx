@@ -53,9 +53,34 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
     void worker();
   }, []);
 
+  const validationContext = useMemo(
+    (): ForeignComponentContext['validation'] => ({
+      data: (id, data, options) => {
+        const bundle = clientBundles?.[id];
+        if (!bundle) {
+          throw new Error('Hub is not loaded');
+        }
+
+        if (bundle.validator) {
+          return bundle.validator(data, options, validationContext);
+        }
+      },
+    }),
+    [clientBundles]
+  );
+
+  const defaultDataContext = useMemo(
+    (): ForeignComponentContext['default'] => ({
+      data: (id, options) => {
+        return getComponentDefaultData(id, options, defaultDataContext);
+      },
+    }),
+    []
+  );
+
   const api = useMemo(
     (): ComponentApi => ({
-      getDefaultData: getComponentDefaultData,
+      getDefaultData: defaultDataContext.data,
       getComponent: <Id extends ComponentId>(id: Id) => {
         const bundle = clientBundles?.[id];
         if (!bundle) {
@@ -76,23 +101,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
         return result;
       },
     }),
-    [clientBundles]
-  );
-
-  const validationContext = useMemo(
-    (): Pick<ForeignComponentContext, 'validation'> => ({
-      validation: {
-        data: (id) => {
-          const bundle = clientBundles?.[id];
-          if (!bundle) {
-            throw new Error('Hub is not loaded');
-          }
-
-          return bundle.validator ?? (() => undefined);
-        },
-      },
-    }),
-    [clientBundles]
+    [clientBundles, defaultDataContext]
   );
 
   const hub = useMemo(

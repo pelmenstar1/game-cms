@@ -1,4 +1,4 @@
-import type { MaybeAsyncFactory, MaybeFactory } from '@game-cms/shared';
+import type { MaybeFactory } from '@game-cms/shared';
 import type { FC } from 'react';
 
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
@@ -40,7 +40,10 @@ export interface ClientComponentSchema<
 }
 
 export type ComponentApi = {
-  getDefaultData: <Id extends ComponentId>(id: Id) => ComponentDataById<Id>;
+  getDefaultData: <Id extends ComponentId>(
+    id: Id,
+    options: ComponentOptionsById<Id>
+  ) => ComponentDataById<Id>;
   getComponent: <Id extends ComponentId>(
     id: Id
   ) => ForeignComponentRenderer<Id>;
@@ -120,10 +123,17 @@ export type ComponentControllerConfig = {
 
 export type ForeignComponentContext = {
   validation: {
-    data: <Id extends ComponentId>(id: Id) => ComponentDataValidatorById<Id>;
+    data: <Id extends ComponentId>(
+      id: Id,
+      data: ComponentDataById<Id>,
+      options: ComponentOptionsById<Id>
+    ) => ComponentErrorById<Id> | undefined;
   };
   default: {
-    data: <Id extends ComponentId>(id: Id) => ComponentDataById<Id>;
+    data: <Id extends ComponentId>(
+      id: Id,
+      options: ComponentOptionsById<Id>
+    ) => ComponentDataById<Id>;
   };
 };
 
@@ -134,7 +144,7 @@ export type ComponentDataValidator<
 > = (
   data: Data,
   options: Options,
-  context: Pick<ForeignComponentContext, 'validation'>
+  context: ForeignComponentContext['validation']
 ) => Error | undefined;
 
 export type ComponentDataValidatorById<Id extends ComponentId> =
@@ -144,18 +154,17 @@ export type ComponentDataValidatorById<Id extends ComponentId> =
     ComponentErrorById<Id>
   >;
 
-export interface ComponentControllerProtocol<
+export type ComponentMeta<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
-  Error = unknown,
-> {
-  validation: {
-    data: ComponentDataValidator<Options, Data, Error>;
-  };
-  default: {
-    data: (context: Pick<ForeignComponentContext, 'default'>) => NoInfer<Data>;
-  };
-}
+  Id extends string = string,
+> = {
+  id: Id;
+  defaultData: MaybeFactory<
+    Data,
+    [options: Options, context: ForeignComponentContext['default']]
+  >;
+};
 
 export interface ComponentController<
   Options extends ComponentOptions = ComponentOptions,
@@ -163,54 +172,15 @@ export interface ComponentController<
   Error = unknown,
   Id extends string = string,
 > {
-  id: Id;
+  meta: ComponentMeta<Options, Data, Id>;
   config?: ComponentControllerConfig;
   validation: {
     data: ComponentDataValidator<Options, Data, Error>;
   };
-  default: {
-    data: MaybeFactory<NoInfer<Data>>;
-  };
 }
-
-export type FileSource = MaybeAsyncFactory<string>;
-
-export interface ComponentRendererDependencies {
-  js: Record<string, FileSource>;
-  css: Record<string, FileSource>;
-}
-
-export interface ComponentRenderManifest {
-  main: FileSource;
-  dependencies: ComponentRendererDependencies;
-}
-
-export type ComponentClientManifest<Id extends ComponentId> = {
-  defaultData: ComponentDataById<Id>;
-  source: {
-    main: string;
-    dependencies: {
-      css: string[];
-    };
-  };
-};
-
-export type ComponentClientManifestMap = {
-  [Id in ComponentId]: ComponentClientManifest<Id>;
-};
-
-export type ComponentStaticConfig<Id extends ComponentId = ComponentId> = {
-  controller: GetComponentControllerById<Id>;
-  renderManifest: ComponentRenderManifest;
-};
 
 export type ComponentControllerMap<K extends string | number = ComponentId> =
   Pick<ComponentMap, K>;
-
-export type ComponentStaticConfigMap<K extends string | number = ComponentId> =
-  {
-    [Id in K]: ComponentStaticConfig<Id>;
-  };
 
 export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
   IdArrayToMap<T>;

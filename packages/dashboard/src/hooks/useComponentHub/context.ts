@@ -4,7 +4,7 @@ import React from 'react';
 export interface ComponentHub {
   loaded: boolean;
   api: ComponentApi;
-  validationContext: Pick<ForeignComponentContext, 'validation'>;
+  validationContext: ForeignComponentContext['validation'];
 }
 
 export const ComponentHubContext = React.createContext<ComponentHub | null>(

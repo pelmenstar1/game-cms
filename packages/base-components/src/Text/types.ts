@@ -1,6 +1,6 @@
-export type ComponentOptions = {
+export type TextOptions = {
   minLength?: number;
   maxLength?: number;
 };
 
-export type ComponentData = string;
+export type TextData = string;

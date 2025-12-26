@@ -1,4 +1,4 @@
-import { entity, repeatable, text } from 'game-cms';
+import { compose, entity, repeatable, text } from 'game-cms';
 
 export default entity({
   id: 'demo::test',
@@ -16,5 +16,15 @@ export default entity({
         },
       })
     ),
+    field3: compose({
+      inner1: text({
+        options: {
+          minLength: 3,
+        },
+      }),
+      inner2: text({
+        options: {},
+      }),
+    }),
   },
 });

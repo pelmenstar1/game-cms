@@ -3,12 +3,16 @@ declare module 'virtual:dashboard/componentConnector' {
     ComponentClientModule,
     ComponentDataById,
     ComponentId,
+    ComponentOptionsById,
+    ForeignComponentContext,
   } from '@game-cms/types';
 
   export function getComponentIds(): ComponentId[];
 
   export function getComponentDefaultData<Id extends ComponentId>(
-    id: Id
+    id: Id,
+    options: ComponentOptionsById<Id>,
+    context: ForeignComponentContext['default']
   ): ComponentDataById<Id>;
 
   export declare function importComponent<Id extends ComponentId>(

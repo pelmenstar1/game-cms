@@ -1,9 +1,9 @@
 import { componentDataValidator } from '@game-cms/utils';
 
-import { ComponentData, ComponentOptions } from './types.js';
+import { TextData, TextOptions } from './types.js';
 
 export const validator = componentDataValidator(
-  (text: ComponentData, options: ComponentOptions) => {
+  (text: TextData, options: TextOptions) => {
     const { minLength, maxLength } = options;
 
     if (minLength !== undefined && text.length < minLength) {

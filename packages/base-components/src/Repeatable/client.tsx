@@ -15,7 +15,9 @@ export const renderer: ComponentRenderer<'base::list'> = ({
   const Component = api.getComponent(options.controller);
 
   const onAdd = () => {
-    onDataChanged?.([...data, api.getDefaultData(options.controller)]);
+    const defaultData = api.getDefaultData(options.controller, options.base);
+
+    onDataChanged?.([...data, defaultData]);
   };
 
   return (

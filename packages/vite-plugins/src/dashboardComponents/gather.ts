@@ -6,11 +6,11 @@ import { filterOutNullable } from '@game-cms/shared/collections';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
 import type { ComponentId, ComponentsFsInfo } from '@game-cms/types';
 
-import { parseComponentMetaFile } from './analysis.js';
+import { getComponentIdFromMetaFile } from './analysis.js';
 
 export type ComponentClientChunkEntry = {
   client: string;
-  defaultData: unknown;
+  metaFilePath: string;
 };
 
 export type ComponentClientChunkMap = Record<
@@ -24,10 +24,12 @@ async function gatherComponentClientChunk(dirPath: string) {
 
   try {
     if (fs.existsSync(clientPath) && fs.existsSync(metaPath)) {
-      const { componentId, defaultData } =
-        await parseComponentMetaFile(metaPath);
+      const componentId = await getComponentIdFromMetaFile(metaPath);
 
-      return [componentId, { client: clientPath, defaultData }] as const;
+      return [
+        componentId,
+        { client: clientPath, metaFilePath: metaPath },
+      ] as const;
     }
   } catch (error: unknown) {
     if (!isFileNotFoundError(error)) {

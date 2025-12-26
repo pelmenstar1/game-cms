@@ -5,14 +5,15 @@
     "rootDir": "./src",
     "verbatimModuleSyntax": false,
 
-    "types": ["node", "vite/client"]
+    "types": ["node"]
   },
   "references": [
     { "path": "../build" },
     { "path": "../types" },
     { "path": "../ui" },
     { "path": "../utils" },
-    { "path": "../codegen" }
+    { "path": "../codegen" },
+    { "path": "../shared" }
   ],
   "include": ["./src", "./scripts"],
   "exclude": ["./scripts"]

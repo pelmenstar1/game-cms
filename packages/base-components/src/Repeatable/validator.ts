@@ -5,10 +5,8 @@ import { RepeatableOptions } from './types.js';
 
 export const validator = componentDataValidator(
   (data: ComponentData[], options: RepeatableOptions, context) => {
-    const validator = context.validation.data(options.controller);
-
     const result = data.map((element) =>
-      validator(element, options.base, context)
+      context.data(options.controller, element, options.base)
     );
 
     return result.every((element) => element === undefined)

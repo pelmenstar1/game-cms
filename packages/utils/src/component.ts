@@ -2,6 +2,7 @@ import type {
   ComponentController,
   ComponentData,
   ComponentDataValidator,
+  ComponentMeta,
   ComponentOptions,
   ServerComponentSchema,
 } from '@game-cms/types';
@@ -20,6 +21,14 @@ export function componentAccessor<
   ) => {
     return { controller, ...input };
   };
+}
+
+export function componentMeta<
+  Options extends ComponentOptions,
+  Data extends ComponentData,
+  Id extends string,
+>(value: ComponentMeta<Options, Data, Id>) {
+  return value;
 }
 
 export function componentDataValidator<

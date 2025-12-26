@@ -8,8 +8,8 @@ type Components = {
   >['controller'];
 };
 
-type ComponentToKeyValue<T extends Record<string, { id: string }>> = {
-  [K in keyof T]: [T[K]['id'], T[K]];
+type ComponentToKeyValue<T extends Record<string, { meta: { id: string } }>> = {
+  [K in keyof T]: [T[K]['meta']['id'], T[K]];
 }[keyof T];
 
 type ComponentsOutput = FromEntries<ComponentToKeyValue<Components>>;
