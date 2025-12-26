@@ -1,7 +1,9 @@
+import { DASHBOARD_COMPONENTS_PATH } from '@game-cms/build';
+import { readJson } from '@game-cms/shared/io';
+import type { ComponentsFsInfo } from '@game-cms/types';
 import type { Plugin } from 'vite';
 
 import { emitComponentConnector } from './connector.js';
-import { readComponentsFsInfo } from './fsInfo.js';
 import { type ComponentClientChunkMap, gatherComponents } from './gather.js';
 
 const COMPONENT_PROTOCOL = 'component:';
@@ -13,7 +15,9 @@ export function dashboardComponentsPlugin(): Plugin {
   return {
     name: 'game-cms:dashboard-components',
     async buildStart() {
-      const fsInfo = await readComponentsFsInfo();
+      const fsInfo = await readJson<ComponentsFsInfo>(
+        DASHBOARD_COMPONENTS_PATH
+      );
 
       components = await gatherComponents(fsInfo);
     },
@@ -31,7 +35,7 @@ export function dashboardComponentsPlugin(): Plugin {
           throw new Error(`Unknown component: ${componentId}`);
         }
 
-        return entry.client;
+        return entry.mainFilePath;
       }
 
       return null;
@@ -39,6 +43,8 @@ export function dashboardComponentsPlugin(): Plugin {
     load(id) {
       if (id === CONNECTOR_ID) {
         const code = emitComponentConnector(components);
+
+        console.log(code);
 
         return { code };
       }

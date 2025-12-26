@@ -3,14 +3,14 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
 import type { ComponentId, ComponentsFsInfo } from '@game-cms/types';
 
 import { getComponentIdFromMetaFile } from './analysis.js';
 
 export type ComponentClientChunkEntry = {
-  client: string;
+  mainFilePath: string;
   metaFilePath: string;
+  validatorFilePath: string;
 };
 
 export type ComponentClientChunkMap = Record<
@@ -19,22 +19,21 @@ export type ComponentClientChunkMap = Record<
 >;
 
 async function gatherComponentClientChunk(dirPath: string) {
-  const clientPath = path.join(dirPath, 'client.js');
-  const metaPath = path.join(dirPath, 'meta.js');
+  const mainFilePath = path.join(dirPath, 'client.js');
+  const metaFilePath = path.join(dirPath, 'meta.js');
+  const validatorFilePath = path.join(dirPath, 'validator.js');
 
-  try {
-    if (fs.existsSync(clientPath) && fs.existsSync(metaPath)) {
-      const componentId = await getComponentIdFromMetaFile(metaPath);
+  if (
+    fs.existsSync(mainFilePath) &&
+    fs.existsSync(metaFilePath) &&
+    fs.existsSync(validatorFilePath)
+  ) {
+    const componentId = await getComponentIdFromMetaFile(metaFilePath);
 
-      return [
-        componentId,
-        { client: clientPath, metaFilePath: metaPath },
-      ] as const;
-    }
-  } catch (error: unknown) {
-    if (!isFileNotFoundError(error)) {
-      throw error;
-    }
+    return [
+      componentId,
+      { mainFilePath, metaFilePath, validatorFilePath },
+    ] as const;
   }
 }
 

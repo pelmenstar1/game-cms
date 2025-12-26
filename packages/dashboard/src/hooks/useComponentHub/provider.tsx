@@ -1,72 +1,37 @@
-import type {
-  ComponentApi,
-  ComponentClientModule,
-  ComponentId,
-  ForeignComponentContext,
-  ForeignComponentRenderer,
-} from '@game-cms/types';
 import {
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+  type ComponentApi,
+  ComponentApiContext,
+} from '@game-cms/component-api';
+import { createInMemoryCache } from '@game-cms/shared';
+import type { ComponentId, ForeignComponentContext } from '@game-cms/types';
+import { type PropsWithChildren, useMemo } from 'react';
+import React from 'react';
 import {
   getComponentDefaultData,
-  getComponentIds,
+  getComponentValidator,
   importComponent,
 } from 'virtual:dashboard/componentConnector';
 
 import { type ComponentHub, ComponentHubContext } from './context';
 
-type ClientModuleMap = {
-  [K in ComponentId]: ComponentClientModule<K>;
-};
+const componentCache = createInMemoryCache((id: ComponentId) =>
+  React.lazy(async () => {
+    const module = await importComponent(id);
 
-type ComponentMap = {
-  [K in ComponentId]?: ForeignComponentRenderer<K>;
-};
+    return { default: module.renderer };
+  })
+);
 
 export function ComponentHubProvider({ children }: PropsWithChildren) {
-  const [clientBundles, setClientBundles] = useState<ClientModuleMap | null>(
-    null
-  );
-
-  const componentCache = useRef<ComponentMap>({});
-
-  const loaded = clientBundles !== null;
-
-  useEffect(() => {
-    const worker = async () => {
-      const entries = await Promise.all(
-        getComponentIds().map(async (id) => {
-          const clientModule = await importComponent(id);
-
-          return [id, clientModule as ComponentClientModule] as const;
-        })
-      );
-
-      setClientBundles(Object.fromEntries(entries));
-    };
-
-    void worker();
-  }, []);
-
   const validationContext = useMemo(
     (): ForeignComponentContext['validation'] => ({
       data: (id, data, options) => {
-        const bundle = clientBundles?.[id];
-        if (!bundle) {
-          throw new Error('Hub is not loaded');
-        }
+        const validator = getComponentValidator(id);
 
-        if (bundle.validator) {
-          return bundle.validator(data, options, validationContext);
-        }
+        return validator(data, options, validationContext);
       },
     }),
-    [clientBundles]
+    []
   );
 
   const defaultDataContext = useMemo(
@@ -81,41 +46,23 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const api = useMemo(
     (): ComponentApi => ({
       getDefaultData: defaultDataContext.data,
-      getComponent: <Id extends ComponentId>(id: Id) => {
-        const bundle = clientBundles?.[id];
-        if (!bundle) {
-          throw new Error('Hub is not loaded');
-        }
-
-        const BaseComponent = bundle.renderer;
-        let result = componentCache.current[id];
-
-        if (!result) {
-          result = (props) => {
-            return <BaseComponent api={api} {...props} />;
-          };
-
-          componentCache.current[id] = result;
-        }
-
-        return result;
-      },
+      getComponent: (id) => componentCache.get(id, api),
     }),
-    [clientBundles, defaultDataContext]
+    [defaultDataContext]
   );
 
   const hub = useMemo(
     (): ComponentHub => ({
-      loaded,
-      api,
       validationContext,
     }),
-    [api, loaded, validationContext]
+    [validationContext]
   );
 
   return (
-    <ComponentHubContext.Provider value={hub}>
-      {children}
-    </ComponentHubContext.Provider>
+    <ComponentApiContext.Provider value={api}>
+      <ComponentHubContext.Provider value={hub}>
+        {children}
+      </ComponentHubContext.Provider>
+    </ComponentApiContext.Provider>
   );
 }

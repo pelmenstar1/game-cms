@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { useComponentApi } from '@game-cms/component-api';
 import { ComponentData, ComponentRenderer } from '@game-cms/types';
 import { Labeled } from '@game-cms/ui';
 
 import styles from './client.module.scss';
 
-export * from './validator.js';
-
 export const renderer: ComponentRenderer<'base::compose'> = ({
-  api,
   data,
   options,
   error,
   onDataChanged,
 }) => {
+  const api = useComponentApi();
+
   return (
     <div className={styles.root}>
       {Object.entries(data).map(([key, itemData]) => {

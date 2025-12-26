@@ -19,7 +19,8 @@
     { "path": "./packages/base-types" },
     { "path": "./packages/base-utils" },
     { "path": "./packages/base-components" },
-    { "path": "./packages/spritesheet" }
+    { "path": "./packages/spritesheet" },
+    { "path": "./packages/component-api" }
   ],
   "include": []
 }

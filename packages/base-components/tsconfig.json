@@ -5,7 +5,7 @@
     "rootDir": "./src",
     "verbatimModuleSyntax": false,
 
-    "types": ["node"]
+    "types": ["node", "vite/client"]
   },
   "references": [
     { "path": "../build" },
@@ -13,7 +13,8 @@
     { "path": "../ui" },
     { "path": "../utils" },
     { "path": "../codegen" },
-    { "path": "../shared" }
+    { "path": "../shared" },
+    { "path": "../component-api" }
   ],
   "include": ["./src", "./scripts"],
   "exclude": ["./scripts"]

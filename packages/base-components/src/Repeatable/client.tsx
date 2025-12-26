@@ -1,17 +1,16 @@
+import { useComponentApi } from '@game-cms/component-api';
 import { ComponentRenderer } from '@game-cms/types';
 import { IconButton, PlusIcon } from '@game-cms/ui';
 
 import styles from './client.module.scss';
 
-export * from './validator.js';
-
 export const renderer: ComponentRenderer<'base::list'> = ({
-  api,
   options,
   data,
   error,
   onDataChanged,
 }) => {
+  const api = useComponentApi();
   const Component = api.getComponent(options.controller);
 
   const onAdd = () => {

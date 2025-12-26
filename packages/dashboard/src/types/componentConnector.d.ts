@@ -2,6 +2,7 @@ declare module 'virtual:dashboard/componentConnector' {
   import type {
     ComponentClientModule,
     ComponentDataById,
+    ComponentDataValidatorById,
     ComponentId,
     ComponentOptionsById,
     ForeignComponentContext,
@@ -14,6 +15,10 @@ declare module 'virtual:dashboard/componentConnector' {
     options: ComponentOptionsById<Id>,
     context: ForeignComponentContext['default']
   ): ComponentDataById<Id>;
+
+  export function getComponentValidator<Id extends ComponentId>(
+    id: Id
+  ): ComponentDataValidatorById<Id>;
 
   export declare function importComponent<Id extends ComponentId>(
     id: Id

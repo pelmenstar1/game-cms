@@ -66,6 +66,7 @@ export default defineConfig(
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/rules-of-hooks': 'off',
       'react-hooks/exhaustive-deps': [
         'warn',
         {

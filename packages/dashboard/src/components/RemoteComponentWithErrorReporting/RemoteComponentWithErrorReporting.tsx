@@ -1,3 +1,4 @@
+import { useComponentApi } from '@game-cms/component-api';
 import type {
   ComponentDataById,
   ComponentErrorById,
@@ -28,7 +29,8 @@ export function RemoteComponentWithErrorReporting<Id extends ComponentId>({
   error,
   onDataChanged,
 }: RemoteComponentWithErrorReportingProps<Id>) {
-  const { validationContext, api } = useComponentHub();
+  const api = useComponentApi();
+  const { validationContext } = useComponentHub();
 
   const fixedOnDataChanged = useCallback(
     (data: ComponentDataById<Id>) => {

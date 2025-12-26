@@ -46,6 +46,7 @@
     { "path": "../vite-plugins" },
     { "path": "../base-utils" },
     { "path": "../codegen" },
-    { "path": "../conditional" }
+    { "path": "../conditional" },
+    { "path": "../component-api" }
   ]
 }

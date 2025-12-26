@@ -39,22 +39,11 @@ export interface ClientComponentSchema<
   defaultData: Data;
 }
 
-export type ComponentApi = {
-  getDefaultData: <Id extends ComponentId>(
-    id: Id,
-    options: ComponentOptionsById<Id>
-  ) => ComponentDataById<Id>;
-  getComponent: <Id extends ComponentId>(
-    id: Id
-  ) => ForeignComponentRenderer<Id>;
-};
-
 export type ComponentProps<
   Options extends ComponentOptions = ComponentOptions,
   Data extends ComponentData = ComponentData,
   Error = unknown,
 > = {
-  api: ComponentApi;
   data: Data;
   options: Options;
   error?: Error;
@@ -109,10 +98,6 @@ export type ComponentPropsById<Id extends ComponentId = ComponentId> =
 
 export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
   ComponentPropsById<Id>
->;
-
-export type ForeignComponentRenderer<Id extends ComponentId = ComponentId> = FC<
-  Omit<ComponentPropsById<Id>, 'api'>
 >;
 
 export type ComponentControllerConfig = {
@@ -186,7 +171,6 @@ export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
   IdArrayToMap<T>;
 
 export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
-  validator?: ComponentDataValidatorById<Id>;
   renderer: ComponentRenderer<Id>;
 };
 

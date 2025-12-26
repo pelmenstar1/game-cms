@@ -303,6 +303,9 @@ importers:
 
   packages/base-components:
     dependencies:
+      '@game-cms/component-api':
+        specifier: workspace:*
+        version: link:../component-api
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -456,6 +459,19 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  packages/component-api:
+    dependencies:
+      '@game-cms/types':
+        specifier: workspace:*
+        version: link:../types
+      react:
+        specifier: 'catalog:'
+        version: 19.2.3
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   packages/conditional:
     dependencies:
       '@game-cms/shared':
@@ -483,6 +499,9 @@ importers:
       '@game-cms/client':
         specifier: workspace:*
         version: link:../client
+      '@game-cms/component-api':
+        specifier: workspace:*
+        version: link:../component-api
       '@game-cms/conditional':
         specifier: workspace:*
         version: link:../conditional
