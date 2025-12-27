@@ -39,6 +39,8 @@ $track-height: 2px;
   width: $thumb-size;
   height: $thumb-size;
 
+  user-select: none;
+
   border-radius: $thumb-size * 0.5;
   background: var(--color-primary);
   transform: translateX(-50%) scale(var(--scale));
@@ -49,7 +51,7 @@ $track-height: 2px;
     --scale: 1.1;
   }
 
-  &:active {
+  &-active {
     --scale: 1.2;
     box-shadow: 0 0 5px var(--color-primary);
   }

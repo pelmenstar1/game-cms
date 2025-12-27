@@ -32,8 +32,6 @@ export * from './SelectBase';
 export * from './SelectHeader';
 export * from './SelectItems';
 export * from './Slider';
-export * from './SpineController';
-export * from './SpineRenderer';
 export * from './Switch';
 export * from './Tab';
 export * from './Table';

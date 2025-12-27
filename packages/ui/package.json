@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "@game-cms/codegen": "workspace:*",
-    "@rollup/plugin-typescript": "12.3.0",
     "@storybook/addon-a11y": "catalog:",
     "@storybook/addon-links": "catalog:",
     "@storybook/react": "catalog:",
@@ -31,7 +30,6 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "react-router": "catalog:",
-    "rollup": "catalog:",
     "sass-embedded": "catalog:",
     "storybook": "catalog:",
     "tsx": "catalog:",
@@ -42,6 +40,10 @@
     ".": {
       "import": "./dist/src/index.js",
       "types": "./dist/src/index.d.ts"
+    },
+    "./spine": {
+      "import": "./dist/src/components/spine.js",
+      "types": "./dist/src/components/spine.d.ts"
     },
     "./theme/global": {
       "import": "./dist/src/theme/global.scss",

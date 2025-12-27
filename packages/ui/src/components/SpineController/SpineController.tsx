@@ -1,12 +1,24 @@
-import { type ComponentProps, useCallback, useRef, useState } from 'react';
+import React, {
+  type ComponentProps,
+  Suspense,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { IndeterminateCircularProgress } from '../IndeterminateCircularProgress';
-import { SpineRenderer, type SpineRendererRefType } from '../SpineRenderer';
+import type { SpineRendererRefType } from '../SpineRenderer';
 import type { SpineData } from '../SpineRenderer/types';
 import { AnimationList } from './AnimationList';
 import { Header } from './Header';
 import styles from './SpineController.module.scss';
+
+const SpineRenderer = React.lazy(async () => {
+  const { SpineRenderer } = await import('../SpineRenderer');
+
+  return { default: SpineRenderer };
+});
 
 export interface SpineControllerProps extends ComponentProps<'div'> {
   spine: SpineData;
@@ -60,16 +72,18 @@ export function SpineController({
         onAnimationSelected={onAnimationSelected}
       />
 
-      <SpineRenderer
-        ref={timeSliderRef}
-        className={styles['renderer']}
-        spine={spine}
-        animation={selectedAnimation}
-        isRunning={isRunning}
-        speed={speed}
-        onAnimationsLoaded={onAnimationsLoaded}
-        onAnimationTimeChanged={setAnimationTime}
-      />
+      <Suspense fallback={null}>
+        <SpineRenderer
+          ref={timeSliderRef}
+          className={styles['renderer']}
+          spine={spine}
+          animation={selectedAnimation}
+          isRunning={isRunning}
+          speed={speed}
+          onAnimationsLoaded={onAnimationsLoaded}
+          onAnimationTimeChanged={setAnimationTime}
+        />
+      </Suspense>
 
       {!animations && (
         <div className={styles['loading-container']}>
