@@ -3,7 +3,7 @@ import type {
   ComponentClientModule,
   ComponentControllerConfig,
   ComponentDataById,
-  ComponentDataValidatorById,
+  ComponentDataValidator,
   ComponentId,
   ComponentOptionsById,
   ForeignComponentContext,
@@ -18,7 +18,7 @@ export interface ComponentConnector {
 
   getComponentValidator<Id extends ComponentId>(
     id: Id
-  ): ComponentDataValidatorById<Id>;
+  ): ComponentDataValidator<Id>;
 
   getComponentClientResolver<Id extends ComponentId>(
     id: Id

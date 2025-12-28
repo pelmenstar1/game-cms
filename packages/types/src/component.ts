@@ -3,14 +3,6 @@ import type { FC } from 'react';
 
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ComponentMap extends Record<string, ComponentController> {}
-
-export type ComponentId = keyof ComponentMap;
-
-export const COMPONENT_DATA_RAW = Symbol();
-export const COMPONENT_DATA_RESOLVED = Symbol();
-
 export type ComponentDataAtom = unknown; // string | number | boolean | null;
 export type ComponentData =
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
@@ -18,96 +10,84 @@ export type ComponentData =
 
 export type ComponentOptions = ComponentData;
 
-export type BaseComponentSchema<
-  Options extends ComponentOptions,
-  Controller,
+export type ComponentTypes = {
+  data: ComponentData;
+  options: ComponentOptions;
+  error: unknown;
+};
+
+export type ComponentEntry<T extends ComponentTypes> = T;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+export interface ComponentTypeMap<_Args = unknown> extends Record<
+  string,
+  ComponentTypes
+> {}
+
+export type ComponentId = keyof ComponentTypeMap;
+
+export type ComponentSchema<
+  Id extends ComponentId = ComponentId,
+  Args = unknown,
 > = {
   config?: ComponentControllerConfig;
-  options: Options;
-  controller: Controller;
+  options: ComponentOptionsById<Id, Args>;
+  componentId: Id;
 };
 
-export type ServerComponentSchema<
-  Options extends ComponentOptions = ComponentOptions,
-  Data extends ComponentData = ComponentData,
-  Error = unknown,
-  Id extends string = string,
-  ResolvedData extends ComponentData = Data,
-  ClientData extends ComponentData = Data,
-> = BaseComponentSchema<
-  Options,
-  ComponentController<Options, Data, Error, Id, ResolvedData, ClientData>
->;
-
-export interface ClientComponentSchema<
-  Options extends ComponentOptions = ComponentOptions,
-  Data extends ComponentData = ComponentData,
-> extends BaseComponentSchema<Options, ComponentId> {
-  defaultData: Data;
-}
-
-export type GetComponentControllerById<Id extends ComponentId> =
-  ComponentMap[Id];
-
-type InferControllerParams<Controller> =
-  Controller extends ComponentController<
-    infer Options,
-    infer Data,
-    infer Error,
-    infer Id,
-    infer ResolvedData,
-    infer ClientData
-  >
-    ? {
-        options: Options;
-        data: Data;
-        error: Error;
-        id: Id;
-        resolvedData: ResolvedData;
-        clientData: ClientData;
-      }
-    : never;
-
-type InferControllerParamsById<Id extends ComponentId> = InferControllerParams<
-  GetComponentControllerById<Id>
->;
-
-export type ComponentDataById<T extends ComponentId> =
-  InferControllerParamsById<T>['data'];
-
-export type ComponentResolvedDataById<T extends ComponentId> =
-  InferControllerParamsById<T>['data'];
-
-export type ComponentClientDataById<T extends ComponentId> =
-  InferControllerParamsById<T>['clientData'];
-
-export type ComponentOptionsById<T extends ComponentId> =
-  InferControllerParamsById<T>['options'];
-
-export type ComponentErrorById<T extends ComponentId> =
-  InferControllerParamsById<T>['error'];
-
-export type ComponentProps<
-  Options extends ComponentOptions = ComponentOptions,
-  Data extends ComponentData = ComponentData,
-  Error = unknown,
-> = {
-  data: Data;
-  options: Options;
-  error?: Error;
-  onDataChanged?: (data: Data) => void;
+type GetComponentTypes<Types extends ComponentTypes> = {
+  options: Types['options'];
+  data: Types['data'];
+  error: Types['error'];
+  resolvedData: Types extends { resolvedData: unknown }
+    ? Types['resolvedData']
+    : Types['data'];
+  clientData: Types extends { clientData: unknown }
+    ? Types['clientData']
+    : Types['data'];
 };
 
-export type ComponentPropsById<Id extends ComponentId = ComponentId> =
-  ComponentProps<
-    ComponentOptionsById<Id>,
-    ComponentClientDataById<Id>,
-    ComponentErrorById<Id>
-  >;
+type GetComponentTypesById<
+  Id extends ComponentId,
+  Args = unknown,
+> = GetComponentTypes<ComponentTypeMap<Args>[Id]>;
 
-export type ComponentRenderer<Id extends ComponentId = ComponentId> = FC<
-  ComponentPropsById<Id>
->;
+export type ComponentDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['data'];
+
+export type ComponentResolvedDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['resolvedData'];
+
+export type ComponentClientDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['clientData'];
+
+export type ComponentOptionsById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['options'];
+
+export type ComponentErrorById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['error'];
+
+export type ComponentProps<Id extends ComponentId, Args> = {
+  data: ComponentClientDataById<Id, Args>;
+  options: ComponentOptionsById<Id, Args>;
+  error?: ComponentErrorById<Id, Args>;
+  onDataChanged?: (data: ComponentClientDataById<Id, Args>) => void;
+};
+
+export type ComponentRenderer<
+  Id extends ComponentId = ComponentId,
+  Args = unknown,
+> = FC<ComponentProps<Id, Args>>;
 
 export type ComponentControllerConfig = {
   ui?: {
@@ -117,119 +97,106 @@ export type ComponentControllerConfig = {
 
 export type ForeignComponentContext = {
   validation: {
-    data: <Id extends ComponentId>(
+    data: <Id extends ComponentId, Args>(
       id: Id,
-      data: ComponentDataById<Id>,
-      options: ComponentOptionsById<Id>
-    ) => ComponentErrorById<Id> | undefined;
+      data: ComponentDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>
+    ) => ComponentErrorById<Id, Args> | undefined;
   };
   default: {
-    data: <Id extends ComponentId>(
+    data: <Id extends ComponentId, Args>(
       id: Id,
-      options: ComponentOptionsById<Id>
-    ) => ComponentDataById<Id>;
+      options: ComponentOptionsById<Id, Args>
+    ) => ComponentDataById<Id, Args>;
   };
   resolver: {
-    data: <Id extends ComponentId>(
+    data: <Id extends ComponentId, Args>(
       id: Id,
-      data: ComponentDataById<Id>,
-      options: ComponentOptionsById<Id>,
+      data: ComponentDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>,
       args: ComponentDataResolverArgs
     ) => ComponentResolvedDataById<Id>;
   };
   clientResolver: {
-    toClient: <Id extends ComponentId>(
+    toClient: <Id extends ComponentId, Args>(
       id: Id,
-      data: ComponentDataById<Id>,
-      options: ComponentOptionsById<Id>
-    ) => ComponentClientDataById<Id>;
+      data: ComponentDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>
+    ) => ComponentClientDataById<Id, Args>;
 
-    fromClient: <Id extends ComponentId>(
+    fromClient: <Id extends ComponentId, Args>(
       id: Id,
-      clientData: ComponentClientDataById<Id>,
-      options: ComponentOptionsById<Id>
+      clientData: ComponentClientDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>
     ) => Or<
-      { result: ComponentDataById<Id> },
-      { error: ComponentErrorById<Id> }
+      { result: ComponentDataById<Id, Args> },
+      { error: ComponentErrorById<Id, Args> }
     >;
   };
 };
 
-export type ComponentDataValidator<
-  Options extends ComponentOptions = ComponentOptions,
-  Data extends ComponentData = ComponentData,
-  Error = unknown,
-> = (
-  data: Data,
-  options: Options,
+export type ComponentDataValidator<Id extends ComponentId, Args = unknown> = (
+  data: ComponentDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentContext['validation']
-) => Error | undefined;
-
-export type ComponentDataValidatorById<Id extends ComponentId> =
-  ComponentDataValidator<
-    ComponentOptionsById<Id>,
-    ComponentDataById<Id>,
-    ComponentErrorById<Id>
-  >;
+) => ComponentErrorById<Id, Args> | undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentDataResolverArgs {}
 
-export type ComponentDataResolver<
-  Raw extends ComponentData,
-  Resolved extends ComponentData,
-  Options extends ComponentOptions,
-> = (
-  raw: Raw,
-  options: Options,
+export type ComponentDataResolver<Id extends ComponentId, Args = unknown> = (
+  raw: ComponentDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentContext['resolver'],
   args: ComponentDataResolverArgs
-) => Resolved;
+) => ComponentResolvedDataById<Id, Args>;
 
-export type ComponentClientDataResolver<Id extends ComponentId> = {
+export type ComponentClientDataResolver<
+  Id extends ComponentId,
+  Args = unknown,
+> = {
   toClient: (
-    data: ComponentDataById<Id>,
-    options: ComponentOptionsById<Id>,
+    data: ComponentDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentContext['clientResolver']
-  ) => ComponentClientDataById<Id>;
+  ) => ComponentClientDataById<Id, Args>;
 
   fromClient: (
-    clientData: ComponentClientDataById<Id>,
-    options: ComponentOptionsById<Id>,
+    clientData: ComponentClientDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentContext['clientResolver']
-  ) => { result: ComponentDataById<Id> } | { error: ComponentErrorById<Id> };
+  ) =>
+    | { result: ComponentDataById<Id, Args> }
+    | { error: ComponentErrorById<Id, Args> };
 };
 
 export type ComponentMeta<
-  Options extends ComponentOptions = ComponentOptions,
-  Data extends ComponentData = ComponentData,
-  Id extends string = string,
+  Id extends ComponentId = ComponentId,
+  Args = unknown,
 > = {
   id: Id;
   config?: ComponentControllerConfig;
   defaultData: MaybeFactory<
-    Data,
-    [options: Options, context: ForeignComponentContext['default']]
+    ComponentDataById<Id, Args>,
+    [
+      options: ComponentOptionsById<Id, Args>,
+      context: ForeignComponentContext['default'],
+    ]
   >;
 };
 
 export interface ComponentController<
-  Options extends ComponentOptions = ComponentOptions,
-  Data extends ComponentData = ComponentData,
-  Error = unknown,
-  Id extends string = string,
-  ResolvedData extends ComponentData = Data,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _ClientData extends ComponentData = Data,
+  Id extends ComponentId = ComponentId,
+  Args = unknown,
 > {
-  meta: ComponentMeta<Options, Data, Id>;
-  resolver?: ComponentDataResolver<Data, ResolvedData, Options>;
-
-  validator: ComponentDataValidator<Options, Data, Error>;
+  meta: ComponentMeta<Id, Args>;
+  resolver?: ComponentDataResolver<Id, Args>;
+  validator: ComponentDataValidator<Id, Args>;
 }
 
-export type ComponentControllerMap<K extends string | number = ComponentId> =
-  Pick<ComponentMap, K>;
+export type ComponentControllerMap = {
+  [Id in keyof ComponentTypeMap]: ComponentController<Id>;
+};
 
 export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
   IdArrayToMap<T>;

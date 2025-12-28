@@ -1,19 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { mapObject } from '@game-cms/shared/object';
 import { component } from '@game-cms/utils';
 
 import meta from './meta.js';
-import { ComposeData, ComposeError, ComposeOptions } from './types.js';
 import { validator } from './validator.js';
 
 export * from './types.js';
 
-export default component<
-  ComposeOptions,
-  ComposeData,
-  ComposeError,
-  'base::compose'
->({
+export default component({
   meta,
   validator,
   resolver: (raw, options, context, args) => {

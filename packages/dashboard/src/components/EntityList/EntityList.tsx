@@ -1,4 +1,4 @@
-import type { ClientEntitySchema } from '@game-cms/base-types';
+import type { EntitySchema } from '@game-cms/base-types';
 import { listEntities } from '@game-cms/client';
 import { classNames, List } from '@game-cms/ui';
 
@@ -13,7 +13,7 @@ import styles from './EntityList.module.scss';
 
 export interface EntityListProps {
   className?: string;
-  schema: ClientEntitySchema;
+  schema: EntitySchema;
 }
 
 const PAGE_SIZE = 10;

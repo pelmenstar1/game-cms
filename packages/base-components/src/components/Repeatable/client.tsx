@@ -4,17 +4,20 @@ import { IconButton, PlusIcon } from '@game-cms/ui';
 
 import styles from './client.module.scss';
 
-export const renderer: ComponentRenderer<'base::list'> = ({
+export const renderer: ComponentRenderer<'base::repeatable'> = ({
   options,
   data,
   error,
   onDataChanged,
 }) => {
   const api = useComponentApi();
-  const Component = api.getComponent(options.controller);
+  const Component = api.getComponent(options.componentId);
 
   const onAdd = () => {
-    const defaultData = api.getDefaultData(options.controller, options.base);
+    const defaultData = api.getDefaultData(
+      options.componentId,
+      options.baseOptions
+    );
 
     onDataChanged?.([...data, defaultData]);
   };
@@ -26,7 +29,7 @@ export const renderer: ComponentRenderer<'base::list'> = ({
           <Component
             key={index}
             data={item}
-            options={options.base}
+            options={options.baseOptions}
             error={error?.[index]}
             onDataChanged={(newItem) => {
               const newData = [...data];

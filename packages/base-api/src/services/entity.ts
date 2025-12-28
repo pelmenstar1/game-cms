@@ -84,7 +84,7 @@ export default service({
         const componentSchema = entitySchema.components[key];
 
         const resolvedData = foreignComponentContext.resolver.data(
-          componentSchema.controller.meta.id,
+          componentSchema.componentId,
           item,
 
           componentSchema.options,

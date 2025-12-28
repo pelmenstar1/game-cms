@@ -1,10 +1,10 @@
 import '@game-cms/global';
 
 import type { ApiErrorStatusMap } from './api.js';
-import type { ServerEntitySchema } from './entity.js';
+import type { EntitySchema } from './entity.js';
 
 export interface OwnEnvironment {
-  entitySchemas: ServerEntitySchema[];
+  entitySchemas: EntitySchema[];
 }
 
 declare module '@game-cms/global' {

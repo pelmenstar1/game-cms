@@ -1,7 +1,14 @@
 import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
-import type { ComponentId, ForeignComponentContext } from '@game-cms/types';
+import type {
+  ComponentDataById,
+  ComponentDataResolverArgs,
+  ComponentId,
+  ComponentOptionsById,
+  ComponentResolvedDataById,
+  ForeignComponentContext,
+} from '@game-cms/types';
 import { service } from '@game-cms/utils';
 
 function getController<T extends ComponentId>(id: T) {
@@ -37,12 +44,17 @@ const foreignComponentContext: Omit<ForeignComponentContext, 'clientResolver'> =
       },
     },
     resolver: {
-      data: (id, data, options, args) => {
+      data: <Id extends ComponentId, Args>(
+        id: Id,
+        data: ComponentDataById<Id, Args>,
+        options: ComponentOptionsById<Id, Args>,
+        args: ComponentDataResolverArgs
+      ) => {
         const { resolver } = getController(id);
 
         return resolver
           ? resolver(data, options, foreignComponentContext.resolver, args)
-          : data;
+          : (data as ComponentResolvedDataById<Id, Args>);
       },
     },
   };

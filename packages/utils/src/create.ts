@@ -3,8 +3,7 @@ import type { EnvAccessor } from '@game-cms/shared/io';
 import type {
   ApiRoute,
   ComponentController,
-  ComponentData,
-  ComponentOptions,
+  ComponentId,
   Service,
   UnresolvedCmsConfig,
 } from '@game-cms/types';
@@ -53,15 +52,8 @@ export function service<const T extends Service>(value: T): T {
 }
 
 /*@__NO_SIDE_EFFECTS__*/
-export function component<
-  Options extends ComponentOptions,
-  Data extends ComponentData,
-  Error,
-  Id extends string,
-  ResolvedData extends ComponentData = Data,
-  ClientData extends ComponentData = Data,
->(
-  value: ComponentController<Options, Data, Error, Id, ResolvedData, ClientData>
+export function component<Id extends ComponentId>(
+  value: ComponentController<Id>
 ) {
   return value;
 }

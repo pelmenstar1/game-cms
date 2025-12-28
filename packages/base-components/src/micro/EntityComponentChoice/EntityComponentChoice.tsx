@@ -1,6 +1,6 @@
 import { useComponentApi } from '@game-cms/component-api';
 import type {
-  ComponentDataById,
+  ComponentClientDataById,
   ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
@@ -23,13 +23,13 @@ export interface EntityComponentChoiceProps<Id extends ComponentId> {
 
   componentId: Id;
   options: ComponentOptionsById<Id>;
-  data: ComponentDataById<Id>;
+  data: ComponentClientDataById<Id>;
   dataError: ComponentErrorById<Id> | undefined;
   condition: string;
   conditionError: string | undefined;
 
   onConditionChanged?: (value: string) => void;
-  onDataChanged?: (data: ComponentDataById<Id>) => void;
+  onDataChanged?: (data: ComponentClientDataById<Id>) => void;
   onDelete?: () => void;
 }
 

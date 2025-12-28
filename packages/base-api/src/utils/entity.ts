@@ -3,17 +3,19 @@ import { cms } from '@game-cms/global';
 import { mapObject } from '@game-cms/shared/object';
 import type {
   ComponentData,
-  ComponentOptions,
-  ServerComponentSchema,
+  ComponentId,
+  ComponentSchema,
 } from '@game-cms/types';
 import { z, type ZodType } from 'zod';
 
 function getValidatorForComponent<Data extends ComponentData>(
-  component: ServerComponentSchema<ComponentOptions, Data>
+  component: ComponentSchema<ComponentId, Data>
 ): ZodType<Data> {
   const { foreignComponentContext } = cms().service('base::component');
 
-  const { validator } = component.controller;
+  const { validator } = cms()
+    .service('base::component')
+    .getController(component.componentId);
 
   return z.custom<Data>((data) => {
     const error = validator(

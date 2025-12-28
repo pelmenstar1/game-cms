@@ -1,74 +1,58 @@
 import type {
-  ClientComponentSchema,
   ComponentData,
+  ComponentDataById,
+  ComponentSchema,
   DefaultExport,
   FromEntries,
-  ServerComponentSchema,
 } from '@game-cms/types';
 
+export type EntitySchemaComponents = Record<string, ComponentSchema>;
+
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface EntityMap extends Record<string, EntityData> {}
+export interface EntityMap extends Record<string, EntitySchemaComponents> {}
 
 export type EntityId = keyof EntityMap;
 
-export type EntityDataById<Id extends EntityId> = EntityMap[Id];
+export type EntityData = Record<string, ComponentData>;
+
+type ComponentsToData<T> = {
+  [K in keyof T]: T[K] extends ComponentSchema<infer Id, infer Args>
+    ? ComponentDataById<Id, Args>
+    : never;
+};
+
+export type EntityDataById<Id extends EntityId> = ComponentsToData<
+  EntityMap[Id]
+>;
 
 export interface EntitySchemaMeta<Id extends EntityId = EntityId> {
   id: Id;
   title: string;
 }
 
-export interface BaseEntitySchema<
-  Id extends EntityId,
-  Components,
+export interface EntitySchema<
+  Id extends EntityId = EntityId,
+  Components extends EntitySchemaComponents = EntitySchemaComponents,
 > extends EntitySchemaMeta<Id> {
   components: Components;
 }
 
-export type EntityData = Record<string, ComponentData>;
-
-export type ServerEntitySchema<
-  T extends EntityData = EntityData,
-  Id extends EntityId = EntityId,
-> = BaseEntitySchema<
+export type EntitySchemaById<Id extends EntityId> = EntitySchema<
   Id,
-  {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [K in keyof T]: ServerComponentSchema<any, T[K], any, any, any, any>;
-  }
+  EntityMap[Id]
 >;
 
-export type ServerEntitySchemaById<Id extends EntityId> = ServerEntitySchema<
-  EntityDataById<Id>,
-  Id
->;
-
-export type ClientEntitySchemaComponents<T extends EntityData> = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [K in keyof T]: ClientComponentSchema<any, T[K]>;
-};
-
-export type ClientEntitySchema<
-  T extends EntityData = EntityData,
-  Id extends EntityId = EntityId,
-> = BaseEntitySchema<Id, ClientEntitySchemaComponents<T>>;
-
-export type ClientEntitySchemaById<Id extends EntityId> = ClientEntitySchema<
-  EntityDataById<Id>,
-  Id
->;
-
-export type InferDataFromServerEntitySchema<T> =
-  T extends ServerEntitySchema<infer Data> ? Data : never;
-
-type EntityToEntry<T extends { id: string }> = [
+type EntityToEntry<T extends { id: string; components: unknown }> = [
   T['id'],
-  InferDataFromServerEntitySchema<T>,
+  T['components'],
 ];
 
-export type EntitiesToEntries<T extends DefaultExport<{ id: string }>[]> = {
+export type EntitiesToEntries<
+  T extends DefaultExport<{ id: string; components: unknown }>[],
+> = {
   [K in keyof T]: EntityToEntry<T[K]['default']>;
 }[number];
 
-export type ResolveEntities<T extends DefaultExport<{ id: string }>[]> =
-  FromEntries<EntitiesToEntries<T>>;
+export type ResolveEntities<
+  T extends DefaultExport<{ id: string; components: unknown }>[],
+> = FromEntries<EntitiesToEntries<T>>;

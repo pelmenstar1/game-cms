@@ -1,15 +1,14 @@
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
-import { ComponentRenderer } from '@game-cms/types';
+import { ComponentOptionsById, ComponentRenderer } from '@game-cms/types';
 import { useMemo } from 'react';
 
 import { ComponentGroup } from '../../internal/types.js';
 import { ComponentGridGroup } from '../../micro/ComponentGridGroup/index.js';
 import styles from './client.module.scss';
-import { ComposeOptions } from './types.js';
 
 function splitEntitySchemaComponentsToGroups<T>(
   api: ComponentApi,
-  options: ComposeOptions
+  options: ComponentOptionsById<'base::compose'>
 ) {
   const compactGroup: Partial<ComponentGroup<T>> = {};
   let compactGroupNonEmpty = false;

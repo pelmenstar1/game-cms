@@ -8,7 +8,7 @@ export default apiRoute({
     id: 'entitySchema$get',
   },
   handler: () => {
-    const schemas = cms().service('base::entitySchema').getClientAll();
+    const schemas = cms().service('base::entitySchema').getAll();
 
     return schemas;
   },

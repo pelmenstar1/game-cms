@@ -3,7 +3,14 @@ import {
   ComponentApiContext,
 } from '@game-cms/component-api';
 import { createInMemoryCache } from '@game-cms/shared';
-import type { ComponentId, ForeignComponentContext } from '@game-cms/types';
+import type {
+  ComponentClientDataById,
+  ComponentDataById,
+  ComponentId,
+  ComponentOptionsById,
+  ComponentRenderer,
+  ForeignComponentContext,
+} from '@game-cms/types';
 import { type PropsWithChildren, useMemo } from 'react';
 import React from 'react';
 import {
@@ -53,12 +60,16 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
           ? resolver.fromClient(clientData, options, clientResolverContext)
           : { result: clientData };
       },
-      toClient: (id, data, options) => {
+      toClient: <Id extends ComponentId, Args>(
+        id: Id,
+        data: ComponentDataById<Id, Args>,
+        options: ComponentOptionsById<Id>
+      ) => {
         const resolver = getComponentClientResolver(id);
 
         return resolver
           ? resolver.toClient(data, options, clientResolverContext)
-          : data;
+          : (data as ComponentClientDataById<Id, Args>);
       },
     }),
     []
@@ -67,7 +78,8 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const api = useMemo(
     (): ComponentApi => ({
       getDefaultData: defaultDataContext.data,
-      getComponent: (id) => componentCache.get(id, api),
+      getComponent: <Id extends ComponentId, Args>(id: Id) =>
+        componentCache.get(id, null) as unknown as ComponentRenderer<Id, Args>,
       getConfig: getComponentConfig,
       clientResolverContext,
     }),

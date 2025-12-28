@@ -1,10 +1,12 @@
-import type { ServerEntitySchema } from '@game-cms/base-types';
-import type { ComponentData } from '@game-cms/types';
+import type {
+  EntitySchema,
+  EntitySchemaComponents,
+} from '@game-cms/base-types';
 
 /*@__NO_SIDE_EFFECTS__*/
 export function entity<
-  T extends Record<string, ComponentData>,
   Id extends string,
->(value: ServerEntitySchema<T, Id>) {
+  const Components extends EntitySchemaComponents,
+>(value: EntitySchema<Id, Components>) {
   return value;
 }

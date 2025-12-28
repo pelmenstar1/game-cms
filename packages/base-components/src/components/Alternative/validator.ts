@@ -1,16 +1,11 @@
+import { ComponentErrorById } from '@game-cms/types';
 import { componentDataValidator } from '@game-cms/utils';
 
-import {
-  AlternativeData,
-  AlternativeError,
-  AlternativeOptions,
-} from './types.js';
-
-export const validator = componentDataValidator(
-  (data: AlternativeData, options: AlternativeOptions, context) => {
+export const validator = componentDataValidator<'base::alternative'>(
+  (data, options, context) => {
     const { componentId, baseOptions } = options;
 
-    const result: AlternativeError = {
+    const result: ComponentErrorById<'base::alternative'> = {
       default: context.data(componentId, data.default, baseOptions),
       alternative: data.alternative.map((item) => ({
         condition: undefined,

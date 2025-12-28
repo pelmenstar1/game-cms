@@ -1,8 +1,8 @@
 import type {
-  ClientEntitySchema,
-  ClientEntitySchemaById,
   EntityDataById,
   EntityId,
+  EntitySchema,
+  EntitySchemaById,
 } from '@game-cms/base-types';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import type { ComponentDataResolverArgs } from '@game-cms/types';
@@ -25,7 +25,7 @@ export type EntityResolvedDataByIdWithId<T extends EntityId> =
 export const getEntitySchemas = (context: RequestContext) =>
   request(context, {
     url: `/entitySchema/list`,
-    response: json<ClientEntitySchema[]>(),
+    response: json<EntitySchema[]>(),
   });
 
 export const getEntitySchema = <T extends EntityId>(
@@ -34,7 +34,7 @@ export const getEntitySchema = <T extends EntityId>(
 ) =>
   request(context, {
     url: `/entitySchema/byId/${entityId}`,
-    response: json<ClientEntitySchemaById<T>>(),
+    response: json<EntitySchemaById<T>>(),
   });
 
 export const createEntity = <T extends EntityId>(

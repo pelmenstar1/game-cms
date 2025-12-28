@@ -1,20 +1,28 @@
-import type { ComposeOptions } from '@game-cms/base-components';
-import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
+import type {
+  EntityDataById,
+  EntityId,
+  EntitySchemaById,
+} from '@game-cms/base-types';
 import type { ComponentApi } from '@game-cms/component-api';
 import { mapObject } from '@game-cms/shared/object';
-import type { ComponentClientDataById } from '@game-cms/types';
+import type {
+  ComponentClientDataById,
+  ComponentOptionsById,
+} from '@game-cms/types';
 
-export function transformDataToClientData<T extends EntityData>(
+type ComposeOptions = ComponentOptionsById<'base::compose'>;
+
+export function transformDataToClientData<Id extends EntityId>(
   api: ComponentApi,
-  schema: ClientEntitySchema<T>,
-  data: T | undefined,
+  schema: EntitySchemaById<Id>,
+  data: EntityDataById<Id> | undefined,
   options: ComposeOptions
 ): ComponentClientDataById<'base::compose'> {
   const dataOrDefault =
     data ??
-    (mapObject(schema.components, (propSchema) =>
-      api.getDefaultData(propSchema.controller, propSchema.options)
-    ) as T);
+    mapObject(schema.components, (propSchema) =>
+      api.getDefaultData(propSchema.componentId, propSchema.options)
+    );
 
   return api.clientResolverContext.toClient(
     'base::compose',
@@ -23,9 +31,8 @@ export function transformDataToClientData<T extends EntityData>(
   );
 }
 
-export function transformClientDataToData<T extends EntityData>(
+export function transformClientDataToData(
   api: ComponentApi,
-  schema: ClientEntitySchema<T>,
   clientData: ComponentClientDataById<'base::compose'>,
   options: ComposeOptions
 ) {

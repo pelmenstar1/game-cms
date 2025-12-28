@@ -63,6 +63,12 @@ export default defineConfig(
       'unicorn/no-process-exit': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+        },
+      ],
 
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',

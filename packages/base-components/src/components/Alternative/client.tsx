@@ -11,8 +11,6 @@ export const renderer: ComponentRenderer<'base::alternative'> = ({
   error,
   onDataChanged,
 }) => {
-  console.log(error);
-
   const api = useComponentApi();
 
   const { baseOptions, componentId } = options;

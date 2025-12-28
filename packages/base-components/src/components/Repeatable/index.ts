@@ -1,21 +1,16 @@
-import { ComponentData } from '@game-cms/types';
 import { component } from '@game-cms/utils';
 
 import meta from './meta.js';
-import { RepeatableOptions } from './types.js';
 import { validator } from './validator.js';
 
-export default component<
-  RepeatableOptions,
-  ComponentData[],
-  unknown[],
-  (typeof meta)['id']
->({
+export default component({
   meta,
   validator,
   resolver: (raw, options, context, args) => {
-    const { base, controller } = options;
+    const { baseOptions, componentId } = options;
 
-    return raw.map((item) => context.data(controller, item, base, args));
+    return raw.map((item) =>
+      context.data(componentId, item, baseOptions, args)
+    );
   },
 });

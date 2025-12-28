@@ -1,40 +1,27 @@
 import type {
   ComponentController,
-  ComponentData,
   ComponentDataValidator,
+  ComponentId,
   ComponentMeta,
-  ComponentOptions,
-  ServerComponentSchema,
+  ComponentSchema,
 } from '@game-cms/types';
 
-export function componentAccessor<
-  Options extends ComponentOptions,
-  Data extends ComponentData,
-  Error,
-  Id extends string,
->(controller: ComponentController<Options, Data, Error, Id>) {
+export function componentAccessor<Id extends string, Args>(
+  controller: ComponentController<Id, Args>
+) {
   return (
-    input: Omit<
-      ServerComponentSchema<Options, Data, Error, Id>,
-      'controller' | 'config'
-    >
-  ) => {
-    return { controller, ...input };
+    input: Omit<ComponentSchema<Id, Args>, 'componentId' | 'config'>
+  ): ComponentSchema<Id, Args> => {
+    return { componentId: controller.meta.id, ...input };
   };
 }
 
-export function componentMeta<
-  Options extends ComponentOptions,
-  Data extends ComponentData,
-  Id extends string,
->(value: ComponentMeta<Options, Data, Id>) {
+export function componentMeta<Id extends string>(value: ComponentMeta<Id>) {
   return value;
 }
 
-export function componentDataValidator<
-  Options extends ComponentOptions,
-  Data extends ComponentData,
-  Error,
->(value: ComponentDataValidator<Options, Data, Error>) {
+export function componentDataValidator<Id extends ComponentId, Args = unknown>(
+  value: ComponentDataValidator<Id, Args>
+) {
   return value;
 }

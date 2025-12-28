@@ -10,6 +10,8 @@ async function phase(name: string, command: string) {
   } catch (error: unknown) {
     console.error(`> ${name}`);
     console.error(error);
+
+    throw error;
   }
 }
 

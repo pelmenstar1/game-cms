@@ -31,14 +31,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./source": {
-      "import": "./dist/source.js",
-      "types": "./src//source.d.ts"
-    },
-    "./types": {
-      "import": "./dist/types.js",
-      "types": "./dist/types.d.ts"
     }
   },
   "browserslist": [

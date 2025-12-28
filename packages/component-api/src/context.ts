@@ -9,12 +9,14 @@ import type {
 import React from 'react';
 
 export type ComponentApi = {
-  getDefaultData: <Id extends ComponentId>(
+  getDefaultData: <Id extends ComponentId, Args = unknown>(
     id: Id,
-    options: ComponentOptionsById<Id>
-  ) => ComponentDataById<Id>;
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentDataById<Id, Args>;
 
-  getComponent: <Id extends ComponentId>(id: Id) => ComponentRenderer<Id>;
+  getComponent: <Id extends ComponentId, Args = unknown>(
+    id: Id
+  ) => ComponentRenderer<Id, Args>;
 
   getConfig: (id: ComponentId) => ComponentControllerConfig | undefined;
 

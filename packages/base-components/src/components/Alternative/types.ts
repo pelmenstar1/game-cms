@@ -1,24 +1,46 @@
 import { ConditionalData } from '@game-cms/conditional';
-import { ComponentData, ComponentId, ComponentOptions } from '@game-cms/types';
+import {
+  ComponentClientDataById,
+  ComponentDataById,
+  ComponentEntry,
+  ComponentErrorById,
+  ComponentId,
+  ComponentOptionsById,
+} from '@game-cms/types';
 
-export type AlternativeOptions<
-  BaseOptions extends ComponentOptions = ComponentOptions,
-  Id extends ComponentId = ComponentId,
-> = {
-  componentId: Id;
-  baseOptions: BaseOptions;
-};
+type ResolveArgs<Args> = Args extends {
+  componentId: infer Id extends ComponentId;
+  baseArgs: infer BaseArgs;
+}
+  ? { componentId: Id; baseArgs: BaseArgs }
+  : { componentId: ComponentId; baseArgs: unknown };
 
-export type AlternativeData<Data extends ComponentData = ComponentData> =
-  ConditionalData<Data>;
+type GetId<Args> = ResolveArgs<Args>['componentId'];
+type GetBaseArgs<Args> = ResolveArgs<Args>['baseArgs'];
 
-export type AlternativeClientData<Data extends ComponentData = ComponentData> =
-  ConditionalData<Data, string>;
+type Error<Args> = ComponentErrorById<GetId<Args>, GetBaseArgs<Args>>;
+type Data<Args> = ComponentDataById<GetId<Args>, GetBaseArgs<Args>>;
 
-export type AlternativeError<BaseError = unknown> = {
-  default: BaseError | undefined;
-  alternative: {
-    data: BaseError | undefined;
-    condition: string | undefined;
-  }[];
-};
+declare module '@game-cms/types' {
+  interface ComponentTypeMap<_Args> {
+    'base::alternative': ComponentEntry<{
+      data: ConditionalData<Data<_Args>>;
+      options: {
+        componentId: GetId<_Args>;
+        baseOptions: ComponentOptionsById<GetId<_Args>, GetBaseArgs<_Args>>;
+      };
+      error: {
+        default: Error<_Args> | undefined;
+        alternative: {
+          data: Error<_Args> | undefined;
+          condition: string | undefined;
+        }[];
+      };
+      resolvedData: Data<_Args>;
+      clientData: ConditionalData<
+        ComponentClientDataById<GetId<_Args>, GetBaseArgs<_Args>>,
+        string
+      >;
+    }>;
+  }
+}

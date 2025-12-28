@@ -1,46 +1,59 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ServerComponentSchema } from '@game-cms/types';
+import {
+  ComponentClientDataById,
+  ComponentData,
+  ComponentDataById,
+  ComponentEntry,
+  ComponentId,
+  ComponentOptions,
+  ComponentOptionsById,
+  ComponentResolvedDataById,
+  ComponentSchema,
+} from '@game-cms/types';
 
-export type ComposeInput = Record<string, ServerComponentSchema<any, any, any>>;
+export type ComposeInput = Record<string, ComponentSchema<ComponentId, any>>;
 
-type GetSchemaParams<T> =
-  T extends ServerComponentSchema<
-    infer Options,
-    infer Data,
-    infer Error,
-    infer Id,
-    infer ResolvedData,
-    infer ClientData
-  >
+type GetSchemaParams<T = unknown> =
+  T extends ComponentSchema<infer Id, infer Args>
     ? {
-        options: Options;
-        data: Data;
+        options: ComponentOptionsById<Id, Args>;
+        data: ComponentDataById<Id, Args>;
         error: Error;
         id: Id;
-        resolvedData: ResolvedData;
-        clientData: ClientData;
+        resolvedData: ComponentResolvedDataById<Id, Args>;
+        clientData: ComponentClientDataById<Id, Args>;
       }
-    : never;
+    : {
+        options: ComponentOptions;
+        data: ComponentData;
+        error: unknown;
+        id: ComponentId;
+        resolvedData: ComponentData;
+        clientData: ComponentData;
+      };
 
-export type ComposeData<T extends ComposeInput = ComposeInput> = {
-  [K in keyof T]: GetSchemaParams<T[K]>['data'];
+type ResolveInput<T> = unknown extends T ? ComposeInput : T;
+type ComposeMap<T, TK extends keyof GetSchemaParams> = {
+  [K in keyof ResolveInput<T>]: GetSchemaParams<T>[TK];
 };
 
-export type ComposeClientData<T extends ComposeInput = ComposeInput> = {
-  [K in keyof T]: GetSchemaParams<T[K]>['clientData'];
+type ComposeOptionsEntry<T = unknown> = {
+  componentId: GetSchemaParams<T>['id'];
+  options: GetSchemaParams<T>['options'];
 };
 
-export type ComposeResolvedData<T extends ComposeInput = ComposeInput> = {
-  [K in keyof T]: GetSchemaParams<T[K]>['resolvedData'];
-};
-
-export type ComposeOptions<T extends ComposeInput = ComposeInput> = {
-  [K in keyof T]: {
-    componentId: GetSchemaParams<T[K]>['id'];
-    options: GetSchemaParams<T[K]>['options'];
-  };
-};
-
-export type ComposeError<T extends ComposeInput = ComposeInput> = {
-  [K in keyof T]: GetSchemaParams<T[K]>['error'];
-};
+declare module '@game-cms/types' {
+  interface ComponentTypeMap<_Args> {
+    'base::compose': ComponentEntry<{
+      data: ComposeMap<_Args, 'data'>;
+      options: {
+        [K in keyof ResolveInput<_Args>]: ComposeOptionsEntry<
+          ResolveInput<_Args>[K]
+        >;
+      };
+      error: ComposeMap<_Args, 'error'>;
+      resolvedData: ComposeMap<_Args, 'resolvedData'>;
+      clientData: ComposeMap<_Args, 'clientData'>;
+    }>;
+  }
+}

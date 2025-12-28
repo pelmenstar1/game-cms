@@ -1,7 +1,11 @@
-import type { ComposeOptions } from '@game-cms/base-components';
-import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
+import type {
+  EntityDataById,
+  EntityId,
+  EntitySchemaById,
+} from '@game-cms/base-types';
 import { useComponentApi } from '@game-cms/component-api';
 import { mapObject } from '@game-cms/shared/object';
+import type { ComponentOptionsById } from '@game-cms/types';
 import {
   Button,
   classNames,
@@ -16,31 +20,30 @@ import { transformDataToClientData } from '@/services/entity/transform';
 
 import styles from './AccessEntityView.module.scss';
 
-export interface AccessEntityViewProps<T extends EntityData> {
+export interface AccessEntityViewProps<Id extends EntityId> {
   className?: string;
-  schema: ClientEntitySchema<T>;
-  initialValue?: T;
-  onSave?: (value: T) => void;
+  schema: EntitySchemaById<Id>;
+  initialValue?: EntityDataById<Id>;
+  onSave?: (value: EntityDataById<Id>) => void;
   onDelete?: () => void;
 }
 
-export function AccessEntityView<T extends EntityData>({
+export function AccessEntityView<Id extends EntityId>({
   className,
   schema,
   initialValue,
   onSave,
   onDelete,
-}: AccessEntityViewProps<T>) {
+}: AccessEntityViewProps<Id>) {
   const api = useComponentApi();
   const hub = useComponentHub();
 
   const Compose = api.getComponent('base::compose');
 
   const composeOptions = useMemo(
-    (): ComposeOptions =>
+    (): ComponentOptionsById<'base::compose'> =>
       mapObject(schema.components, (component) => ({
-        componentId: component.controller as string,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        componentId: component.componentId as string,
         options: component.options,
       })),
     [schema]
@@ -71,7 +74,7 @@ export function AccessEntityView<T extends EntityData>({
     const dataValue = data.result;
 
     if (dataValue !== undefined) {
-      onSave?.(dataValue as T);
+      onSave?.(dataValue as EntityDataById<Id>);
     }
   }, [data.result, onSave]);
 
