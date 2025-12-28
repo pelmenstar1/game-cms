@@ -12,7 +12,8 @@ export function spawnProcessAsync(
   setup?: (p: ChildProcessWithoutNullStreams) => void
 ) {
   return new Promise((resolve, reject) => {
-    const spawnedProcess = spawn(file, args, options);
+    const command = `${file} ${args.map((arg) => `"${arg}"`).join(' ')}`;
+    const spawnedProcess = spawn(command, options);
 
     setup?.(spawnedProcess);
 

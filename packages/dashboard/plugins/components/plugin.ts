@@ -44,8 +44,6 @@ export function dashboardComponentsPlugin(): Plugin {
       if (id === CONNECTOR_ID) {
         const code = emitComponentConnector(components);
 
-        console.log(code);
-
         return { code };
       }
     },

@@ -1,19 +1,24 @@
-import { execFile } from 'node:child_process';
+import { spawn } from 'node:child_process';
 
-export function execFileAsync(file: string, args: string[], cwd?: string) {
-  return new Promise((resolve, reject) => {
-    execFile(file, args, { cwd, shell: true }, (error, stdout, stderr) => {
-      const message = `${stdout}\n${stderr}`;
+export function pnpm(command: string) {
+  return new Promise<void>((resolve, reject) => {
+    const p = spawn(`pnpm ${command}`, { shell: true });
 
-      if (error) {
-        reject(new Error(message, { cause: error }));
+    let result: string = '';
+
+    const pushToResult = (chunk: string) => {
+      result += chunk;
+    };
+
+    p.stdout.on('data', pushToResult);
+    p.stderr.on('data', pushToResult);
+
+    p.on('exit', (code) => {
+      if (code === 0) {
+        resolve(undefined);
       } else {
-        resolve(message);
+        reject(new Error(result));
       }
     });
   });
-}
-
-export function pnpm(args: string[], cwd?: string) {
-  return execFileAsync('pnpm', args, cwd);
 }
