@@ -1,4 +1,3 @@
-import type { ConditionalValueInput } from '@game-cms/conditional';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
 import { apiRoute } from '@game-cms/utils';
@@ -27,7 +26,7 @@ export default apiRoute({
 
     const result = await cms()
       .service('base::entity')
-      .getById(entityId, id, filter as ConditionalValueInput);
+      .getById(entityId, id, filter);
 
     return result;
   },

@@ -1,13 +1,11 @@
 import type {
   ClientEntitySchema,
+  ClientEntitySchemaById,
+  EntityDataById,
   EntityId,
-  GetEntityById,
 } from '@game-cms/base-types';
-import type {
-  ConditionalValueInput,
-  EntityConditionalDataById,
-} from '@game-cms/conditional';
 import type { PageData, PagingOptions } from '@game-cms/shared';
+import type { ComponentDataResolverArgs } from '@game-cms/types';
 import qs from 'qs';
 
 import { request, url } from '../internal/utils.js';
@@ -15,12 +13,14 @@ import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
 import type { RequestContext } from '../types.js';
 
-export type EntityDataByIdWithId<T extends EntityId> = GetEntityById<T> & {
+export type EntityDataByIdWithId<T extends EntityId> = EntityDataById<T> & {
   _id: string;
 };
 
-export type EntityConditionalDataByIdWithId<T extends EntityId> =
-  EntityConditionalDataById<T> & { _id: string };
+export type EntityResolvedDataByIdWithId<T extends EntityId> =
+  EntityDataById<T> & {
+    _id: string;
+  };
 
 export const getEntitySchemas = (context: RequestContext) =>
   request(context, {
@@ -34,31 +34,31 @@ export const getEntitySchema = <T extends EntityId>(
 ) =>
   request(context, {
     url: `/entitySchema/byId/${entityId}`,
-    response: json<ClientEntitySchema<GetEntityById<T>>>(),
+    response: json<ClientEntitySchemaById<T>>(),
   });
 
 export const createEntity = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
-  body: EntityConditionalDataById<T>
+  body: EntityDataById<T>
 ) =>
   request(context, {
     url: `/entity/${entityId}`,
     method: 'POST',
     body: jsonInit(body),
-    response: json<EntityConditionalDataByIdWithId<T>>(),
+    response: json<EntityDataByIdWithId<T>>(),
   });
 
 export const getEntityById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
   id: string,
-  conditions?: ConditionalValueInput
+  args?: ComponentDataResolverArgs
 ) =>
   request(context, {
     url: url({
       path: `/entity/${entityId}/byId/${id}`,
-      search: qs.stringify(conditions),
+      search: qs.stringify(args),
     }),
     response: json<EntityDataByIdWithId<T>>(),
   });
@@ -67,7 +67,7 @@ export const updateEntityById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
   id: string,
-  data: EntityConditionalDataById<T>
+  data: EntityDataById<T>
 ) =>
   request(context, {
     url: `/entity/${entityId}/byId/${id}`,
@@ -82,7 +82,7 @@ export const getRawEntityById = <T extends EntityId>(
 ) =>
   request(context, {
     url: `/entity/${entityId}/raw/byId/${id}`,
-    response: json<EntityConditionalDataByIdWithId<T>>(),
+    response: json<EntityDataByIdWithId<T>>(),
   });
 
 export const deleteEntityById = (

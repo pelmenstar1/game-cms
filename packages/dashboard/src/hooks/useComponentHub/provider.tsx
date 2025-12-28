@@ -7,6 +7,8 @@ import type { ComponentId, ForeignComponentContext } from '@game-cms/types';
 import { type PropsWithChildren, useMemo } from 'react';
 import React from 'react';
 import {
+  getComponentClientResolver,
+  getComponentConfig,
   getComponentDefaultData,
   getComponentValidator,
   importComponent,
@@ -36,8 +38,27 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
   const defaultDataContext = useMemo(
     (): ForeignComponentContext['default'] => ({
-      data: (id, options) => {
-        return getComponentDefaultData(id, options, defaultDataContext);
+      data: (id, options) =>
+        getComponentDefaultData(id, options, defaultDataContext),
+    }),
+    []
+  );
+
+  const clientResolverContext = useMemo(
+    (): ForeignComponentContext['clientResolver'] => ({
+      fromClient: (id, clientData, options) => {
+        const resolver = getComponentClientResolver(id);
+
+        return resolver
+          ? resolver.fromClient(clientData, options, clientResolverContext)
+          : { result: clientData };
+      },
+      toClient: (id, data, options) => {
+        const resolver = getComponentClientResolver(id);
+
+        return resolver
+          ? resolver.toClient(data, options, clientResolverContext)
+          : data;
       },
     }),
     []
@@ -47,8 +68,10 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
     (): ComponentApi => ({
       getDefaultData: defaultDataContext.data,
       getComponent: (id) => componentCache.get(id, api),
+      getConfig: getComponentConfig,
+      clientResolverContext,
     }),
-    [defaultDataContext]
+    [clientResolverContext, defaultDataContext]
   );
 
   const hub = useMemo(

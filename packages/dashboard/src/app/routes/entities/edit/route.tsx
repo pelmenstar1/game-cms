@@ -1,10 +1,10 @@
+import type { EntityData } from '@game-cms/base-types';
 import {
   deleteEntityById,
   getEntitySchema,
   getRawEntityById,
   updateEntityById,
 } from '@game-cms/client';
-import type { EntityConditionalData } from '@game-cms/conditional';
 import { useNotification } from '@game-cms/ui';
 import { useCallback } from 'react';
 
@@ -34,7 +34,7 @@ export default function Page({ params }: Route.ComponentProps) {
   const doDeleteEntity = useApiAction(deleteEntityById);
 
   const onSave = useCallback(
-    (data: EntityConditionalData) => {
+    (data: EntityData) => {
       doUpdateEntity(name, id, data)
         .then(() => {
           void redirect('/entities');

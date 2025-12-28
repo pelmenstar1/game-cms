@@ -11,15 +11,15 @@ export interface EntityMap extends Record<string, EntityData> {}
 
 export type EntityId = keyof EntityMap;
 
-export type GetEntityById<Id extends EntityId> = EntityMap[Id];
+export type EntityDataById<Id extends EntityId> = EntityMap[Id];
 
-export interface EntitySchemaMeta<Id extends string = string> {
+export interface EntitySchemaMeta<Id extends EntityId = EntityId> {
   id: Id;
   title: string;
 }
 
 export interface BaseEntitySchema<
-  Id extends string,
+  Id extends EntityId,
   Components,
 > extends EntitySchemaMeta<Id> {
   components: Components;
@@ -29,13 +29,18 @@ export type EntityData = Record<string, ComponentData>;
 
 export type ServerEntitySchema<
   T extends EntityData = EntityData,
-  Id extends string = string,
+  Id extends EntityId = EntityId,
 > = BaseEntitySchema<
   Id,
   {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [K in keyof T]: ServerComponentSchema<any, T[K], any>;
   }
+>;
+
+export type ServerEntitySchemaById<Id extends EntityId> = ServerEntitySchema<
+  EntityDataById<Id>,
+  Id
 >;
 
 export type ClientEntitySchemaComponents<T extends EntityData> = {
@@ -45,8 +50,13 @@ export type ClientEntitySchemaComponents<T extends EntityData> = {
 
 export type ClientEntitySchema<
   T extends EntityData = EntityData,
-  Id extends string = string,
+  Id extends EntityId = EntityId,
 > = BaseEntitySchema<Id, ClientEntitySchemaComponents<T>>;
+
+export type ClientEntitySchemaById<Id extends EntityId> = ClientEntitySchema<
+  EntityDataById<Id>,
+  Id
+>;
 
 export type InferDataFromServerEntitySchema<T> =
   T extends ServerEntitySchema<infer Data> ? Data : never;

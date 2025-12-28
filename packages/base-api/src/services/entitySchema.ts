@@ -1,6 +1,8 @@
 import type {
   ClientEntitySchema,
+  EntityId,
   ServerEntitySchema,
+  ServerEntitySchemaById,
 } from '@game-cms/base-types';
 import { cms, env } from '@game-cms/global';
 import { mapObject } from '@game-cms/shared/object';
@@ -17,8 +19,7 @@ function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
 
       return {
         ...value,
-        config: value.controller.config,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        config: value.controller.meta.config,
         defaultData: foreignComponentContext.default.data(id, value.options),
         controller: id,
       };
@@ -26,12 +27,12 @@ function toClientEntitySchema(schema: ServerEntitySchema): ClientEntitySchema {
   };
 }
 
-function getById(id: string) {
+function getById<Id extends EntityId>(id: Id) {
   const { entitySchemas } = env();
 
   const result = entitySchemas.find((schema) => schema.id === id);
 
-  return result ?? null;
+  return (result ?? null) as ServerEntitySchemaById<Id> | null;
 }
 
 export default service({

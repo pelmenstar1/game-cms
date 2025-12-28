@@ -1,8 +1,10 @@
 import type {
+  ComponentControllerConfig,
   ComponentDataById,
   ComponentId,
   ComponentOptionsById,
   ComponentRenderer,
+  ForeignComponentContext,
 } from '@game-cms/types';
 import React from 'react';
 
@@ -11,7 +13,12 @@ export type ComponentApi = {
     id: Id,
     options: ComponentOptionsById<Id>
   ) => ComponentDataById<Id>;
+
   getComponent: <Id extends ComponentId>(id: Id) => ComponentRenderer<Id>;
+
+  getConfig: (id: ComponentId) => ComponentControllerConfig | undefined;
+
+  clientResolverContext: ForeignComponentContext['clientResolver'];
 };
 
 export const ComponentApiContext =

@@ -8,8 +8,6 @@
     "@game-cms/shared": "workspace:*"
   },
   "devDependencies": {
-    "@game-cms/base-types": "workspace:*",
-    "@game-cms/types": "workspace:*",
     "typescript": "catalog:"
   },
   "exports": {

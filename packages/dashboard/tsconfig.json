@@ -12,7 +12,7 @@
       "node",
       "vite/client",
       "@game-cms/base-api/clientTypes",
-      "./src/types/componentConnector.d.ts"
+      "./src/types/virtualComponentConnector.d.ts"
     ],
     "target": "ES2022",
     "module": "ES2022",
@@ -43,6 +43,7 @@
     { "path": "../utils" },
     { "path": "../base-api" },
     { "path": "../base-types" },
+    { "path": "../base-components" },
     { "path": "../vite-plugins" },
     { "path": "../base-utils" },
     { "path": "../codegen" },

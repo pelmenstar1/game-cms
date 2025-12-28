@@ -1,8 +1,4 @@
-import type {
-  ConditionalChoices,
-  EntityConditionalData,
-} from '@game-cms/conditional';
-import { conditionalAstExpression } from '@game-cms/conditional/schema';
+import type { EntityData } from '@game-cms/base-types';
 import { cms } from '@game-cms/global';
 import { mapObject } from '@game-cms/shared/object';
 import type {
@@ -14,13 +10,13 @@ import { z, type ZodType } from 'zod';
 
 function getValidatorForComponent<Data extends ComponentData>(
   component: ServerComponentSchema<ComponentOptions, Data>
-): ZodType<ConditionalChoices<Data>> {
+): ZodType<Data> {
   const { foreignComponentContext } = cms().service('base::component');
 
-  const { validation } = component.controller;
+  const { validator } = component.controller;
 
-  const dataValidator = z.custom<Data>((data) => {
-    const error = validation.data(
+  return z.custom<Data>((data) => {
+    const error = validator(
       data as Data,
       component.options,
       foreignComponentContext.validation
@@ -28,23 +24,9 @@ function getValidatorForComponent<Data extends ComponentData>(
 
     return error === undefined;
   });
-
-  return z.object({
-    default: dataValidator,
-    alternative: z
-      .array(
-        z.object({
-          condition: conditionalAstExpression,
-          value: dataValidator,
-        })
-      )
-      .optional(),
-  });
 }
 
-export function getEntityValidationType<T extends EntityConditionalData>(
-  id: string
-) {
+export function getEntityValidationType<T extends EntityData>(id: string) {
   const schema = cms().service('base::entitySchema').getById(id);
 
   if (schema === null) {

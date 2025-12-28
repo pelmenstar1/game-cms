@@ -1,11 +1,7 @@
 import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
-import type {
-  ComponentDataValidatorById,
-  ComponentId,
-  ForeignComponentContext,
-} from '@game-cms/types';
+import type { ComponentId, ForeignComponentContext } from '@game-cms/types';
 import { service } from '@game-cms/utils';
 
 function getController<T extends ComponentId>(id: T) {
@@ -19,23 +15,37 @@ function getController<T extends ComponentId>(id: T) {
   return controller;
 }
 
-const foreignComponentContext: ForeignComponentContext = {
-  validation: {
-    data: <Id extends ComponentId>(id: Id) =>
-      getController(id).validation.data as ComponentDataValidatorById<Id>,
-  },
-  default: {
-    data: (id, options) => {
-      const factory = getController(id).meta.defaultData;
-
-      return resolveMaybeFactory(
-        factory,
-        options,
-        foreignComponentContext.default
-      );
+const foreignComponentContext: Omit<ForeignComponentContext, 'clientResolver'> =
+  {
+    validation: {
+      data: (id, data, options) =>
+        getController(id).validator(
+          data,
+          options,
+          foreignComponentContext.validation
+        ),
     },
-  },
-};
+    default: {
+      data: (id, options) => {
+        const factory = getController(id).meta.defaultData;
+
+        return resolveMaybeFactory(
+          factory,
+          options,
+          foreignComponentContext.default
+        );
+      },
+    },
+    resolver: {
+      data: (id, data, options, args) => {
+        const { resolver } = getController(id);
+
+        return resolver
+          ? resolver(data, options, foreignComponentContext.resolver, args)
+          : data;
+      },
+    },
+  };
 
 export default service({
   id: 'base::component',

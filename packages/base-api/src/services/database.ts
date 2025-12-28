@@ -1,9 +1,9 @@
 import type {
   DatabaseCollectionId,
   DatabaseEntityMap,
+  EntityDataById,
   EntityId,
 } from '@game-cms/base-types';
-import type { EntityConditionalDataById } from '@game-cms/conditional';
 import { env } from '@game-cms/global';
 import { service } from '@game-cms/utils';
 import { ClientSession, MongoClient, type TransactionOptions } from 'mongodb';
@@ -27,9 +27,7 @@ export default service({
     return client().db().collection<DatabaseEntityMap[T]>(id);
   },
   entityCollection: <T extends EntityId>(id: T) => {
-    return client()
-      .db()
-      .collection<EntityConditionalDataById<T>>(`base::entity::${id}`);
+    return client().db().collection<EntityDataById<T>>(`base::entity::${id}`);
   },
   withTransaction: async <R>(
     action: (session: ClientSession) => Promise<R>

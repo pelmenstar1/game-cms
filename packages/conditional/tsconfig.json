@@ -7,9 +7,5 @@
     "verbatimModuleSyntax": false
   },
   "include": ["./src"],
-  "references": [
-    { "path": "../types" },
-    { "path": "../base-types" },
-    { "path": "../shared" }
-  ]
+  "references": [{ "path": "../shared" }]
 }

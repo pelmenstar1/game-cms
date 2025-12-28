@@ -67,6 +67,7 @@ export default defineConfig(
       'react/prop-types': 'off',
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/rules-of-hooks': 'off',
+      'react-hooks/static-components': 'off',
       'react-hooks/exhaustive-deps': [
         'warn',
         {

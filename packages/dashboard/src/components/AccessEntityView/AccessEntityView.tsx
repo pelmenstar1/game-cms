@@ -1,5 +1,7 @@
+import type { ComposeOptions } from '@game-cms/base-components';
 import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
-import type { EntityConditionalData } from '@game-cms/conditional';
+import { useComponentApi } from '@game-cms/component-api';
+import { mapObject } from '@game-cms/shared/object';
 import {
   Button,
   classNames,
@@ -9,20 +11,16 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
-import { entityDataHasErrors } from '@/services/entity/error';
-import {
-  transformEntityConditionalDataFromRaw,
-  transformEntityConditionalDataToRaw,
-} from '@/services/entity/transform';
+import { useComponentHub } from '@/hooks/useComponentHub';
+import { transformEntityConditionalDataToRaw } from '@/services/entity/transform';
 
-import { EntityComponentGrid } from '../EntityComponentGrid';
 import styles from './AccessEntityView.module.scss';
 
 export interface AccessEntityViewProps<T extends EntityData> {
   className?: string;
   schema: ClientEntitySchema<T>;
-  initialValue?: EntityConditionalData<T>;
-  onSave?: (value: EntityConditionalData<T>) => void;
+  initialValue?: T;
+  onSave?: (value: T) => void;
   onDelete?: () => void;
 }
 
@@ -33,17 +31,38 @@ export function AccessEntityView<T extends EntityData>({
   onSave,
   onDelete,
 }: AccessEntityViewProps<T>) {
-  const [currentValue, setCurrentValue] = useState(() =>
-    transformEntityConditionalDataToRaw(schema, initialValue)
+  const api = useComponentApi();
+  const hub = useComponentHub();
+
+  const Compose = api.getComponent('base::compose');
+
+  const composeOptions = useMemo(
+    (): ComposeOptions =>
+      mapObject(schema.components, (component) => ({
+        componentId: component.controller as string,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        options: component.options,
+      })),
+    [schema]
   );
 
-  const hasErrors = useMemo(
-    () => entityDataHasErrors(currentValue),
-    [currentValue]
+  const [currentValue, setCurrentValue] = useState(() =>
+    transformEntityConditionalDataToRaw(
+      api,
+      schema,
+      initialValue,
+      composeOptions
+    )
+  );
+
+  const error = useMemo(
+    () =>
+      hub.validationContext.data('base::compose', currentValue, composeOptions),
+    [composeOptions, currentValue, hub]
   );
 
   const onSaveTransformed = useCallback(() => {
-    onSave?.(transformEntityConditionalDataFromRaw(currentValue));
+    // onSave?.(transformEntityConditionalDataFromRaw(currentValue));
   }, [currentValue, onSave]);
 
   return (
@@ -65,18 +84,20 @@ export function AccessEntityView<T extends EntityData>({
       </div>
 
       <div className={styles.content}>
-        <EntityComponentGrid
-          className={styles['component-grid']}
-          schema={schema}
-          value={currentValue}
-          onValueChanged={setCurrentValue}
-        />
+        <div className={styles['component-grid']}>
+          <Compose
+            data={currentValue}
+            options={composeOptions}
+            error={error}
+            onDataChanged={setCurrentValue}
+          />
+        </div>
 
         <div className={styles['action-block']}>
           <Button
             buttonVariant="solid"
             onClick={onSaveTransformed}
-            disabled={hasErrors}
+            disabled={error !== undefined}
           >
             Save
           </Button>

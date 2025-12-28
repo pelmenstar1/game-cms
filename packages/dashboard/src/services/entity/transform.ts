@@ -1,51 +1,30 @@
+import type { ComposeOptions } from '@game-cms/base-components';
 import type { ClientEntitySchema, EntityData } from '@game-cms/base-types';
-import {
-  conditionalAstExpressionToString,
-  type ConditionalChoices,
-  type EntityConditionalData,
-} from '@game-cms/conditional';
+import type { ComponentApi } from '@game-cms/component-api';
 import { mapObject } from '@game-cms/shared/object';
-
-import type { RawEntityConditionalData } from '@/types/conditional';
-
-import { ComponentErrorPending } from './error';
+import type { ComponentClientDataById } from '@game-cms/types';
 
 export function transformEntityConditionalDataToRaw<T extends EntityData>(
+  api: ComponentApi,
   schema: ClientEntitySchema<T>,
-  data: EntityConditionalData<T> | undefined
-) {
-  const result = mapObject(schema.components, (propSchema, key) => {
-    if (data !== undefined) {
-      const value = data[key];
+  data: T | undefined,
+  options: ComposeOptions
+): ComponentClientDataById<'base::compose'> {
+  const dataOrDefault =
+    data ??
+    (mapObject(schema.components, (propSchema) =>
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      api.getDefaultData(propSchema.controller, propSchema.options)
+    ) as T);
 
-      return {
-        default: { value: value.default, error: ComponentErrorPending },
-        alternative:
-          value.alternative?.map(({ value, condition }) => ({
-            condition: {
-              raw: conditionalAstExpressionToString(condition),
-              expression: condition,
-            },
-            data: {
-              value,
-              error: ComponentErrorPending,
-            },
-          })) ?? [],
-      };
-    }
-
-    return {
-      default: {
-        value: propSchema.defaultData,
-        error: ComponentErrorPending,
-      },
-      alternative: [],
-    };
-  });
-
-  return result as RawEntityConditionalData<T>;
+  return api.clientResolverContext.toClient(
+    'base::compose',
+    dataOrDefault,
+    options
+  );
 }
 
+/*
 export function transformEntityConditionalDataFromRaw<T extends EntityData>(
   data: RawEntityConditionalData<T>
 ) {
@@ -67,3 +46,4 @@ export function transformEntityConditionalDataFromRaw<T extends EntityData>(
     };
   }) as EntityConditionalData<T>;
 }
+*/

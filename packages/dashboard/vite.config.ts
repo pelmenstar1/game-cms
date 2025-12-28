@@ -1,10 +1,8 @@
 import { reactRouter } from '@react-router/dev/vite';
 import { defineConfig, type Plugin } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import {
-  libraryWatcherPlugin,
-  dashboardComponentsPlugin,
-} from '@game-cms/vite-plugins';
+import { libraryWatcherPlugin } from '@game-cms/vite-plugins';
+import { dashboardComponentsPlugin } from './plugins/components/plugin';
 
 export default defineConfig({
   plugins: [

@@ -14,7 +14,8 @@
     { "path": "../utils" },
     { "path": "../codegen" },
     { "path": "../shared" },
-    { "path": "../component-api" }
+    { "path": "../component-api" },
+    { "path": "../conditional" }
   ],
   "include": ["./src", "./scripts"],
   "exclude": ["./scripts"]

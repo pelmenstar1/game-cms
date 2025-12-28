@@ -1,5 +1,5 @@
+import type { EntityData } from '@game-cms/base-types';
 import { createEntity, getEntitySchema } from '@game-cms/client';
-import type { EntityConditionalData } from '@game-cms/conditional';
 import { useNotification } from '@game-cms/ui';
 import { useCallback } from 'react';
 
@@ -23,7 +23,7 @@ export default function Page({ params }: Route.ComponentProps) {
   const doCreateEntity = useApiAction(createEntity);
 
   const onSave = useCallback(
-    (data: EntityConditionalData) => {
+    (data: EntityData) => {
       doCreateEntity(params.name, data)
         .then(() => {
           void redirect('/entities');

@@ -68,6 +68,8 @@ export async function generateComponentsFsInfo(): Promise<ComponentsFsInfo> {
   const config = await resolveConfig();
   const components = await getAllComponents({ config, compiledFilePath });
 
+  console.log(components);
+
   return {
     distributions: components.map((value) => value.distributionPath),
   };

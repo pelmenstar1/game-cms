@@ -58,7 +58,11 @@ export function component<
   Data extends ComponentData,
   Error,
   Id extends string,
->(value: ComponentController<Options, Data, Error, Id>) {
+  ResolvedData extends ComponentData = Data,
+  ClientData extends ComponentData = Data,
+>(
+  value: ComponentController<Options, Data, Error, Id, ResolvedData, ClientData>
+) {
   return value;
 }
 

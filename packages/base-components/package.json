@@ -12,6 +12,7 @@
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
     "@game-cms/utils": "workspace:*",
+    "@game-cms/conditional": "workspace:*",
     "zod": "catalog:"
   },
   "peerDependencies": {

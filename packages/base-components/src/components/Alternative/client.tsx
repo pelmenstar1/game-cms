@@ -1,0 +1,136 @@
+import { useComponentApi } from '@game-cms/component-api';
+import { ComponentData, ComponentRenderer } from '@game-cms/types';
+import { DraggableList, IconButton, PlusIcon, Typography } from '@game-cms/ui';
+
+import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
+import styles from './client.module.scss';
+
+export const renderer: ComponentRenderer<'base::alternative'> = ({
+  data,
+  options,
+  error,
+  onDataChanged,
+}) => {
+  const api = useComponentApi();
+
+  const { baseOptions, componentId } = options;
+  const BaseComponent = api.getComponent(componentId);
+
+  const alternativeItems = data.alternative.map((choice, i) => ({
+    key: i,
+    ...choice,
+  }));
+
+  const onDefaultChange = (newDefault: ComponentData) => {
+    onDataChanged?.({
+      alternative: data.alternative,
+      default: newDefault,
+    });
+  };
+
+  const onAlternativeItemsChanged = (newItems: typeof alternativeItems) => {
+    onDataChanged?.({
+      default: data.default,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      alternative: newItems.map(({ key, ...rest }) => rest),
+    });
+  };
+
+  const onAddItem = () => {
+    onDataChanged?.({
+      default: data.default,
+      alternative: [
+        ...alternativeItems,
+        {
+          condition: '',
+          value: api.getDefaultData(componentId, baseOptions),
+        },
+      ],
+    });
+  };
+
+  return (
+    <div>
+      <div className={styles['default-choice']}>
+        <Typography className={styles['default-choice-label']}>
+          Default
+        </Typography>
+
+        <BaseComponent
+          data={data.default}
+          options={baseOptions}
+          error={error?.default}
+          onDataChanged={onDefaultChange}
+        />
+      </div>
+
+      {alternativeItems.length > 0 && (
+        <DraggableList
+          className={styles['alternative-list']}
+          items={alternativeItems}
+          onItemsChanged={onAlternativeItemsChanged}
+        >
+          {(item, _, handleRef) => {
+            const onItemDataChanged = (value: ComponentData) => {
+              const newAlternative = [...data.alternative];
+              newAlternative[item.key] = { ...newAlternative[item.key], value };
+
+              onDataChanged?.({
+                default: data.default,
+                alternative: newAlternative,
+              });
+            };
+
+            const onItemConditionChanged = (condition: string) => {
+              const newAlternative = [...data.alternative];
+              newAlternative[item.key] = {
+                ...newAlternative[item.key],
+                condition,
+              };
+
+              onDataChanged?.({
+                default: data.default,
+                alternative: newAlternative,
+              });
+            };
+
+            const onItemDelete = () => {
+              const newAlternative = [...data.alternative];
+              newAlternative.splice(item.key, 1);
+
+              onDataChanged?.({
+                default: data.default,
+                alternative: newAlternative,
+              });
+            };
+
+            const itemError = error?.alternative[item.key];
+
+            return (
+              <EntityComponentChoice
+                componentId={componentId}
+                data={item.value}
+                condition={item.condition}
+                dataError={itemError?.data}
+                conditionError={itemError?.condition}
+                options={options}
+                handleRef={handleRef}
+                onDataChanged={onItemDataChanged}
+                onConditionChanged={onItemConditionChanged}
+                onDelete={onItemDelete}
+              />
+            );
+          }}
+        </DraggableList>
+      )}
+
+      <IconButton
+        className={styles['add-alternative-button']}
+        title="Add alternative"
+        onClick={onAddItem}
+      >
+        <PlusIcon />
+      </IconButton>
+    </div>
+  );
+};
