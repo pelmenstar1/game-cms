@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { componentDataValidator } from '@game-cms/utils';
 
 import { ComposeData, ComposeError, ComposeOptions } from './types.js';

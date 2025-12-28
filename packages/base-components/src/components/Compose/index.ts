@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { mapObject } from '@game-cms/shared/object';
 import { component } from '@game-cms/utils';
 

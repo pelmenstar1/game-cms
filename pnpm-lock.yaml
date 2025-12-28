@@ -306,6 +306,9 @@ importers:
 
   packages/base-components:
     dependencies:
+      '@game-cms/codegen':
+        specifier: workspace:*
+        version: link:../codegen
       '@game-cms/component-api':
         specifier: workspace:*
         version: link:../component-api
@@ -337,9 +340,6 @@ importers:
       '@game-cms/build':
         specifier: workspace:*
         version: link:../build
-      '@game-cms/codegen':
-        specifier: workspace:*
-        version: link:../codegen
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.3
