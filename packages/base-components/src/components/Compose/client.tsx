@@ -31,7 +31,7 @@ function splitEntitySchemaComponentsToGroups<T>(
   }
 
   if (compactGroupNonEmpty) {
-    groups.push(compactGroup);
+    groups.unshift(compactGroup);
   }
 
   return groups;
@@ -49,6 +49,8 @@ export const renderer: ComponentRenderer<'base::compose'> = ({
     () => splitEntitySchemaComponentsToGroups(api, options),
     [api, options]
   );
+
+  console.log('compose', error);
 
   return (
     <div className={styles.root}>

@@ -7,7 +7,7 @@ import { writeComponentsFsInfo } from '../../services/components.js';
 import { getDashboardPackagePath } from '../../services/dashboard.js';
 
 async function runDashboardBuild(dashboardPath: string) {
-  await redirectProcess('npm', ['run', 'build'], {
+  await redirectProcess('npm run build', {
     shell: true,
     cwd: dashboardPath,
   });

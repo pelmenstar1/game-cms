@@ -4,33 +4,53 @@ import {
 } from '@game-cms/conditional';
 import { ComponentClientDataResolver } from '@game-cms/types';
 
+function parseCondition(text: string) {
+  try {
+    return { value: parseConditionalNotation(text) };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
 export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
   {
-    toClient: (data) => ({
+    toClient: (data, options, context) => ({
       default: data.default,
       alternative: data.alternative.map((item) => ({
         condition: conditionalAstExpressionToString(item.condition),
-        value: item.value,
+        value: context.toClient(
+          options.componentId,
+          item.value,
+          options.baseOptions
+        ),
       })),
     }),
-    fromClient: (data) => {
-      const parsedConditions = data.alternative.map(({ condition }) => {
-        try {
-          return { value: parseConditionalNotation(condition) };
-        } catch (error) {
-          return {
-            error: error instanceof Error ? error.message : 'Unknown error',
-          };
-        }
-      });
+    fromClient: (data, options, context) => {
+      const result = data.alternative.map(
+        ({ value, condition: rawCondition }) => {
+          const condition = parseCondition(rawCondition);
 
-      if (parsedConditions.some((item) => item.error !== undefined)) {
+          const data = context.fromClient(
+            options.componentId,
+            value,
+            options.baseOptions
+          );
+
+          if (condition.error !== undefined || data.error !== undefined) {
+            return { error: { condition: condition.error, data: data.error } };
+          }
+
+          return { value: { condition: condition.value, data: data.result } };
+        }
+      );
+
+      if (result.some((item) => item.error !== undefined)) {
         return {
           error: {
             default: undefined,
-            alternative: parsedConditions.map(({ error }) => ({
-              data: undefined,
-              condition: error,
+            alternative: result.map(({ error }) => ({
+              data: error?.data,
+              condition: error?.condition,
             })),
           },
         };
@@ -39,11 +59,16 @@ export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
       return {
         result: {
           default: data.default,
-          alternative: data.alternative.map((item, i) => ({
-            value: item.value,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            condition: parsedConditions[i].value!,
-          })),
+          alternative: result.map(({ value }) => {
+            if (value === undefined) {
+              throw new Error('Value is undefined');
+            }
+
+            return {
+              condition: value.condition,
+              value: value.data,
+            };
+          }),
         },
       };
     },

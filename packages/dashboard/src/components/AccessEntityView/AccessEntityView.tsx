@@ -12,7 +12,7 @@ import {
 import { useCallback, useMemo, useState } from 'react';
 
 import { useComponentHub } from '@/hooks/useComponentHub';
-import { transformEntityConditionalDataToRaw } from '@/services/entity/transform';
+import { transformDataToClientData } from '@/services/entity/transform';
 
 import styles from './AccessEntityView.module.scss';
 
@@ -46,24 +46,34 @@ export function AccessEntityView<T extends EntityData>({
     [schema]
   );
 
-  const [currentValue, setCurrentValue] = useState(() =>
-    transformEntityConditionalDataToRaw(
-      api,
-      schema,
-      initialValue,
-      composeOptions
-    )
+  const [clientData, setClientData] = useState(() =>
+    transformDataToClientData(api, schema, initialValue, composeOptions)
+  );
+
+  const data = useMemo(
+    () =>
+      api.clientResolverContext.fromClient(
+        'base::compose',
+        clientData,
+        composeOptions
+      ),
+    [api, clientData, composeOptions]
   );
 
   const error = useMemo(
     () =>
-      hub.validationContext.data('base::compose', currentValue, composeOptions),
-    [composeOptions, currentValue, hub]
+      hub.validationContext.data('base::compose', clientData, composeOptions) ??
+      data.error,
+    [hub, clientData, composeOptions, data.error]
   );
 
   const onSaveTransformed = useCallback(() => {
-    // onSave?.(transformEntityConditionalDataFromRaw(currentValue));
-  }, [currentValue, onSave]);
+    const dataValue = data.result;
+
+    if (dataValue !== undefined) {
+      onSave?.(dataValue as T);
+    }
+  }, [data.result, onSave]);
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -86,10 +96,10 @@ export function AccessEntityView<T extends EntityData>({
       <div className={styles.content}>
         <div className={styles['component-grid']}>
           <Compose
-            data={currentValue}
+            data={clientData}
             options={composeOptions}
             error={error}
-            onDataChanged={setCurrentValue}
+            onDataChanged={setClientData}
           />
         </div>
 

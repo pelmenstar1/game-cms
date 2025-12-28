@@ -31,7 +31,7 @@ async function waitUntilDevServerStarts() {
 }
 
 function runDashboardDev(dashboardPath: string) {
-  const p = childProcess.spawn('npm', ['run', 'dev'], {
+  const p = childProcess.spawn('npm run dev', {
     shell: true,
     cwd: dashboardPath,
   });

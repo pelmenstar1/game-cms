@@ -16,13 +16,13 @@ import {
 
 import { type ComponentHub, ComponentHubContext } from './context';
 
-const componentCache = createInMemoryCache((id: ComponentId) =>
-  React.lazy(async () => {
+const componentCache = createInMemoryCache((id: ComponentId) => {
+  return React.lazy(async () => {
     const module = await importComponent(id);
 
     return { default: module.renderer };
-  })
-);
+  });
+});
 
 export function ComponentHubProvider({ children }: PropsWithChildren) {
   const validationContext = useMemo(

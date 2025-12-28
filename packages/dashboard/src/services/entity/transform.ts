@@ -4,7 +4,7 @@ import type { ComponentApi } from '@game-cms/component-api';
 import { mapObject } from '@game-cms/shared/object';
 import type { ComponentClientDataById } from '@game-cms/types';
 
-export function transformEntityConditionalDataToRaw<T extends EntityData>(
+export function transformDataToClientData<T extends EntityData>(
   api: ComponentApi,
   schema: ClientEntitySchema<T>,
   data: T | undefined,
@@ -19,6 +19,19 @@ export function transformEntityConditionalDataToRaw<T extends EntityData>(
   return api.clientResolverContext.toClient(
     'base::compose',
     dataOrDefault,
+    options
+  );
+}
+
+export function transformClientDataToData<T extends EntityData>(
+  api: ComponentApi,
+  schema: ClientEntitySchema<T>,
+  clientData: ComponentClientDataById<'base::compose'>,
+  options: ComposeOptions
+) {
+  return api.clientResolverContext.fromClient(
+    'base::compose',
+    clientData,
     options
   );
 }

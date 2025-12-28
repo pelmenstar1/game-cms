@@ -1,8 +1,6 @@
 import { mapObject } from '@game-cms/shared/object';
 import { ComponentClientDataResolver } from '@game-cms/types';
 
-import { ComposeError } from './types.js';
-
 export const clientResolver: ComponentClientDataResolver<'base::compose'> = {
   toClient: (data, options, context) =>
     mapObject(options, (prop, key) =>
@@ -17,23 +15,15 @@ export const clientResolver: ComponentClientDataResolver<'base::compose'> = {
         ] as const
     );
 
-    const error = result.map(
-      ([key, item]) => [key, (item as { error?: ComposeError }).error] as const
-    );
+    const error = result.map(([key, item]) => [key, item.error] as const);
 
     if (error.some(([, error]) => error !== undefined)) {
-      return { error };
+      return { error: Object.fromEntries(error) };
     }
 
     return {
       result: Object.fromEntries(
-        result.map(([key, item]) => {
-          if (!('result' in item)) {
-            throw new Error('No result in item');
-          }
-
-          return [key, item.result] as const;
-        })
+        result.map(([key, item]) => [key, item.result] as const)
       ),
     };
   },

@@ -26,7 +26,7 @@ export const renderer: ComponentRenderer<'base::list'> = ({
           <Component
             key={index}
             data={item}
-            options={options}
+            options={options.base}
             error={error?.[index]}
             onDataChanged={(newItem) => {
               const newData = [...data];

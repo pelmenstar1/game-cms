@@ -1,4 +1,4 @@
-import type { MaybeFactory } from '@game-cms/shared';
+import type { MaybeFactory, Or } from '@game-cms/shared';
 import type { FC } from 'react';
 
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
@@ -148,7 +148,10 @@ export type ForeignComponentContext = {
       id: Id,
       clientData: ComponentClientDataById<Id>,
       options: ComponentOptionsById<Id>
-    ) => { result: ComponentDataById<Id> } | { error: ComponentErrorById<Id> };
+    ) => Or<
+      { result: ComponentDataById<Id> },
+      { error: ComponentErrorById<Id> }
+    >;
   };
 };
 

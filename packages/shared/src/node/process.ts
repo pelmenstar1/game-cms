@@ -6,13 +6,11 @@ import {
 import process from 'node:process';
 
 export function spawnProcessAsync(
-  file: string,
-  args: string[],
+  command: string,
   options: SpawnOptionsWithoutStdio | undefined,
   setup?: (p: ChildProcessWithoutNullStreams) => void
 ) {
   return new Promise((resolve, reject) => {
-    const command = `${file} ${args.map((arg) => `"${arg}"`).join(' ')}`;
     const spawnedProcess = spawn(command, options);
 
     setup?.(spawnedProcess);
@@ -28,11 +26,10 @@ export function spawnProcessAsync(
 }
 
 export function redirectProcess(
-  file: string,
-  args: string[],
+  command: string,
   options?: SpawnOptionsWithoutStdio
 ) {
-  return spawnProcessAsync(file, args, options, (p) => {
+  return spawnProcessAsync(command, options, (p) => {
     p.stdout.pipe(process.stdout);
     p.stderr.pipe(process.stderr);
   });

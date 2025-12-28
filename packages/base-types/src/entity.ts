@@ -34,7 +34,7 @@ export type ServerEntitySchema<
   Id,
   {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [K in keyof T]: ServerComponentSchema<any, T[K], any>;
+    [K in keyof T]: ServerComponentSchema<any, T[K], any, any, any, any>;
   }
 >;
 

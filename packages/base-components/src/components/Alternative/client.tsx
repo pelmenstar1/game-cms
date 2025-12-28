@@ -11,6 +11,8 @@ export const renderer: ComponentRenderer<'base::alternative'> = ({
   error,
   onDataChanged,
 }) => {
+  console.log(error);
+
   const api = useComponentApi();
 
   const { baseOptions, componentId } = options;
@@ -50,7 +52,7 @@ export const renderer: ComponentRenderer<'base::alternative'> = ({
   };
 
   return (
-    <div>
+    <div className={styles['root']}>
       <div className={styles['default-choice']}>
         <Typography className={styles['default-choice-label']}>
           Default
