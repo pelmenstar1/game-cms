@@ -52,6 +52,8 @@ async function main() {
       ]);
     } catch {
       // Messages about errors are already in the terminal
+
+      process.exit(1);
     }
   }
 }
