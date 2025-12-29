@@ -38,7 +38,6 @@
     "@game-cms/base-components": "workspace:*",
     "@game-cms/base-utils": "workspace:*",
     "@game-cms/client": "workspace:*",
-    "@game-cms/conditional": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",

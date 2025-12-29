@@ -27,9 +27,9 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
     let currentExpression: ConditionalAstExpression | undefined;
 
     const isPrevVarStart = prevToken === TokenType.VAR_START;
-    const isLiteral = typeof token === 'string';
+    const isStringToken = typeof token === 'object';
 
-    if (isPrevVarStart && !isLiteral) {
+    if (isPrevVarStart && !isStringToken) {
       invalidExpression('expected literal after $');
     }
 
@@ -38,10 +38,10 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
       continue;
     }
 
-    if (isLiteral) {
+    if (isStringToken) {
       currentExpression = isPrevVarStart
-        ? { $type: 'var', name: token }
-        : { $type: 'literal', value: token };
+        ? { $type: 'var', name: token.value }
+        : { $type: 'literal', value: token.value };
     }
 
     if (token === TokenType.OPEN_BRACKET) {
@@ -123,6 +123,8 @@ export function parseConditionalNotation(
   input: string
 ): ConditionalAstExpression {
   const tokens = tokenizeText(input);
+
+  console.log(tokens);
 
   return parseTokens(tokens);
 }

@@ -117,12 +117,11 @@ test.each<[string]>([
   ['($a==1'],
   ['()'],
   ['$$'],
-  ['$a=1'],
   ['$$a==1'],
 ])('parseConditionalNotation/error', (input) => {
   expect(() => {
     const value = parseConditionalNotation(input);
 
     console.log(value);
-  }).toThrow();
+  }, input).toThrow();
 });

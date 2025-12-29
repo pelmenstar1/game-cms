@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 
 import { type Token, TokenType } from './token.js';
-import { findClosingBracketIndex } from './utils.js';
+import { findClosingBracketIndex, findClosingQuoteIndex } from './utils.js';
 
 const open: Token = TokenType.OPEN_BRACKET;
 const content: Token = TokenType.AND;
@@ -14,6 +14,15 @@ test.each<[Token[], number]>([
   [[open, content, open, close, content, close], 6],
 ])('findClosingBracketIndex/success', (input, expected) => {
   const actual = findClosingBracketIndex(input);
+
+  expect(actual).toEqual(expected);
+});
+
+test.each<[string, number]>([
+  [`123'`, 4],
+  [String.raw`12\'12'`, 7],
+])('findClosingQuoteIndex', (input, expected) => {
+  const actual = findClosingQuoteIndex(input);
 
   expect(actual).toEqual(expected);
 });

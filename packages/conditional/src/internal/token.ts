@@ -1,16 +1,23 @@
 export const enum TokenType {
   OPEN_BRACKET = 0,
   CLOSE_BRACKET = 1,
-  AND = 10,
-  OR = 11,
-  LT = 12,
-  LTE = 13,
-  GT = 14,
-  GTE = 15,
-  EQ = 16,
-  NOT = 17,
-  NEQ = 18,
-  VAR_START = 20,
+  AND = 2,
+  OR = 3,
+  LT = 4,
+  LTE = 5,
+  GT = 6,
+  GTE = 7,
+  EQ = 8,
+  NOT = 9,
+  NEQ = 10,
+  VAR_START = 11,
+  TRUE = 12,
+  FALSE = 13,
 }
 
-export type Token = TokenType | string;
+export const enum StringTokenType {
+  STRING = 20,
+  LITERAL = 21,
+}
+
+export type Token = TokenType | { type: StringTokenType; value: string };

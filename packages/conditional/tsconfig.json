@@ -4,7 +4,8 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "types": ["node", "@game-cms/shared/types"],
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "isolatedModules": false
   },
   "include": ["./src"],
   "references": [{ "path": "../shared" }]
