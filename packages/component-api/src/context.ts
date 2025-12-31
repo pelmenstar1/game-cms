@@ -6,9 +6,13 @@ import type {
   ComponentRenderer,
   ForeignComponentContext,
 } from '@game-cms/types';
-import React from 'react';
+import React, { type Key } from 'react';
+
+import type { IdSource } from '../../shared/src/idSource.js';
 
 export type ComponentApi = {
+  idSource: IdSource<Key>;
+
   getDefaultData: <Id extends ComponentId, Args = unknown>(
     id: Id,
     options: ComponentOptionsById<Id, Args>

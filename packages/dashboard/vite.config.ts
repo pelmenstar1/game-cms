@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     reactRouter(),
     tsconfigPaths(),
-    libraryWatcherPlugin('ui') as Plugin,
+    libraryWatcherPlugin(['ui', 'base-components']) as Plugin,
     dashboardComponentsPlugin() as Plugin,
   ],
 });

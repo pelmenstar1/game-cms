@@ -1,5 +1,5 @@
-import type { MaybeFactory, Or } from '@game-cms/shared';
-import type { FC } from 'react';
+import type { IdSource, MaybeFactory, Or } from '@game-cms/shared';
+import type { FC, Key } from 'react';
 
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
 
@@ -118,6 +118,8 @@ export type ForeignComponentContext = {
     ) => ComponentResolvedDataById<Id>;
   };
   clientResolver: {
+    idSource: IdSource<Key>;
+
     toClient: <Id extends ComponentId, Args>(
       id: Id,
       data: ComponentDataById<Id, Args>,
@@ -151,6 +153,10 @@ export type ComponentDataResolver<Id extends ComponentId, Args = unknown> = (
   args: ComponentDataResolverArgs
 ) => ComponentResolvedDataById<Id, Args>;
 
+export type ComponentDataOrError<Id extends ComponentId, Args = unknown> =
+  | { result: ComponentDataById<Id, Args> }
+  | { error: ComponentErrorById<Id, Args> };
+
 export type ComponentClientDataResolver<
   Id extends ComponentId,
   Args = unknown,
@@ -165,9 +171,7 @@ export type ComponentClientDataResolver<
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentContext['clientResolver']
-  ) =>
-    | { result: ComponentDataById<Id, Args> }
-    | { error: ComponentErrorById<Id, Args> };
+  ) => ComponentDataOrError<Id, Args>;
 };
 
 export type ComponentMeta<

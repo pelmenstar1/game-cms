@@ -1,13 +1,20 @@
 import { mapObject } from '@game-cms/shared/object';
-import type { ComponentId, ComponentSchema } from '@game-cms/types';
+import type {
+  ComponentId,
+  ComponentOptionsById,
+  ComponentSchema,
+} from '@game-cms/types';
 import { componentAccessor } from '@game-cms/utils';
 
 import type { ComposeInput } from './components/Compose/types.js';
+import { DynamicZoneInput } from './components/DynamicZone/types.js';
 import Number from './components/Number/index.js';
 import Text from './components/Text/index.js';
 
 export type * from './components/Alternative/types.js';
 export type * from './components/Compose/types.js';
+export type * from './components/DynamicZone/types.js';
+export type * from './components/Number/types.js';
 export type * from './components/Repeatable/types.js';
 export type * from './components/Text/types.js';
 
@@ -47,5 +54,18 @@ export function alternative<Id extends ComponentId, Args>(
       componentId: baseComponent.componentId,
       baseOptions: baseComponent.options,
     },
+  };
+}
+
+export function dynamicZone<const T extends DynamicZoneInput>(
+  input: T
+): ComponentSchema<'base::dynamic-zone', T> {
+  return {
+    componentId: 'base::dynamic-zone',
+    options: mapObject(input, (item) => ({
+      title: item.title,
+      componentId: item.component.componentId,
+      options: item.component.options,
+    })) as ComponentOptionsById<'base::dynamic-zone', T>,
   };
 }

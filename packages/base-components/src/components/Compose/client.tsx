@@ -49,8 +49,6 @@ export const renderer: ComponentRenderer<'base::compose'> = ({
     [api, options]
   );
 
-  console.log('compose', error);
-
   return (
     <div className={styles.root}>
       {groups.map((group, i) => {

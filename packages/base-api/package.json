@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
-    "generate-types": "tsx ./scripts/generateTypes.ts"
+    "typegen": "tsx ./scripts/generateTypes.ts"
   },
   "devDependencies": {
     "@game-cms/api-testing": "workspace:*",

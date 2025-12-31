@@ -3,13 +3,13 @@ import path from 'node:path';
 import { watch } from 'chokidar';
 import type { Plugin } from 'vite';
 
-export function libraryWatcherPlugin(name: string): Plugin {
+export function libraryWatcherPlugin(packages: string[]): Plugin {
   return {
     name: 'library-watcher',
     apply: 'serve',
     configureServer: (server) => {
-      const watchDir = `../${name}/dist`;
-      const watcher = watch(watchDir, {
+      const watchDirs = packages.map((name) => `../${name}/dist`);
+      const watcher = watch(watchDirs, {
         ignoreInitial: true,
         usePolling: true,
       });
@@ -38,7 +38,6 @@ export function libraryWatcherPlugin(name: string): Plugin {
       server.httpServer?.on('close', () => {
         void watcher.close();
       });
-      // server.moduleGraph.getModulesByFile()
     },
   };
 }

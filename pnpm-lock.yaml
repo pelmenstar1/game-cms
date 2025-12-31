@@ -505,9 +505,6 @@ importers:
       '@game-cms/component-api':
         specifier: workspace:*
         version: link:../component-api
-      '@game-cms/conditional':
-        specifier: workspace:*
-        version: link:../conditional
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared

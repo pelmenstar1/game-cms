@@ -1,0 +1,15 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.item-container {
+  border: 1px solid var(--color-background-dark-variant);
+  padding: 0.5em 1em 1em;
+  border-radius: 0.5em;
+
+  &-header {
+    margin-bottom: 0.75em;
+  }
+}

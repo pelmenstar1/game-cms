@@ -1,36 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  ComponentClientDataById,
-  ComponentData,
-  ComponentDataById,
-  ComponentEntry,
-  ComponentId,
-  ComponentOptions,
-  ComponentOptionsById,
-  ComponentResolvedDataById,
-  ComponentSchema,
-} from '@game-cms/types';
+import { ComponentEntry, ComponentId, ComponentSchema } from '@game-cms/types';
+
+import { GetSchemaParams } from '../../internal/types.js';
 
 export type ComposeInput = Record<string, ComponentSchema<ComponentId, any>>;
-
-type GetSchemaParams<T = unknown> =
-  T extends ComponentSchema<infer Id, infer Args>
-    ? {
-        options: ComponentOptionsById<Id, Args>;
-        data: ComponentDataById<Id, Args>;
-        error: Error;
-        id: Id;
-        resolvedData: ComponentResolvedDataById<Id, Args>;
-        clientData: ComponentClientDataById<Id, Args>;
-      }
-    : {
-        options: ComponentOptions;
-        data: ComponentData;
-        error: unknown;
-        id: ComponentId;
-        resolvedData: ComponentData;
-        clientData: ComponentData;
-      };
 
 type ResolveInput<T> = unknown extends T ? ComposeInput : T;
 type ComposeMap<T, TK extends keyof GetSchemaParams> = {

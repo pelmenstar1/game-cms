@@ -2,7 +2,7 @@ import {
   type ComponentApi,
   ComponentApiContext,
 } from '@game-cms/component-api';
-import { createInMemoryCache } from '@game-cms/shared';
+import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
 import type {
   ComponentClientDataById,
   ComponentDataById,
@@ -53,6 +53,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
   const clientResolverContext = useMemo(
     (): ForeignComponentContext['clientResolver'] => ({
+      idSource: incrementingIdSource,
       fromClient: (id, clientData, options) => {
         const resolver = getComponentClientResolver(id);
 
@@ -77,6 +78,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
   const api = useMemo(
     (): ComponentApi => ({
+      idSource: incrementingIdSource,
       getDefaultData: defaultDataContext.data,
       getComponent: <Id extends ComponentId, Args>(id: Id) =>
         componentCache.get(id, null) as unknown as ComponentRenderer<Id, Args>,

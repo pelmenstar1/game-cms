@@ -5,16 +5,11 @@ import type {
   ComponentId,
   ComponentOptionsById,
 } from '@game-cms/types';
-import {
-  classNames,
-  DeleteIcon,
-  DragHandle,
-  IconButton,
-  Typography,
-} from '@game-cms/ui';
+import { classNames, Typography } from '@game-cms/ui';
 import type { RefObject } from 'react';
 
 import { ConditionalInput } from '../ConditionalInput/index.js';
+import { ItemControlHeader } from '../ItemControlHeader/index.js';
 import styles from './EntityComponentChoice.module.scss';
 
 export interface EntityComponentChoiceProps<Id extends ComponentId> {
@@ -51,21 +46,15 @@ export function EntityComponentChoice<Id extends ComponentId>({
 
   return (
     <div className={classNames(styles.root, className)}>
-      <div className={styles.header}>
+      <ItemControlHeader
+        className={styles.header}
+        onDelete={onDelete}
+        handleRef={handleRef}
+      >
         <Typography className={styles['alternative-label']}>
           Alternative
         </Typography>
-
-        <IconButton
-          title="Delete alternative"
-          className={styles['delete-button']}
-          onClick={onDelete}
-        >
-          <DeleteIcon />
-        </IconButton>
-
-        <DragHandle className={styles['drag-handle']} ref={handleRef} />
-      </div>
+      </ItemControlHeader>
 
       <ConditionalInput
         value={condition}

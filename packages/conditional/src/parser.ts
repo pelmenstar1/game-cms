@@ -124,7 +124,5 @@ export function parseConditionalNotation(
 ): ConditionalAstExpression {
   const tokens = tokenizeText(input);
 
-  console.log(tokens);
-
   return parseTokens(tokens);
 }

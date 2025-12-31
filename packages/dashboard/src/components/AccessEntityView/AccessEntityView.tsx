@@ -70,6 +70,8 @@ export function AccessEntityView<Id extends EntityId>({
     [hub, clientData, composeOptions, data.error]
   );
 
+  console.log(data);
+
   const onSaveTransformed = useCallback(() => {
     const dataValue = data.result;
 
