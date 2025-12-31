@@ -1,6 +1,6 @@
 import type {
+  ComponentClientDataById,
   ComponentControllerConfig,
-  ComponentDataById,
   ComponentId,
   ComponentOptionsById,
   ComponentRenderer,
@@ -16,11 +16,9 @@ export type ComponentApi = {
   getDefaultData: <Id extends ComponentId, Args = unknown>(
     id: Id,
     options: ComponentOptionsById<Id, Args>
-  ) => ComponentDataById<Id, Args>;
+  ) => ComponentClientDataById<Id, Args>;
 
-  getComponent: <Id extends ComponentId, Args = unknown>(
-    id: Id
-  ) => ComponentRenderer<Id, Args>;
+  getComponent: <Id extends ComponentId>(id: Id) => ComponentRenderer<Id>;
 
   getConfig: (id: ComponentId) => ComponentControllerConfig | undefined;
 

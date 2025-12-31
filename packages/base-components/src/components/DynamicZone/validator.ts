@@ -1,15 +1,25 @@
-import { componentDataValidator } from '@game-cms/utils';
+import {
+  ComponentDataById,
+  ComponentDataValidator,
+  ComponentErrorById,
+  ComponentOptionsById,
+  ForeignComponentContext,
+} from '@game-cms/types';
 
-export const validator = componentDataValidator<'base::dynamic-zone'>(
-  (data, options, context) => {
-    const errors = data.map((dataItem) => {
-      const { componentId, options: baseOptions } = options[dataItem.key];
+type Id = 'base::dynamic-zone';
 
-      return context.data(componentId, dataItem.data, baseOptions);
-    });
+export const validator: ComponentDataValidator<Id> = <Args>(
+  data: ComponentDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentContext['validation']
+) => {
+  const errors = data.map((dataItem) => {
+    const { componentId, options: baseOptions } = options[dataItem.key];
 
-    return errors.every((element) => element === undefined)
-      ? undefined
-      : errors;
-  }
-);
+    return context.data(componentId, dataItem.data, baseOptions);
+  });
+
+  return errors.every((element) => element === undefined)
+    ? undefined
+    : (errors as ComponentErrorById<'base::dynamic-zone', Args>);
+};

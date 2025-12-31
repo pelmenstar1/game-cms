@@ -41,7 +41,7 @@ export function compose<const T extends ComposeInput>(
     options: mapObject(map, (schema) => ({
       componentId: schema.componentId,
       options: schema.options,
-    })),
+    })) as ComponentOptionsById<'base::compose', T>,
   };
 }
 

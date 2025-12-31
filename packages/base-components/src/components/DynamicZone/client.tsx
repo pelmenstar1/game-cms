@@ -1,27 +1,29 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentRenderer } from '@game-cms/types';
+import {
+  ComponentClientDataById,
+  ComponentOptionsById,
+  ComponentProps,
+} from '@game-cms/types';
 import { Button } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 
-import {
-  ComponentList,
-  ComponentListItem,
-} from '../../micro/ComponentList/index.js';
+import { ComponentList } from '../../micro/ComponentList/index.js';
 import styles from './client.module.scss';
 
-interface ListItem extends ComponentListItem {
-  itemKey: string;
-}
+type Id = 'base::dynamic-zone';
 
-export const renderer: ComponentRenderer<'base::dynamic-zone'> = ({
+export const renderer = <Args,>({
   data,
   options,
   error,
   onDataChanged,
-}) => {
+}: ComponentProps<Id, Args>) => {
+  type Data = ComponentClientDataById<Id, Args>;
+  type Options = ComponentOptionsById<Id, Args>;
+
   const api = useComponentApi();
 
-  const items = useMemo((): ListItem[] => {
+  const items = useMemo(() => {
     return data.map((itemData, index) => {
       const itemOptions = options[itemData.key];
 
@@ -37,13 +39,13 @@ export const renderer: ComponentRenderer<'base::dynamic-zone'> = ({
   }, [data, error, options]);
 
   const onItemsChanged = useCallback(
-    (items: ListItem[]) => {
+    (newItems: typeof items) => {
       onDataChanged?.(
-        items.map((item) => ({
+        newItems.map((item) => ({
           key: item.itemKey,
           clientKey: item.key,
           data: item.data,
-        }))
+        })) as Data
       );
     },
     [onDataChanged]
@@ -54,30 +56,32 @@ export const renderer: ComponentRenderer<'base::dynamic-zone'> = ({
       <ComponentList items={items} onItemsChanged={onItemsChanged} />
 
       <div className={styles['component-palette']}>
-        {Object.entries(options).map(([key, itemOptions]) => {
-          const onClick = () => {
-            const { componentId, options } = itemOptions;
+        {Object.entries<Options[keyof Options]>(options).map(
+          ([key, itemOptions]) => {
+            const onClick = () => {
+              const { componentId, options } = itemOptions;
 
-            onDataChanged?.([
-              ...data,
-              {
-                key,
-                clientKey: api.idSource(),
-                data: api.getDefaultData(componentId, options),
-              },
-            ]);
-          };
+              onDataChanged?.([
+                ...data,
+                {
+                  key,
+                  clientKey: api.idSource(),
+                  data: api.getDefaultData(componentId, options),
+                },
+              ] as Data);
+            };
 
-          return (
-            <Button
-              key={key}
-              className={styles['component-palette-item']}
-              onClick={onClick}
-            >
-              {itemOptions.title}
-            </Button>
-          );
-        })}
+            return (
+              <Button
+                key={key}
+                className={styles['component-palette-item']}
+                onClick={onClick}
+              >
+                {itemOptions.title}
+              </Button>
+            );
+          }
+        )}
       </div>
     </div>
   );

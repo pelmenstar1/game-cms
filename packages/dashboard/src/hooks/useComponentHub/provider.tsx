@@ -79,9 +79,13 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const api = useMemo(
     (): ComponentApi => ({
       idSource: incrementingIdSource,
-      getDefaultData: defaultDataContext.data,
-      getComponent: <Id extends ComponentId, Args>(id: Id) =>
-        componentCache.get(id, null) as unknown as ComponentRenderer<Id, Args>,
+      getDefaultData: (id, options) => {
+        const result = defaultDataContext.data(id, options);
+
+        return clientResolverContext.toClient(id, result, options);
+      },
+      getComponent: <Id extends ComponentId>(id: Id) =>
+        componentCache.get(id, null) as unknown as ComponentRenderer<Id>,
       getConfig: getComponentConfig,
       clientResolverContext,
     }),

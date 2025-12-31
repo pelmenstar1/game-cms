@@ -1,5 +1,5 @@
-import type { IdSource, MaybeFactory, Or } from '@game-cms/shared';
-import type { FC, Key } from 'react';
+import type { IdSource, Or } from '@game-cms/shared';
+import type { Key, ReactNode } from 'react';
 
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
 
@@ -84,10 +84,11 @@ export type ComponentProps<Id extends ComponentId, Args> = {
   onDataChanged?: (data: ComponentClientDataById<Id, Args>) => void;
 };
 
-export type ComponentRenderer<
-  Id extends ComponentId = ComponentId,
+export type ComponentRenderer<Id extends ComponentId = ComponentId> = <
   Args = unknown,
-> = FC<ComponentProps<Id, Args>>;
+>(
+  props: ComponentProps<Id, Args>
+) => ReactNode;
 
 export type ComponentControllerConfig = {
   ui?: {
@@ -137,7 +138,7 @@ export type ForeignComponentContext = {
   };
 };
 
-export type ComponentDataValidator<Id extends ComponentId, Args = unknown> = (
+export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
   data: ComponentDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentContext['validation']
@@ -174,28 +175,24 @@ export type ComponentClientDataResolver<
   ) => ComponentDataOrError<Id, Args>;
 };
 
-export type ComponentMeta<
-  Id extends ComponentId = ComponentId,
-  Args = unknown,
-> = {
+export type ComponentMeta<Id extends ComponentId = ComponentId> = {
   id: Id;
   config?: ComponentControllerConfig;
-  defaultData: MaybeFactory<
-    ComponentDataById<Id, Args>,
-    [
-      options: ComponentOptionsById<Id, Args>,
-      context: ForeignComponentContext['default'],
-    ]
-  >;
+  defaultData:
+    | ComponentDataById<Id>
+    | (<Args>(
+        options: ComponentOptionsById<Id, Args>,
+        context: ForeignComponentContext['default']
+      ) => ComponentDataById<Id, Args>);
 };
 
 export interface ComponentController<
   Id extends ComponentId = ComponentId,
   Args = unknown,
 > {
-  meta: ComponentMeta<Id, Args>;
+  meta: ComponentMeta<Id>;
   resolver?: ComponentDataResolver<Id, Args>;
-  validator: ComponentDataValidator<Id, Args>;
+  validator: ComponentDataValidator<Id>;
 }
 
 export type ComponentControllerMap = {

@@ -24,7 +24,7 @@ export type GetSchemaParams<T = unknown> =
     ? {
         options: ComponentOptionsById<Id, Args>;
         data: ComponentDataById<Id, Args>;
-        error: ComponentErrorById<Id, Args>;
+        error: ComponentErrorById<Id, Args> | undefined;
         id: Id;
         resolvedData: ComponentResolvedDataById<Id, Args>;
         clientData: ComponentClientDataById<Id, Args>;

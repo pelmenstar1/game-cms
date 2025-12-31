@@ -1,31 +1,40 @@
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
-import { ComponentOptionsById, ComponentRenderer } from '@game-cms/types';
+import {
+  ComponentDataById,
+  ComponentOptionsById,
+  ComponentRenderer,
+} from '@game-cms/types';
 import { useMemo } from 'react';
 
 import { ComponentGroup } from '../../internal/types.js';
 import { ComponentGridGroup } from '../../micro/ComponentGridGroup/index.js';
 import styles from './client.module.scss';
+import { ComposeOptionsEntry } from './types.js';
 
-function splitEntitySchemaComponentsToGroups<T>(
+type Id = 'base::compose';
+
+type ComposeGroup<Args> = ComponentGroup<ComponentDataById<Id, Args>>;
+
+function splitEntitySchemaComponentsToGroups<Args>(
   api: ComponentApi,
-  options: ComponentOptionsById<'base::compose'>
-) {
-  const compactGroup: Partial<ComponentGroup<T>> = {};
+  options: ComponentOptionsById<Id, Args>
+): ComposeGroup<Args>[] {
+  const compactGroup: Partial<ComposeGroup<Args>> = {};
   let compactGroupNonEmpty = false;
 
-  const groups: Partial<ComponentGroup<T>>[] = [];
+  const groups: unknown[] = [];
 
-  for (const [key, schema] of Object.entries(options)) {
+  for (const [key, schema] of Object.entries<ComposeOptionsEntry>(options)) {
     const config = api.getConfig(schema.componentId);
     const compact = config?.ui?.compact ?? false;
 
     if (compact) {
-      compactGroup[key as keyof T] = schema;
+      compactGroup[key as keyof ComposeGroup<Args>] = schema;
       compactGroupNonEmpty = true;
     } else {
       groups.push({
         [key]: schema,
-      } as ComponentGroup<T>);
+      } as ComposeGroup<Args>);
     }
   }
 
@@ -33,10 +42,10 @@ function splitEntitySchemaComponentsToGroups<T>(
     groups.unshift(compactGroup);
   }
 
-  return groups;
+  return groups as ComposeGroup<Args>[];
 }
 
-export const renderer: ComponentRenderer<'base::compose'> = ({
+export const renderer: ComponentRenderer<Id> = ({
   data,
   options,
   error,
@@ -51,17 +60,15 @@ export const renderer: ComponentRenderer<'base::compose'> = ({
 
   return (
     <div className={styles.root}>
-      {groups.map((group, i) => {
-        return (
-          <ComponentGridGroup
-            key={i}
-            group={group}
-            data={data}
-            error={error}
-            onValueChanged={onDataChanged}
-          />
-        );
-      })}
+      {groups.map((group, i) => (
+        <ComponentGridGroup
+          key={i}
+          group={group}
+          data={data}
+          error={error}
+          onValueChanged={onDataChanged}
+        />
+      ))}
     </div>
   );
 };

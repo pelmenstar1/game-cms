@@ -1,5 +1,4 @@
-import { componentDataValidator } from '@game-cms/utils';
+import { ComponentDataValidator } from '@game-cms/types';
 
-export const validator = componentDataValidator<'base::number'>(
-  () => undefined
-);
+export const validator: ComponentDataValidator<'base::number'> = () =>
+  undefined;

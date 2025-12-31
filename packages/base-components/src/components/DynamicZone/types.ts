@@ -19,59 +19,66 @@ export type DynamicZoneInput = Record<
 
 type ResolveInput<T> = T extends DynamicZoneInput ? T : DynamicZoneInput;
 
-type Error<Input extends DynamicZoneInput> = {
-  [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
-    ? ComponentErrorById<Id, Args>
-    : unknown;
-}[keyof Input][];
-
 type DataEntry<Data, K> = {
   key: K;
   data: Data;
-};
-
-type Data<Input extends DynamicZoneInput> = {
-  [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
-    ? DataEntry<ComponentDataById<Id, Args>, keyof Input>
-    : DataEntry<ComponentData, keyof Input>;
-}[keyof Input][];
-
-type ResolvedData<Input extends DynamicZoneInput> = {
-  [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
-    ? DataEntry<ComponentResolvedDataById<Id, Args>, keyof Input>
-    : DataEntry<ComponentData, keyof Input>;
-}[keyof Input][];
-
-type OptionsEntry<Options> = {
-  componentId: ComponentId;
-  title: string;
-  options: Options;
-};
-
-type Options<Input extends DynamicZoneInput> = {
-  [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
-    ? OptionsEntry<ComponentOptionsById<Id, Args>>
-    : OptionsEntry<ComponentOptions>;
 };
 
 interface ClientDataEntry<Data, K> extends DataEntry<Data, K> {
   clientKey: Key;
 }
 
-type ClientData<Input extends DynamicZoneInput> = {
-  [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
-    ? ClientDataEntry<ComponentClientDataById<Id, Args>, keyof Input>
-    : ClientDataEntry<ComponentData, keyof Input>;
+type GetSchemaParams<T = unknown, K = string> =
+  T extends ComponentSchema<infer Id, infer Args>
+    ? {
+        options: ComponentOptionsById<Id, Args>;
+        data: DataEntry<ComponentDataById<Id, Args>, K>;
+        error: ComponentErrorById<Id, Args> | undefined;
+        id: Id;
+        resolvedData: DataEntry<ComponentResolvedDataById<Id, Args>, K>;
+        clientData: ClientDataEntry<ComponentClientDataById<Id, Args>, K>;
+      }
+    : {
+        options: ComponentOptions;
+        data: DataEntry<ComponentData, K>;
+        error: unknown;
+        id: ComponentId;
+        resolvedData: DataEntry<ComponentData, K>;
+        clientData: ClientDataEntry<ComponentData, K>;
+      };
+
+type DynamicZoneArray<
+  Input extends DynamicZoneInput,
+  TK extends keyof GetSchemaParams,
+> = {
+  [K in keyof Input]: GetSchemaParams<Input[K]['component'], K>[TK];
 }[keyof Input][];
+
+type OptionsEntry<Options, Id> = {
+  componentId: Id;
+  title: string;
+  options: Options;
+};
+
+type Options<Input extends DynamicZoneInput> = {
+  [K in keyof Input]: Input[K]['component'] extends ComponentSchema<
+    infer Id,
+    infer Args
+  >
+    ? OptionsEntry<ComponentOptionsById<Id, Args>, Id>
+    : OptionsEntry<ComponentOptions, ComponentId>;
+};
+
+type DynamicZoneEntry<Input extends DynamicZoneInput> = {
+  data: DynamicZoneArray<Input, 'data'>;
+  options: Options<Input>;
+  error: DynamicZoneArray<Input, 'error'>;
+  resolvedData: DynamicZoneArray<Input, 'resolvedData'>;
+  clientData: DynamicZoneArray<Input, 'clientData'>;
+};
 
 declare module '@game-cms/types' {
   interface ComponentTypeMap<_Args> {
-    'base::dynamic-zone': ComponentEntry<{
-      data: Data<ResolveInput<_Args>>;
-      options: Options<ResolveInput<_Args>>;
-      error: Error<ResolveInput<_Args>>;
-      resolvedData: ResolvedData<ResolveInput<_Args>>;
-      clientData: ClientData<ResolveInput<_Args>>;
-    }>;
+    'base::dynamic-zone': ComponentEntry<DynamicZoneEntry<ResolveInput<_Args>>>;
   }
 }

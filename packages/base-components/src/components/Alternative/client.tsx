@@ -1,16 +1,20 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentData, ComponentRenderer } from '@game-cms/types';
+import { ComponentClientDataById, ComponentProps } from '@game-cms/types';
 import { DraggableList, IconButton, PlusIcon, Typography } from '@game-cms/ui';
 
 import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
 import styles from './client.module.scss';
 
-export const renderer: ComponentRenderer<'base::alternative'> = ({
+type Id = 'base::alternative';
+
+export const renderer = <Args,>({
   data,
   options,
   error,
   onDataChanged,
-}) => {
+}: ComponentProps<Id, Args>) => {
+  type ItemData = ComponentClientDataById<Id, Args>['default'];
+
   const api = useComponentApi();
 
   const { baseOptions, componentId } = options;
@@ -21,7 +25,7 @@ export const renderer: ComponentRenderer<'base::alternative'> = ({
     ...choice,
   }));
 
-  const onDefaultChange = (newDefault: ComponentData) => {
+  const onDefaultChange = (newDefault: ItemData) => {
     onDataChanged?.({
       alternative: data.alternative,
       default: newDefault,
@@ -71,7 +75,7 @@ export const renderer: ComponentRenderer<'base::alternative'> = ({
           onItemsChanged={onAlternativeItemsChanged}
         >
           {(item, _, handleRef) => {
-            const onItemDataChanged = (value: ComponentData) => {
+            const onItemDataChanged = (value: ItemData) => {
               const newAlternative = [...data.alternative];
               newAlternative[item.key] = { ...newAlternative[item.key], value };
 

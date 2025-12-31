@@ -1,7 +1,5 @@
 import type {
   ComponentController,
-  ComponentDataValidator,
-  ComponentId,
   ComponentMeta,
   ComponentSchema,
 } from '@game-cms/types';
@@ -17,11 +15,5 @@ export function componentAccessor<Id extends string, Args>(
 }
 
 export function componentMeta<Id extends string>(value: ComponentMeta<Id>) {
-  return value;
-}
-
-export function componentDataValidator<Id extends ComponentId, Args = unknown>(
-  value: ComponentDataValidator<Id, Args>
-) {
   return value;
 }
