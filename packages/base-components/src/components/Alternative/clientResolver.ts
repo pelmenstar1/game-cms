@@ -14,27 +14,29 @@ function parseCondition(text: string) {
 
 export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
   {
-    toClient: (data, options, context) => ({
-      default: data.default,
-      alternative: data.alternative.map((item) => ({
-        condition: conditionalAstExpressionToString(item.condition),
-        value: context.toClient(
-          options.componentId,
-          item.value,
-          options.baseOptions
-        ),
-      })),
-    }),
+    toClient: (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        default: context.toClient(componentId, data.default, baseOptions),
+        alternative: data.alternative.map((item) => ({
+          condition: conditionalAstExpressionToString(item.condition),
+          value: context.toClient(componentId, item.value, baseOptions),
+        })),
+      };
+    },
     fromClient: (data, options, context) => {
-      const result = data.alternative.map(
+      const { componentId, baseOptions } = options;
+      const defaultResult = context.fromClient(
+        componentId,
+        data.default,
+        baseOptions
+      );
+
+      const alternativeResult = data.alternative.map(
         ({ value, condition: rawCondition }) => {
           const condition = parseCondition(rawCondition);
-
-          const data = context.fromClient(
-            options.componentId,
-            value,
-            options.baseOptions
-          );
+          const data = context.fromClient(componentId, value, baseOptions);
 
           if (condition.error !== undefined || data.error !== undefined) {
             return { error: { condition: condition.error, data: data.error } };
@@ -44,11 +46,14 @@ export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
         }
       );
 
-      if (result.some((item) => item.error !== undefined)) {
+      if (
+        defaultResult.error !== undefined ||
+        alternativeResult.some((item) => item.error !== undefined)
+      ) {
         return {
           error: {
-            default: undefined,
-            alternative: result.map(({ error }) => ({
+            default: defaultResult.error,
+            alternative: alternativeResult.map(({ error }) => ({
               data: error?.data,
               condition: error?.condition,
             })),
@@ -58,8 +63,8 @@ export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
 
       return {
         result: {
-          default: data.default,
-          alternative: result.map(({ value }) => {
+          default: defaultResult.result,
+          alternative: alternativeResult.map(({ value }) => {
             if (value === undefined) {
               throw new Error('Value is undefined');
             }

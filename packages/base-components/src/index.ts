@@ -23,7 +23,7 @@ export const number = componentAccessor(Number);
 
 export function repeatable<Id extends ComponentId, Args>(
   baseComponent: ComponentSchema<Id, Args>
-): ComponentSchema<'base::repeatable', { componentId: Id; baseArgs: Args }> {
+): ComponentSchema<'base::repeatable', { id: Id; baseArgs: Args }> {
   return {
     componentId: 'base::repeatable',
     options: {

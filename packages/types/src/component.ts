@@ -158,17 +158,14 @@ export type ComponentDataOrError<Id extends ComponentId, Args = unknown> =
   | { result: ComponentDataById<Id, Args> }
   | { error: ComponentErrorById<Id, Args> };
 
-export type ComponentClientDataResolver<
-  Id extends ComponentId,
-  Args = unknown,
-> = {
-  toClient: (
+export type ComponentClientDataResolver<Id extends ComponentId> = {
+  toClient: <Args>(
     data: ComponentDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentContext['clientResolver']
   ) => ComponentClientDataById<Id, Args>;
 
-  fromClient: (
+  fromClient: <Args>(
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentContext['clientResolver']

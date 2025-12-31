@@ -1,7 +1,9 @@
 import { useComponentApi } from '@game-cms/component-api';
 import { ComponentRenderer } from '@game-cms/types';
 import { IconButton, PlusIcon } from '@game-cms/ui';
+import { useCallback, useMemo } from 'react';
 
+import { ComponentList } from '../../micro/ComponentList/ComponentList.js';
 import styles from './client.module.scss';
 
 export const renderer: ComponentRenderer<'base::repeatable'> = ({
@@ -11,7 +13,18 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
   onDataChanged,
 }) => {
   const api = useComponentApi();
-  const Component = api.getComponent(options.componentId);
+
+  const items = useMemo(() => {
+    const { baseOptions, componentId } = options;
+
+    return data.map((dataItem, index) => ({
+      key: dataItem.clientKey,
+      componentId,
+      options: baseOptions,
+      data: dataItem.data,
+      error: error?.[index],
+    }));
+  }, [data, error, options]);
 
   const onAdd = () => {
     const defaultData = api.getDefaultData(
@@ -19,27 +32,28 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
       options.baseOptions
     );
 
-    onDataChanged?.([...data, defaultData]);
+    onDataChanged?.([
+      ...data,
+      { clientKey: api.generateId(), data: defaultData },
+    ]);
   };
+
+  const onItemsChanged = useCallback(
+    (newItems: typeof items) => {
+      onDataChanged?.(
+        newItems.map((item) => ({ clientKey: item.key, data: item.data }))
+      );
+    },
+    [onDataChanged]
+  );
 
   return (
     <div className={styles.root}>
-      <div className={styles.list}>
-        {data.map((item, index) => (
-          <Component
-            key={index}
-            data={item}
-            options={options.baseOptions}
-            error={error?.[index]}
-            onDataChanged={(newItem) => {
-              const newData = [...data];
-              newData[index] = newItem;
-
-              onDataChanged?.(newData);
-            }}
-          />
-        ))}
-      </div>
+      <ComponentList
+        className={styles.list}
+        items={items}
+        onItemsChanged={onItemsChanged}
+      />
 
       <IconButton className={styles.add} title="Add element" onClick={onAdd}>
         <PlusIcon />

@@ -65,7 +65,7 @@ export const renderer = <Args,>({
                 ...data,
                 {
                   key,
-                  clientKey: api.idSource(),
+                  clientKey: api.generateId(),
                   data: api.getDefaultData(componentId, options),
                 },
               ] as Data);

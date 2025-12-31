@@ -78,7 +78,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
   const api = useMemo(
     (): ComponentApi => ({
-      idSource: incrementingIdSource,
+      generateId: incrementingIdSource,
       getDefaultData: (id, options) => {
         const result = defaultDataContext.data(id, options);
 

@@ -65,12 +65,15 @@ export function AccessEntityView<Id extends EntityId>({
 
   const error = useMemo(
     () =>
-      hub.validationContext.data('base::compose', clientData, composeOptions) ??
-      data.error,
-    [hub, clientData, composeOptions, data.error]
+      data.result
+        ? hub.validationContext.data(
+            'base::compose',
+            data.result,
+            composeOptions
+          )
+        : data.error,
+    [data, hub.validationContext, composeOptions]
   );
-
-  console.log(data);
 
   const onSaveTransformed = useCallback(() => {
     const dataValue = data.result;

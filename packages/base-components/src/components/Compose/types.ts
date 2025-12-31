@@ -4,7 +4,7 @@ import { GetSchemaParams } from '../../internal/types.js';
 
 export type ComposeInput = Record<string, ComponentSchema>;
 
-type ResolveInput<T> = T extends ComposeInput ? T : ComposeInput;
+export type ResolveComposeInput<T> = T extends ComposeInput ? T : ComposeInput;
 type ComposeMap<
   Input extends ComposeInput,
   TK extends keyof GetSchemaParams,
@@ -15,7 +15,9 @@ type ComposeMap<
 export type ComposeOptionsEntry<T extends ComponentSchema = ComponentSchema> =
   Pick<T, 'componentId' | 'options'>;
 
-type ComposeEntry<Input extends ComposeInput> = {
+export type ComposeEntry<Args> = BaseComposeEntry<ResolveComposeInput<Args>>;
+
+type BaseComposeEntry<Input extends ComposeInput> = {
   data: ComposeMap<Input, 'data'>;
   options: {
     [K in keyof Input]: ComposeOptionsEntry<Input[K]>;
@@ -29,6 +31,6 @@ type ComposeEntry<Input extends ComposeInput> = {
 
 declare module '@game-cms/types' {
   interface ComponentTypeMap<_Args> {
-    'base::compose': ComponentEntry<ComposeEntry<ResolveInput<_Args>>>;
+    'base::compose': ComponentEntry<ComposeEntry<_Args>>;
   }
 }

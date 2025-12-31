@@ -7,31 +7,36 @@ import {
   ComponentOptionsById,
   ComponentResolvedDataById,
 } from '@game-cms/types';
+import { Key } from 'react';
+
+type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
+  id: Id;
+  baseArgs: BaseArgs;
+};
 
 type ResolveArgs<Args> = Args extends {
   componentId: infer Id extends ComponentId;
   baseArgs: infer BaseArgs;
 }
-  ? { componentId: Id; baseArgs: BaseArgs }
-  : { componentId: ComponentId; baseArgs: unknown };
+  ? RepeatableArgs<Id, BaseArgs>
+  : RepeatableArgs;
 
-type GetId<Args> = ResolveArgs<Args>['componentId'];
-type GetBaseArgs<Args> = ResolveArgs<Args>['baseArgs'];
+type RepeatableEntry<Args extends RepeatableArgs> = {
+  data: ComponentDataById<Args['id'], Args['baseArgs']>[];
+  options: {
+    componentId: Args['id'];
+    baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
+  };
+  error: (ComponentErrorById<Args['id'], Args['baseArgs']> | undefined)[];
+  resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>[];
+  clientData: {
+    clientKey: Key;
+    data: ComponentClientDataById<Args['id'], Args['baseArgs']>;
+  }[];
+};
 
 declare module '@game-cms/types' {
   interface ComponentTypeMap<_Args> {
-    'base::repeatable': ComponentEntry<{
-      data: ComponentDataById<GetId<_Args>, GetBaseArgs<_Args>>[];
-      options: {
-        componentId: GetId<_Args>;
-        baseOptions: ComponentOptionsById<GetId<_Args>, GetBaseArgs<_Args>>;
-      };
-      error: ComponentErrorById<GetId<_Args>, GetBaseArgs<_Args>>[];
-      resolvedData: ComponentResolvedDataById<
-        GetId<_Args>,
-        GetBaseArgs<_Args>
-      >[];
-      clientData: ComponentClientDataById<GetId<_Args>, GetBaseArgs<_Args>>[];
-    }>;
+    'base::repeatable': ComponentEntry<RepeatableEntry<ResolveArgs<_Args>>>;
   }
 }
