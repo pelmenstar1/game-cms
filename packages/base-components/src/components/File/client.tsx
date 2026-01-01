@@ -7,12 +7,15 @@ import {
   useAsyncCallback,
   useModal,
 } from '@game-cms/ui';
+import { useCallback } from 'react';
 
 import { FileExplorerModal } from '../../micro/FileExplorerModal/index.js';
+import { FileList } from '../../micro/FileList/index.js';
 import styles from './client.module.scss';
+import { FileClientDataItem } from './types.js';
 
 export const renderer: ComponentRenderer<'base::file'> = ({
-  data,
+  data: { items },
   error,
   onDataChanged,
 }) => {
@@ -22,18 +25,41 @@ export const renderer: ComponentRenderer<'base::file'> = ({
     const result = await showModal(FileExplorerModal, {});
 
     if (result) {
-      onDataChanged?.({ items: [...data.items, result] });
+      onDataChanged?.({ items: [...items, result] });
     }
-  }, [data.items, onDataChanged, showModal]);
+  }, [items, onDataChanged, showModal]);
+
+  const onItemsChanged = useCallback(
+    (items: FileClientDataItem[]) => {
+      onDataChanged?.({ items });
+    },
+    [onDataChanged]
+  );
 
   return (
     <div className={styles.root}>
       <div
-        className={classNames(styles.preview, error && styles['preview-error'])}
+        className={classNames(
+          styles['preview-container'],
+          error && styles['preview-error']
+        )}
       >
-        <IconButton title="Add file" onClick={onAddFile}>
-          <PlusIcon />
-        </IconButton>
+        {items.length > 0 ? (
+          <FileList
+            items={items}
+            onItemsChanged={onItemsChanged}
+            onAddFile={onAddFile}
+            className={styles['preview-list']}
+          />
+        ) : (
+          <IconButton
+            title="Add file"
+            onClick={onAddFile}
+            className={styles['single-add-button']}
+          >
+            <PlusIcon />
+          </IconButton>
+        )}
       </div>
 
       {error && <Typography>{error}</Typography>}

@@ -1,4 +1,5 @@
 import { useComponentApi } from '@game-cms/component-api';
+import { removeIndex } from '@game-cms/shared/collections';
 import { ComponentClientDataById, ComponentProps } from '@game-cms/types';
 import { DraggableList, IconButton, PlusIcon, Typography } from '@game-cms/ui';
 
@@ -99,12 +100,9 @@ export const renderer = <Args,>({
             };
 
             const onItemDelete = () => {
-              const newAlternative = [...data.alternative];
-              newAlternative.splice(item.key, 1);
-
               onDataChanged?.({
                 default: data.default,
-                alternative: newAlternative,
+                alternative: removeIndex(data.alternative, item.key),
               });
             };
 

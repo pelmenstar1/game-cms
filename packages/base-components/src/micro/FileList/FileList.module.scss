@@ -1,0 +1,21 @@
+.pager {
+  display: flex;
+  gap: 0.5em;
+
+  &-move-button {
+    padding: 0;
+  }
+}
+
+.preview {
+  flex-grow: 1;
+  height: 10em;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
