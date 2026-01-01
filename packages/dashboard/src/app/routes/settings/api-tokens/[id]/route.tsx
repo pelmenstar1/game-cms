@@ -1,20 +1,19 @@
 import { deleteApiToken, getApiTokenInfo } from '@game-cms/client';
+import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import {
   Button,
   ConfirmationDialog,
+  DataLoader,
   DeleteIcon,
   Labeled,
   Typography,
   useAsyncCallback,
   useModal,
   useNotification,
+  useTypedNavigate,
 } from '@game-cms/ui';
 
-import { DataLoader } from '@/components/DataLoader';
 import { PermissionsEditor } from '@/components/PermissionsEditor';
-import { useApiAction } from '@/hooks/useApiAction';
-import { useApiQuery } from '@/hooks/useApiQuery';
-import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 import { formatExpirationDate } from '@/utils/expirationDate';
 
 import type { Route } from './+types/route';

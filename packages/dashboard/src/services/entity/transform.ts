@@ -4,6 +4,7 @@ import type {
   EntitySchemaById,
 } from '@game-cms/base-types';
 import type { ComponentApi } from '@game-cms/component-api';
+import type { MaybePromise } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
 import type {
   ComponentClientDataById,
@@ -17,7 +18,7 @@ export function transformDataToClientData<Id extends EntityId>(
   schema: EntitySchemaById<Id>,
   data: EntityDataById<Id> | undefined,
   options: ComposeOptions
-): ComponentClientDataById<'base::compose'> {
+): MaybePromise<ComponentClientDataById<'base::compose'>> {
   const dataOrDefault =
     data ??
     mapObject(schema.components, (propSchema) =>

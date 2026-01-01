@@ -1,10 +1,9 @@
 import { listApiTokens } from '@game-cms/client';
-import { LinkButton, List, PlusIcon } from '@game-cms/ui';
+import { useApiQuery } from '@game-cms/component-api';
+import { DataLoader, LinkButton, List, PlusIcon } from '@game-cms/ui';
 
 import { ApiTokenItem } from '@/components/ApiTokenItem';
-import { DataLoader } from '@/components/DataLoader';
 import { PageView } from '@/components/PageView';
-import { useApiQuery } from '@/hooks/useApiQuery';
 import { usePagingOptions } from '@/hooks/usePagingOptions';
 import { useQueryPage } from '@/hooks/useQueryPage';
 

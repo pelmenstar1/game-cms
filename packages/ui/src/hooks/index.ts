@@ -9,4 +9,5 @@ export * from './usePageFetcher';
 export * from './usePreventLeaving';
 export * from './useScrollbar';
 export * from './useTestRegex';
+export * from './useTypedNavigate';
 export * from './useValidation';

@@ -1,12 +1,11 @@
 import type { EntitySchema } from '@game-cms/base-types';
 import { listEntities } from '@game-cms/client';
-import { classNames, List } from '@game-cms/ui';
+import { useApiQuery } from '@game-cms/component-api';
+import { classNames, DataLoader, List } from '@game-cms/ui';
 
-import { useApiQuery } from '@/hooks/useApiQuery';
 import { usePagingOptions } from '@/hooks/usePagingOptions';
 import { useQueryPage } from '@/hooks/useQueryPage';
 
-import { DataLoader } from '../DataLoader';
 import { EntityListItem } from '../EntityListItem';
 import { PageView } from '../PageView';
 import styles from './EntityList.module.scss';

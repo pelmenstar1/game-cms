@@ -1,12 +1,13 @@
-import { handleResponseError } from './internal/errors.js';
-import { createFullUrl } from './internal/utils.js';
-import type { ResponseParser } from './responseParser.js';
 import type {
-  GameCmsClient,
-  GameCmsClientOptions,
+  ApiClient,
   InitBodyRequestOptions,
   RequestOptions,
-} from './types.js';
+  ResponseParser,
+} from '@game-cms/types';
+
+import { handleResponseError } from './internal/errors.js';
+import { createFullUrl } from './internal/utils.js';
+import type { GameCmsClientOptions } from './types.js';
 
 function isBodyOptions(
   options: RequestOptions
@@ -31,7 +32,7 @@ export function createStandardRequestInit(
 
 export function createStandardClient({
   baseUrl,
-}: GameCmsClientOptions): GameCmsClient {
+}: GameCmsClientOptions): ApiClient {
   async function makeRequest<T>(
     options: RequestOptions & { response?: ResponseParser<T> }
   ) {
@@ -49,7 +50,6 @@ export function createStandardClient({
   }
 
   return {
-    baseUrl,
     makeRequest,
   };
 }

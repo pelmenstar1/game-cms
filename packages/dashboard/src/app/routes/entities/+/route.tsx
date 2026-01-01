@@ -1,13 +1,10 @@
 import type { EntityData } from '@game-cms/base-types';
 import { createEntity, getEntitySchema } from '@game-cms/client';
-import { useNotification } from '@game-cms/ui';
+import { useApiAction, useApiQuery } from '@game-cms/component-api';
+import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
 import { useCallback } from 'react';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
-import { DataLoader } from '@/components/DataLoader';
-import { useApiAction } from '@/hooks/useApiAction';
-import { useApiQuery } from '@/hooks/useApiQuery';
-import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';

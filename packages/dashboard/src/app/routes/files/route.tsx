@@ -1,7 +1,6 @@
+import { FileExplorer } from '@game-cms/base-components/micro';
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router';
-
-import { FileExplorer } from '@/components/FileExplorer';
 
 import styles from './route.module.scss';
 

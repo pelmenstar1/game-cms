@@ -306,6 +306,12 @@ importers:
 
   packages/base-components:
     dependencies:
+      '@game-cms/base-types':
+        specifier: workspace:*
+        version: link:../base-types
+      '@game-cms/client':
+        specifier: workspace:*
+        version: link:../client
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
@@ -343,6 +349,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.3
+      mongodb:
+        specifier: 'catalog:'
+        version: 7.0.0
       tsx:
         specifier: 'catalog:'
         version: 4.21.0
@@ -470,6 +479,9 @@ importers:
       '@game-cms/types':
         specifier: workspace:*
         version: link:../types
+      '@game-cms/ui':
+        specifier: workspace:*
+        version: link:../ui
       react:
         specifier: 'catalog:'
         version: 19.2.3

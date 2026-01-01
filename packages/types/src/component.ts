@@ -1,6 +1,7 @@
-import type { IdSource, Or } from '@game-cms/shared';
+import type { IdSource, MaybePromise, Or } from '@game-cms/shared';
 import type { Key, ReactNode } from 'react';
 
+import type { RequestContext } from './apiClient.js';
 import type { DefaultExport, IdArrayToMap } from './typeutil.js';
 
 export type ComponentDataAtom = unknown; // string | number | boolean | null;
@@ -121,11 +122,21 @@ export type ForeignComponentContext = {
   clientResolver: {
     idSource: IdSource<Key>;
 
+    getDefaultData: <Id extends ComponentId, Args>(
+      id: Id,
+      options: ComponentOptionsById<Id, Args>
+    ) => ComponentClientDataById<Id, Args>;
+
+    makeRequest: <Args extends unknown[], R>(
+      fn: (context: RequestContext, ...args: Args) => Promise<R>,
+      args: Args
+    ) => Promise<R>;
+
     toClient: <Id extends ComponentId, Args>(
       id: Id,
       data: ComponentDataById<Id, Args>,
       options: ComponentOptionsById<Id, Args>
-    ) => ComponentClientDataById<Id, Args>;
+    ) => MaybePromise<ComponentClientDataById<Id, Args>>;
 
     fromClient: <Id extends ComponentId, Args>(
       id: Id,
@@ -159,11 +170,16 @@ export type ComponentDataOrError<Id extends ComponentId, Args = unknown> =
   | { error: ComponentErrorById<Id, Args> };
 
 export type ComponentClientDataResolver<Id extends ComponentId> = {
+  getDefaultData: <Args>(
+    options: ComponentOptionsById<Id, Args>,
+    context: ForeignComponentContext['clientResolver']
+  ) => ComponentClientDataById<Id, Args>;
+
   toClient: <Args>(
     data: ComponentDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentContext['clientResolver']
-  ) => ComponentClientDataById<Id, Args>;
+  ) => MaybePromise<ComponentClientDataById<Id, Args>>;
 
   fromClient: <Args>(
     clientData: ComponentClientDataById<Id, Args>,

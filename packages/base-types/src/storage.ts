@@ -19,8 +19,18 @@ export enum StorageItemType {
 }
 
 export type StorageFileItem = z.infer<typeof storageFileItem>;
+
+export interface StorageFileItemWithId<Id = string> extends StorageFileItem {
+  id: Id;
+}
+
 export type StorageFolderItem = z.infer<typeof storageFileItem>;
 export type StorageItem = z.infer<typeof storageItem>;
+
+export type StorageItemWithId<Id = string> = StorageItem & {
+  id: Id;
+};
+
 export type StorageItemWithMeta = z.infer<typeof storageItemWithMeta>;
 
 export type UploadFileMeta = z.infer<typeof uploadFileMeta>;

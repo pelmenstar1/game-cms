@@ -1,8 +1,8 @@
 import { type SignInPayload } from '@game-cms/base-types';
+import type { RequestContext } from '@game-cms/types';
 
 import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
-import type { RequestContext } from '../types.js';
 
 export const signUserIn = (context: RequestContext, payload: SignInPayload) =>
   request(context, {

@@ -2,6 +2,7 @@ import { mapObject } from '@game-cms/shared/object';
 import {
   ComponentClientDataById,
   ComponentClientDataResolver,
+  ComponentDataById,
   ComponentDataOrError,
   ComponentOptionsById,
   ForeignComponentContext,
@@ -12,10 +13,30 @@ import { ComposeEntry } from './types.js';
 type Id = 'base::compose';
 
 export const clientResolver: ComponentClientDataResolver<Id> = {
-  toClient: (data, options, context) =>
-    mapObject(options, (prop, key) =>
-      context.toClient(prop.componentId, data[key], prop.options)
+  getDefaultData: (options, context) =>
+    mapObject(options, (item) =>
+      context.getDefaultData(item.componentId, item.options)
     ),
+  toClient: async <Args>(
+    data: ComponentDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    context: ForeignComponentContext['clientResolver']
+  ) => {
+    type Options = ComposeEntry<Args>['options'];
+    type OptionsEntry = Options[keyof Options];
+
+    const entries = await Promise.all(
+      Object.entries<OptionsEntry>(options).map(
+        async ([key, prop]) =>
+          [
+            key,
+            await context.toClient(prop.componentId, data[key], prop.options),
+          ] as const
+      )
+    );
+
+    return Object.fromEntries(entries) as ComponentDataById<Id, Args>;
+  },
   fromClient: <Args>(
     data: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,

@@ -1,13 +1,11 @@
 import { getPermissions } from '@game-cms/client';
-import { classNames } from '@game-cms/ui';
-
-import { useApiQuery } from '@/hooks/useApiQuery';
+import { useApiQuery } from '@game-cms/component-api';
+import { classNames, DataLoader } from '@game-cms/ui';
 
 import {
   BasePermissionsEditor,
   type BasePermissionsEditorProps,
 } from '../BasePermissionsEditor';
-import { DataLoader } from '../DataLoader';
 import styles from './PermissionsEditor.module.scss';
 
 export interface PermissionsEditorProps extends Omit<

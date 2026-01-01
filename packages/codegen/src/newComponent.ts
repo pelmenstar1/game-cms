@@ -4,6 +4,7 @@ import path from 'node:path';
 type CreateNewComponentOptions = {
   storybook?: boolean;
   reExport?: boolean;
+  rootDir?: string;
 };
 
 type StepContext = {
@@ -60,12 +61,14 @@ export const Primary = meta.story({
 
 export async function createNewComponent(
   baseDir: string,
-  componentPath: string,
   options?: CreateNewComponentOptions
 ) {
+  const componentPath = process.argv[2];
+
   const fullComponentPath = path.join(
     baseDir,
-    '../src/components',
+    '../',
+    options?.rootDir ?? 'src/components',
     componentPath
   );
 

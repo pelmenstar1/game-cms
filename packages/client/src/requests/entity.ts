@@ -5,13 +5,15 @@ import type {
   EntitySchemaById,
 } from '@game-cms/base-types';
 import type { PageData, PagingOptions } from '@game-cms/shared';
-import type { ComponentDataResolverArgs } from '@game-cms/types';
+import type {
+  ComponentDataResolverArgs,
+  RequestContext,
+} from '@game-cms/types';
 import qs from 'qs';
 
 import { request, url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
-import type { RequestContext } from '../types.js';
 
 export type EntityDataByIdWithId<T extends EntityId> = EntityDataById<T> & {
   _id: string;

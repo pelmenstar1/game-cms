@@ -16,15 +16,15 @@ import {
   type ModalProps,
 } from './context';
 
-type ModalInvokationInfo<T = object> = {
+type ModalInvocationInfo<T = object> = {
   component: FC<T>;
   props: T;
 };
 
 export function ModalProvider({ children }: PropsWithChildren) {
-  const [currentModal, setCurrentModal] = useState<ModalInvokationInfo>();
+  const [currentModal, setCurrentModal] = useState<ModalInvocationInfo>();
 
-  const queueRef = useRef<ModalInvokationInfo[]>([]);
+  const queueRef = useRef<ModalInvocationInfo[]>([]);
 
   const onQueueUpdated = useCallback(() => {
     setCurrentModal(queueRef.current[0]);
@@ -44,7 +44,7 @@ export function ModalProvider({ children }: PropsWithChildren) {
       type R = InferModalResult<Props>;
 
       return new Promise<R>((resolve) => {
-        queueRef.current.push({
+        queueRef.current.unshift({
           component: Component,
           props: {
             ...props,
@@ -53,7 +53,7 @@ export function ModalProvider({ children }: PropsWithChildren) {
               resolve(result);
             },
           },
-        } as ModalInvokationInfo);
+        } as ModalInvocationInfo);
         onQueueUpdated();
       });
     };

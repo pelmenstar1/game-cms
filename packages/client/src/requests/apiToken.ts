@@ -8,12 +8,11 @@ import type {
   SignTokenInPayload,
 } from '@game-cms/base-types';
 import type { PageData, PagingOptions } from '@game-cms/shared';
-import type { ToClientType } from '@game-cms/types';
+import type { RequestContext, ToClientType } from '@game-cms/types';
 
 import { request, url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
-import type { RequestContext } from '../types.js';
 
 export const getApiTokenJwt = (
   context: RequestContext,

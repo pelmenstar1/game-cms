@@ -1,6 +1,7 @@
 import {
   type ComponentApi,
   ComponentApiContext,
+  useApiClient,
 } from '@game-cms/component-api';
 import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
 import type {
@@ -32,6 +33,8 @@ const componentCache = createInMemoryCache((id: ComponentId) => {
 });
 
 export function ComponentHubProvider({ children }: PropsWithChildren) {
+  const client = useApiClient();
+
   const validationContext = useMemo(
     (): ForeignComponentContext['validation'] => ({
       data: (id, data, options) => {
@@ -54,6 +57,22 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const clientResolverContext = useMemo(
     (): ForeignComponentContext['clientResolver'] => ({
       idSource: incrementingIdSource,
+      makeRequest: (fn, args) => {
+        return client.makeApiRequest(fn, args).promise;
+      },
+      getDefaultData: <Id extends ComponentId, Args>(
+        id: Id,
+        options: ComponentOptionsById<Id, Args>
+      ) => {
+        const resolver = getComponentClientResolver(id);
+
+        return resolver
+          ? resolver.getDefaultData(options, clientResolverContext)
+          : (defaultDataContext.data(id, options) as ComponentClientDataById<
+              Id,
+              Args
+            >);
+      },
       fromClient: (id, clientData, options) => {
         const resolver = getComponentClientResolver(id);
 
@@ -73,23 +92,23 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
           : (data as ComponentClientDataById<Id, Args>);
       },
     }),
-    []
+    [client, defaultDataContext]
   );
 
   const api = useMemo(
     (): ComponentApi => ({
       generateId: incrementingIdSource,
       getDefaultData: (id, options) => {
-        const result = defaultDataContext.data(id, options);
+        // const result = defaultDataContext.data(id, options);
 
-        return clientResolverContext.toClient(id, result, options);
+        return clientResolverContext.getDefaultData(id, options);
       },
       getComponent: <Id extends ComponentId>(id: Id) =>
         componentCache.get(id, null) as unknown as ComponentRenderer<Id>,
       getConfig: getComponentConfig,
       clientResolverContext,
     }),
-    [clientResolverContext, defaultDataContext]
+    [clientResolverContext]
   );
 
   const hub = useMemo(

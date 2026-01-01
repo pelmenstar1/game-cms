@@ -8,6 +8,7 @@ import { componentAccessor } from '@game-cms/utils';
 
 import type { ComposeInput } from './components/Compose/types.js';
 import { DynamicZoneInput } from './components/DynamicZone/types.js';
+import File from './components/File/index.js';
 import Number from './components/Number/index.js';
 import Text from './components/Text/index.js';
 
@@ -20,6 +21,7 @@ export type * from './components/Text/types.js';
 
 export const text = componentAccessor(Text);
 export const number = componentAccessor(Number);
+export const file = componentAccessor(File);
 
 export function repeatable<Id extends ComponentId, Args>(
   baseComponent: ComponentSchema<Id, Args>

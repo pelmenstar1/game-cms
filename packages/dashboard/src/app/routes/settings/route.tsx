@@ -1,6 +1,5 @@
+import { useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
-
-import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 
 import { items } from './items';
 

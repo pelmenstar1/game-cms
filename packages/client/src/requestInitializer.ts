@@ -1,6 +1,4 @@
-import type { RequestInitWithHeaders } from './internal/utilTypes.js';
-
-export type RequestInitializer = (init: RequestInitWithHeaders) => void;
+import { type RequestInitializer } from '@game-cms/types';
 
 export function jsonInit(body: unknown): RequestInitializer {
   return (init) => {

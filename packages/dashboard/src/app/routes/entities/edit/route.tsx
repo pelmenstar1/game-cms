@@ -5,14 +5,15 @@ import {
   getRawEntityById,
   updateEntityById,
 } from '@game-cms/client';
-import { useNotification } from '@game-cms/ui';
+import { useApiAction, useApiQuery } from '@game-cms/component-api';
+import {
+  MultipleDataLoader,
+  useNotification,
+  useTypedNavigate,
+} from '@game-cms/ui';
 import { useCallback } from 'react';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
-import { MultipleDataLoader } from '@/components/MultipleDataLoader';
-import { useApiAction } from '@/hooks/useApiAction';
-import { useApiQuery } from '@/hooks/useApiQuery';
-import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';

@@ -5,7 +5,10 @@ import type {
 } from '@game-cms/base-types';
 import { useComponentApi } from '@game-cms/component-api';
 import { mapObject } from '@game-cms/shared/object';
-import type { ComponentOptionsById } from '@game-cms/types';
+import type {
+  ComponentClientDataById,
+  ComponentOptionsById,
+} from '@game-cms/types';
 import {
   Button,
   classNames,
@@ -13,7 +16,7 @@ import {
   IconButton,
   Typography,
 } from '@game-cms/ui';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useComponentHub } from '@/hooks/useComponentHub';
 import { transformDataToClientData } from '@/services/entity/transform';
@@ -49,39 +52,55 @@ export function AccessEntityView<Id extends EntityId>({
     [schema]
   );
 
-  const [clientData, setClientData] = useState(() =>
-    transformDataToClientData(api, schema, initialValue, composeOptions)
-  );
+  const [clientData, setClientData] =
+    useState<ComponentClientDataById<'base::compose'>>();
+
+  useEffect(() => {
+    const worker = async () => {
+      const result = await transformDataToClientData(
+        api,
+        schema,
+        initialValue,
+        composeOptions
+      );
+
+      setClientData(result);
+    };
+
+    void worker();
+  }, [api, composeOptions, initialValue, schema]);
 
   const data = useMemo(
     () =>
-      api.clientResolverContext.fromClient(
-        'base::compose',
-        clientData,
-        composeOptions
-      ),
+      clientData
+        ? api.clientResolverContext.fromClient(
+            'base::compose',
+            clientData,
+            composeOptions
+          )
+        : undefined,
     [api, clientData, composeOptions]
   );
 
   const error = useMemo(
     () =>
-      data.result
+      data?.result
         ? hub.validationContext.data(
             'base::compose',
             data.result,
             composeOptions
           )
-        : data.error,
+        : data?.error,
     [data, hub.validationContext, composeOptions]
   );
 
   const onSaveTransformed = useCallback(() => {
-    const dataValue = data.result;
+    const dataValue = data?.result;
 
     if (dataValue !== undefined) {
       onSave?.(dataValue as EntityDataById<Id>);
     }
-  }, [data.result, onSave]);
+  }, [data, onSave]);
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -103,12 +122,14 @@ export function AccessEntityView<Id extends EntityId>({
 
       <div className={styles.content}>
         <div className={styles['component-grid']}>
-          <Compose
-            data={clientData}
-            options={composeOptions}
-            error={error}
-            onDataChanged={setClientData}
-          />
+          {clientData !== undefined && (
+            <Compose
+              data={clientData}
+              options={composeOptions}
+              error={error}
+              onDataChanged={setClientData}
+            />
+          )}
         </div>
 
         <div className={styles['action-block']}>

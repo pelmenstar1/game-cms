@@ -1,12 +1,12 @@
 import { formatSearchParams, type SearchParams } from '@game-cms/shared';
-import type { HttpMethod } from '@game-cms/types';
-
 import type {
+  HttpMethod,
   RequestContext,
   RequestOptions,
   RequestOptionsWithResult,
   RequestUrl,
-} from '../types.js';
+} from '@game-cms/types';
+
 import type { MaybeSearch } from './utilTypes.js';
 
 type ObjectRequestUrl<Path extends string> = {

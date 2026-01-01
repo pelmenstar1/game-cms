@@ -1,10 +1,9 @@
 import { getEntitySchemas } from '@game-cms/client';
-import { LinkButton, NavTabs, PlusIcon } from '@game-cms/ui';
+import { useApiQuery } from '@game-cms/component-api';
+import { LinkButton, NavTabs, PlusIcon, useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
 
 import { EntityList } from '@/components/EntityList';
-import { useApiQuery } from '@/hooks/useApiQuery';
-import { useTypedNavigate } from '@/hooks/useTypedNavigate';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';

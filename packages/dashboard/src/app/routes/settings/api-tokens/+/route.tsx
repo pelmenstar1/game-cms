@@ -1,4 +1,5 @@
 import { createApiToken } from '@game-cms/client';
+import { useApiAction } from '@game-cms/component-api';
 import {
   parseTimeSpec,
   type RelativeTime,
@@ -22,7 +23,6 @@ import { useCallback, useState } from 'react';
 
 import { DisplayApiTokenDialog } from '@/components/DisplayApiTokenDialog';
 import { PermissionsEditor } from '@/components/PermissionsEditor';
-import { useApiAction } from '@/hooks/useApiAction';
 
 import styles from './route.module.scss';
 

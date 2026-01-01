@@ -10,6 +10,8 @@
   "references": [
     { "path": "../build" },
     { "path": "../types" },
+    { "path": "../base-types" },
+    { "path": "../client" },
     { "path": "../ui" },
     { "path": "../utils" },
     { "path": "../codegen" },

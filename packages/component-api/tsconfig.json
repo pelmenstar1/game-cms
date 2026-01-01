@@ -2,8 +2,10 @@
   "extends": "../../configs/tsconfig.lib.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "module": "esnext",
+    "moduleResolution": "bundler"
   },
   "include": ["./src"],
-  "references": [{ "path": "../types" }]
+  "references": [{ "path": "../types" }, { "path": "../ui" }]
 }

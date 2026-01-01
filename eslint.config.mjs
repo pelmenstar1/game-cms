@@ -25,7 +25,7 @@ export default defineConfig(
       'packages/ui/.storybook',
       'packages/ui/vite.storybook.config.ts',
       'packages/base-api/scripts/*',
-      'packages/base-components/scripts/copyStyles.ts',
+      'packages/base-components/scripts/*',
       'coverage',
     ],
   },

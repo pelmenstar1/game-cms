@@ -2,8 +2,24 @@ import { ComponentClientDataResolver } from '@game-cms/types';
 
 export const clientResolver: ComponentClientDataResolver<'base::dynamic-zone'> =
   {
-    toClient: (data, _, context) =>
-      data.map((dataItem) => ({ ...dataItem, clientKey: context.idSource() })),
+    getDefaultData: () => [],
+    toClient: (data, options, context) => {
+      return Promise.all(
+        data.map(async (dataItem) => {
+          const { componentId, options: baseOptions } = options[dataItem.key];
+
+          return {
+            clientKey: context.idSource(),
+            key: dataItem.key,
+            data: await context.toClient(
+              componentId,
+              dataItem.data,
+              baseOptions
+            ),
+          };
+        })
+      );
+    },
     fromClient: (clientData, options, context) => {
       const result = clientData.map((value) => {
         const { componentId, options: baseOptions } = options[value.key];

@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@game-cms/types": "workspace:*",
+    "@game-cms/ui": "workspace:*",
     "react": "catalog:"
   },
   "devDependencies": {

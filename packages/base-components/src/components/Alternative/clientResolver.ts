@@ -14,15 +14,21 @@ function parseCondition(text: string) {
 
 export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
   {
-    toClient: (data, options, context) => {
+    getDefaultData: (options, context) => ({
+      default: context.getDefaultData(options.componentId, options.baseOptions),
+      alternative: [],
+    }),
+    toClient: async (data, options, context) => {
       const { componentId, baseOptions } = options;
 
       return {
-        default: context.toClient(componentId, data.default, baseOptions),
-        alternative: data.alternative.map((item) => ({
-          condition: conditionalAstExpressionToString(item.condition),
-          value: context.toClient(componentId, item.value, baseOptions),
-        })),
+        default: await context.toClient(componentId, data.default, baseOptions),
+        alternative: await Promise.all(
+          data.alternative.map(async (item) => ({
+            condition: conditionalAstExpressionToString(item.condition),
+            value: await context.toClient(componentId, item.value, baseOptions),
+          }))
+        ),
       };
     },
     fromClient: (data, options, context) => {

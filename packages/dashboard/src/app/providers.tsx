@@ -1,18 +1,17 @@
 import { NotificationWrapper, useModal } from '@game-cms/ui';
 import type { PropsWithChildren } from 'react';
 
+import { ApiClientProvider } from '@/context/apiClient';
 import { useComponentHub } from '@/hooks/useComponentHub';
-
-import { useApiClient } from '../hooks/useApiClient';
 
 export function Providers({ children }: PropsWithChildren) {
   return (
-    <useModal.Provider>
-      <NotificationWrapper>
-        <useApiClient.Provider>
-          <useComponentHub.Provider>{children}</useComponentHub.Provider>
-        </useApiClient.Provider>
-      </NotificationWrapper>
-    </useModal.Provider>
+    <NotificationWrapper>
+      <ApiClientProvider>
+        <useComponentHub.Provider>
+          <useModal.Provider>{children}</useModal.Provider>
+        </useComponentHub.Provider>
+      </ApiClientProvider>
+    </NotificationWrapper>
   );
 }

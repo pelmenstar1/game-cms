@@ -1,0 +1,12 @@
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.explorer {
+  flex-grow: 1;
+}
+
+.select-button {
+  margin-left: auto;
+}
