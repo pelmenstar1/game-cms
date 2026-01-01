@@ -1,14 +1,15 @@
 import {
   ComponentClientDataById,
   ComponentData,
-  ComponentDataById,
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
   ComponentOptions,
   ComponentOptionsById,
+  ComponentRawDataById,
   ComponentResolvedDataById,
   ComponentSchema,
+  ComponentStorageDataById,
 } from '@game-cms/types';
 import { Key } from 'react';
 
@@ -31,20 +32,22 @@ interface ClientDataEntry<Data, K> extends DataEntry<Data, K> {
 type GetSchemaParams<T = unknown, K = string> =
   T extends ComponentSchema<infer Id, infer Args>
     ? {
-        options: ComponentOptionsById<Id, Args>;
-        data: DataEntry<ComponentDataById<Id, Args>, K>;
-        error: ComponentErrorById<Id, Args> | undefined;
         id: Id;
+        options: ComponentOptionsById<Id, Args>;
+        error: ComponentErrorById<Id, Args> | undefined;
+        rawData: DataEntry<ComponentRawDataById<Id, Args>, K>;
         resolvedData: DataEntry<ComponentResolvedDataById<Id, Args>, K>;
         clientData: ClientDataEntry<ComponentClientDataById<Id, Args>, K>;
+        storageData: DataEntry<ComponentStorageDataById<Id, Args>, K>;
       }
     : {
-        options: ComponentOptions;
-        data: DataEntry<ComponentData, K>;
-        error: unknown;
         id: ComponentId;
+        options: ComponentOptions;
+        error: unknown;
+        rawData: DataEntry<ComponentData, K>;
         resolvedData: DataEntry<ComponentData, K>;
         clientData: ClientDataEntry<ComponentData, K>;
+        storageData: DataEntry<ComponentData, K>;
       };
 
 type DynamicZoneArray<
@@ -70,7 +73,7 @@ type Options<Input extends DynamicZoneInput> = {
 };
 
 type DynamicZoneEntry<Input extends DynamicZoneInput> = {
-  data: DynamicZoneArray<Input, 'data'>;
+  rawData: DynamicZoneArray<Input, 'rawData'>;
   options: Options<Input>;
   error: DynamicZoneArray<Input, 'error'>;
   resolvedData: DynamicZoneArray<Input, 'resolvedData'>;

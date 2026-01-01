@@ -1,6 +1,6 @@
 import type {
-  EntityDataById,
   EntityId,
+  EntityRawDataById,
   EntitySchemaById,
 } from '@game-cms/base-types';
 import { useComponentApi } from '@game-cms/component-api';
@@ -26,8 +26,8 @@ import styles from './AccessEntityView.module.scss';
 export interface AccessEntityViewProps<Id extends EntityId> {
   className?: string;
   schema: EntitySchemaById<Id>;
-  initialValue?: EntityDataById<Id>;
-  onSave?: (value: EntityDataById<Id>) => void;
+  initialValue?: EntityRawDataById<Id>;
+  onSave?: (value: EntityRawDataById<Id>) => void;
   onDelete?: () => void;
 }
 
@@ -85,7 +85,7 @@ export function AccessEntityView<Id extends EntityId>({
   const error = useMemo(
     () =>
       data?.result
-        ? hub.validationContext.data(
+        ? hub.validationContext.validate(
             'base::compose',
             data.result,
             composeOptions
@@ -98,7 +98,7 @@ export function AccessEntityView<Id extends EntityId>({
     const dataValue = data?.result;
 
     if (dataValue !== undefined) {
-      onSave?.(dataValue as EntityDataById<Id>);
+      onSave?.(dataValue as EntityRawDataById<Id>);
     }
   }, [data, onSave]);
 

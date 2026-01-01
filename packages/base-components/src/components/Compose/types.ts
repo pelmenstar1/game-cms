@@ -18,7 +18,7 @@ export type ComposeOptionsEntry<T extends ComponentSchema = ComponentSchema> =
 export type ComposeEntry<Args> = BaseComposeEntry<ResolveComposeInput<Args>>;
 
 type BaseComposeEntry<Input extends ComposeInput> = {
-  data: ComposeMap<Input, 'data'>;
+  rawData: ComposeMap<Input, 'rawData'>;
   options: {
     [K in keyof Input]: ComposeOptionsEntry<Input[K]>;
   };

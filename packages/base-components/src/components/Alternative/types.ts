@@ -1,46 +1,61 @@
 import { ConditionalData } from '@game-cms/conditional';
 import {
   ComponentClientDataById,
-  ComponentDataById,
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
+  ComponentRawDataById,
+  ComponentStorageDataById,
 } from '@game-cms/types';
 
+type AlternativeArgs<Id = ComponentId, BaseArgs = unknown> = {
+  id: Id;
+  baseArgs: BaseArgs;
+};
+
 type ResolveArgs<Args> = Args extends {
-  componentId: infer Id extends ComponentId;
+  id: infer Id extends ComponentId;
   baseArgs: infer BaseArgs;
 }
-  ? { componentId: Id; baseArgs: BaseArgs }
-  : { componentId: ComponentId; baseArgs: unknown };
+  ? AlternativeArgs<Id, BaseArgs>
+  : AlternativeArgs;
 
-type GetId<Args> = ResolveArgs<Args>['componentId'];
-type GetBaseArgs<Args> = ResolveArgs<Args>['baseArgs'];
+type Error<Args extends AlternativeArgs> = ComponentErrorById<
+  Args['id'],
+  Args['baseArgs']
+>;
 
-type Error<Args> = ComponentErrorById<GetId<Args>, GetBaseArgs<Args>>;
-type Data<Args> = ComponentDataById<GetId<Args>, GetBaseArgs<Args>>;
+type Data<Args extends AlternativeArgs> = ComponentRawDataById<
+  Args['id'],
+  Args['baseArgs']
+>;
+
+type AlternativeEntry<Args extends AlternativeArgs> = {
+  rawData: ConditionalData<Data<Args>>;
+  options: {
+    componentId: Args['id'];
+    baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
+  };
+  error: {
+    default: Error<Args> | undefined;
+    alternative: {
+      data: Error<Args> | undefined;
+      condition: string | undefined;
+    }[];
+  };
+  resolvedData: Data<Args>;
+  clientData: ConditionalData<
+    ComponentClientDataById<Args['id'], Args['baseArgs']>,
+    string
+  >;
+  storageData: ConditionalData<
+    ComponentStorageDataById<Args['id'], Args['baseArgs']>
+  >;
+};
 
 declare module '@game-cms/types' {
   interface ComponentTypeMap<_Args> {
-    'base::alternative': ComponentEntry<{
-      data: ConditionalData<Data<_Args>>;
-      options: {
-        componentId: GetId<_Args>;
-        baseOptions: ComponentOptionsById<GetId<_Args>, GetBaseArgs<_Args>>;
-      };
-      error: {
-        default: Error<_Args> | undefined;
-        alternative: {
-          data: Error<_Args> | undefined;
-          condition: string | undefined;
-        }[];
-      };
-      resolvedData: Data<_Args>;
-      clientData: ConditionalData<
-        ComponentClientDataById<GetId<_Args>, GetBaseArgs<_Args>>,
-        string
-      >;
-    }>;
+    'base::alternative': ComponentEntry<AlternativeEntry<ResolveArgs<_Args>>>;
   }
 }

@@ -1,11 +1,11 @@
 import {
   ComponentClientDataById,
   ComponentData,
-  ComponentDataById,
   ComponentErrorById,
   ComponentId,
   ComponentOptions,
   ComponentOptionsById,
+  ComponentRawDataById,
   ComponentResolvedDataById,
   ComponentSchema,
 } from '@game-cms/types';
@@ -23,7 +23,7 @@ export type GetSchemaParams<T = unknown> =
   T extends ComponentSchema<infer Id, infer Args>
     ? {
         options: ComponentOptionsById<Id, Args>;
-        data: ComponentDataById<Id, Args>;
+        rawData: ComponentRawDataById<Id, Args>;
         error: ComponentErrorById<Id, Args> | undefined;
         id: Id;
         resolvedData: ComponentResolvedDataById<Id, Args>;
@@ -31,7 +31,7 @@ export type GetSchemaParams<T = unknown> =
       }
     : {
         options: ComponentOptions;
-        data: ComponentData;
+        rawData: ComponentData;
         error: unknown;
         id: ComponentId;
         resolvedData: ComponentData;

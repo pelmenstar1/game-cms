@@ -1,11 +1,12 @@
 import {
   ComponentClientDataById,
-  ComponentDataById,
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
+  ComponentRawDataById,
   ComponentResolvedDataById,
+  ComponentStorageDataById,
 } from '@game-cms/types';
 import { Key } from 'react';
 
@@ -22,7 +23,7 @@ type ResolveArgs<Args> = Args extends {
   : RepeatableArgs;
 
 type RepeatableEntry<Args extends RepeatableArgs> = {
-  data: ComponentDataById<Args['id'], Args['baseArgs']>[];
+  rawData: ComponentRawDataById<Args['id'], Args['baseArgs']>[];
   options: {
     componentId: Args['id'];
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
@@ -33,6 +34,7 @@ type RepeatableEntry<Args extends RepeatableArgs> = {
     clientKey: Key;
     data: ComponentClientDataById<Args['id'], Args['baseArgs']>;
   }[];
+  storageData: ComponentStorageDataById<Args['id'], Args['baseArgs']>[];
 };
 
 declare module '@game-cms/types' {

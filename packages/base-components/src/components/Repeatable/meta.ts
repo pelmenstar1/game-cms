@@ -2,5 +2,5 @@ import { componentMeta } from '@game-cms/utils';
 
 export default componentMeta({
   id: 'base::repeatable',
-  defaultData: [],
+  defaultRawData: [],
 });

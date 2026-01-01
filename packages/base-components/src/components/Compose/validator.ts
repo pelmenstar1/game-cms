@@ -1,21 +1,21 @@
 import {
-  ComponentDataById,
   ComponentDataValidator,
   ComponentErrorById,
   ComponentOptionsById,
-  ForeignComponentContext,
+  ComponentRawDataById,
+  ForeignComponentValidationContext,
 } from '@game-cms/types';
 
 type Id = 'base::compose';
 
 export const validator: ComponentDataValidator<Id> = <Args>(
-  data: ComponentDataById<Id, Args>,
+  data: ComponentRawDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
-  context: ForeignComponentContext['validation']
+  context: ForeignComponentValidationContext
 ) => {
   const entries = Object.entries(options).map(
     ([key, { componentId, options }]) =>
-      [key, context.data(componentId, data[key], options)] as const
+      [key, context.validate(componentId, data[key], options)] as const
   );
 
   if (entries.some(([, value]) => value !== undefined)) {

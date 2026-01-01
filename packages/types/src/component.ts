@@ -2,9 +2,8 @@ import type { IdSource, MaybePromise, Or } from '@game-cms/shared';
 import type { Key, ReactNode } from 'react';
 
 import type { RequestContext } from './apiClient.js';
-import type { DefaultExport, IdArrayToMap } from './typeutil.js';
 
-export type ComponentDataAtom = unknown; // string | number | boolean | null;
+export type ComponentDataAtom = unknown;
 export type ComponentData =
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   ComponentDataAtom | ComponentData[] | { [K in string]: ComponentData };
@@ -12,7 +11,7 @@ export type ComponentData =
 export type ComponentOptions = ComponentData;
 
 export type ComponentTypes = {
-  data: ComponentData;
+  rawData: ComponentData;
   options: ComponentOptions;
   error: unknown;
 };
@@ -31,21 +30,20 @@ export type ComponentSchema<
   Id extends ComponentId = ComponentId,
   Args = unknown,
 > = {
-  config?: ComponentControllerConfig;
-  options: ComponentOptionsById<Id, Args>;
   componentId: Id;
+  options: ComponentOptionsById<Id, Args>;
 };
+
+type GetOrRawData<T extends ComponentTypes, K extends string> =
+  T extends Record<K, unknown> ? T[K] : T['rawData'];
 
 type GetComponentTypes<Types extends ComponentTypes> = {
   options: Types['options'];
-  data: Types['data'];
   error: Types['error'];
-  resolvedData: Types extends { resolvedData: unknown }
-    ? Types['resolvedData']
-    : Types['data'];
-  clientData: Types extends { clientData: unknown }
-    ? Types['clientData']
-    : Types['data'];
+  rawData: Types['rawData'];
+  resolvedData: GetOrRawData<Types, 'resolvedData'>;
+  clientData: GetOrRawData<Types, 'clientData'>;
+  storageData: GetOrRawData<Types, 'storageData'>;
 };
 
 type GetComponentTypesById<
@@ -53,10 +51,15 @@ type GetComponentTypesById<
   Args = unknown,
 > = GetComponentTypes<ComponentTypeMap<Args>[Id]>;
 
-export type ComponentDataById<
+export type ComponentStorageDataById<
   T extends ComponentId,
   Args = unknown,
-> = GetComponentTypesById<T, Args>['data'];
+> = GetComponentTypesById<T, Args>['storageData'];
+
+export type ComponentRawDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['rawData'];
 
 export type ComponentResolvedDataById<
   T extends ComponentId,
@@ -97,114 +100,140 @@ export type ComponentControllerConfig = {
   };
 };
 
-export type ForeignComponentContext = {
-  validation: {
-    data: <Id extends ComponentId, Args>(
-      id: Id,
-      data: ComponentDataById<Id, Args>,
-      options: ComponentOptionsById<Id, Args>
-    ) => ComponentErrorById<Id, Args> | undefined;
-  };
-  default: {
-    data: <Id extends ComponentId, Args>(
-      id: Id,
-      options: ComponentOptionsById<Id, Args>
-    ) => ComponentDataById<Id, Args>;
-  };
-  resolver: {
-    data: <Id extends ComponentId, Args>(
-      id: Id,
-      data: ComponentDataById<Id, Args>,
-      options: ComponentOptionsById<Id, Args>,
-      args: ComponentDataResolverArgs
-    ) => ComponentResolvedDataById<Id>;
-  };
-  clientResolver: {
-    idSource: IdSource<Key>;
+export type ForeignComponentValidationContext = {
+  validate: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentRawDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentErrorById<Id, Args> | undefined;
+};
 
-    getDefaultData: <Id extends ComponentId, Args>(
-      id: Id,
-      options: ComponentOptionsById<Id, Args>
-    ) => ComponentClientDataById<Id, Args>;
+export type ForeignComponentDefaultDataContext = {
+  getDefault: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentRawDataById<Id, Args>;
+};
 
-    makeRequest: <Args extends unknown[], R>(
-      fn: (context: RequestContext, ...args: Args) => Promise<R>,
-      args: Args
-    ) => Promise<R>;
+export type ForeignComponentDataResolverContext = {
+  resolveRawData: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentRawDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    args: ComponentDataResolverArgs
+  ) => ComponentResolvedDataById<Id>;
+};
+export type ForeignComponentClientDataResolverContext = {
+  idSource: IdSource<Key>;
 
-    toClient: <Id extends ComponentId, Args>(
-      id: Id,
-      data: ComponentDataById<Id, Args>,
-      options: ComponentOptionsById<Id, Args>
-    ) => MaybePromise<ComponentClientDataById<Id, Args>>;
+  getDefaultData: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentClientDataById<Id, Args>;
 
-    fromClient: <Id extends ComponentId, Args>(
-      id: Id,
-      clientData: ComponentClientDataById<Id, Args>,
-      options: ComponentOptionsById<Id, Args>
-    ) => Or<
-      { result: ComponentDataById<Id, Args> },
-      { error: ComponentErrorById<Id, Args> }
-    >;
-  };
+  makeRequest: <Args extends unknown[], R>(
+    fn: (context: RequestContext, ...args: Args) => Promise<R>,
+    args: Args
+  ) => Promise<R>;
+
+  toClient: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentRawDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => MaybePromise<ComponentClientDataById<Id, Args>>;
+
+  fromClient: <Id extends ComponentId, Args>(
+    id: Id,
+    clientData: ComponentClientDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => Or<
+    { result: ComponentRawDataById<Id, Args> },
+    { error: ComponentErrorById<Id, Args> }
+  >;
+};
+
+export type ForeignComponentStorageDataResolverContext = {
+  toStorage: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentRawDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
+
+  fromStorage: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => MaybePromise<ComponentRawDataById<Id, Args>>;
 };
 
 export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
-  data: ComponentDataById<Id, Args>,
+  data: ComponentRawDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
-  context: ForeignComponentContext['validation']
+  context: ForeignComponentValidationContext
 ) => ComponentErrorById<Id, Args> | undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentDataResolverArgs {}
 
-export type ComponentDataResolver<Id extends ComponentId, Args = unknown> = (
-  raw: ComponentDataById<Id, Args>,
+export type ComponentDataResolver<Id extends ComponentId> = <Args>(
+  raw: ComponentRawDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
-  context: ForeignComponentContext['resolver'],
+  context: ForeignComponentDataResolverContext,
   args: ComponentDataResolverArgs
 ) => ComponentResolvedDataById<Id, Args>;
 
 export type ComponentDataOrError<Id extends ComponentId, Args = unknown> =
-  | { result: ComponentDataById<Id, Args> }
+  | { result: ComponentRawDataById<Id, Args> }
   | { error: ComponentErrorById<Id, Args> };
 
 export type ComponentClientDataResolver<Id extends ComponentId> = {
   getDefaultData: <Args>(
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentContext['clientResolver']
+    context: ForeignComponentClientDataResolverContext
   ) => ComponentClientDataById<Id, Args>;
 
   toClient: <Args>(
-    data: ComponentDataById<Id, Args>,
+    data: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentContext['clientResolver']
+    context: ForeignComponentClientDataResolverContext
   ) => MaybePromise<ComponentClientDataById<Id, Args>>;
 
   fromClient: <Args>(
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentContext['clientResolver']
+    context: ForeignComponentClientDataResolverContext
   ) => ComponentDataOrError<Id, Args>;
+};
+
+export type ComponentStorageDataResolver<Id extends ComponentId> = {
+  toStorage: <Args>(
+    data: ComponentRawDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    context: ForeignComponentStorageDataResolverContext
+  ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
+
+  fromStorage: <Args>(
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    context: ForeignComponentStorageDataResolverContext
+  ) => MaybePromise<ComponentRawDataById<Id, Args>>;
 };
 
 export type ComponentMeta<Id extends ComponentId = ComponentId> = {
   id: Id;
   config?: ComponentControllerConfig;
-  defaultData:
-    | ComponentDataById<Id>
+  defaultRawData:
+    | ComponentRawDataById<Id>
     | (<Args>(
         options: ComponentOptionsById<Id, Args>,
-        context: ForeignComponentContext['default']
-      ) => ComponentDataById<Id, Args>);
+        context: ForeignComponentDefaultDataContext
+      ) => ComponentRawDataById<Id, Args>);
 };
 
-export interface ComponentController<
-  Id extends ComponentId = ComponentId,
-  Args = unknown,
-> {
+export interface ComponentController<Id extends ComponentId = ComponentId> {
   meta: ComponentMeta<Id>;
-  resolver?: ComponentDataResolver<Id, Args>;
+  resolver?: ComponentDataResolver<Id>;
+  storageResolver?: ComponentStorageDataResolver<Id>;
   validator: ComponentDataValidator<Id>;
 }
 
@@ -212,11 +241,7 @@ export type ComponentControllerMap = {
   [Id in keyof ComponentTypeMap]: ComponentController<Id>;
 };
 
-export type ResolveComponents<T extends DefaultExport<{ id: string }>[]> =
-  IdArrayToMap<T>;
-
 export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
-  dataResolver: ComponentClientDataById<Id>;
   renderer: ComponentRenderer<Id>;
 };
 

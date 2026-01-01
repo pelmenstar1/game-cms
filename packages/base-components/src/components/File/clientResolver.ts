@@ -5,10 +5,10 @@ import { ComponentClientDataResolver } from '@game-cms/types';
 import { FileClientDataItem } from './types.js';
 
 export const clientResolver: ComponentClientDataResolver<'base::file'> = {
-  getDefaultData: () => ({ items: [] }),
-  toClient: async (data, _, context) => {
-    const items = await Promise.all(
-      data.items.map(async (storageId): Promise<FileClientDataItem> => {
+  getDefaultData: () => [],
+  toClient: (data, _, context) => {
+    return Promise.all(
+      data.map(async (storageId): Promise<FileClientDataItem> => {
         const result = await context.makeRequest(getStorageItemInfo, [
           storageId,
         ]);
@@ -25,14 +25,10 @@ export const clientResolver: ComponentClientDataResolver<'base::file'> = {
         };
       })
     );
-
-    return { items };
   },
   fromClient: (clientData) => {
     return {
-      result: {
-        items: clientData.items.map((item) => item.id),
-      },
+      result: clientData.map((item) => item.id),
     };
   },
 };

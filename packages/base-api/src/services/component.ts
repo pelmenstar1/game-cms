@@ -2,12 +2,16 @@ import { ApiError } from '@game-cms/base-utils';
 import { env } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
 import type {
-  ComponentDataById,
   ComponentDataResolverArgs,
   ComponentId,
   ComponentOptionsById,
+  ComponentRawDataById,
   ComponentResolvedDataById,
-  ForeignComponentContext,
+  ComponentStorageDataById,
+  ForeignComponentDataResolverContext,
+  ForeignComponentDefaultDataContext,
+  ForeignComponentStorageDataResolverContext,
+  ForeignComponentValidationContext,
 } from '@game-cms/types';
 import { service } from '@game-cms/utils';
 
@@ -22,45 +26,73 @@ function getController<T extends ComponentId>(id: T) {
   return controller;
 }
 
-const foreignComponentContext: Omit<ForeignComponentContext, 'clientResolver'> =
+const foreignValidationContext: ForeignComponentValidationContext = {
+  validate: (id, data, options) =>
+    getController(id).validator(data, options, foreignValidationContext),
+};
+
+const foreignDefaultContext: ForeignComponentDefaultDataContext = {
+  getDefault: (id, options) => {
+    const factory = getController(id).meta.defaultRawData;
+
+    return resolveMaybeFactory(factory, options, foreignDefaultContext);
+  },
+};
+
+const foreignResolverContext: ForeignComponentDataResolverContext = {
+  resolveRawData: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentRawDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    args: ComponentDataResolverArgs
+  ) => {
+    const { resolver } = getController(id);
+
+    return resolver
+      ? resolver(data, options, foreignResolverContext, args)
+      : (data as ComponentResolvedDataById<Id, Args>);
+  },
+};
+
+const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext =
   {
-    validation: {
-      data: (id, data, options) =>
-        getController(id).validator(
-          data,
-          options,
-          foreignComponentContext.validation
-        ),
-    },
-    default: {
-      data: (id, options) => {
-        const factory = getController(id).meta.defaultData;
+    fromStorage: <Id extends ComponentId, Args>(
+      id: Id,
+      data: ComponentStorageDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>
+    ) => {
+      const { storageResolver } = getController(id);
 
-        return resolveMaybeFactory(
-          factory,
-          options,
-          foreignComponentContext.default
-        );
-      },
+      return storageResolver
+        ? storageResolver.fromStorage(
+            data,
+            options,
+            foreignStorageResolverContext
+          )
+        : (data as ComponentRawDataById<Id, Args>);
     },
-    resolver: {
-      data: <Id extends ComponentId, Args>(
-        id: Id,
-        data: ComponentDataById<Id, Args>,
-        options: ComponentOptionsById<Id, Args>,
-        args: ComponentDataResolverArgs
-      ) => {
-        const { resolver } = getController(id);
+    toStorage: <Id extends ComponentId, Args>(
+      id: Id,
+      data: ComponentRawDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>
+    ) => {
+      const { storageResolver } = getController(id);
 
-        return resolver
-          ? resolver(data, options, foreignComponentContext.resolver, args)
-          : (data as ComponentResolvedDataById<Id, Args>);
-      },
+      return storageResolver
+        ? storageResolver.toStorage(
+            data,
+            options,
+            foreignStorageResolverContext
+          )
+        : (data as ComponentStorageDataById<Id, Args>);
     },
   };
 
 export default service({
   id: 'base::component',
-  foreignComponentContext,
+  foreignValidationContext,
+  foreignDefaultContext,
+  foreignResolverContext,
+  foreignStorageResolverContext,
   getController,
 });

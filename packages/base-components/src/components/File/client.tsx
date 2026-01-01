@@ -15,7 +15,7 @@ import styles from './client.module.scss';
 import { FileClientDataItem } from './types.js';
 
 export const renderer: ComponentRenderer<'base::file'> = ({
-  data: { items },
+  data: items,
   error,
   onDataChanged,
 }) => {
@@ -25,13 +25,13 @@ export const renderer: ComponentRenderer<'base::file'> = ({
     const result = await showModal(FileExplorerModal, {});
 
     if (result) {
-      onDataChanged?.({ items: [...items, result] });
+      onDataChanged?.([...items, result]);
     }
   }, [items, onDataChanged, showModal]);
 
   const onItemsChanged = useCallback(
     (items: FileClientDataItem[]) => {
-      onDataChanged?.({ items });
+      onDataChanged?.(items);
     },
     [onDataChanged]
   );

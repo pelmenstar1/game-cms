@@ -5,7 +5,7 @@
     "rootDir": "./src",
     "verbatimModuleSyntax": false,
 
-    "types": ["node", "vite/client"]
+    "types": ["node", "vite/client", "@game-cms/base-api/types"]
   },
   "references": [
     { "path": "../build" },
@@ -18,7 +18,8 @@
     { "path": "../shared" },
     { "path": "../component-api" },
     { "path": "../conditional" },
-    { "path": "../codegen" }
+    { "path": "../global" },
+    { "path": "../base-api" }
   ],
   "include": ["./src", "./scripts"],
   "exclude": ["./scripts"]

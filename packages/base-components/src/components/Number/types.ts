@@ -4,7 +4,7 @@ declare module '@game-cms/types' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentTypeMap<_Args> {
     'base::number': ComponentEntry<{
-      data: number;
+      rawData: number;
       options: Record<string, never>;
       error: undefined;
     }>;

@@ -3,6 +3,8 @@ import { componentMeta } from '@game-cms/utils';
 
 export default componentMeta({
   id: 'base::compose',
-  defaultData: (options, context) =>
-    mapObject(options, (item) => context.data(item.componentId, item.options)),
+  defaultRawData: (options, context) =>
+    mapObject(options, (item) =>
+      context.getDefault(item.componentId, item.options)
+    ),
 });

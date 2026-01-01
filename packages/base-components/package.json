@@ -17,13 +17,16 @@
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
     "@game-cms/utils": "workspace:*",
-    "zod": "catalog:"
+    "@game-cms/global": "workspace:*",
+    "zod": "catalog:",
+    "mongodb": "catalog:"
   },
   "peerDependencies": {
     "react": "*",
     "react-dom": "*"
   },
   "devDependencies": {
+    "@game-cms/base-api": "workspace:*",
     "@game-cms/build": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@types/node": "catalog:",

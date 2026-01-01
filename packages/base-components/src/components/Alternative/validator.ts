@@ -8,10 +8,10 @@ export const validator: ComponentDataValidator<'base::alternative'> = (
   const { componentId, baseOptions } = options;
 
   const result: ComponentErrorById<'base::alternative'> = {
-    default: context.data(componentId, data.default, baseOptions),
+    default: context.validate(componentId, data.default, baseOptions),
     alternative: data.alternative.map((item) => ({
       condition: undefined,
-      data: context.data(componentId, item, baseOptions),
+      data: context.validate(componentId, item, baseOptions),
     })),
   };
 

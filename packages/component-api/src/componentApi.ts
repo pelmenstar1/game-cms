@@ -4,7 +4,7 @@ import type {
   ComponentId,
   ComponentOptionsById,
   ComponentRenderer,
-  ForeignComponentContext,
+  ForeignComponentClientDataResolverContext,
 } from '@game-cms/types';
 import React, { type Key } from 'react';
 
@@ -22,7 +22,7 @@ export type ComponentApi = {
 
   getConfig: (id: ComponentId) => ComponentControllerConfig | undefined;
 
-  clientResolverContext: ForeignComponentContext['clientResolver'];
+  clientResolverContext: ForeignComponentClientDataResolverContext;
 };
 
 export const ComponentApiContext =

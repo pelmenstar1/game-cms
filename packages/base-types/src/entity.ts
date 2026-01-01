@@ -1,7 +1,9 @@
 import type {
   ComponentData,
-  ComponentDataById,
+  ComponentRawDataById,
+  ComponentResolvedDataById,
   ComponentSchema,
+  ComponentStorageDataById,
   DefaultExport,
   FromEntries,
 } from '@game-cms/types';
@@ -15,14 +17,36 @@ export type EntityId = keyof EntityMap;
 
 export type EntityData = Record<string, ComponentData>;
 
-type ComponentsToData<T> = {
-  [K in keyof T]: T[K] extends ComponentSchema<infer Id, infer Args>
-    ? ComponentDataById<Id, Args>
-    : never;
+type GetEntityDataVariants<T = unknown> =
+  T extends ComponentSchema<infer Id, infer Args>
+    ? {
+        rawData: ComponentRawDataById<Id, Args>;
+        resolvedData: ComponentResolvedDataById<Id, Args>;
+        storageData: ComponentStorageDataById<Id, Args>;
+      }
+    : {
+        rawData: ComponentData;
+        resolvedData: ComponentData;
+        storageData: ComponentData;
+      };
+
+type ComponentsToData<T, DataKey extends keyof GetEntityDataVariants> = {
+  [K in keyof T]: GetEntityDataVariants<T[K]>[DataKey];
 };
 
-export type EntityDataById<Id extends EntityId> = ComponentsToData<
-  EntityMap[Id]
+export type EntityRawDataById<Id extends EntityId> = ComponentsToData<
+  EntityMap[Id],
+  'rawData'
+>;
+
+export type EntityResolvedDataById<Id extends EntityId> = ComponentsToData<
+  EntityMap[Id],
+  'resolvedData'
+>;
+
+export type EntityStorageDataById<Id extends EntityId> = ComponentsToData<
+  EntityMap[Id],
+  'storageData'
 >;
 
 export interface EntitySchemaMeta<Id extends EntityId = EntityId> {

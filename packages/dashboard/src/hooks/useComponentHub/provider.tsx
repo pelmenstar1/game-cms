@@ -6,11 +6,13 @@ import {
 import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
 import type {
   ComponentClientDataById,
-  ComponentDataById,
   ComponentId,
   ComponentOptionsById,
+  ComponentRawDataById,
   ComponentRenderer,
-  ForeignComponentContext,
+  ForeignComponentClientDataResolverContext,
+  ForeignComponentDefaultDataContext,
+  ForeignComponentValidationContext,
 } from '@game-cms/types';
 import { type PropsWithChildren, useMemo } from 'react';
 import React from 'react';
@@ -36,8 +38,8 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const client = useApiClient();
 
   const validationContext = useMemo(
-    (): ForeignComponentContext['validation'] => ({
-      data: (id, data, options) => {
+    (): ForeignComponentValidationContext => ({
+      validate: (id, data, options) => {
         const validator = getComponentValidator(id);
 
         return validator(data, options, validationContext);
@@ -47,15 +49,15 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   );
 
   const defaultDataContext = useMemo(
-    (): ForeignComponentContext['default'] => ({
-      data: (id, options) =>
+    (): ForeignComponentDefaultDataContext => ({
+      getDefault: (id, options) =>
         getComponentDefaultData(id, options, defaultDataContext),
     }),
     []
   );
 
   const clientResolverContext = useMemo(
-    (): ForeignComponentContext['clientResolver'] => ({
+    (): ForeignComponentClientDataResolverContext => ({
       idSource: incrementingIdSource,
       makeRequest: (fn, args) => {
         return client.makeApiRequest(fn, args).promise;
@@ -68,10 +70,10 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
         return resolver
           ? resolver.getDefaultData(options, clientResolverContext)
-          : (defaultDataContext.data(id, options) as ComponentClientDataById<
-              Id,
-              Args
-            >);
+          : (defaultDataContext.getDefault(
+              id,
+              options
+            ) as ComponentClientDataById<Id, Args>);
       },
       fromClient: (id, clientData, options) => {
         const resolver = getComponentClientResolver(id);
@@ -82,7 +84,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
       },
       toClient: <Id extends ComponentId, Args>(
         id: Id,
-        data: ComponentDataById<Id, Args>,
+        data: ComponentRawDataById<Id, Args>,
         options: ComponentOptionsById<Id>
       ) => {
         const resolver = getComponentClientResolver(id);

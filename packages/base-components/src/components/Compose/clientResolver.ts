@@ -2,10 +2,10 @@ import { mapObject } from '@game-cms/shared/object';
 import {
   ComponentClientDataById,
   ComponentClientDataResolver,
-  ComponentDataById,
   ComponentDataOrError,
   ComponentOptionsById,
-  ForeignComponentContext,
+  ComponentRawDataById,
+  ForeignComponentClientDataResolverContext,
 } from '@game-cms/types';
 
 import { ComposeEntry } from './types.js';
@@ -18,9 +18,9 @@ export const clientResolver: ComponentClientDataResolver<Id> = {
       context.getDefaultData(item.componentId, item.options)
     ),
   toClient: async <Args>(
-    data: ComponentDataById<Id, Args>,
+    data: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentContext['clientResolver']
+    context: ForeignComponentClientDataResolverContext
   ) => {
     type Options = ComposeEntry<Args>['options'];
     type OptionsEntry = Options[keyof Options];
@@ -35,12 +35,12 @@ export const clientResolver: ComponentClientDataResolver<Id> = {
       )
     );
 
-    return Object.fromEntries(entries) as ComponentDataById<Id, Args>;
+    return Object.fromEntries(entries) as ComponentRawDataById<Id, Args>;
   },
   fromClient: <Args>(
     data: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentContext['clientResolver']
+    context: ForeignComponentClientDataResolverContext
   ) => {
     type Options = ComposeEntry<Args>['options'];
     type OptionsEntry = Options[keyof Options];
@@ -53,7 +53,7 @@ export const clientResolver: ComponentClientDataResolver<Id> = {
         context.fromClient(
           componentId,
           // TODO: Fix any
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
           data[key] as any,
           options
         ),

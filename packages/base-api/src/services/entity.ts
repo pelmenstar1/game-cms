@@ -1,11 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
-import type { EntityDataById, EntityId } from '@game-cms/base-types';
+import type {
+  EntityId,
+  EntityRawDataById,
+  EntityStorageDataById,
+} from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
 import { cms } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
+import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 import type { ComponentDataResolverArgs } from '@game-cms/types';
 import { service } from '@game-cms/utils';
-import type { Filter, ObjectId, OptionalUnlessRequiredId } from 'mongodb';
+import type {
+  Filter,
+  ObjectId,
+  OptionalUnlessRequiredId,
+  WithId,
+} from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
@@ -17,33 +26,73 @@ function idFilter<T>(id: ObjectId) {
   return { _id: id } as Filter<T>;
 }
 
+function getEntitySchema<T extends EntityId>(entityId: T) {
+  const result = cms().service('base::entitySchema').getById(entityId);
+  if (result === null) {
+    throw new ApiError('Unknown entity', 'base::entity/notFound');
+  }
+
+  return result;
+}
+
 async function getRawById<T extends EntityId>(entityId: T, id: ObjectId) {
+  const entitySchema = getEntitySchema(entityId);
   const result = await collection(entityId).findOne(idFilter(id));
 
   if (result === null) {
     return null;
   }
 
-  return result;
+  const { _id, ...ownResult } = result;
+  const { foreignStorageResolverContext } = cms().service('base::component');
+
+  const rawResult = mapObject(
+    ownResult as unknown as EntityStorageDataById<T>,
+    (item, key) => {
+      const { componentId, options } = entitySchema.components[key];
+
+      return foreignStorageResolverContext.fromStorage(
+        componentId,
+        item,
+        options
+      );
+    }
+  );
+
+  return { _id, ...rawResult } as WithId<EntityRawDataById<T>>;
+}
+
+async function toStorageData<T extends EntityId>(
+  entityId: T,
+  rawData: EntityRawDataById<T>
+): Promise<EntityStorageDataById<T>> {
+  const entitySchema = getEntitySchema(entityId);
+  const { foreignStorageResolverContext } = cms().service('base::component');
+
+  return asyncMapObject(rawData, (item, key) => {
+    const { componentId, options } = entitySchema.components[key];
+
+    return foreignStorageResolverContext.toStorage(componentId, item, options);
+  });
 }
 
 export default service({
   id: 'base::entity',
-  create: async <T extends EntityId>(
-    id: T,
-    data: OptionalUnlessRequiredId<EntityDataById<T>>
-  ) => {
-    const result = await collection(id).insertOne(data);
+  create: async <T extends EntityId>(id: T, data: EntityRawDataById<T>) => {
+    const storageData = await toStorageData(id, data);
+    const result = await collection(id).insertOne(
+      storageData as OptionalUnlessRequiredId<EntityRawDataById<T>>
+    );
 
-    return { _id: result.insertedId, ...data };
+    return { _id: result.insertedId, ...storageData };
   },
   update: async <T extends EntityId>(
     entityId: T,
     id: ObjectId,
-    data: EntityDataById<T>
+    data: EntityRawDataById<T>
   ) => {
     const result = await collection(entityId).updateOne(idFilter(id), {
-      $set: data,
+      $set: await toStorageData(entityId, data),
     });
 
     return result.matchedCount > 0;
@@ -57,17 +106,13 @@ export default service({
     return result;
   },
   getRawById,
-  getById: async <T extends EntityId>(
-    entityId: T,
+  getResolvedById: async <Id extends EntityId>(
+    entityId: Id,
     id: ObjectId,
     args: ComponentDataResolverArgs
   ) => {
-    const entitySchema = cms().service('base::entitySchema').getById(entityId);
-    if (entitySchema === null) {
-      throw new ApiError('Unknown entity', 'base::entity/notFound');
-    }
-
-    const { foreignComponentContext } = cms().service('base::component');
+    const entitySchema = getEntitySchema(entityId);
+    const { foreignResolverContext } = cms().service('base::component');
 
     const result = await getRawById(entityId, id);
 
@@ -76,24 +121,21 @@ export default service({
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, ...value } = result;
+    const { _id, ...ownResult } = result;
 
-    const entries = Object.entries(value)
-      .filter(([key]) => key !== '_id')
-      .map(([key, item]) => {
-        const componentSchema = entitySchema.components[key];
+    return mapObject(
+      ownResult as unknown as EntityRawDataById<Id>,
+      (item, key) => {
+        const { componentId, options: baseOptions } =
+          entitySchema.components[key];
 
-        const resolvedData = foreignComponentContext.resolver.data(
-          componentSchema.componentId,
+        return foreignResolverContext.resolveRawData(
+          componentId,
           item,
-
-          componentSchema.options,
+          baseOptions,
           args
         );
-
-        return [key, resolvedData] as const;
-      });
-
-    return Object.fromEntries(entries);
+      }
+    );
   },
 });

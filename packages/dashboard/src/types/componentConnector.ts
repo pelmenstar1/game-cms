@@ -2,19 +2,19 @@ import type {
   ComponentClientDataResolver,
   ComponentClientModule,
   ComponentControllerConfig,
-  ComponentDataById,
   ComponentDataValidator,
   ComponentId,
   ComponentOptionsById,
-  ForeignComponentContext,
+  ComponentRawDataById,
+  ForeignComponentDefaultDataContext,
 } from '@game-cms/types';
 
 export interface ComponentConnector {
   getComponentDefaultData<Id extends ComponentId>(
     id: Id,
     options: ComponentOptionsById<Id>,
-    context: ForeignComponentContext['default']
-  ): ComponentDataById<Id>;
+    context: ForeignComponentDefaultDataContext
+  ): ComponentRawDataById<Id>;
 
   getComponentValidator<Id extends ComponentId>(
     id: Id

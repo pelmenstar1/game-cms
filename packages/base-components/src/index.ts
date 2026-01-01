@@ -49,7 +49,7 @@ export function compose<const T extends ComposeInput>(
 
 export function alternative<Id extends ComponentId, Args>(
   baseComponent: ComponentSchema<Id, Args>
-): ComponentSchema<'base::alternative', { componentId: Id; baseArgs: Args }> {
+): ComponentSchema<'base::alternative', { id: Id; baseArgs: Args }> {
   return {
     componentId: 'base::alternative',
     options: {

@@ -26,7 +26,7 @@ export default apiRoute({
 
     const result = await cms()
       .service('base::entity')
-      .getById(entityId, id, filter);
+      .getResolvedById(entityId, id, filter);
 
     return result;
   },

@@ -7,5 +7,5 @@ export default componentMeta({
       compact: true,
     },
   },
-  defaultData: { items: [] },
+  defaultRawData: [],
 });

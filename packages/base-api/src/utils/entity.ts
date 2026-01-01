@@ -11,7 +11,7 @@ import { z, type ZodType } from 'zod';
 function getValidatorForComponent<Data extends ComponentData>(
   component: ComponentSchema<ComponentId, Data>
 ): ZodType<Data> {
-  const { foreignComponentContext } = cms().service('base::component');
+  const { foreignValidationContext } = cms().service('base::component');
 
   const { validator } = cms()
     .service('base::component')
@@ -21,7 +21,7 @@ function getValidatorForComponent<Data extends ComponentData>(
     const error = validator(
       data as Data,
       component.options,
-      foreignComponentContext.validation
+      foreignValidationContext
     );
 
     return error === undefined;

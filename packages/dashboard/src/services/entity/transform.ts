@@ -1,6 +1,6 @@
 import type {
-  EntityDataById,
   EntityId,
+  EntityRawDataById,
   EntitySchemaById,
 } from '@game-cms/base-types';
 import type { ComponentApi } from '@game-cms/component-api';
@@ -16,7 +16,7 @@ type ComposeOptions = ComponentOptionsById<'base::compose'>;
 export function transformDataToClientData<Id extends EntityId>(
   api: ComponentApi,
   schema: EntitySchemaById<Id>,
-  data: EntityDataById<Id> | undefined,
+  data: EntityRawDataById<Id> | undefined,
   options: ComposeOptions
 ): MaybePromise<ComponentClientDataById<'base::compose'>> {
   const dataOrDefault =

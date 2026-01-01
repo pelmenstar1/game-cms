@@ -1,6 +1,6 @@
 import type {
-  EntityDataById,
   EntityId,
+  EntityRawDataById,
   EntitySchema,
   EntitySchemaById,
 } from '@game-cms/base-types';
@@ -15,12 +15,12 @@ import { request, url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
 import { json } from '../responseParser.js';
 
-export type EntityDataByIdWithId<T extends EntityId> = EntityDataById<T> & {
+export type EntityDataByIdWithId<T extends EntityId> = EntityRawDataById<T> & {
   _id: string;
 };
 
 export type EntityResolvedDataByIdWithId<T extends EntityId> =
-  EntityDataById<T> & {
+  EntityRawDataById<T> & {
     _id: string;
   };
 
@@ -42,7 +42,7 @@ export const getEntitySchema = <T extends EntityId>(
 export const createEntity = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
-  body: EntityDataById<T>
+  body: EntityRawDataById<T>
 ) =>
   request(context, {
     url: `/entity/${entityId}`,
@@ -69,7 +69,7 @@ export const updateEntityById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
   id: string,
-  data: EntityDataById<T>
+  data: EntityRawDataById<T>
 ) =>
   request(context, {
     url: `/entity/${entityId}/byId/${id}`,

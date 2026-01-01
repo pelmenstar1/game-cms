@@ -13,7 +13,7 @@ export default component({
     return mapObject(raw, (value, key) => {
       const { componentId, options: itemOptions } = options[key];
 
-      return context.data(componentId, value, itemOptions, args);
+      return context.resolveRawData(componentId, value, itemOptions, args);
     });
   },
 });

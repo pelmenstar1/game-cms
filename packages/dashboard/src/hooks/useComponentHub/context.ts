@@ -1,8 +1,8 @@
-import type { ForeignComponentContext } from '@game-cms/types';
+import type { ForeignComponentValidationContext } from '@game-cms/types';
 import React from 'react';
 
 export interface ComponentHub {
-  validationContext: ForeignComponentContext['validation'];
+  validationContext: ForeignComponentValidationContext;
 }
 
 export const ComponentHubContext = React.createContext<ComponentHub | null>(

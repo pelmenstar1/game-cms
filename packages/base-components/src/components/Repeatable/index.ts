@@ -10,7 +10,7 @@ export default component({
     const { baseOptions, componentId } = options;
 
     return raw.map((item) =>
-      context.data(componentId, item, baseOptions, args)
+      context.resolveRawData(componentId, item, baseOptions, args)
     );
   },
 });
