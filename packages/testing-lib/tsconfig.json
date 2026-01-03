@@ -2,8 +2,5 @@
   "extends": "../../configs/tsconfig.lib.json",
   "include": ["./src"],
   "references": [{ "path": "../shared" }, { "path": "../types" }],
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist"
-  }
+  "compilerOptions": { "rootDir": "./src", "outDir": "./dist" }
 }

@@ -4,17 +4,16 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "types": ["node", "@game-cms/base-api/types"],
-
     "noUncheckedIndexedAccess": true
   },
   "include": ["./src"],
   "references": [
-    { "path": "../base-types" },
     { "path": "../base-api" },
+    { "path": "../base-types" },
     { "path": "../base-utils" },
-    { "path": "../shared" },
-    { "path": "../utils" },
     { "path": "../global" },
-    { "path": "../testing-lib" }
+    { "path": "../shared" },
+    { "path": "../testing-lib" },
+    { "path": "../utils" }
   ]
 }

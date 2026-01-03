@@ -1,16 +1,12 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-
     "module": "esnext",
     "moduleResolution": "bundler",
     "target": "esnext",
     "types": [],
-
     "declaration": true,
-
     "allowJs": true,
-
     "strict": true,
     "jsx": "react-jsx",
     "noUncheckedSideEffectImports": true,
@@ -18,13 +14,11 @@
     "skipLibCheck": true,
     "composite": true,
     "verbatimModuleSyntax": true,
-    "paths": {
-      "#storybook/*": ["./.storybook/*"]
-    }
+    "paths": { "#storybook/*": ["./.storybook/*"] }
   },
   "references": [
-    { "path": "../shared" },
     { "path": "../codegen" },
+    { "path": "../shared" },
     { "path": "../storybook-config" }
   ],
   "include": ["src", "scripts", ".storybook/main.ts", ".storybook/preview.tsx"]

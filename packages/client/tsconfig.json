@@ -3,18 +3,17 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-
     "types": ["@game-cms/base-api/clientTypes"],
     "noUncheckedIndexedAccess": true
   },
   "include": ["./src"],
   "references": [
-    { "path": "../types" },
     { "path": "../base-api" },
     { "path": "../base-types" },
     { "path": "../base-utils" },
     { "path": "../conditional" },
     { "path": "../shared" },
+    { "path": "../types" },
     { "path": "../utils" }
   ]
 }

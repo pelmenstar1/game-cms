@@ -7,15 +7,15 @@
   },
   "include": ["./src"],
   "references": [
+    { "path": "../base-types" },
+    { "path": "../base-utils" },
     { "path": "../build" },
     { "path": "../codegen" },
     { "path": "../conditional" },
     { "path": "../global" },
     { "path": "../shared" },
-    { "path": "../utils" },
-    { "path": "../types" },
     { "path": "../testing-lib" },
-    { "path": "../base-types" },
-    { "path": "../base-utils" }
+    { "path": "../types" },
+    { "path": "../utils" }
   ]
 }

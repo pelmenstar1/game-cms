@@ -1,15 +1,12 @@
 {
   "extends": "../../configs/tsconfig.lib.json",
-  "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist"
-  },
+  "compilerOptions": { "rootDir": "./src", "outDir": "./dist" },
   "include": ["./src"],
   "references": [
-    { "path": "../types" },
+    { "path": "../base-api" },
+    { "path": "../base-components" },
     { "path": "../base-types" },
     { "path": "../shared" },
-    { "path": "../base-api" },
-    { "path": "../base-components" }
+    { "path": "../types" }
   ]
 }

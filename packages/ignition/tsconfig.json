@@ -7,11 +7,11 @@
   },
   "include": ["./src"],
   "references": [
-    { "path": "../shared" },
-    { "path": "../types" },
-    { "path": "../global" },
     { "path": "../base-api" },
     { "path": "../base-plugin" },
-    { "path": "../build" }
+    { "path": "../build" },
+    { "path": "../global" },
+    { "path": "../shared" },
+    { "path": "../types" }
   ]
 }

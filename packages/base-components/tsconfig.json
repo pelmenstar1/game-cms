@@ -4,22 +4,22 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "verbatimModuleSyntax": false,
-
     "types": ["node", "vite/client", "@game-cms/base-api/types"]
   },
   "references": [
-    { "path": "../build" },
-    { "path": "../types" },
+    { "path": "../base-api" },
     { "path": "../base-types" },
+    { "path": "../build" },
     { "path": "../client" },
-    { "path": "../ui" },
-    { "path": "../utils" },
     { "path": "../codegen" },
-    { "path": "../shared" },
+    { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../conditional" },
     { "path": "../global" },
-    { "path": "../base-api" }
+    { "path": "../shared" },
+    { "path": "../types" },
+    { "path": "../ui" },
+    { "path": "../utils" }
   ],
   "include": ["./src", "./scripts"],
   "exclude": ["./scripts"]

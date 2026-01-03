@@ -5,19 +5,17 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "types": ["node", "vite/client", "@game-cms/base-components"],
-    "paths": {
-      "#storybook/*": ["./.storybook/*"]
-    }
+    "paths": { "#storybook/*": ["./.storybook/*"] }
   },
   "include": ["./src", "./.storybook/preview.tsx"],
   "references": [
-    { "path": "../codegen" },
-    { "path": "../types" },
-    { "path": "../utils" },
     { "path": "../base-components" },
+    { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../shared" },
+    { "path": "../storybook-config" },
+    { "path": "../types" },
     { "path": "../ui" },
-    { "path": "../storybook-config" }
+    { "path": "../utils" }
   ]
 }

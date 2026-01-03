@@ -3,11 +3,9 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-
     "module": "nodenext",
     "target": "esnext",
     "types": ["node"],
-
     "strict": true,
     "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
@@ -16,7 +14,6 @@
     "noUncheckedIndexedAccess": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-
     "composite": true
   },
   "include": ["./src"]

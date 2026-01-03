@@ -20,12 +20,8 @@
     "jsx": "react-jsx",
     "rootDirs": [".", "./.react-router/types"],
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "#storybook/*": ["./.storybook/*"]
-    },
+    "paths": { "@/*": ["./src/*"], "#storybook/*": ["./.storybook/*"] },
     "noEmit": true,
-
     "strict": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
@@ -35,21 +31,21 @@
     "composite": true
   },
   "references": [
+    { "path": "../base-api" },
+    { "path": "../base-components" },
+    { "path": "../base-types" },
+    { "path": "../base-utils" },
     { "path": "../build" },
     { "path": "../client" },
+    { "path": "../codegen" },
+    { "path": "../component-api" },
+    { "path": "../global" },
+    { "path": "../ignition" },
     { "path": "../shared" },
+    { "path": "../storybook-config" },
     { "path": "../types" },
     { "path": "../ui" },
     { "path": "../utils" },
-    { "path": "../base-api" },
-    { "path": "../base-types" },
-    { "path": "../base-components" },
-    { "path": "../vite-plugins" },
-    { "path": "../base-utils" },
-    { "path": "../codegen" },
-    { "path": "../component-api" },
-    { "path": "../storybook-config" },
-    { "path": "../global" },
-    { "path": "../ignition" }
+    { "path": "../vite-plugins" }
   ]
 }

@@ -4,9 +4,8 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "types": ["node"],
-
     "noUncheckedIndexedAccess": true
   },
   "include": ["./src"],
-  "references": [{ "path": "../shared" }, { "path": "../base-types" }]
+  "references": [{ "path": "../base-types" }, { "path": "../shared" }]
 }
