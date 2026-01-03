@@ -1,12 +1,14 @@
 import childProcess from 'node:child_process';
 
 import { setCmsController } from '@game-cms/global';
+import { initEnvFromConfigs } from '@game-cms/ignition';
 import { delay } from '@game-cms/shared';
 
-import { writeComponentsFsInfo } from '../../services/components.js';
 import { createController } from '../../services/controller.js';
-import { getDashboardPackagePath } from '../../services/dashboard.js';
-import { initEnvFromConfigs } from '../../services/env.js';
+import {
+  getDashboardPackagePath,
+  writeDashboardMeta,
+} from '../../services/dashboard/index.js';
 import { startServer } from '../../services/server.js';
 
 async function isDevServerUp() {
@@ -43,7 +45,7 @@ function runDashboardDev(dashboardPath: string) {
 export default async function dev() {
   const dashboardPath = getDashboardPackagePath();
 
-  await writeComponentsFsInfo(dashboardPath);
+  await writeDashboardMeta(dashboardPath);
   await initEnvFromConfigs();
 
   setCmsController(createController());

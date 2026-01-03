@@ -1,6 +1,3 @@
-import { DASHBOARD_COMPONENTS_PATH } from '@game-cms/build';
-import { readJson } from '@game-cms/shared/io';
-import type { ComponentsFsInfo } from '@game-cms/types';
 import type { Plugin } from 'vite';
 
 import { emitComponentConnector } from './connector.js';
@@ -15,11 +12,7 @@ export function dashboardComponentsPlugin(): Plugin {
   return {
     name: 'game-cms:dashboard-components',
     async buildStart() {
-      const fsInfo = await readJson<ComponentsFsInfo>(
-        DASHBOARD_COMPONENTS_PATH
-      );
-
-      components = await gatherComponents(fsInfo);
+      components = await gatherComponents();
     },
     resolveId(source) {
       if (source === CONNECTOR_ID) {

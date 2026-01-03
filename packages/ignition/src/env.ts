@@ -1,7 +1,9 @@
+import path from 'node:path';
+
 import {
   type BaseCmsEnvironment,
   type CmsEnvironment,
-  initializeEnv,
+  setEnvironment,
 } from '@game-cms/global';
 import { loadEnvFileIfExists } from '@game-cms/shared/io';
 import { mergeObjects, resolveObject } from '@game-cms/shared/object';
@@ -12,15 +14,16 @@ import type {
 } from '@game-cms/types';
 
 import { getAllServices, getApiConfig } from './api.js';
-import { getAllComponentControllers } from './components.js';
+import { getComponentEnv } from './components.js';
 import { resolveConfig } from './config.js';
-import { compiledFilePath } from './localPath.js';
 
-type BaseEnvResolvers = EnvResolver<Omit<BaseCmsEnvironment, 'config'>>;
+type BaseEnvResolvers = EnvResolver<
+  Omit<BaseCmsEnvironment, 'config' | 'compiledFilePath'>
+>;
 
 const baseEnvResolvers: BaseEnvResolvers = {
   api: getApiConfig,
-  components: getAllComponentControllers,
+  components: getComponentEnv,
   services: getAllServices,
 };
 
@@ -32,10 +35,12 @@ function getPluginEnvResolvers(config: ResolvedCmsConfig) {
     .filter((value) => value !== undefined);
 }
 
-export async function initEnvFromConfigs() {
-  await loadEnvFileIfExists();
+export async function initEnvFromConfigs(baseDir: string = './') {
+  const compiledFilePath = (value: string) => path.join(baseDir, 'dist', value);
 
-  const config = await resolveConfig();
+  await loadEnvFileIfExists(baseDir);
+
+  const config = await resolveConfig(compiledFilePath);
 
   const resolvers: EnvResolver<object>[] = [
     ...getPluginEnvResolvers(config),
@@ -51,5 +56,5 @@ export async function initEnvFromConfigs() {
     resolvers.map((resolver) => resolveObject(resolver, context))
   );
 
-  initializeEnv(mergeObjects([{ config }, ...items]) as CmsEnvironment);
+  setEnvironment(mergeObjects([{ config }, ...items]) as CmsEnvironment);
 }

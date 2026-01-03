@@ -1,8 +1,8 @@
 import { reactRouter } from '@react-router/dev/vite';
-import { defineConfig, type Plugin } from 'vite';
+import { defineConfig, type Plugin, type PluginOption } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { libraryWatcherPlugin } from '@game-cms/vite-plugins';
-import { dashboardComponentsPlugin } from './plugins/components/plugin';
+import { ignitePlugin } from './plugins/ignite/plugin';
 
 export default defineConfig({
   plugins: [
@@ -13,6 +13,6 @@ export default defineConfig({
       'base-components',
       'game-plugin-components',
     ]) as Plugin,
-    dashboardComponentsPlugin() as Plugin,
+    ignitePlugin() as PluginOption,
   ],
 });

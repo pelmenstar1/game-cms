@@ -48,6 +48,8 @@
     { "path": "../base-utils" },
     { "path": "../codegen" },
     { "path": "../component-api" },
-    { "path": "../storybook-config" }
+    { "path": "../storybook-config" },
+    { "path": "../global" },
+    { "path": "../ignition" }
   ]
 }

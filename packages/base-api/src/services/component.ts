@@ -16,7 +16,7 @@ import type {
 import { service } from '@game-cms/utils';
 
 function getController<T extends ComponentId>(id: T) {
-  const controller = env().components[id];
+  const controller = env().components.controllers[id];
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (controller === undefined) {

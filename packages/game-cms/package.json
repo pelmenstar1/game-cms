@@ -29,6 +29,7 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",
     "@game-cms/utils": "workspace:*",
+    "@game-cms/ignition": "workspace:*",
     "commander": "14.0.2",
     "fastify": "catalog:",
     "pino": "10.1.0",

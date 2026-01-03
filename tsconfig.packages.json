@@ -24,7 +24,8 @@
     { "path": "./packages/base-components" },
     { "path": "./packages/spritesheet" },
     { "path": "./packages/component-api" },
-    { "path": "./packages/storybook-config" }
+    { "path": "./packages/storybook-config" },
+    { "path": "./packages/ignition" }
   ],
   "include": []
 }

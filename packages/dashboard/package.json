@@ -39,6 +39,8 @@
     "@game-cms/types": "workspace:*",
     "@game-cms/ui": "workspace:*",
     "@game-cms/utils": "workspace:*",
+    "@game-cms/ignition": "workspace:*",
+    "@game-cms/global": "workspace:*",
     "@react-router/node": "catalog:",
     "isbot": "5.1.32",
     "lodash": "^4.17.21",

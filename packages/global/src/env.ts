@@ -9,9 +9,14 @@ export interface ApiEnvironment {
   routes: ApiRoute[];
 }
 
+export type ComponentEnv = {
+  distributions: string[];
+  controllers: ComponentControllerMap;
+};
+
 export type BaseCmsEnvironment = {
   config: ResolvedCmsConfig;
-  components: ComponentControllerMap;
+  components: ComponentEnv;
   api: ApiEnvironment;
   services: Service[];
 };
@@ -21,7 +26,7 @@ export interface CmsEnvironment extends BaseCmsEnvironment {}
 
 let _env: CmsEnvironment | undefined;
 
-export function initializeEnv(value: CmsEnvironment) {
+export function setEnvironment(value: CmsEnvironment) {
   _env = value;
 }
 

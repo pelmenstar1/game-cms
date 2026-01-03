@@ -507,6 +507,12 @@ importers:
       '@game-cms/component-api':
         specifier: workspace:*
         version: link:../component-api
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
+      '@game-cms/ignition':
+        specifier: workspace:*
+        version: link:../ignition
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -622,6 +628,9 @@ importers:
       '@game-cms/global':
         specifier: workspace:*
         version: link:../global
+      '@game-cms/ignition':
+        specifier: workspace:*
+        version: link:../ignition
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -743,6 +752,28 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+
+  packages/ignition:
+    dependencies:
+      '@game-cms/base-plugin':
+        specifier: workspace:*
+        version: link:../base-plugin
+      '@game-cms/build':
+        specifier: workspace:*
+        version: link:../build
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@game-cms/base-api':
+        specifier: workspace:*
+        version: link:../base-api
+      '@game-cms/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/shared:
     dependencies:

@@ -1,26 +1,11 @@
-import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import httProxy from '@fastify/http-proxy';
 import staticPlugin from '@fastify/static';
-import { getImportDirectory } from '@game-cms/shared/node';
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 
-export function getDashboardPackagePath() {
-  return getImportDirectory(
-    import.meta.resolve('@game-cms/dashboard/package.json')
-  );
-}
-
-function getLocalDashboardBuildPath() {
-  const dashboardPath = path.resolve('./build');
-  if (!fs.existsSync(dashboardPath)) {
-    throw new Error('Dashboard build does not exist');
-  }
-
-  return dashboardPath;
-}
+import { getLocalDashboardBuildPath } from './package.js';
 
 async function initLocalIndexFile(app: FastifyInstance, dashboardPath: string) {
   const content = await fsp.readFile(path.join(dashboardPath, 'index.html'));

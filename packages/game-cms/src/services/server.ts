@@ -5,7 +5,10 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 
-import { dashboardPlugin, type DashboardPluginOptions } from './dashboard.js';
+import {
+  dashboardPlugin,
+  type DashboardPluginOptions,
+} from './dashboard/index.js';
 import { createFastifyApp } from './fastify.js';
 import { initPlugins } from './plugin.js';
 

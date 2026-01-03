@@ -3,8 +3,10 @@ import path from 'node:path';
 
 import { redirectProcess } from '@game-cms/shared/node';
 
-import { writeComponentsFsInfo } from '../../services/components.js';
-import { getDashboardPackagePath } from '../../services/dashboard.js';
+import {
+  getDashboardPackagePath,
+  writeDashboardMeta,
+} from '../../services/dashboard/index.js';
 
 async function runDashboardBuild(dashboardPath: string) {
   await redirectProcess('npm run build', {
@@ -22,7 +24,7 @@ async function copyDashboardOutput(dashboardPath: string) {
 export default async function build() {
   const dashboardPath = getDashboardPackagePath();
 
-  await writeComponentsFsInfo(dashboardPath);
+  await writeDashboardMeta(dashboardPath);
   await runDashboardBuild(dashboardPath);
 
   await copyDashboardOutput(dashboardPath);

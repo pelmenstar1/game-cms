@@ -2,8 +2,9 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
+import { env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import type { ComponentId, ComponentsFsInfo } from '@game-cms/types';
+import type { ComponentId } from '@game-cms/types';
 
 import { getComponentIdFromMetaFile } from './analysis.js';
 
@@ -59,11 +60,11 @@ async function gatherComponentsForDistribution(distPath: string) {
   return filterOutNullable(result);
 }
 
-export async function gatherComponents(
-  fsInfo: ComponentsFsInfo
-): Promise<ComponentClientChunkMap> {
+export async function gatherComponents(): Promise<ComponentClientChunkMap> {
+  const { components } = env();
+
   const result = await Promise.all(
-    fsInfo.distributions.map((distPath) =>
+    components.distributions.map((distPath) =>
       gatherComponentsForDistribution(distPath)
     )
   );
