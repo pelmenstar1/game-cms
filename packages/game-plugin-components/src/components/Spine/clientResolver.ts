@@ -43,7 +43,7 @@ export const clientResolver: ComponentClientDataResolver<'game::spine'> = {
       result: {
         images: images.result,
         atlas: atlas.result,
-        skeleton: atlas.result,
+        skeleton: skeleton.result,
       },
     };
   },

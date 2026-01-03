@@ -84,7 +84,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
           <FileComponent
             data={data.atlas}
             options={ATLAS_OPTIONS}
-            error={error?.skeleton}
+            error={error?.atlas}
             onDataChanged={onAtlasChanged}
           />
         </Labeled>
@@ -93,7 +93,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
           <FileComponent
             data={data.images}
             options={IMAGES_OPTIONS}
-            error={error?.skeleton}
+            error={error?.images}
             onDataChanged={onImagesChanged}
           />
         </Labeled>

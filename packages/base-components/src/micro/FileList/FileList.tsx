@@ -23,6 +23,7 @@ type FileListItem = {
 
 export interface FileListProps<T extends FileListItem> {
   className?: string;
+  maxItems?: number;
   items: T[];
   onItemsChanged?: (items: T[]) => void;
   onAddFile?: () => void;
@@ -34,26 +35,20 @@ interface PagerButtonProps {
   children: ReactNode;
 }
 
-function PagerButton({ disabled, onClick, children }: PagerButtonProps) {
-  return (
-    <Button
-      hasIcon
-      className={styles['pager-move-button']}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </Button>
-  );
+function PagerButton(props: PagerButtonProps) {
+  return <Button hasIcon className={styles['pager-move-button']} {...props} />;
 }
 
 export function FileList<T extends FileListItem>({
   className,
   items,
+  maxItems,
   onItemsChanged,
   onAddFile,
 }: FileListProps<T>) {
   const [item, setItem] = useState({ index: 0, value: items[0] });
+
+  const canAddItem = maxItems === undefined || items.length < maxItems;
 
   const onDelete = useCallback(() => {
     onItemsChanged?.(removeIndex(items, item.index));
@@ -78,14 +73,16 @@ export function FileList<T extends FileListItem>({
   return (
     <div className={classNames(styles.root, className)}>
       <div className={styles.pager}>
-        <PagerButton
-          disabled={item.index === 0}
-          onClick={() => {
-            moveIndex(-1);
-          }}
-        >
-          <ArrowLeftIcon />
-        </PagerButton>
+        {items.length > 1 && (
+          <PagerButton
+            disabled={item.index === 0}
+            onClick={() => {
+              moveIndex(-1);
+            }}
+          >
+            <ArrowLeftIcon />
+          </PagerButton>
+        )}
 
         <FilePreview
           className={styles['preview']}
@@ -93,23 +90,27 @@ export function FileList<T extends FileListItem>({
           mime={item.value.mime}
         />
 
-        <PagerButton
-          disabled={item.index === items.length - 1}
-          onClick={() => {
-            moveIndex(1);
-          }}
-        >
-          <ArrowRightIcon />
-        </PagerButton>
+        {items.length > 1 && (
+          <PagerButton
+            disabled={item.index === items.length - 1}
+            onClick={() => {
+              moveIndex(1);
+            }}
+          >
+            <ArrowRightIcon />
+          </PagerButton>
+        )}
       </div>
 
       <div className={styles.footer}>
         <Typography variant="caption">{item.value.name}</Typography>
 
         <div className={styles['footer-actions']}>
-          <IconButton title="Add file" onClick={onAddFile} hover="fill">
-            <PlusIcon />
-          </IconButton>
+          {canAddItem && (
+            <IconButton title="Add file" onClick={onAddFile} hover="fill">
+              <PlusIcon />
+            </IconButton>
+          )}
 
           <IconButton title="Delete item" onClick={onDelete} hover="fill">
             <DeleteIcon />

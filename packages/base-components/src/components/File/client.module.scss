@@ -4,11 +4,20 @@
     padding: 0.5em;
     border: 1px solid var(--color-background-dark-variant);
     border-radius: 0.5em;
+
+    &-error {
+      border-color: var(--color-danger-dark);
+    }
   }
 
   &-list {
     flex-grow: 1;
   }
+}
+
+.error {
+  margin-top: 0.5em;
+  color: var(--color-danger-dark);
 }
 
 .single-add-button {

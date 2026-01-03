@@ -7,9 +7,17 @@ export const validator: ComponentDataValidator<'game::spine'> = (
   _,
   context
 ) => {
-  return {
+  const result = {
     atlas: context.validate('base::file', data.atlas, ATLAS_OPTIONS),
     images: context.validate('base::file', data.images, IMAGES_OPTIONS),
     skeleton: context.validate('base::file', data.skeleton, SKELETON_OPTIONS),
   };
+
+  if (
+    result.atlas !== undefined ||
+    result.images !== undefined ||
+    result.skeleton !== undefined
+  ) {
+    return result;
+  }
 };

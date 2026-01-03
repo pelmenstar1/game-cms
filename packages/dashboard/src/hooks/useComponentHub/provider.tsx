@@ -51,9 +51,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const defaultDataContext = useMemo(
     (): ForeignComponentDefaultDataContext => ({
       getDefault: (id, options) => {
-        const result = getComponentDefaultData(id, options, defaultDataContext);
-
-        return result;
+        return getComponentDefaultData(id, options, defaultDataContext);
       },
     }),
     []
@@ -103,11 +101,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const api = useMemo(
     (): ComponentApi => ({
       generateId: incrementingIdSource,
-      getDefaultData: (id, options) => {
-        // const result = defaultDataContext.data(id, options);
-
-        return clientResolverContext.getDefaultData(id, options);
-      },
+      getDefaultData: clientResolverContext.getDefaultData,
       getComponent: <Id extends ComponentId>(id: Id) =>
         componentCache.get(id, null) as unknown as ComponentRenderer<Id>,
       getConfig: getComponentConfig,

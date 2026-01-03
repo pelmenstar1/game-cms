@@ -16,7 +16,7 @@ import { FileClientDataItem } from './types.js';
 
 export const renderer: ComponentRenderer<'base::file'> = ({
   data: items,
-  options: { supportedMimeTypes },
+  options: { supportedMimeTypes, maxItems },
   error,
   onDataChanged,
 }) => {
@@ -39,17 +39,25 @@ export const renderer: ComponentRenderer<'base::file'> = ({
     [onDataChanged]
   );
 
+  const errorText =
+    error === 'TOO_FEW_ITEMS'
+      ? 'Too few files'
+      : error === 'TOO_MANY_ITEMS'
+        ? 'Too many items'
+        : '';
+
   return (
-    <div className={styles.root}>
+    <div>
       <div
         className={classNames(
           styles['preview-container'],
-          error && styles['preview-error']
+          error && styles['preview-container-error']
         )}
       >
         {items.length > 0 ? (
           <FileList
             items={items}
+            maxItems={maxItems}
             onItemsChanged={onItemsChanged}
             onAddFile={onAddFile}
             className={styles['preview-list']}
@@ -65,7 +73,9 @@ export const renderer: ComponentRenderer<'base::file'> = ({
         )}
       </div>
 
-      {error && <Typography>{error}</Typography>}
+      {error && (
+        <Typography className={styles['error']}>{errorText}</Typography>
+      )}
     </div>
   );
 };

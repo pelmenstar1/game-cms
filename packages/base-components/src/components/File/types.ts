@@ -13,7 +13,7 @@ declare module '@game-cms/types' {
         minItems?: number;
         maxItems?: number;
       };
-      error: string;
+      error: 'TOO_FEW_ITEMS' | 'TOO_MANY_ITEMS';
       clientData: FileClientDataItem[];
       storageData: ObjectId[];
     }>;
