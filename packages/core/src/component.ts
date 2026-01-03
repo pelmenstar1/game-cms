@@ -219,19 +219,21 @@ export type ComponentStorageDataResolver<Id extends ComponentId> = {
   ) => MaybePromise<ComponentRawDataById<Id, Args>>;
 };
 
+export type ComponentDefaultDataHandler<Id extends ComponentId> =
+  | ComponentRawDataById<Id>
+  | (<Args>(
+      options: ComponentOptionsById<Id, Args>,
+      context: ForeignComponentDefaultDataContext
+    ) => ComponentRawDataById<Id, Args>);
+
 export type ComponentMeta<Id extends ComponentId = ComponentId> = {
   id: Id;
   config?: ComponentControllerConfig;
-  defaultRawData:
-    | ComponentRawDataById<Id>
-    | (<Args>(
-        options: ComponentOptionsById<Id, Args>,
-        context: ForeignComponentDefaultDataContext
-      ) => ComponentRawDataById<Id, Args>);
 };
 
 export interface ComponentController<Id extends ComponentId = ComponentId> {
   meta: ComponentMeta<Id>;
+  defaultRawData: ComponentDefaultDataHandler<Id>;
   resolver?: ComponentDataResolver<Id>;
   storageResolver?: ComponentStorageDataResolver<Id>;
   validator: ComponentDataValidator<Id>;

@@ -28,7 +28,7 @@ export function dashboardComponentsPlugin(): Plugin {
           throw new Error(`Unknown component: ${componentId}`);
         }
 
-        return entry.paths.main;
+        return entry.paths.renderer;
       }
 
       return null;

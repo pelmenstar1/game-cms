@@ -7,14 +7,14 @@ import {
 } from '@game-cms/core';
 import { component } from '@game-cms/core';
 
-import meta from './meta.js';
-import { validator } from './validator.js';
+import { defaultRawData, meta, validator } from './shared.js';
 
 type Id = (typeof meta)['id'];
 
 export default component({
   meta,
   validator,
+  defaultRawData,
   resolver: <Args>(
     raw: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,

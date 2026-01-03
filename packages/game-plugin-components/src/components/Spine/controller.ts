@@ -1,9 +1,9 @@
 import { component } from '@game-cms/core';
 
-import meta from './meta.js';
-import { validator } from './validator.js';
+import { defaultRawData, meta, validator } from './shared.js';
 
 export default component({
   meta,
   validator,
+  defaultRawData,
 });

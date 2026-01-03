@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 
 import { SpineModal } from '../../micro/SpineModal';
 import styles from './client.module.scss';
-import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './shared';
+import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './constants';
 
 type FileData = ComponentClientDataById<'base::file'>[number];
 

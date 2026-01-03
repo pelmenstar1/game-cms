@@ -1,7 +1,7 @@
 import { ComponentRenderer } from '@game-cms/core';
 import { TextInput } from '@game-cms/ui';
 
-import styles from './client.module.scss';
+import styles from './renderer.module.scss';
 
 export const renderer: ComponentRenderer<'base::text'> = ({
   data,

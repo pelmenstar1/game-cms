@@ -8,7 +8,7 @@ import { Button } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 
 import { ComponentList } from '../../micro/ComponentList/index.js';
-import styles from './client.module.scss';
+import styles from './renderer.module.scss';
 
 type Id = 'base::dynamic-zone';
 

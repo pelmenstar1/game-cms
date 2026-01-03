@@ -1,12 +1,20 @@
 import {
   ComponentDataValidator,
+  ComponentDefaultDataHandler,
   ComponentErrorById,
+  componentMeta,
   ComponentOptionsById,
   ComponentRawDataById,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 
-type Id = 'base::dynamic-zone';
+const id = 'base::dynamic-zone';
+
+type Id = typeof id;
+
+export const meta = componentMeta({ id });
+
+export const defaultRawData: ComponentDefaultDataHandler<Id> = [];
 
 export const validator: ComponentDataValidator<Id> = <Args>(
   data: ComponentRawDataById<Id, Args>,

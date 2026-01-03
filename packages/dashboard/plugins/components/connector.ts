@@ -15,16 +15,12 @@ function sanitizeId(componentId: string) {
   return componentId.replaceAll(/[^\w\d]/g, '_');
 }
 
-function metaImportName(componentId: string) {
-  return `${sanitizeId(componentId)}_meta`;
+function sharedImportName(componentId: string) {
+  return `${sanitizeId(componentId)}_shared`;
 }
 
-function validatorImportName(componentId: string) {
-  return `${sanitizeId(componentId)}_validator`;
-}
-
-function clientResolverImportName(componentId: string) {
-  return `${sanitizeId(componentId)}_clientResolver`;
+function clientImportName(componentId: string) {
+  return `${sanitizeId(componentId)}_client`;
 }
 
 function emitImportBase(
@@ -46,14 +42,14 @@ function emitImportBase(
       .join('');
 }
 
-const metaImports = emitImportBase(metaImportName, (paths) => paths.meta);
-const validatorImports = emitImportBase(
-  (id) => `{ validator as ${validatorImportName(id)} }`,
-  (paths) => paths.validator
+const sharedImports = emitImportBase(
+  (id) => `* as ${sharedImportName(id)}`,
+  (paths) => paths.shared
 );
-const clientResolverImports = emitImportBase(
-  (id) => `{ clientResolver as ${clientResolverImportName(id)} }`,
-  (paths) => paths.clientResolver
+
+const clientImports = emitImportBase(
+  (id) => `* as ${clientImportName(id)}`,
+  (paths) => paths.client
 );
 
 const helperImports: EmitStep = () =>
@@ -64,10 +60,9 @@ const componentInfoMap: EmitStep = (info) => {
     .map(
       ([componentId, entry]) =>
         `'${componentId}': {
-  component: () => import('${normalizeFilePath(entry.paths.main)}'),
-  meta: ${metaImportName(componentId)},
-  validator: ${validatorImportName(componentId)},
-  ${entry.paths.clientResolver !== undefined ? `clientResolver: ${clientResolverImportName(componentId)}` : ''}
+  renderer: () => import('${normalizeFilePath(entry.paths.renderer)}'),
+  shared: ${sharedImportName(componentId)},
+  ${entry.paths.client !== undefined ? `client: ${clientImportName(componentId)}` : ''}
 }`
     )
     .join(',');
@@ -77,26 +72,25 @@ const componentInfoMap: EmitStep = (info) => {
 
 const connectorSteps: Record<keyof ComponentConnector, EmitStep> = {
   importComponent: () => {
-    return `(id) => componentInfoMap[id].component();`;
+    return `(id) => componentInfoMap[id].renderer();`;
   },
   getComponentDefaultData: () => {
-    return `(id, options, context) => resolveMaybeFactory(componentInfoMap[id].meta.defaultRawData, options, context);`;
+    return `(id, options, context) => resolveMaybeFactory(componentInfoMap[id].shared.defaultRawData, options, context);`;
   },
   getComponentValidator: () => {
-    return `(id) => componentInfoMap[id].validator;`;
+    return `(id) => componentInfoMap[id].shared.validator;`;
   },
   getComponentConfig: () => {
-    return `(id) => componentInfoMap[id].meta.config;`;
+    return `(id) => componentInfoMap[id].shared.meta.config;`;
   },
   getComponentClientResolver: () => {
-    return `(id) => componentInfoMap[id].clientResolver;`;
+    return `(id) => componentInfoMap[id].client.clientResolver;`;
   },
 };
 
 const steps = [
-  metaImports,
-  validatorImports,
-  clientResolverImports,
+  sharedImports,
+  clientImports,
   helperImports,
   componentInfoMap,
   ...Object.entries(connectorSteps).map(

@@ -6,14 +6,13 @@ import type { ComponentId } from '@game-cms/core';
 import { env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 
-import { getComponentIdFromMetaFile } from './analysis.js';
+import { getComponentIdFromSharedFile } from './analysis.js';
 
 export type ComponentClientChunkEntry = {
   paths: {
-    main: string;
-    meta: string;
-    validator: string;
-    clientResolver?: string;
+    renderer: string;
+    shared: string;
+    client?: string;
   };
 };
 
@@ -23,22 +22,22 @@ export type ComponentClientChunkMap = Record<
 >;
 
 async function gatherComponentClientChunk(dirPath: string) {
-  const main = path.join(dirPath, 'client.js');
-  const meta = path.join(dirPath, 'meta.js');
-  const validator = path.join(dirPath, 'validator.js');
-  const clientResolver = path.join(dirPath, 'clientResolver.js');
+  const renderer = path.join(dirPath, 'renderer.js');
+  const shared = path.join(dirPath, 'shared.js');
+  const client = path.join(dirPath, 'client.js');
 
-  if (fs.existsSync(main) && fs.existsSync(meta) && fs.existsSync(validator)) {
-    const componentId = await getComponentIdFromMetaFile(meta);
+  if (
+    fs.existsSync(renderer) &&
+    fs.existsSync(shared) &&
+    fs.existsSync(client)
+  ) {
+    const componentId = await getComponentIdFromSharedFile(shared);
 
     const entry: ComponentClientChunkEntry = {
       paths: {
-        main,
-        meta,
-        validator,
-        clientResolver: fs.existsSync(clientResolver)
-          ? clientResolver
-          : undefined,
+        renderer,
+        shared,
+        client: fs.existsSync(client) ? client : undefined,
       },
     };
 

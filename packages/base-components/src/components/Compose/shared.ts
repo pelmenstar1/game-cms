@@ -1,12 +1,30 @@
 import {
   ComponentDataValidator,
+  ComponentDefaultDataHandler,
   ComponentErrorById,
+  componentMeta,
   ComponentOptionsById,
   ComponentRawDataById,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
+import { mapObject } from '@game-cms/shared/object';
 
-type Id = 'base::compose';
+const id = 'base::compose';
+
+type Id = typeof id;
+
+export const meta = componentMeta({
+  id,
+});
+
+export const defaultRawData: ComponentDefaultDataHandler<Id> = (
+  options,
+  context
+) => {
+  return mapObject(options, (item) =>
+    context.getDefault(item.componentId, item.options)
+  );
+};
 
 export const validator: ComponentDataValidator<Id> = <Args>(
   data: ComponentRawDataById<Id, Args>,

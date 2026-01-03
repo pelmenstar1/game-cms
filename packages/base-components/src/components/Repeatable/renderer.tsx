@@ -4,7 +4,7 @@ import { IconButton, PlusIcon } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 
 import { ComponentList } from '../../micro/ComponentList/ComponentList.js';
-import styles from './client.module.scss';
+import styles from './renderer.module.scss';
 
 export const renderer: ComponentRenderer<'base::repeatable'> = ({
   options,

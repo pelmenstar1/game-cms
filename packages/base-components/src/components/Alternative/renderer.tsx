@@ -4,7 +4,7 @@ import { removeIndex } from '@game-cms/shared/collections';
 import { DraggableList, IconButton, PlusIcon, Typography } from '@game-cms/ui';
 
 import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
-import styles from './client.module.scss';
+import styles from './renderer.module.scss';
 
 type Id = 'base::alternative';
 

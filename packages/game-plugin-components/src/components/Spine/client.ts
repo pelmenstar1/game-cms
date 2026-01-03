@@ -1,6 +1,6 @@
 import type { ComponentClientDataResolver } from '@game-cms/core';
 
-import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './shared.js';
+import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './constants';
 
 export const clientResolver: ComponentClientDataResolver<'game::spine'> = {
   getDefaultData: () => ({

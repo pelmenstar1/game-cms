@@ -33,9 +33,9 @@ const foreignValidationContext: ForeignComponentValidationContext = {
 
 const foreignDefaultContext: ForeignComponentDefaultDataContext = {
   getDefault: (id, options) => {
-    const factory = getController(id).meta.defaultRawData;
+    const { defaultRawData } = getController(id);
 
-    return resolveMaybeFactory(factory, options, foreignDefaultContext);
+    return resolveMaybeFactory(defaultRawData, options, foreignDefaultContext);
   },
 };
 

@@ -8,9 +8,9 @@ import { mapObject } from '@game-cms/shared/object';
 
 import type { ComposeInput } from './components/Compose/types.js';
 import { DynamicZoneInput } from './components/DynamicZone/types.js';
-import File from './components/File/index.js';
-import Number from './components/Number/index.js';
-import Text from './components/Text/index.js';
+import File from './components/File/controller.js';
+import Number from './components/Number/controller.js';
+import Text from './components/Text/controller.js';
 import { TitleSpecById } from './internal/title.js';
 
 export type * from './components/Alternative/types.js';
@@ -35,7 +35,7 @@ export function repeatable<Id extends ComponentId, Args>(args: {
   return {
     componentId: 'base::repeatable',
     options: {
-      title: title as TitleSpecById<ComponentId, Args>,
+      title,
       componentId: baseComponent.componentId,
       baseOptions: baseComponent.options,
     },

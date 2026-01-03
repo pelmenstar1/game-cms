@@ -1,19 +1,46 @@
-import type { ComponentOptionsById } from '@game-cms/core';
+import {
+  type ComponentDataValidator,
+  type ComponentDefaultDataHandler,
+  componentMeta,
+} from '@game-cms/core';
 
-type FileOptions = ComponentOptionsById<'base::file'>;
+import {
+  ATLAS_OPTIONS,
+  IMAGES_OPTIONS,
+  SKELETON_OPTIONS,
+} from './constants.js';
 
-export const SKELETON_OPTIONS: FileOptions = {
-  minItems: 1,
-  maxItems: 1,
-  supportedMimeTypes: ['application/json'],
-};
+const id = 'game::spine';
 
-export const ATLAS_OPTIONS: FileOptions = {
-  minItems: 1,
-  maxItems: 1,
-};
+type Id = typeof id;
 
-export const IMAGES_OPTIONS: FileOptions = {
-  minItems: 1,
-  supportedMimeTypes: ['image/*'],
+export const meta = componentMeta({
+  id,
+  config: {
+    ui: {
+      compact: true,
+    },
+  },
+});
+
+export const defaultRawData: ComponentDefaultDataHandler<Id> = () => ({
+  atlas: [],
+  skeleton: [],
+  images: [],
+});
+
+export const validator: ComponentDataValidator<Id> = (data, _, context) => {
+  const result = {
+    atlas: context.validate('base::file', data.atlas, ATLAS_OPTIONS),
+    images: context.validate('base::file', data.images, IMAGES_OPTIONS),
+    skeleton: context.validate('base::file', data.skeleton, SKELETON_OPTIONS),
+  };
+
+  if (
+    result.atlas !== undefined ||
+    result.images !== undefined ||
+    result.skeleton !== undefined
+  ) {
+    return result;
+  }
 };

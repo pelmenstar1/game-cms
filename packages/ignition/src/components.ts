@@ -20,7 +20,7 @@ export async function getAllComponentDistributions(
   const result = await Promise.all(
     plugins.map(
       async ({ components }) =>
-        components && resolveAsyncMaybeFactory(components, context)
+        components && (await resolveAsyncMaybeFactory(components, context))
     )
   );
 
@@ -35,7 +35,7 @@ async function getDistributionControllers(distPath: string) {
   const result = await Promise.all(
     entries.map(async (entry) => {
       if (entry.isDirectory()) {
-        const controllerPath = path.join(distPath, entry.name, 'index.js');
+        const controllerPath = path.join(distPath, entry.name, 'controller.js');
 
         if (fs.existsSync(controllerPath)) {
           const { default: controller } = await importFile<{
