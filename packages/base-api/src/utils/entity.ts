@@ -1,11 +1,11 @@
 import type { EntityData } from '@game-cms/base-types';
-import { cms } from '@game-cms/global';
-import { mapObject } from '@game-cms/shared/object';
 import type {
   ComponentData,
   ComponentId,
   ComponentSchema,
-} from '@game-cms/types';
+} from '@game-cms/core';
+import { cms } from '@game-cms/global';
+import { mapObject } from '@game-cms/shared/object';
 import { z, type ZodType } from 'zod';
 
 function getValidatorForComponent<Data extends ComponentData>(

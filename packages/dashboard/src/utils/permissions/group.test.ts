@@ -1,4 +1,4 @@
-import type { ApiRouteId } from '@game-cms/types';
+import type { ApiRouteId } from '@game-cms/core';
 import { expect, test } from 'vitest';
 
 import { groupPermissions, type PermissionGroupMap } from './group';

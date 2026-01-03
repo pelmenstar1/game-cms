@@ -1,5 +1,5 @@
+import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
-import { apiRoute } from '@game-cms/utils';
 
 export default apiRoute({
   url: '/entitySchema/list',

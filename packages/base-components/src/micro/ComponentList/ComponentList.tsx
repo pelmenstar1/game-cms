@@ -5,7 +5,7 @@ import {
   ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import { classNames, DraggableList } from '@game-cms/ui';
 import { Key } from 'react';
 

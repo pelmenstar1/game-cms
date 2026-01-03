@@ -7,7 +7,7 @@
   "private": true,
   "devDependencies": {
     "@game-cms/base-types": "workspace:*",
-    "@game-cms/types": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "typescript": "catalog:"
   }
 }

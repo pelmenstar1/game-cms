@@ -1,4 +1,4 @@
-import { httpMethods } from '@game-cms/types';
+import { httpMethods } from '@game-cms/core';
 import z from 'zod';
 
 const httpMethod = z.enum(httpMethods);

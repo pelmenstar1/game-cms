@@ -1,4 +1,4 @@
-import type { ComponentOptionsById } from '@game-cms/types';
+import type { ComponentOptionsById } from '@game-cms/core';
 
 type FileOptions = ComponentOptionsById<'base::file'>;
 

@@ -4,11 +4,8 @@ import type {
   EntitySchema,
   EntitySchemaById,
 } from '@game-cms/base-types';
+import type { ComponentDataResolverArgs, RequestContext } from '@game-cms/core';
 import type { PageData, PagingOptions } from '@game-cms/shared';
-import type {
-  ComponentDataResolverArgs,
-  RequestContext,
-} from '@game-cms/types';
 import qs from 'qs';
 
 import { request, url } from '../internal/utils.js';

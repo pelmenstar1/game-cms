@@ -1,4 +1,4 @@
-import type { ResponseParser } from '@game-cms/types';
+import type { ResponseParser } from '@game-cms/core';
 
 const _json = (response: Response) => response.json();
 

@@ -3,7 +3,7 @@ import type {
   ComponentControllerMap,
   ResolvedCmsConfig,
   Service,
-} from '@game-cms/types';
+} from '@game-cms/core';
 
 export interface ApiEnvironment {
   routes: ApiRoute[];

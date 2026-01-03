@@ -4,8 +4,8 @@ import type {
   EntityId,
   EntityStorageDataById,
 } from '@game-cms/base-types';
+import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
-import { service } from '@game-cms/utils';
 import { ClientSession, MongoClient, type TransactionOptions } from 'mongodb';
 
 let _client: MongoClient | undefined;

@@ -4,11 +4,11 @@ import type {
   EntityStorageDataById,
 } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
+import type { ComponentDataResolverArgs } from '@game-cms/core';
+import { service } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { asyncMapObject, mapObject } from '@game-cms/shared/object';
-import type { ComponentDataResolverArgs } from '@game-cms/types';
-import { service } from '@game-cms/utils';
 import type {
   Filter,
   ObjectId,

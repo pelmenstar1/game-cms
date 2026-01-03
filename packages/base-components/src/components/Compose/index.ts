@@ -1,5 +1,5 @@
+import { component } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
-import { component } from '@game-cms/utils';
 
 import meta from './meta.js';
 import { validator } from './validator.js';

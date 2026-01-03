@@ -1,9 +1,9 @@
 import fsp from 'node:fs/promises';
 
+import type { DashboardMeta } from '@game-cms/core';
 import { env } from '@game-cms/global';
 import { initEnvFromConfigs } from '@game-cms/ignition';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import type { DashboardMeta } from '@game-cms/types';
 import type { PluginOption } from 'vite';
 
 import { dashboardComponentsPlugin } from '../components/plugin.js';

@@ -1,5 +1,5 @@
 import type { ApiToken, ServerUser, StorageItem } from '@game-cms/base-types';
-import type { FromEntries } from '@game-cms/types';
+import type { FromEntries } from '@game-cms/core';
 
 type ServiceExport = typeof import('./index.js');
 
@@ -9,7 +9,7 @@ type BaseServicesMap = FromEntries<
   }[keyof ServiceExport]
 >;
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface ServiceMap extends BaseServicesMap {}
 }

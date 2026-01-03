@@ -1,6 +1,4 @@
 import { ApiError } from '@game-cms/base-utils';
-import { env } from '@game-cms/global';
-import { resolveMaybeFactory } from '@game-cms/shared';
 import type {
   ComponentDataResolverArgs,
   ComponentId,
@@ -12,8 +10,10 @@ import type {
   ForeignComponentDefaultDataContext,
   ForeignComponentStorageDataResolverContext,
   ForeignComponentValidationContext,
-} from '@game-cms/types';
-import { service } from '@game-cms/utils';
+} from '@game-cms/core';
+import { service } from '@game-cms/core';
+import { env } from '@game-cms/global';
+import { resolveMaybeFactory } from '@game-cms/shared';
 
 function getController<T extends ComponentId>(id: T) {
   const controller = env().components.controllers[id];

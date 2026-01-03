@@ -1,5 +1,5 @@
 import { useComponentApi } from '@game-cms/component-api';
-import type { ComponentData } from '@game-cms/types';
+import type { ComponentData } from '@game-cms/core';
 import { classNames, Labeled } from '@game-cms/ui';
 
 import { ComponentGroup, ComponentGroupItem } from '../../internal/types.js';

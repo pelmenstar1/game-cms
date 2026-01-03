@@ -1,5 +1,10 @@
 import path from 'node:path';
 
+import type {
+  EnvResolver,
+  ResolvedCmsConfig,
+  ValueSourceContext,
+} from '@game-cms/core';
 import {
   type BaseCmsEnvironment,
   type CmsEnvironment,
@@ -7,11 +12,6 @@ import {
 } from '@game-cms/global';
 import { loadEnvFileIfExists } from '@game-cms/shared/io';
 import { mergeObjects, resolveObject } from '@game-cms/shared/object';
-import type {
-  EnvResolver,
-  ResolvedCmsConfig,
-  ValueSourceContext,
-} from '@game-cms/types';
 
 import { getAllServices, getApiConfig } from './api.js';
 import { getComponentEnv } from './components.js';

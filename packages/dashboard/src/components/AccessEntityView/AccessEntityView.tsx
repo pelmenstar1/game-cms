@@ -4,11 +4,11 @@ import type {
   EntitySchemaById,
 } from '@game-cms/base-types';
 import { useComponentApi } from '@game-cms/component-api';
-import { mapObject } from '@game-cms/shared/object';
 import type {
   ComponentClientDataById,
   ComponentOptionsById,
-} from '@game-cms/types';
+} from '@game-cms/core';
+import { mapObject } from '@game-cms/shared/object';
 import {
   Button,
   classNames,

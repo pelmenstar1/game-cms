@@ -1,6 +1,6 @@
-import { ComponentEntry } from '@game-cms/types';
+import { ComponentEntry } from '@game-cms/core';
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentTypeMap<_Args> {
     'base::number': ComponentEntry<{

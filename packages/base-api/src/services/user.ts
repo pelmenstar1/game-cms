@@ -4,10 +4,10 @@ import type {
   ServerUser,
 } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
+import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { isDuplicateKeyError } from '@game-cms/shared/mongo';
-import { service } from '@game-cms/utils';
 import type { ClientSession, Filter, ObjectId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';

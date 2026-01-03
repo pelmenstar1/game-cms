@@ -1,5 +1,5 @@
+import type { GameCmsController, Service, ServiceMap } from '@game-cms/core';
 import { env } from '@game-cms/global';
-import type { GameCmsController, Service, ServiceMap } from '@game-cms/types';
 
 function createServiceMap(services: Service[]) {
   return Object.fromEntries(

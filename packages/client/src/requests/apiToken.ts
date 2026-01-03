@@ -7,8 +7,8 @@ import type {
   OpaqueApiTokenWithId,
   SignTokenInPayload,
 } from '@game-cms/base-types';
+import type { RequestContext, ToClientType } from '@game-cms/core';
 import type { PageData, PagingOptions } from '@game-cms/shared';
-import type { RequestContext, ToClientType } from '@game-cms/types';
 
 import { request, url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';

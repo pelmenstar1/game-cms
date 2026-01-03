@@ -1,7 +1,7 @@
 import type { Readable } from 'node:stream';
 
+import type { UnknownApiRoute } from '@game-cms/core';
 import type { MaybePromise } from '@game-cms/shared';
-import type { UnknownApiRoute } from '@game-cms/types';
 
 import type { StorageFileItem, UploadFileMeta } from './storage.js';
 

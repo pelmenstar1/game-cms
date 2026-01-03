@@ -8,7 +8,7 @@ import {
   ComponentRawDataById,
   ComponentResolvedDataById,
   ComponentSchema,
-} from '@game-cms/types';
+} from '@game-cms/core';
 
 export type ComponentGroupItem<Id extends ComponentId = ComponentId> = {
   componentId: Id;

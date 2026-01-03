@@ -9,7 +9,7 @@
     "@game-cms/game-plugin-components": "workspace:*"
   },
   "devDependencies": {
-    "@game-cms/types": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "@game-cms/game-plugin-types": "workspace:*",
     "typescript": "catalog:"
   }

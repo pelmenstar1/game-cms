@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",
-    "@game-cms/types": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "glob": "catalog:"
   },
   "exports": {

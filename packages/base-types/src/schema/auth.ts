@@ -1,5 +1,5 @@
+import { apiRouteId } from '@game-cms/core/schema';
 import { objectId } from '@game-cms/shared/mongo';
-import { apiRouteId } from '@game-cms/types/schema';
 import z from 'zod';
 
 export const permissionId = z.union([z.literal('*'), apiRouteId]);

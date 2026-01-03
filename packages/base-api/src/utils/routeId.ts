@@ -1,6 +1,5 @@
+import { type ApiRouteId, parseApiRouteId } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
-import type { ApiRouteId } from '@game-cms/types';
-import { parseApiRouteId } from '@game-cms/utils';
 
 export function entityRouteId(action: string): ApiRouteId {
   return `entity/[entityId]$${action}`;

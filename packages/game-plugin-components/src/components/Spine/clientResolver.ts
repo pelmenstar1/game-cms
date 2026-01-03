@@ -1,4 +1,4 @@
-import type { ComponentClientDataResolver } from '@game-cms/types';
+import type { ComponentClientDataResolver } from '@game-cms/core';
 
 import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './shared.js';
 

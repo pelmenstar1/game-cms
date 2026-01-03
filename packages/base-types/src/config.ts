@@ -25,7 +25,7 @@ export type AuthConfig = {
   };
 };
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   interface UnresolvedCmsConfig {
     auth: AuthConfig;
     storage: StorageConfig;

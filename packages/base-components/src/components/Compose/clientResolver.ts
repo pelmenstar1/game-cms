@@ -1,4 +1,3 @@
-import { mapObject } from '@game-cms/shared/object';
 import {
   ComponentClientDataById,
   ComponentClientDataResolver,
@@ -6,7 +5,8 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ForeignComponentClientDataResolverContext,
-} from '@game-cms/types';
+} from '@game-cms/core';
+import { mapObject } from '@game-cms/shared/object';
 
 import { ComposeEntry } from './types.js';
 

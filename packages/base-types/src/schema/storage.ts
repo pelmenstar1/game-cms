@@ -1,5 +1,5 @@
+import { pagingOptionsSchema } from '@game-cms/core/schema';
 import { objectId, stringObjectId } from '@game-cms/shared/mongo';
-import { pagingOptionsSchema } from '@game-cms/types/schema';
 import z from 'zod';
 
 import { StorageItemType } from '../storage.js';

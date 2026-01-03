@@ -1,7 +1,7 @@
 import { deleteStorageItemOptions } from '@game-cms/base-types/schema';
+import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
-import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 export default apiRoute({

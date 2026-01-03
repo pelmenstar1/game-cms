@@ -1,5 +1,5 @@
+import { componentMeta } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
-import { componentMeta } from '@game-cms/utils';
 
 export default componentMeta({
   id: 'base::compose',

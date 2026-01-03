@@ -2,15 +2,15 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import type { ComponentEnv } from '@game-cms/global';
-import { resolveAsyncMaybeFactory } from '@game-cms/shared';
-import { filterOutNullable } from '@game-cms/shared/collections';
-import { importFile } from '@game-cms/shared/io';
 import type {
   ComponentController,
   ComponentControllerMap,
   ValueSourceContext,
-} from '@game-cms/types';
+} from '@game-cms/core';
+import type { ComponentEnv } from '@game-cms/global';
+import { resolveAsyncMaybeFactory } from '@game-cms/shared';
+import { filterOutNullable } from '@game-cms/shared/collections';
+import { importFile } from '@game-cms/shared/io';
 
 export async function getAllComponentDistributions(
   context: ValueSourceContext

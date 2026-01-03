@@ -12,8 +12,7 @@
     { "path": "../base-types" },
     { "path": "../base-utils" },
     { "path": "../conditional" },
-    { "path": "../shared" },
-    { "path": "../types" },
-    { "path": "../utils" }
+    { "path": "../core" },
+    { "path": "../shared" }
   ]
 }

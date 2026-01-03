@@ -10,7 +10,7 @@ import {
   ComponentResolvedDataById,
   ComponentSchema,
   ComponentStorageDataById,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import { Key } from 'react';
 
 export type DynamicZoneInput = Record<
@@ -80,7 +80,7 @@ type DynamicZoneEntry<Input extends DynamicZoneInput> = {
   clientData: DynamicZoneArray<Input, 'clientData'>;
 };
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::dynamic-zone': ComponentEntry<DynamicZoneEntry<ResolveInput<_Args>>>;
   }

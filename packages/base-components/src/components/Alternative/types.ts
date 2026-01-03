@@ -7,7 +7,7 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentStorageDataById,
-} from '@game-cms/types';
+} from '@game-cms/core';
 
 type AlternativeArgs<Id = ComponentId, BaseArgs = unknown> = {
   id: Id;
@@ -54,7 +54,7 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
   >;
 };
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::alternative': ComponentEntry<AlternativeEntry<ResolveArgs<_Args>>>;
   }

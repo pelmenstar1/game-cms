@@ -13,3 +13,8 @@ export interface ServiceMap {}
 
 export type ResolveServices<T extends DefaultExport<Service>[]> =
   IdArrayToMap<T>;
+
+/*@__NO_SIDE_EFFECTS__*/
+export function service<const T extends Service>(value: T): T {
+  return value;
+}

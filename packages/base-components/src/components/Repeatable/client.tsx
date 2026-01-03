@@ -1,5 +1,5 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentRenderer } from '@game-cms/types';
+import { ComponentRenderer } from '@game-cms/core';
 import { IconButton, PlusIcon } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 

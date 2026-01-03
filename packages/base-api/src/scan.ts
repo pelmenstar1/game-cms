@@ -1,6 +1,5 @@
-import { importFile } from '@game-cms/shared/io';
-import { scanDirectory } from '@game-cms/shared/io';
-import type { PluginValueSource } from '@game-cms/types';
+import type { PluginValueSource } from '@game-cms/core';
+import { importFile, scanDirectory } from '@game-cms/shared/io';
 
 export function scanDirectorySource<T>(
   directoryPath: string

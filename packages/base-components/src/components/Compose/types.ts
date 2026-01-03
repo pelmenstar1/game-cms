@@ -1,4 +1,4 @@
-import { ComponentEntry, ComponentSchema } from '@game-cms/types';
+import { ComponentEntry, ComponentSchema } from '@game-cms/core';
 
 import { GetSchemaParams } from '../../internal/types.js';
 
@@ -29,7 +29,7 @@ type BaseComposeEntry<Input extends ComposeInput> = {
   clientData: ComposeMap<Input, 'clientData'>;
 };
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::compose': ComponentEntry<ComposeEntry<_Args>>;
   }

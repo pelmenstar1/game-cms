@@ -9,7 +9,7 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "skipLibCheck": true,
-    "types": ["node", "@game-cms/types"],
+    "types": ["node", "@game-cms/core"],
     "composite": true
   },
   "include": ["./src"],

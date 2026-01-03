@@ -8,7 +8,7 @@
     "@game-cms/base-plugin": "workspace:*"
   },
   "devDependencies": {
-    "@game-cms/types": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "@game-cms/base-api": "workspace:*"
   },
   "exports": {

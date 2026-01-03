@@ -6,8 +6,8 @@
     { "path": "../base-api" },
     { "path": "../base-components" },
     { "path": "../base-types" },
+    { "path": "../core" },
     { "path": "../global" },
-    { "path": "../shared" },
-    { "path": "../types" }
+    { "path": "../shared" }
   ]
 }

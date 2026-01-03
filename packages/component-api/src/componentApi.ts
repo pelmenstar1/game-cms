@@ -5,7 +5,7 @@ import type {
   ComponentOptionsById,
   ComponentRenderer,
   ForeignComponentClientDataResolverContext,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import React, { type Key } from 'react';
 
 import type { IdSource } from '../../shared/src/idSource.js';

@@ -3,13 +3,13 @@ import type {
   ComponentEntry,
   ComponentErrorById,
   ComponentRawDataById,
-} from '@game-cms/types';
+} from '@game-cms/core';
 
 type FileError = ComponentErrorById<'base::file'>;
 type FileData = ComponentRawDataById<'base::file'>;
 type FileClientData = ComponentClientDataById<'base::file'>;
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentTypeMap<_Args> {
     'game::spine': ComponentEntry<{

@@ -1,4 +1,4 @@
-import { componentAccessor } from '@game-cms/utils';
+import { componentAccessor } from '@game-cms/core';
 
 import Spine from './components/Spine/index.js';
 

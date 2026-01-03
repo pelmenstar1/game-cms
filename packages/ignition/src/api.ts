@@ -1,12 +1,12 @@
-import type { ApiEnvironment } from '@game-cms/global';
-import { resolveAsyncMaybeFactory } from '@game-cms/shared';
-import { filterOutNullable } from '@game-cms/shared/collections';
-import { mergeObjects } from '@game-cms/shared/object';
 import type {
   Plugin,
   PluginValueSource,
   ValueSourceContext,
-} from '@game-cms/types';
+} from '@game-cms/core';
+import type { ApiEnvironment } from '@game-cms/global';
+import { resolveAsyncMaybeFactory } from '@game-cms/shared';
+import { filterOutNullable } from '@game-cms/shared/collections';
+import { mergeObjects } from '@game-cms/shared/object';
 
 function getApiRouteSourceFromPlugin(plugin: Plugin) {
   const routes = plugin.api?.routes;

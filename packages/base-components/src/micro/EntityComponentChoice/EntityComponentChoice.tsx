@@ -4,7 +4,7 @@ import type {
   ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import { classNames, Typography } from '@game-cms/ui';
 import type { RefObject } from 'react';
 

@@ -10,7 +10,7 @@
     "rollup": "catalog:"
   },
   "devDependencies": {
-    "@game-cms/types": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "typescript": "catalog:"
   }
 }

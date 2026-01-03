@@ -1,6 +1,6 @@
 import { ApiError } from '@game-cms/base-utils';
+import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
-import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 import { getEntityValidationType } from '../../utils/entity.js';

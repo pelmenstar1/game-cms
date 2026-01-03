@@ -1,7 +1,7 @@
 import path from 'node:path';
 
+import type { Plugin } from '@game-cms/core';
 import { getImportDirectory } from '@game-cms/shared/node';
-import type { Plugin } from '@game-cms/types';
 
 export const gamePlugin: Plugin = {
   components: () => {

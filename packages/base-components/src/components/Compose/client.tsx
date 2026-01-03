@@ -3,7 +3,7 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRenderer,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import { useMemo } from 'react';
 
 import { ComponentGroup } from '../../internal/types.js';

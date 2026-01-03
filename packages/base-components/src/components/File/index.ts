@@ -1,4 +1,4 @@
-import { component } from '@game-cms/utils';
+import { component } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 
 import meta from './meta.js';

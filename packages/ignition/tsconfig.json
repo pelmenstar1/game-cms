@@ -9,8 +9,8 @@
   "references": [
     { "path": "../base-api" },
     { "path": "../base-plugin" },
+    { "path": "../core" },
     { "path": "../global" },
-    { "path": "../shared" },
-    { "path": "../types" }
+    { "path": "../shared" }
   ]
 }

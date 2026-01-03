@@ -1,7 +1,7 @@
 import type { EntitySchema } from '@game-cms/base-types';
+import type { ValueSourceContext } from '@game-cms/core';
 import { importFile } from '@game-cms/shared/io';
 import { scanDirectory } from '@game-cms/shared/io';
-import type { ValueSourceContext } from '@game-cms/types';
 
 async function importEntitySchema(filePath: string) {
   if (filePath.endsWith('.js')) {

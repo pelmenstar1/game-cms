@@ -1,6 +1,6 @@
+import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
-import { apiRoute } from '@game-cms/utils';
 import qs from 'qs';
 import z from 'zod';
 

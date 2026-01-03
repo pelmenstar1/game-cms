@@ -1,11 +1,11 @@
 import path from 'node:path';
 
+import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
 import { combineAsyncFactories } from '@game-cms/shared';
-import type { PluginApiConfig, ServiceSource } from '@game-cms/types';
-import { scanDirectorySource } from '@game-cms/utils';
 
 import { errorStatuses } from './errors.js';
 import { auth } from './plugins/auth.js';
+import { scanDirectorySource } from './scan.js';
 import * as services from './services/index.js';
 import { errorHandler } from './utils/errorHandler.js';
 

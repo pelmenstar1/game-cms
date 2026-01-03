@@ -4,12 +4,12 @@ import type {
   EntitySchemaById,
 } from '@game-cms/base-types';
 import type { ComponentApi } from '@game-cms/component-api';
-import type { MaybePromise } from '@game-cms/shared';
-import { mapObject } from '@game-cms/shared/object';
 import type {
   ComponentClientDataById,
   ComponentOptionsById,
-} from '@game-cms/types';
+} from '@game-cms/core';
+import type { MaybePromise } from '@game-cms/shared';
+import { mapObject } from '@game-cms/shared/object';
 
 type ComposeOptions = ComponentOptionsById<'base::compose'>;
 

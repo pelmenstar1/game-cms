@@ -1,4 +1,4 @@
-import type { ApiRouteId } from '@game-cms/types';
+import type { ApiRouteId } from '@game-cms/core';
 import { classNames, Labeled, List } from '@game-cms/ui';
 import { useMemo } from 'react';
 

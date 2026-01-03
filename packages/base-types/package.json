@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
-    "@game-cms/types": "workspace:*"
+    "@game-cms/core": "workspace:*"
   },
   "dependencies": {
     "@game-cms/global": "workspace:*",

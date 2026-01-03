@@ -38,13 +38,12 @@
     { "path": "../client" },
     { "path": "../codegen" },
     { "path": "../component-api" },
+    { "path": "../core" },
     { "path": "../global" },
     { "path": "../ignition" },
     { "path": "../shared" },
     { "path": "../storybook-config" },
-    { "path": "../types" },
     { "path": "../ui" },
-    { "path": "../utils" },
     { "path": "../vite-plugins" }
   ]
 }

@@ -3,7 +3,6 @@ import {
   ComponentApiContext,
   useApiClient,
 } from '@game-cms/component-api';
-import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
 import type {
   ComponentClientDataById,
   ComponentId,
@@ -13,7 +12,8 @@ import type {
   ForeignComponentClientDataResolverContext,
   ForeignComponentDefaultDataContext,
   ForeignComponentValidationContext,
-} from '@game-cms/types';
+} from '@game-cms/core';
+import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
 import { type PropsWithChildren, useMemo } from 'react';
 import React from 'react';
 import {

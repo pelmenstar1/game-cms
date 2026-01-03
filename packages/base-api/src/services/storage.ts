@@ -7,8 +7,8 @@ import {
   type StorageItemWithMeta,
   type UploadFilePayload,
 } from '@game-cms/base-types';
+import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
-import { service } from '@game-cms/utils';
 import type { ClientSession, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';

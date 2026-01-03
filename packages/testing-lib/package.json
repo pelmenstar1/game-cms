@@ -6,7 +6,7 @@
   "type": "module",
   "devDependencies": {
     "@game-cms/shared": "workspace:*",
-    "@game-cms/types": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

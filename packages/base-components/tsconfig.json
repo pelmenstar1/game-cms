@@ -14,11 +14,10 @@
     { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../conditional" },
+    { "path": "../core" },
     { "path": "../global" },
     { "path": "../shared" },
-    { "path": "../types" },
-    { "path": "../ui" },
-    { "path": "../utils" }
+    { "path": "../ui" }
   ],
   "include": ["./src", "./scripts"],
   "exclude": ["./scripts"]

@@ -7,7 +7,7 @@ import {
   uploadFile,
 } from '@game-cms/client';
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
-import type { ToClientType } from '@game-cms/types';
+import type { ToClientType } from '@game-cms/core';
 import {
   classNames,
   ConfirmationDialog,

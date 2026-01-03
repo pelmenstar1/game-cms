@@ -4,7 +4,7 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ForeignComponentValidationContext,
-} from '@game-cms/types';
+} from '@game-cms/core';
 
 type Id = 'base::dynamic-zone';
 

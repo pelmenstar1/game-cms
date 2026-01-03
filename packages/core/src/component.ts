@@ -245,6 +245,23 @@ export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
   renderer: ComponentRenderer<Id>;
 };
 
-export type ComponentsFsInfo = {
-  distributions: string[];
-};
+/*@__NO_SIDE_EFFECTS__*/
+export function component<Id extends ComponentId>(
+  value: ComponentController<Id>
+) {
+  return value;
+}
+
+export function componentAccessor<Id extends string>(
+  controller: ComponentController<Id>
+) {
+  return <Args>(
+    input: Omit<ComponentSchema<Id, Args>, 'componentId' | 'config'>
+  ): ComponentSchema<Id, Args> => {
+    return { componentId: controller.meta.id, ...input };
+  };
+}
+
+export function componentMeta<Id extends string>(value: ComponentMeta<Id>) {
+  return value;
+}

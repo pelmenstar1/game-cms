@@ -1,6 +1,6 @@
+import { apiRoute } from '@game-cms/core';
+import { pagingOptionsSchema } from '@game-cms/core/schema';
 import { cms } from '@game-cms/global';
-import { pagingOptionsSchema } from '@game-cms/types/schema';
-import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 import { entityRouteId } from '../../utils/routeId.js';

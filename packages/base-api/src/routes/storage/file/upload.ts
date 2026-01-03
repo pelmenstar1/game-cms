@@ -4,9 +4,9 @@ import {
   uploadFileResponse,
 } from '@game-cms/base-types/schema';
 import { ApiError } from '@game-cms/base-utils';
+import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { parseJsonOptional } from '@game-cms/shared';
-import { apiRoute } from '@game-cms/utils';
 
 import { apiValidateValue } from '../../../utils/validate.js';
 

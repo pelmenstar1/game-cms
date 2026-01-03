@@ -1,4 +1,4 @@
-import { ComponentClientDataResolver } from '@game-cms/types';
+import { ComponentClientDataResolver } from '@game-cms/core';
 
 export const clientResolver: ComponentClientDataResolver<'base::repeatable'> = {
   getDefaultData: () => [],

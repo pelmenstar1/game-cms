@@ -7,7 +7,7 @@ import {
   ComponentRawDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import { Key } from 'react';
 
 type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
@@ -37,7 +37,7 @@ type RepeatableEntry<Args extends RepeatableArgs> = {
   storageData: ComponentStorageDataById<Args['id'], Args['baseArgs']>[];
 };
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::repeatable': ComponentEntry<RepeatableEntry<ResolveArgs<_Args>>>;
   }

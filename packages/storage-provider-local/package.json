@@ -15,8 +15,8 @@
     "@fastify/send": "catalog:",
     "@game-cms/base-utils": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "@game-cms/utils": "workspace:*",
     "@game-cms/global": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "zod": "catalog:"
   }
 }

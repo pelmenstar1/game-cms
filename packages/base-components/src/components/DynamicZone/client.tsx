@@ -3,7 +3,7 @@ import {
   ComponentClientDataById,
   ComponentOptionsById,
   ComponentProps,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import { Button } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 

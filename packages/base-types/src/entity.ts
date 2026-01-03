@@ -6,7 +6,7 @@ import type {
   ComponentStorageDataById,
   DefaultExport,
   FromEntries,
-} from '@game-cms/types';
+} from '@game-cms/core';
 
 export type EntitySchemaComponents = Record<string, ComponentSchema>;
 

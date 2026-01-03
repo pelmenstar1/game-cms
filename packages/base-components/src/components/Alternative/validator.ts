@@ -1,4 +1,4 @@
-import { ComponentDataValidator, ComponentErrorById } from '@game-cms/types';
+import { ComponentDataValidator, ComponentErrorById } from '@game-cms/core';
 
 export const validator: ComponentDataValidator<'base::alternative'> = (
   data,

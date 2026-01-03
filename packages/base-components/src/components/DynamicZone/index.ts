@@ -4,8 +4,8 @@ import {
   ComponentRawDataById,
   ComponentResolvedDataById,
   ForeignComponentDataResolverContext,
-} from '@game-cms/types';
-import { component } from '@game-cms/utils';
+} from '@game-cms/core';
+import { component } from '@game-cms/core';
 
 import meta from './meta.js';
 import { validator } from './validator.js';

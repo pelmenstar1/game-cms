@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "dependencies": {
-    "@game-cms/types": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "@game-cms/ui": "workspace:*",
     "react": "catalog:"
   },

@@ -1,4 +1,4 @@
-import { ComponentEntry } from '@game-cms/types';
+import { ComponentEntry } from '@game-cms/core';
 
 export type TextOptions = {
   minLength?: number;
@@ -9,7 +9,7 @@ export type TextData = string;
 
 export type TextError = 'TEXT_TOO_SHORT' | 'TEXT_TOO_LONG';
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentTypeMap<_Args> {
     'base::text': ComponentEntry<{

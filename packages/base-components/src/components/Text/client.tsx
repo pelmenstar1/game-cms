@@ -1,4 +1,4 @@
-import { ComponentRenderer } from '@game-cms/types';
+import { ComponentRenderer } from '@game-cms/core';
 import { TextInput } from '@game-cms/ui';
 
 import styles from './client.module.scss';

@@ -12,10 +12,9 @@
     { "path": "../base-components" },
     { "path": "../codegen" },
     { "path": "../component-api" },
+    { "path": "../core" },
     { "path": "../shared" },
     { "path": "../storybook-config" },
-    { "path": "../types" },
-    { "path": "../ui" },
-    { "path": "../utils" }
+    { "path": "../ui" }
   ]
 }

@@ -1,5 +1,5 @@
+import type { HttpMethod } from '@game-cms/core';
 import type { MaybePromise } from '@game-cms/shared';
-import type { HttpMethod } from '@game-cms/types';
 import {
   fastify,
   type FastifyInstance,

@@ -1,4 +1,4 @@
-import type { GameCmsController } from '@game-cms/types';
+import type { GameCmsController } from '@game-cms/core';
 
 let _cms: GameCmsController = {
   service: () => {

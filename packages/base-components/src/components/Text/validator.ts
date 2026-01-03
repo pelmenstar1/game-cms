@@ -1,4 +1,4 @@
-import { ComponentDataValidator } from '@game-cms/types';
+import { ComponentDataValidator } from '@game-cms/core';
 
 export const validator: ComponentDataValidator<'base::text'> = (
   text,

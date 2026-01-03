@@ -17,7 +17,7 @@ export type ApiErrorCodeTypeMap<T> = Partial<Record<ApiErrorCode, T>>;
 
 export type ApiErrorStatusMap = ApiErrorCodeTypeMap<number>;
 
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   interface PluginApiConfig {
     error?: {
       statuses?: ApiErrorStatusMap;

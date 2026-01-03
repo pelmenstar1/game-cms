@@ -4,10 +4,10 @@ import type {
   OpaqueApiTokenWithId,
 } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
+import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import { randomBytes } from '@game-cms/shared/crypto';
-import { service } from '@game-cms/utils';
 import type { ObjectId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';

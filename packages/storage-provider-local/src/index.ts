@@ -10,9 +10,9 @@ import {
   type StorageProvider,
 } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
+import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
-import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
 import { createNewFileName } from './utils.js';

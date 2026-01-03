@@ -7,7 +7,7 @@ import type {
   ComponentOptionsById,
   ComponentRawDataById,
   ForeignComponentDefaultDataContext,
-} from '@game-cms/types';
+} from '@game-cms/core';
 
 export interface ComponentConnector {
   getComponentDefaultData<Id extends ComponentId>(

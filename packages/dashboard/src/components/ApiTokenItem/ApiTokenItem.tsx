@@ -1,5 +1,5 @@
 import type { OpaqueApiTokenWithId } from '@game-cms/base-types';
-import type { ToClientType } from '@game-cms/types';
+import type { ToClientType } from '@game-cms/core';
 import { classNames, Link } from '@game-cms/ui';
 
 import styles from './ApiTokenItem.module.scss';

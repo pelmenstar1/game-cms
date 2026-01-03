@@ -7,7 +7,7 @@ import type {
   UploadFileMeta,
   UploadFileResponse,
 } from '@game-cms/base-types';
-import type { RequestContext, ToClientType } from '@game-cms/types';
+import type { RequestContext, ToClientType } from '@game-cms/core';
 
 import { request, url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';

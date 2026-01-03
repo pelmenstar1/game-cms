@@ -9,6 +9,6 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@game-cms/types": "workspace:*"
+    "@game-cms/core": "workspace:*"
   }
 }

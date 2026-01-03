@@ -2,9 +2,9 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
+import type { ComponentId } from '@game-cms/core';
 import { env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import type { ComponentId } from '@game-cms/types';
 
 import { getComponentIdFromMetaFile } from './analysis.js';
 

@@ -1,4 +1,4 @@
-import type { ForeignComponentValidationContext } from '@game-cms/types';
+import type { ForeignComponentValidationContext } from '@game-cms/core';
 import React from 'react';
 
 export interface ComponentHub {

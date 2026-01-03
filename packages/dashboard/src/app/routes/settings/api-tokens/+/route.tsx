@@ -1,11 +1,11 @@
 import { createApiToken } from '@game-cms/client';
 import { useApiAction } from '@game-cms/component-api';
+import type { ApiRouteId } from '@game-cms/core';
 import {
   parseTimeSpec,
   type RelativeTime,
   type TimeSpec,
 } from '@game-cms/shared/chrono';
-import type { ApiRouteId } from '@game-cms/types';
 import {
   Button,
   ErrorBoard,

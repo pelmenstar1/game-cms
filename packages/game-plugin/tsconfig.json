@@ -3,9 +3,9 @@
   "compilerOptions": { "rootDir": "./src", "outDir": "./dist" },
   "include": ["./src"],
   "references": [
+    { "path": "../core" },
     { "path": "../game-plugin-components" },
     { "path": "../game-plugin-types" },
-    { "path": "../shared" },
-    { "path": "../types" }
+    { "path": "../shared" }
   ]
 }

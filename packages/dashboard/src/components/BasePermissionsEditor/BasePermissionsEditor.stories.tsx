@@ -1,4 +1,4 @@
-import type { ApiRouteId } from '@game-cms/types';
+import type { ApiRouteId } from '@game-cms/core';
 import { useState } from 'react';
 
 import preview from '#storybook/preview';

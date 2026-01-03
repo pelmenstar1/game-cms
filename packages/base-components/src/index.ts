@@ -1,10 +1,10 @@
+import {
+  componentAccessor,
+  type ComponentId,
+  type ComponentOptionsById,
+  type ComponentSchema,
+} from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
-import type {
-  ComponentId,
-  ComponentOptionsById,
-  ComponentSchema,
-} from '@game-cms/types';
-import { componentAccessor } from '@game-cms/utils';
 
 import type { ComposeInput } from './components/Compose/types.js';
 import { DynamicZoneInput } from './components/DynamicZone/types.js';

@@ -1,4 +1,4 @@
-declare module '@game-cms/types' {
+declare module '@game-cms/core' {
   interface ApiRouteMap {
     'GET /auth/permissions': typeof import('./auth/permissions/get.js');
     'DELETE /auth/token/byId/:id': typeof import('./auth/token/byId/delete.js');

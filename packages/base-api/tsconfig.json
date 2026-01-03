@@ -11,10 +11,9 @@
     { "path": "../base-utils" },
     { "path": "../codegen" },
     { "path": "../conditional" },
+    { "path": "../core" },
     { "path": "../global" },
     { "path": "../shared" },
-    { "path": "../testing-lib" },
-    { "path": "../types" },
-    { "path": "../utils" }
+    { "path": "../testing-lib" }
   ]
 }

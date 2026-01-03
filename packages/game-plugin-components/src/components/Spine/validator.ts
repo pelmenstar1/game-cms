@@ -1,4 +1,4 @@
-import type { ComponentDataValidator } from '@game-cms/types';
+import type { ComponentDataValidator } from '@game-cms/core';
 
 import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './shared.js';
 

@@ -2,7 +2,7 @@ import { useComponentApi } from '@game-cms/component-api';
 import type {
   ComponentClientDataById,
   ComponentRenderer,
-} from '@game-cms/types';
+} from '@game-cms/core';
 import { IconButton, Labeled, PreviewIcon, useModal } from '@game-cms/ui';
 import { useCallback } from 'react';
 

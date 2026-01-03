@@ -1,6 +1,6 @@
 import { ApiError } from '@game-cms/base-utils';
+import { type ApiRouteContextConfig } from '@game-cms/core';
 import { cms } from '@game-cms/global';
-import { type ApiRouteContextConfig } from '@game-cms/types';
 import type { FastifyPluginCallback, RouteGenericInterface } from 'fastify';
 
 import { SESSION_JWT_COOKIE_NAME } from '../utils/authCookie.js';

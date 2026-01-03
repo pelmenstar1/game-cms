@@ -1,6 +1,6 @@
 import { StorageItemType } from '@game-cms/base-types';
 import { getStorageItemInfo } from '@game-cms/client';
-import { ComponentClientDataResolver } from '@game-cms/types';
+import { ComponentClientDataResolver } from '@game-cms/core';
 
 import { FileClientDataItem } from './types.js';
 

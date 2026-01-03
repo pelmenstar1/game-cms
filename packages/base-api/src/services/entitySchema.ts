@@ -1,6 +1,6 @@
 import type { EntityId, EntitySchemaById } from '@game-cms/base-types';
+import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
-import { service } from '@game-cms/utils';
 
 function getById<Id extends EntityId>(id: Id) {
   const { entitySchemas } = env();

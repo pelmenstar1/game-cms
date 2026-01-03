@@ -1,6 +1,6 @@
 import { useComponentApi } from '@game-cms/component-api';
+import { ComponentClientDataById, ComponentProps } from '@game-cms/core';
 import { removeIndex } from '@game-cms/shared/collections';
-import { ComponentClientDataById, ComponentProps } from '@game-cms/types';
 import { DraggableList, IconButton, PlusIcon, Typography } from '@game-cms/ui';
 
 import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';

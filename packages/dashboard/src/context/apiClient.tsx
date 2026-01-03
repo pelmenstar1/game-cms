@@ -6,7 +6,7 @@ import {
   type ApiClientContextType,
   type ApiRedirectOptions,
 } from '@game-cms/component-api';
-import type { RequestContext } from '@game-cms/types';
+import type { RequestContext } from '@game-cms/core';
 import type { PageUrl, TypedNavigateFunction } from '@game-cms/ui';
 import { type PropsWithChildren, useMemo } from 'react';
 import { useNavigate } from 'react-router';

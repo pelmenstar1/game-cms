@@ -2,8 +2,8 @@ import path from 'node:path';
 
 import { apiConfig, serviceSource } from '@game-cms/base-api';
 import type { OwnEnvironment } from '@game-cms/base-types';
+import type { Plugin } from '@game-cms/core';
 import { getImportDirectory } from '@game-cms/shared/node';
-import type { Plugin } from '@game-cms/types';
 
 import { scanEntitySchemas } from './entity/scan.js';
 import { dashboardEntityPlugin } from './entity/vitePlugin.js';

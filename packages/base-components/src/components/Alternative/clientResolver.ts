@@ -2,7 +2,7 @@ import {
   conditionalAstExpressionToString,
   parseConditionalNotation,
 } from '@game-cms/conditional';
-import { ComponentClientDataResolver } from '@game-cms/types';
+import { ComponentClientDataResolver } from '@game-cms/core';
 
 function parseCondition(text: string) {
   try {

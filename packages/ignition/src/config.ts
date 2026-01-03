@@ -1,11 +1,11 @@
 import { basePlugin } from '@game-cms/base-plugin';
+import type { ResolvedCmsConfig, UnresolvedCmsConfig } from '@game-cms/core';
 import { type MaybePromise, resolveMaybeFactory } from '@game-cms/shared';
 import {
   createEnvAccessor,
   type EnvAccessor,
   importFile,
 } from '@game-cms/shared/io';
-import type { ResolvedCmsConfig, UnresolvedCmsConfig } from '@game-cms/types';
 
 type MaybeEnv<R extends object> = R | ((env: EnvAccessor) => MaybePromise<R>);
 

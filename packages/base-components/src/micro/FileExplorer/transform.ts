@@ -1,6 +1,6 @@
 import { StorageItemType, StorageItemWithMeta } from '@game-cms/base-types';
+import { ToClientType } from '@game-cms/core';
 import { matchMime } from '@game-cms/shared';
-import { ToClientType } from '@game-cms/types';
 
 import { FileItem } from '../FileGrid/index.js';
 
