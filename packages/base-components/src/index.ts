@@ -15,6 +15,7 @@ import Text from './components/Text/index.js';
 export type * from './components/Alternative/types.js';
 export type * from './components/Compose/types.js';
 export type * from './components/DynamicZone/types.js';
+export type * from './components/File/types.js';
 export type * from './components/Number/types.js';
 export type * from './components/Repeatable/types.js';
 export type * from './components/Text/types.js';

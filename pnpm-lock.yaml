@@ -198,6 +198,9 @@ importers:
 
   demo-app:
     dependencies:
+      '@game-cms/game-plugin':
+        specifier: workspace:*
+        version: link:../packages/game-plugin
       '@game-cms/storage-provider-local':
         specifier: workspace:*
         version: link:../packages/storage-provider-local
@@ -214,25 +217,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
-
-  packages/api-testing:
-    dependencies:
-      fastify:
-        specifier: '*'
-        version: 5.6.2
-    devDependencies:
-      '@game-cms/shared':
-        specifier: workspace:*
-        version: link:../shared
-      '@game-cms/types':
-        specifier: workspace:*
-        version: link:../types
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      vitest:
-        specifier: 'catalog:'
-        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/base-api:
     dependencies:
@@ -282,15 +266,15 @@ importers:
         specifier: 'catalog:'
         version: 4.2.1
     devDependencies:
-      '@game-cms/api-testing':
-        specifier: workspace:*
-        version: link:../api-testing
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
       '@game-cms/conditional':
         specifier: workspace:*
         version: link:../conditional
+      '@game-cms/testing-lib':
+        specifier: workspace:*
+        version: link:../testing-lib
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.3
@@ -563,24 +547,15 @@ importers:
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
+      '@game-cms/storybook-config':
+        specifier: workspace:*
+        version: link:../storybook-config
       '@game-cms/vite-plugins':
         specifier: workspace:*
         version: link:../vite-plugins
       '@react-router/dev':
         specifier: 'catalog:'
         version: 7.11.0(@types/node@25.0.3)(react-router@7.11.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(typescript@5.9.3)(vite@7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
-      '@storybook/addon-a11y':
-        specifier: 'catalog:'
-        version: 10.1.10(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
-      '@storybook/addon-links':
-        specifier: 'catalog:'
-        version: 10.1.10(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
-      '@storybook/react':
-        specifier: 'catalog:'
-        version: 10.1.10(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
-      '@storybook/react-vite':
-        specifier: 'catalog:'
-        version: 10.1.10(esbuild@0.27.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.54.0)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
       '@types/lodash':
         specifier: ^4.17.21
         version: 4.17.21
@@ -691,6 +666,71 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  packages/game-plugin:
+    dependencies:
+      '@game-cms/game-plugin-components':
+        specifier: workspace:*
+        version: link:../game-plugin-components
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@game-cms/game-plugin-types':
+        specifier: workspace:*
+        version: link:../game-plugin-types
+      '@game-cms/types':
+        specifier: workspace:*
+        version: link:../types
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/game-plugin-components:
+    dependencies:
+      '@esotericsoftware/spine-pixi-v8':
+        specifier: ^4.2.96
+        version: 4.2.96(pixi.js@8.14.3)
+      '@game-cms/base-components':
+        specifier: workspace:*
+        version: link:../base-components
+      '@game-cms/component-api':
+        specifier: workspace:*
+        version: link:../component-api
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@game-cms/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@game-cms/utils':
+        specifier: workspace:*
+        version: link:../utils
+      pixi.js:
+        specifier: ^8.14.3
+        version: 8.14.3
+    devDependencies:
+      '@game-cms/codegen':
+        specifier: workspace:*
+        version: link:../codegen
+      '@game-cms/storybook-config':
+        specifier: workspace:*
+        version: link:../storybook-config
+      '@game-cms/types':
+        specifier: workspace:*
+        version: link:../types
+      storybook:
+        specifier: 'catalog:'
+        version: 10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/game-plugin-types:
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   packages/global:
     dependencies:
       '@game-cms/types':
@@ -746,6 +786,9 @@ importers:
       '@game-cms/base-utils':
         specifier: workspace:*
         version: link:../base-utils
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -762,6 +805,9 @@ importers:
       '@game-cms/base-types':
         specifier: workspace:*
         version: link:../base-types
+      '@game-cms/testing-lib':
+        specifier: workspace:*
+        version: link:../testing-lib
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.3
@@ -793,6 +839,53 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+
+  packages/storybook-config:
+    dependencies:
+      '@storybook/addon-a11y':
+        specifier: 'catalog:'
+        version: 10.1.10(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
+      '@storybook/addon-links':
+        specifier: 'catalog:'
+        version: 10.1.10(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
+      '@storybook/react':
+        specifier: 'catalog:'
+        version: 10.1.10(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
+      '@storybook/react-vite':
+        specifier: 'catalog:'
+        version: 10.1.10(esbuild@0.27.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.54.0)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitejs/plugin-react':
+        specifier: 'catalog:'
+        version: 5.1.2(vite@7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
+      storybook:
+        specifier: 'catalog:'
+        version: 10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      vite:
+        specifier: 'catalog:'
+        version: 7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
+    devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/testing-lib:
+    dependencies:
+      fastify:
+        specifier: '*'
+        version: 5.6.2
+    devDependencies:
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@game-cms/types':
+        specifier: workspace:*
+        version: link:../types
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/types:
     dependencies:
@@ -836,15 +929,9 @@ importers:
       '@atlaskit/pragmatic-drag-and-drop-live-region':
         specifier: 1.3.1
         version: 1.3.1
-      '@esotericsoftware/spine-pixi-v8':
-        specifier: ^4.2.96
-        version: 4.2.96(pixi.js@8.14.3)
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
-      pixi.js:
-        specifier: ^8.14.3
-        version: 8.14.3
       react:
         specifier: 'catalog:'
         version: 19.2.3
@@ -855,18 +942,9 @@ importers:
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
-      '@storybook/addon-a11y':
-        specifier: 'catalog:'
-        version: 10.1.10(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
-      '@storybook/addon-links':
-        specifier: 'catalog:'
-        version: 10.1.10(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
-      '@storybook/react':
-        specifier: 'catalog:'
-        version: 10.1.10(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)
-      '@storybook/react-vite':
-        specifier: 'catalog:'
-        version: 10.1.10(esbuild@0.27.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(rollup@4.54.0)(storybook@10.1.10(@testing-library/dom@10.4.1)(prettier@3.7.4)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(typescript@5.9.3)(vite@7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
+      '@game-cms/storybook-config':
+        specifier: workspace:*
+        version: link:../storybook-config
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.7

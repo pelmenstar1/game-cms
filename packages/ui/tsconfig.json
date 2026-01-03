@@ -22,6 +22,10 @@
       "#storybook/*": ["./.storybook/*"]
     }
   },
-  "references": [{ "path": "../shared" }, { "path": "../codegen" }],
+  "references": [
+    { "path": "../shared" },
+    { "path": "../codegen" },
+    { "path": "../storybook-config" }
+  ],
   "include": ["src", "scripts", ".storybook/main.ts", ".storybook/preview.tsx"]
 }

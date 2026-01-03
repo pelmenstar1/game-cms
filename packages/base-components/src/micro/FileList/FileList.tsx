@@ -8,6 +8,7 @@ import {
   DeleteIcon,
   IconButton,
   PlusIcon,
+  Typography,
 } from '@game-cms/ui';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 
@@ -16,6 +17,7 @@ import styles from './FileList.module.scss';
 
 type FileListItem = {
   url: string;
+  name: string;
   mime: string;
 };
 
@@ -102,13 +104,17 @@ export function FileList<T extends FileListItem>({
       </div>
 
       <div className={styles.footer}>
-        <IconButton title="Add file" onClick={onAddFile} hover="fill">
-          <PlusIcon />
-        </IconButton>
+        <Typography variant="caption">{item.value.name}</Typography>
 
-        <IconButton title="Delete item" onClick={onDelete} hover="fill">
-          <DeleteIcon />
-        </IconButton>
+        <div className={styles['footer-actions']}>
+          <IconButton title="Add file" onClick={onAddFile} hover="fill">
+            <PlusIcon />
+          </IconButton>
+
+          <IconButton title="Delete item" onClick={onDelete} hover="fill">
+            <DeleteIcon />
+          </IconButton>
+        </div>
       </div>
     </div>
   );

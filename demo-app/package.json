@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@game-cms/storage-provider-local": "workspace:*",
+    "@game-cms/game-plugin": "workspace:*",
     "game-cms": "workspace:*"
   },
   "devDependencies": {

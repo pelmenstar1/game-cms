@@ -57,6 +57,7 @@ async function hydrateItem(
 
 export default service({
   id: 'base::storage',
+  collection,
   uploadFile: async (payload: UploadFilePayload) => {
     const { mime, name, parent } = payload;
     const { url } = await storageProvider().protocol.upload(payload);

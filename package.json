@@ -7,8 +7,8 @@
     "lint": "tsx ./scripts/lint.ts",
     "lint:fix": "pnpm lint --fix",
     "typegen": "pnpm run -r typegen",
-    "prebuild": "pnpm run --filter @game-cms/ui build && tsc --build tsconfig.packages.json --declaration",
-    "prebuild:watch": "pnpm run -filter @game-cms/ui build && tsc --build tsconfig.packages.json --declaration --watch",
+    "prebuild": "pnpm run -r prebuild && tsc --build tsconfig.packages.json --declaration",
+    "prebuild:watch": "pnpm run -fr prebuild && tsc --build tsconfig.packages.json --declaration --watch",
     "test": "vitest --run",
     "clean": "tsx ./scripts/clean.ts",
     "prepare": "husky"

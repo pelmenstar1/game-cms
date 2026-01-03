@@ -1,6 +1,6 @@
 // Base unstyled (only functional) building block for file drop areas.
 
-import { type ComponentProps, useCallback } from 'react';
+import { type ComponentProps } from 'react';
 
 import { FileDrop } from '../FileDrop';
 import { Typography } from '../Typography';
@@ -11,6 +11,7 @@ export interface BaseFileDropAreaProps extends ComponentProps<'div'> {
 
   uploadText?: string;
   dragText?: string;
+  supportedMimeTypes?: string[];
 
   onFiles?: (files: FileList) => void;
 }
@@ -20,20 +21,17 @@ export function BaseFileDropArea({
   disabled,
   uploadText,
   dragText,
+  supportedMimeTypes,
   ...rest
 }: BaseFileDropAreaProps) {
-  const gateOnFiles = useCallback(
-    (files: FileList) => {
-      onFiles?.(files);
-    },
-    [onFiles]
-  );
+  const accept = supportedMimeTypes && supportedMimeTypes.join('');
 
   return (
-    <FileDrop onFiles={gateOnFiles} disabled={disabled}>
+    <FileDrop onFiles={onFiles} disabled={disabled}>
       <div {...rest}>
         <UploadFileButton
-          onFiles={gateOnFiles}
+          accept={accept}
+          onFiles={onFiles}
           disabled={disabled}
           buttonVariant="solid"
           text={uploadText}

@@ -1,0 +1,14 @@
+{
+  "extends": "../../configs/tsconfig.lib.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["./src"],
+  "references": [
+    { "path": "../game-plugin-types" },
+    { "path": "../game-plugin-components" },
+    { "path": "../shared" },
+    { "path": "../types" }
+  ]
+}

@@ -5,6 +5,7 @@ export * from './json.js';
 export * from './math.js';
 export * from './maybeFactory.js';
 export * from './memoryCache.js';
+export * from './mime.js';
 export * from './paging.js';
 export * from './query.js';
 export * from './searchParams.js';

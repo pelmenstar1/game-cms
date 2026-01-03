@@ -1,0 +1,23 @@
+{
+  "extends": "../../configs/tsconfig.lib.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node", "vite/client", "@game-cms/base-components"],
+    "paths": {
+      "#storybook/*": ["./.storybook/*"]
+    }
+  },
+  "include": ["./src", "./.storybook/preview.tsx"],
+  "references": [
+    { "path": "../codegen" },
+    { "path": "../types" },
+    { "path": "../utils" },
+    { "path": "../base-components" },
+    { "path": "../component-api" },
+    { "path": "../shared" },
+    { "path": "../ui" },
+    { "path": "../storybook-config" }
+  ]
+}

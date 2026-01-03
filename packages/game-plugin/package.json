@@ -1,0 +1,16 @@
+{
+  "name": "@game-cms/game-plugin",
+  "packageManager": "pnpm@10.25.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/game-plugin-components": "workspace:*"
+  },
+  "devDependencies": {
+    "@game-cms/types": "workspace:*",
+    "@game-cms/game-plugin-types": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

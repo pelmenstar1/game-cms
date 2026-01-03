@@ -16,18 +16,21 @@ import { FileClientDataItem } from './types.js';
 
 export const renderer: ComponentRenderer<'base::file'> = ({
   data: items,
+  options: { supportedMimeTypes },
   error,
   onDataChanged,
 }) => {
   const showModal = useModal();
 
   const onAddFile = useAsyncCallback(async () => {
-    const result = await showModal(FileExplorerModal, {});
+    const result = await showModal(FileExplorerModal, {
+      supportedMimeTypes,
+    });
 
     if (result) {
       onDataChanged?.([...items, result]);
     }
-  }, [items, onDataChanged, showModal]);
+  }, [items, supportedMimeTypes, onDataChanged, showModal]);
 
   const onItemsChanged = useCallback(
     (items: FileClientDataItem[]) => {

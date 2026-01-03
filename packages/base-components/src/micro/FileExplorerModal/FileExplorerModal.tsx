@@ -10,11 +10,16 @@ import { useCallback, useState } from 'react';
 import { FileExplorer } from '../FileExplorer/index.js';
 import styles from './FileExplorerModal.module.scss';
 
-export type FileExplorerModalProps = ModalProps<
+export interface FileExplorerModalProps extends ModalProps<
   ToClientType<StorageFileItemWithId> | undefined
->;
+> {
+  supportedMimeTypes?: string[];
+}
 
-export function FileExplorerModal({ onClose }: FileExplorerModalProps) {
+export function FileExplorerModal({
+  supportedMimeTypes,
+  onClose,
+}: FileExplorerModalProps) {
   const [folderId, setFolderId] = useState<string>();
 
   const [selectedItem, setSelectedItem] =
@@ -42,6 +47,7 @@ export function FileExplorerModal({ onClose }: FileExplorerModalProps) {
         folderId={folderId}
         onFolderChanged={setFolderId}
         onSelectedItemChanged={setSelectedItem}
+        visibleMimeTypes={supportedMimeTypes}
       />
 
       <Button

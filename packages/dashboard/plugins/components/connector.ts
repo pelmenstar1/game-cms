@@ -80,7 +80,7 @@ const connectorSteps: Record<keyof ComponentConnector, EmitStep> = {
     return `(id) => componentInfoMap[id].component();`;
   },
   getComponentDefaultData: () => {
-    return `(id, options, context) => resolveMaybeFactory(componentInfoMap[id].meta.defaultData, options, context);`;
+    return `(id, options, context) => resolveMaybeFactory(componentInfoMap[id].meta.defaultRawData, options, context);`;
   },
   getComponentValidator: () => {
     return `(id) => componentInfoMap[id].validator;`;

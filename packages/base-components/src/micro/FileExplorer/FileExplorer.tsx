@@ -1,8 +1,4 @@
-import {
-  StorageItemType,
-  StorageItemWithId,
-  type StorageItemWithMeta,
-} from '@game-cms/base-types';
+import { StorageItemWithId } from '@game-cms/base-types';
 import {
   createFolder,
   deleteStorageItemById,
@@ -27,11 +23,13 @@ import { FileGrid, type FileItem } from '../FileGrid/index.js';
 import { FolderNameModal } from '../FolderNameModal/index.js';
 import { UploadFileDialog } from '../UploadFileDialog/index.js';
 import styles from './FileExplorer.module.scss';
+import { transformItems } from './transform.js';
 
 type FolderId = string | undefined;
 
 export interface FileExplorerProps {
   className?: string;
+  visibleMimeTypes?: string[];
   folderId: FolderId;
   onFolderChanged: (value: FolderId) => void;
   onSelectedItemChanged?: (
@@ -39,19 +37,10 @@ export interface FileExplorerProps {
   ) => void;
 }
 
-function transformItems(items: ToClientType<StorageItemWithMeta>[]) {
-  return items.map((item): FileItem => {
-    if (item.type === StorageItemType.FILE) {
-      return { ...item, type: 'file' };
-    }
-
-    return { ...item, type: 'folder' };
-  });
-}
-
 export function FileExplorer({
   className,
   folderId,
+  visibleMimeTypes,
   onFolderChanged,
   onSelectedItemChanged,
 }: FileExplorerProps) {
@@ -79,7 +68,9 @@ export function FileExplorer({
 
   const onUpload = useAsyncCallback(async () => {
     try {
-      const files = await showModal(UploadFileDialog, {});
+      const files = await showModal(UploadFileDialog, {
+        supportedMimeTypes: visibleMimeTypes,
+      });
 
       if (files && files.length > 0) {
         await Promise.all(
@@ -99,7 +90,14 @@ export function FileExplorer({
     } catch {
       notification.error('Failed to upload files');
     }
-  }, [doUploadFile, folderId, notification, refreshItems, showModal]);
+  }, [
+    folderId,
+    notification,
+    visibleMimeTypes,
+    doUploadFile,
+    refreshItems,
+    showModal,
+  ]);
 
   const onDelete = useAsyncCallback(async () => {
     try {
@@ -112,13 +110,15 @@ export function FileExplorer({
         if (proceed) {
           await doDeleteItem(selectedItem.id);
 
+          refreshItems();
+
           notification.info('File deleted');
         }
       }
     } catch {
       notification.error('Failed to delete item');
     }
-  }, [doDeleteItem, notification, selectedItem, showModal]);
+  }, [doDeleteItem, notification, refreshItems, selectedItem, showModal]);
 
   const onCreateFolder = useAsyncCallback(async () => {
     try {
@@ -177,7 +177,7 @@ export function FileExplorer({
           />
           <FileGrid
             className={styles.grid}
-            items={transformItems(items)}
+            items={transformItems(items, visibleMimeTypes)}
             selectedItemId={selectedItem?.id}
             onItemSelected={setSelectedItem}
             onItemDoubleClick={onItemDoubleClick}

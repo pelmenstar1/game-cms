@@ -1,0 +1,19 @@
+{
+  "name": "@game-cms/storybook-config",
+  "packageManager": "pnpm@10.25.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "dependencies": {
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-links": "catalog:",
+    "@storybook/react": "catalog:",
+    "@storybook/react-vite": "catalog:",
+    "storybook": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "vite": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

@@ -3,7 +3,8 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
-    "build": "tsc && pnpm copy-styles",
+    "prebuild": "pnpm copy-styles",
+    "build": "tsc",
     "storybook:start": "storybook dev --port 6006",
     "new-component": "tsx ./scripts/newComponent.ts",
     "new-google-icon": "tsx ./scripts/newGoogleIcon.ts",
@@ -14,18 +15,13 @@
     "@atlaskit/pragmatic-drag-and-drop": "1.7.7",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "1.1.0",
     "@atlaskit/pragmatic-drag-and-drop-live-region": "1.3.1",
-    "@esotericsoftware/spine-pixi-v8": "^4.2.96",
     "@game-cms/shared": "workspace:*",
-    "pixi.js": "^8.14.3",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
     "@game-cms/codegen": "workspace:*",
-    "@storybook/addon-a11y": "catalog:",
-    "@storybook/addon-links": "catalog:",
-    "@storybook/react": "catalog:",
-    "@storybook/react-vite": "catalog:",
+    "@game-cms/storybook-config": "workspace:*",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
@@ -40,10 +36,6 @@
     ".": {
       "import": "./dist/src/index.js",
       "types": "./dist/src/index.d.ts"
-    },
-    "./spine": {
-      "import": "./dist/src/components/spine.js",
-      "types": "./dist/src/components/spine.d.ts"
     },
     "./theme/global": {
       "import": "./dist/src/theme/global.scss",

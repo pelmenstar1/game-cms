@@ -17,7 +17,7 @@ function getContent(mime: string, url: string) {
     return <audio src={url} className={styles.audio} controls />;
   }
 
-  return <UnknownDocumentIcon />;
+  return <UnknownDocumentIcon className={styles['unknown-document']} />;
 }
 
 export function FilePreview({ className, mime, url }: FilePreviewProps) {

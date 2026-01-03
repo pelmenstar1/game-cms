@@ -1,0 +1,11 @@
+.data {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.header {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 0.5em;
+}

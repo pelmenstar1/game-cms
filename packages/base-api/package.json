@@ -6,7 +6,7 @@
     "typegen": "tsx ./scripts/generateTypes.ts"
   },
   "devDependencies": {
-    "@game-cms/api-testing": "workspace:*",
+    "@game-cms/testing-lib": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/conditional": "workspace:*",
     "@types/node": "catalog:",

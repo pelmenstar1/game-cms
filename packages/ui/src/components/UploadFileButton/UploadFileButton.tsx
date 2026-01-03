@@ -32,6 +32,7 @@ export function UploadFileButton({
         type="file"
         disabled={disabled}
         accept={accept}
+        multiple
         onChange={(event) => {
           const { files } = event.target;
 

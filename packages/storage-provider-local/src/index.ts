@@ -4,19 +4,32 @@ import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 
 import send from '@fastify/send';
-import type { StorageFileItem, StorageProvider } from '@game-cms/base-types';
+import {
+  type StorageFileItem,
+  StorageItemType,
+  type StorageProvider,
+} from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
+import { cms } from '@game-cms/global';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
 import { apiRoute } from '@game-cms/utils';
 import z from 'zod';
 
-import { resolveNewFilePath } from './utils.js';
+import { createNewFileName } from './utils.js';
 
 export type LocalStorageProviderConfig = {
   storagePath?: string;
 };
 
 const GET_ROUTE = `/storage/provider/get`;
+
+function createFileUrl(fileName: string) {
+  return encodeURI(`/api${GET_ROUTE}/${fileName}`);
+}
+
+function throwFileNotFound(): never {
+  throw new ApiError('File not found', 'base::entity/notFound');
+}
 
 function getFileRoute(storagePath: string) {
   return apiRoute({
@@ -30,15 +43,31 @@ function getFileRoute(storagePath: string) {
     handler: async (req, res) => {
       const { fileName } = req.params;
 
+      const storageInfo = await cms()
+        .service('base::storage')
+        .collection()
+        .findOne({
+          type: StorageItemType.FILE,
+          url: createFileUrl(fileName),
+        });
+
+      if (storageInfo === null) {
+        throwFileNotFound();
+      }
+
       const { headers, statusCode, stream } = await send(req.raw, fileName, {
         root: storagePath,
+        contentType: false,
       });
 
       if (statusCode === 404) {
-        throw new ApiError('File not found', 'base::entity/notFound');
+        throwFileNotFound();
       }
 
-      res.raw.writeHead(statusCode, headers);
+      res.raw.writeHead(statusCode, {
+        ...headers,
+        'content-type': (storageInfo as StorageFileItem).mime,
+      });
       stream.pipe(res.raw);
     },
   });
@@ -64,14 +93,12 @@ export function localStorageProvider(
     routes: [getFileRoute(storagePath)],
     protocol: {
       upload: async (info) => {
-        const filePath = resolveNewFilePath(storagePath);
-        const fileName = path.basename(filePath);
-
-        const output = fs.createWriteStream(filePath);
+        const fileName = createNewFileName(storagePath, info.name);
+        const output = fs.createWriteStream(path.join(storagePath, fileName));
 
         await pipeline(info.content, output);
 
-        return { url: encodeURI(`/api${GET_ROUTE}/${fileName}`) };
+        return { url: createFileUrl(fileName) };
       },
       delete: async (url) => {
         const filePath = getFilePath(storagePath, url);

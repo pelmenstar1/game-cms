@@ -87,6 +87,8 @@ export function useApiQuery<Args extends unknown[], R>(
         setResult({ status: 'success', value });
       })
       .catch((error: unknown) => {
+        console.error(error);
+
         setResult({ status: 'error', error });
       });
 

@@ -13,14 +13,18 @@
     { "path": "./packages/client" },
     { "path": "./packages/utils" },
     { "path": "./packages/codegen" },
-    { "path": "./packages/api-testing" },
+    { "path": "./packages/testing-lib" },
     { "path": "./packages/base-plugin" },
     { "path": "./packages/base-api" },
     { "path": "./packages/base-types" },
     { "path": "./packages/base-utils" },
+    { "path": "./packages/game-plugin" },
+    { "path": "./packages/game-plugin-components" },
+    { "path": "./packages/game-plugin-types" },
     { "path": "./packages/base-components" },
     { "path": "./packages/spritesheet" },
-    { "path": "./packages/component-api" }
+    { "path": "./packages/component-api" },
+    { "path": "./packages/storybook-config" }
   ],
   "include": []
 }

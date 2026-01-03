@@ -50,8 +50,11 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
   const defaultDataContext = useMemo(
     (): ForeignComponentDefaultDataContext => ({
-      getDefault: (id, options) =>
-        getComponentDefaultData(id, options, defaultDataContext),
+      getDefault: (id, options) => {
+        const result = getComponentDefaultData(id, options, defaultDataContext);
+
+        return result;
+      },
     }),
     []
   );

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": ["node", "@game-cms/base-api/clientTypes"],
+    "types": ["node", "@game-cms/base-api/types"],
 
     "noUncheckedIndexedAccess": true
   },
@@ -13,6 +13,8 @@
     { "path": "../base-api" },
     { "path": "../base-utils" },
     { "path": "../shared" },
-    { "path": "../utils" }
+    { "path": "../utils" },
+    { "path": "../global" },
+    { "path": "../testing-lib" }
   ]
 }

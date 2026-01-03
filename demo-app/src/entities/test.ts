@@ -1,3 +1,4 @@
+import { spine } from '@game-cms/game-plugin';
 import { entity, file } from 'game-cms';
 
 export default entity({
@@ -5,6 +6,9 @@ export default entity({
   title: 'Test',
   components: {
     item1: file({
+      options: {},
+    }),
+    spine1: spine({
       options: {},
     }),
   },

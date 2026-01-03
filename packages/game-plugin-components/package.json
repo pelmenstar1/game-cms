@@ -1,0 +1,27 @@
+{
+  "name": "@game-cms/game-plugin-components",
+  "packageManager": "pnpm@10.25.0",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "scripts": {
+    "prebuild": "tsx ./scripts/copyStyles.ts",
+    "storybook:start": "storybook dev --port 6006"
+  },
+  "dependencies": {
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/component-api": "workspace:*",
+    "@game-cms/ui": "workspace:*",
+    "@game-cms/utils": "workspace:*",
+    "@game-cms/base-components": "workspace:*",
+    "@esotericsoftware/spine-pixi-v8": "^4.2.96",
+    "pixi.js": "^8.14.3"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "@game-cms/codegen": "workspace:*",
+    "@game-cms/types": "workspace:*",
+    "@game-cms/storybook-config": "workspace:*",
+    "storybook": "catalog:"
+  }
+}

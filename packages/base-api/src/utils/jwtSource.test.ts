@@ -1,7 +1,7 @@
 import {
   makeRequest,
   type MakeRequestInjectOptions,
-} from '@game-cms/api-testing';
+} from '@game-cms/testing-lib';
 import { describe, expect, test } from 'vitest';
 
 import { SESSION_JWT_COOKIE_NAME } from './authCookie.js';

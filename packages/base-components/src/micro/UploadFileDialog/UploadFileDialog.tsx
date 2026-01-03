@@ -3,10 +3,13 @@ import { FileDropArea, ModalDialog, type ModalProps } from '@game-cms/ui';
 import styles from './UploadFileDialog.module.scss';
 
 export interface UploadFileDialogProps extends ModalProps<File[] | undefined> {
-  className?: string;
+  supportedMimeTypes?: string[];
 }
 
-export function UploadFileDialog({ onClose }: UploadFileDialogProps) {
+export function UploadFileDialog({
+  supportedMimeTypes,
+  onClose,
+}: UploadFileDialogProps) {
   return (
     <ModalDialog
       onClose={onClose}
@@ -14,6 +17,7 @@ export function UploadFileDialog({ onClose }: UploadFileDialogProps) {
       contentClassName={styles.content}
     >
       <FileDropArea
+        supportedMimeTypes={supportedMimeTypes}
         className={styles['drop-area']}
         onFiles={(files) => {
           onClose([...files]);

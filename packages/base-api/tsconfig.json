@@ -14,7 +14,7 @@
     { "path": "../shared" },
     { "path": "../utils" },
     { "path": "../types" },
-    { "path": "../api-testing" },
+    { "path": "../testing-lib" },
     { "path": "../base-types" },
     { "path": "../base-utils" }
   ]

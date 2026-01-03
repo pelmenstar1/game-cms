@@ -9,7 +9,7 @@ declare module '@game-cms/types' {
     'base::file': ComponentEntry<{
       rawData: string[];
       options: {
-        supportedMimeTypes: string[];
+        supportedMimeTypes?: string[];
         minItems?: number;
         maxItems?: number;
       };
