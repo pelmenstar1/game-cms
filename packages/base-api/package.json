@@ -18,7 +18,6 @@
     "@fastify/multipart": "catalog:",
     "@game-cms/base-types": "workspace:*",
     "@game-cms/base-utils": "workspace:*",
-    "@game-cms/build": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/types": "workspace:*",

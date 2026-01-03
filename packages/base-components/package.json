@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
-    "@game-cms/build": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@types/node": "catalog:",
     "mongodb": "catalog:",

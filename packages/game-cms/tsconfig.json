@@ -11,7 +11,6 @@
     { "path": "../base-plugin" },
     { "path": "../base-types" },
     { "path": "../base-utils" },
-    { "path": "../build" },
     { "path": "../global" },
     { "path": "../ignition" },
     { "path": "../shared" },

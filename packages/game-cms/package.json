@@ -23,7 +23,6 @@
     "@game-cms/base-plugin": "workspace:*",
     "@game-cms/base-types": "workspace:*",
     "@game-cms/base-utils": "workspace:*",
-    "@game-cms/build": "workspace:*",
     "@game-cms/dashboard": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",

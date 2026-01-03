@@ -229,9 +229,6 @@ importers:
       '@game-cms/base-utils':
         specifier: workspace:*
         version: link:../base-utils
-      '@game-cms/build':
-        specifier: workspace:*
-        version: link:../build
       '@game-cms/global':
         specifier: workspace:*
         version: link:../global
@@ -336,9 +333,6 @@ importers:
       '@game-cms/base-api':
         specifier: workspace:*
         version: link:../base-api
-      '@game-cms/build':
-        specifier: workspace:*
-        version: link:../build
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.3
@@ -407,15 +401,6 @@ importers:
       '@game-cms/types':
         specifier: workspace:*
         version: link:../types
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-
-  packages/build:
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 25.0.3
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -553,9 +538,6 @@ importers:
       '@game-cms/base-api':
         specifier: workspace:*
         version: link:../base-api
-      '@game-cms/build':
-        specifier: workspace:*
-        version: link:../build
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
@@ -625,9 +607,6 @@ importers:
       '@game-cms/base-utils':
         specifier: workspace:*
         version: link:../base-utils
-      '@game-cms/build':
-        specifier: workspace:*
-        version: link:../build
       '@game-cms/dashboard':
         specifier: workspace:*
         version: link:../dashboard
@@ -764,9 +743,6 @@ importers:
       '@game-cms/base-plugin':
         specifier: workspace:*
         version: link:../base-plugin
-      '@game-cms/build':
-        specifier: workspace:*
-        version: link:../build
       '@game-cms/global':
         specifier: workspace:*
         version: link:../global
@@ -926,9 +902,6 @@ importers:
 
   packages/types:
     dependencies:
-      '@game-cms/build':
-        specifier: workspace:*
-        version: link:../build
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -1034,9 +1007,6 @@ importers:
 
   packages/vite-plugins:
     dependencies:
-      '@game-cms/build':
-        specifier: workspace:*
-        version: link:../build
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared

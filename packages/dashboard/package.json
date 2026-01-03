@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
-    "@game-cms/build": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",

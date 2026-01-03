@@ -6,9 +6,5 @@
     "types": ["node"]
   },
   "include": ["./src"],
-  "references": [
-    { "path": "../build" },
-    { "path": "../shared" },
-    { "path": "../types" }
-  ]
+  "references": [{ "path": "../shared" }, { "path": "../types" }]
 }

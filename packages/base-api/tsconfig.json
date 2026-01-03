@@ -9,7 +9,6 @@
   "references": [
     { "path": "../base-types" },
     { "path": "../base-utils" },
-    { "path": "../build" },
     { "path": "../codegen" },
     { "path": "../conditional" },
     { "path": "../global" },

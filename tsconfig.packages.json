@@ -7,7 +7,6 @@
     { "path": "./packages/global" },
     { "path": "./packages/shared" },
     { "path": "./packages/ui" },
-    { "path": "./packages/build" },
     { "path": "./packages/vite-plugins" },
     { "path": "./packages/conditional" },
     { "path": "./packages/client" },

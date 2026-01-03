@@ -9,7 +9,6 @@
   "references": [
     { "path": "../base-api" },
     { "path": "../base-types" },
-    { "path": "../build" },
     { "path": "../client" },
     { "path": "../codegen" },
     { "path": "../codegen" },
