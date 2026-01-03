@@ -1,3 +1,4 @@
+export * from './Accordion';
 export * from './BaseFileDropArea';
 export * from './Button';
 export * from './Checkbox';

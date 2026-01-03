@@ -11,9 +11,11 @@ import { DynamicZoneInput } from './components/DynamicZone/types.js';
 import File from './components/File/index.js';
 import Number from './components/Number/index.js';
 import Text from './components/Text/index.js';
+import { TitleSpecById } from './internal/title.js';
 
 export type * from './components/Alternative/types.js';
 export type * from './components/Compose/types.js';
+export * from './components/DynamicZone/factory.js';
 export type * from './components/DynamicZone/types.js';
 export type * from './components/File/types.js';
 export type * from './components/Number/types.js';
@@ -24,12 +26,16 @@ export const text = componentAccessor(Text);
 export const number = componentAccessor(Number);
 export const file = componentAccessor(File);
 
-export function repeatable<Id extends ComponentId, Args>(
-  baseComponent: ComponentSchema<Id, Args>
-): ComponentSchema<'base::repeatable', { id: Id; baseArgs: Args }> {
+export function repeatable<Id extends ComponentId, Args>(args: {
+  title?: TitleSpecById<Id, Args>;
+  component: ComponentSchema<Id, Args>;
+}): ComponentSchema<'base::repeatable', { id: Id; baseArgs: Args }> {
+  const { title, component: baseComponent } = args;
+
   return {
     componentId: 'base::repeatable',
     options: {
+      title: title as TitleSpecById<ComponentId, Args>,
       componentId: baseComponent.componentId,
       baseOptions: baseComponent.options,
     },
@@ -67,6 +73,7 @@ export function dynamicZone<const T extends DynamicZoneInput>(
     componentId: 'base::dynamic-zone',
     options: mapObject(input, (item) => ({
       title: item.title,
+      option: item.option,
       componentId: item.component.componentId,
       options: item.component.options,
     })) as ComponentOptionsById<'base::dynamic-zone', T>,

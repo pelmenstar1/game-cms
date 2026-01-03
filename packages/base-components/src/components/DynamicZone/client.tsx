@@ -31,6 +31,7 @@ export const renderer = <Args,>({
         key: itemData.clientKey,
         componentId: itemOptions.componentId,
         options: itemOptions.options,
+        title: itemOptions.title,
         data: itemData.data,
         error: error?.[index],
         itemKey: itemData.key,
@@ -77,7 +78,7 @@ export const renderer = <Args,>({
                 className={styles['component-palette-item']}
                 onClick={onClick}
               >
-                {itemOptions.title}
+                {itemOptions.option.title}
               </Button>
             );
           }

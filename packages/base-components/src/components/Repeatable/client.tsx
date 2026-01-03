@@ -15,11 +15,12 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
   const api = useComponentApi();
 
   const items = useMemo(() => {
-    const { baseOptions, componentId } = options;
+    const { baseOptions, componentId, title } = options;
 
     return data.map((dataItem, index) => ({
       key: dataItem.clientKey,
       componentId,
+      title,
       options: baseOptions,
       data: dataItem.data,
       error: error?.[index],

@@ -5,11 +5,12 @@ import { GetSchemaParams } from '../../internal/types.js';
 export type ComposeInput = Record<string, ComponentSchema>;
 
 export type ResolveComposeInput<T> = T extends ComposeInput ? T : ComposeInput;
+
 type ComposeMap<
   Input extends ComposeInput,
   TK extends keyof GetSchemaParams,
 > = {
-  [K in keyof Input]: GetSchemaParams<Input>[TK];
+  [K in keyof Input]: GetSchemaParams<Input[K]>[TK];
 };
 
 export type ComposeOptionsEntry<T extends ComponentSchema = ComponentSchema> =

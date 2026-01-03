@@ -13,9 +13,22 @@ import {
 } from '@game-cms/core';
 import { Key } from 'react';
 
+import { TitleSpec, TitleSpecById } from '../../internal/title.js';
+
+type BaseDynamicZoneInputEntry<Id extends ComponentId, Args, Title> = {
+  title?: Title;
+  option: { title: string };
+  component: ComponentSchema<Id, Args>;
+};
+
+export type DynamicZoneInputEntry<
+  Id extends ComponentId,
+  Args,
+> = BaseDynamicZoneInputEntry<Id, Args, TitleSpecById<Id, Args>>;
+
 export type DynamicZoneInput = Record<
   string,
-  { title: string; component: ComponentSchema }
+  BaseDynamicZoneInputEntry<ComponentId, unknown, TitleSpec>
 >;
 
 type ResolveInput<T> = T extends DynamicZoneInput ? T : DynamicZoneInput;
@@ -57,9 +70,10 @@ type DynamicZoneArray<
   [K in keyof Input]: GetSchemaParams<Input[K]['component'], K>[TK];
 }[keyof Input][];
 
-type OptionsEntry<Options, Id> = {
+type OptionsEntry<Options, Id extends ComponentId, Args> = {
   componentId: Id;
-  title: string;
+  title?: TitleSpecById<Id, Args>;
+  option: { title: string };
   options: Options;
 };
 
@@ -68,8 +82,8 @@ type Options<Input extends DynamicZoneInput> = {
     infer Id,
     infer Args
   >
-    ? OptionsEntry<ComponentOptionsById<Id, Args>, Id>
-    : OptionsEntry<ComponentOptions, ComponentId>;
+    ? OptionsEntry<ComponentOptionsById<Id, Args>, Id, Args>
+    : OptionsEntry<ComponentOptions, ComponentId, unknown>;
 };
 
 type DynamicZoneEntry<Input extends DynamicZoneInput> = {

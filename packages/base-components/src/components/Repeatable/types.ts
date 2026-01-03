@@ -10,6 +10,8 @@ import {
 } from '@game-cms/core';
 import { Key } from 'react';
 
+import { TitleSpecById } from '../../internal/title.js';
+
 type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
   id: Id;
   baseArgs: BaseArgs;
@@ -26,6 +28,7 @@ type RepeatableEntry<Args extends RepeatableArgs> = {
   rawData: ComponentRawDataById<Args['id'], Args['baseArgs']>[];
   options: {
     componentId: Args['id'];
+    title?: TitleSpecById<Args['id'], Args['baseArgs']>;
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: (ComponentErrorById<Args['id'], Args['baseArgs']> | undefined)[];

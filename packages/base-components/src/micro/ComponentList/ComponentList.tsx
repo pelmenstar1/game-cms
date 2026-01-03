@@ -6,10 +6,21 @@ import {
   ComponentId,
   ComponentOptionsById,
 } from '@game-cms/core';
-import { classNames, DraggableList } from '@game-cms/ui';
+import {
+  Accordion,
+  classNames,
+  DeleteIcon,
+  DraggableList,
+  DragHandle,
+  IconButton,
+} from '@game-cms/ui';
 import { Key } from 'react';
 
-import { ItemControlHeader } from '../ItemControlHeader/ItemControlHeader.js';
+import {
+  resolveTitleSpec,
+  TitleSpec,
+  TitleSpecById,
+} from '../../internal/title.js';
 import styles from './ComponentList.module.scss';
 
 export type ComponentListItem<
@@ -18,22 +29,27 @@ export type ComponentListItem<
 > = {
   key: Key;
   componentId: Id;
+  title?: TitleSpecById<Id, Args>;
   data: ComponentClientDataById<Id, Args>;
   options: ComponentOptionsById<Id, Args>;
   error?: ComponentErrorById<Id, Args>;
 };
 
-export type ComponentListProps<Item extends ComponentListItem> = {
+export type ComponentListProps<
+  Id extends ComponentId,
+  Args,
+  T extends ComponentListItem<Id, Args>,
+> = {
   className?: string;
-  items: Item[];
-  onItemsChanged: (items: Item[]) => void;
+  items: T[];
+  onItemsChanged: (items: T[]) => void;
 };
 
-export function ComponentList<Item extends ComponentListItem>({
-  className,
-  items,
-  onItemsChanged,
-}: ComponentListProps<Item>) {
+export function ComponentList<
+  Id extends ComponentId,
+  Args,
+  T extends ComponentListItem<Id, Args>,
+>({ className, items, onItemsChanged }: ComponentListProps<Id, Args, T>) {
   const api = useComponentApi();
 
   return (
@@ -42,8 +58,15 @@ export function ComponentList<Item extends ComponentListItem>({
       items={items}
       onItemsChanged={onItemsChanged}
     >
-      {(item, _, handleRef) => {
+      {(item, index, handleRef) => {
         const BaseComponent = api.getComponent(item.componentId);
+
+        const title = item.title
+          ? resolveTitleSpec<object>(
+              item.title as TitleSpec<never>,
+              item.data as never
+            ).toString()
+          : '';
 
         const onItemDataChanged = (data: ComponentData) => {
           onItemsChanged(
@@ -60,21 +83,32 @@ export function ComponentList<Item extends ComponentListItem>({
         };
 
         return (
-          <div key={item.key} className={styles['item-container']}>
-            <ItemControlHeader
-              className={styles['item-container-header']}
-              deleteTitle="Delete item"
-              onDelete={onDelete}
-              handleRef={handleRef}
-            />
+          <Accordion
+            key={item.key}
+            title={title}
+            className={styles['item-container']}
+            headerContent={
+              <>
+                <IconButton
+                  title="Delete item"
+                  className={styles['delete-button']}
+                  onClick={onDelete}
+                >
+                  <DeleteIcon />
+                </IconButton>
 
+                <DragHandle ref={handleRef} />
+              </>
+            }
+            initiallyOpened={index === items.length - 1}
+          >
             <BaseComponent
               data={item.data}
               options={item.options}
               error={item.error}
               onDataChanged={onItemDataChanged}
             />
-          </div>
+          </Accordion>
         );
       }}
     </DraggableList>
