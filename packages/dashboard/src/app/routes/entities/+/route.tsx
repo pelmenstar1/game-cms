@@ -1,18 +1,16 @@
 import type { EntityData } from '@game-cms/base-types';
-import { createEntity, getEntitySchema } from '@game-cms/client';
-import { useApiAction, useApiQuery } from '@game-cms/component-api';
-import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
+import { createEntity } from '@game-cms/client';
+import { useApiAction } from '@game-cms/component-api';
+import { useNotification, useTypedNavigate } from '@game-cms/ui';
 import { useCallback } from 'react';
+import { getEntitySchemaById } from 'virtual:dashboard/entityConnector';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
 
 import type { Route } from './+types/route';
-import styles from './route.module.scss';
 
 export default function Page({ params }: Route.ComponentProps) {
-  const [entitySchema] = useApiQuery(getEntitySchema, [params.name], {
-    redirectOnNotFound: true,
-  });
+  const entitySchema = getEntitySchemaById(params.name);
 
   const notification = useNotification();
   const redirect = useTypedNavigate();
@@ -34,11 +32,5 @@ export default function Page({ params }: Route.ComponentProps) {
     [doCreateEntity, notification, params.name, redirect]
   );
 
-  return (
-    <DataLoader className={styles.root} result={entitySchema}>
-      {(entitySchema) => (
-        <AccessEntityView schema={entitySchema} onSave={onSave} />
-      )}
-    </DataLoader>
-  );
+  return <AccessEntityView schema={entitySchema} onSave={onSave} />;
 }

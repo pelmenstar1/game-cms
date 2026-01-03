@@ -5,7 +5,8 @@ import type { OwnEnvironment } from '@game-cms/base-types';
 import { getImportDirectory } from '@game-cms/shared/node';
 import type { Plugin } from '@game-cms/types';
 
-import { scanEntitySchemas } from './entity.js';
+import { scanEntitySchemas } from './entity/scan.js';
+import { dashboardEntityPlugin } from './entity/vitePlugin.js';
 
 export const basePlugin: Plugin<OwnEnvironment> = {
   api: apiConfig,
@@ -24,5 +25,8 @@ export const basePlugin: Plugin<OwnEnvironment> = {
   },
   env: {
     entitySchemas: scanEntitySchemas,
+  },
+  dashboard: {
+    plugins: [dashboardEntityPlugin()],
   },
 };

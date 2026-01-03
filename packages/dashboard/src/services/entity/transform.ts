@@ -25,6 +25,8 @@ export function transformDataToClientData<Id extends EntityId>(
       api.getDefaultData(propSchema.componentId, propSchema.options)
     );
 
+  console.log(dataOrDefault);
+
   return api.clientResolverContext.toClient(
     'base::compose',
     dataOrDefault,

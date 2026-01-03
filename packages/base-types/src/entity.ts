@@ -66,6 +66,11 @@ export type EntitySchemaById<Id extends EntityId> = EntitySchema<
   EntityMap[Id]
 >;
 
+export type EntityConnector = {
+  getEntitySchemas: () => EntitySchema[];
+  getEntitySchemaById: <Id extends EntityId>(id: Id) => EntitySchemaById<Id>;
+};
+
 type EntityToEntry<T extends { id: string; components: unknown }> = [
   T['id'],
   T['components'],

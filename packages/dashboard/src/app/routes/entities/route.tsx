@@ -1,7 +1,6 @@
-import { getEntitySchemas } from '@game-cms/client';
-import { useApiQuery } from '@game-cms/component-api';
 import { LinkButton, NavTabs, PlusIcon, useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
+import { getEntitySchemas } from 'virtual:dashboard/entityConnector';
 
 import { EntityList } from '@/components/EntityList';
 
@@ -17,19 +16,16 @@ export function meta() {
 
 export default function Page({ params }: Route.ComponentProps) {
   const { name: selectedEntity } = params;
-  const [schemasResult] = useApiQuery(getEntitySchemas);
-  const schemas =
-    schemasResult.status === 'success' ? schemasResult.value : undefined;
+  const schemas = getEntitySchemas();
 
-  const selectedSchema =
-    selectedEntity && schemas
-      ? schemas.find(({ id }) => id === selectedEntity)
-      : null;
+  const selectedSchema = selectedEntity
+    ? schemas.find(({ id }) => id === selectedEntity)
+    : null;
 
   const navigate = useTypedNavigate();
 
   useEffect(() => {
-    if (schemas && schemas.length > 0 && selectedEntity === undefined) {
+    if (schemas.length > 0 && selectedEntity === undefined) {
       const [schema] = schemas;
 
       void navigate(`/entities/${schema.id}`);
@@ -46,12 +42,10 @@ export default function Page({ params }: Route.ComponentProps) {
     <div className={styles.root}>
       <NavTabs
         className={styles['entities-tabs']}
-        items={
-          schemas?.map((schema) => ({
-            text: schema.title,
-            href: `/entities/${schema.id}`,
-          })) ?? []
-        }
+        items={schemas.map((schema) => ({
+          text: schema.title,
+          href: `/entities/${schema.id}`,
+        }))}
       />
 
       {selectedSchema && (

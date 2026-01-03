@@ -16,11 +16,13 @@
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-components": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "@game-cms/types": "workspace:*"
+    "@game-cms/types": "workspace:*",
+    "@game-cms/global": "workspace:*"
   },
   "devDependencies": {
     "@game-cms/base-types": "workspace:*",
     "mongodb": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

@@ -6,6 +6,7 @@
     { "path": "../base-api" },
     { "path": "../base-components" },
     { "path": "../base-types" },
+    { "path": "../global" },
     { "path": "../shared" },
     { "path": "../types" }
   ]

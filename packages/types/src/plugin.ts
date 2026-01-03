@@ -5,6 +5,7 @@ import type {
   FastifyPluginAsync,
   FastifyPluginCallback,
 } from 'fastify';
+import type { Plugin as VitePlugin } from 'vite';
 
 import type { ApiRoute } from './api.js';
 import type { ResolvedCmsConfig } from './config.js';
@@ -42,11 +43,16 @@ export interface PluginApiConfig {
   routes?: MaybeWithUrlPrefix<ApiRouteSource>;
 }
 
+export type PluginDashboardConfig = {
+  plugins?: VitePlugin[];
+};
+
 type BasePlugin = {
   api?: PluginApiConfig;
 
   services?: ServiceSource;
   components?: ComponentSource;
+  dashboard?: PluginDashboardConfig;
 
   setup?: (config: ResolvedCmsConfig) => MaybePromise<void>;
 };

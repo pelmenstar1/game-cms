@@ -8,9 +8,6 @@ export function transformItems(
   items: ToClientType<StorageItemWithMeta>[],
   visibleMimeTypes: string[] | undefined
 ) {
-  console.log(items);
-  console.log(visibleMimeTypes);
-
   return items
     .filter((item) => {
       if (item.type === StorageItemType.FILE) {
