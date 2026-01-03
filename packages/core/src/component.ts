@@ -1,4 +1,9 @@
-import type { IdSource, MaybePromise, Or } from '@game-cms/shared';
+import type {
+  IdSource,
+  IsAllOptional,
+  MaybePromise,
+  Or,
+} from '@game-cms/shared';
 import type { Key, ReactNode } from 'react';
 
 import type { RequestContext } from './apiClient.js';
@@ -231,13 +236,34 @@ export type ComponentMeta<Id extends ComponentId = ComponentId> = {
   config?: ComponentControllerConfig;
 };
 
-export interface ComponentController<Id extends ComponentId = ComponentId> {
+type RequiredIf<T, C> = C extends true ? Required<T> : T;
+type RequiredIfExists<
+  T,
+  Id extends ComponentId,
+  K extends PropertyKey,
+> = RequiredIf<
+  T,
+  ComponentTypeMap[Id] extends Record<K, unknown> ? true : false
+>;
+
+interface BaseComponentController<Id extends ComponentId = ComponentId> {
   meta: ComponentMeta<Id>;
   defaultRawData: ComponentDefaultDataHandler<Id>;
-  resolver?: ComponentDataResolver<Id>;
-  storageResolver?: ComponentStorageDataResolver<Id>;
   validator: ComponentDataValidator<Id>;
 }
+
+export type ComponentController<Id extends ComponentId = ComponentId> =
+  BaseComponentController<Id> &
+    RequiredIfExists<
+      { resolver?: ComponentDataResolver<Id> },
+      Id,
+      'resolvedData'
+    > &
+    RequiredIfExists<
+      { storageResolver?: ComponentStorageDataResolver<Id> },
+      Id,
+      'storageData'
+    >;
 
 export type ComponentControllerMap = {
   [Id in keyof ComponentTypeMap]: ComponentController<Id>;
@@ -246,6 +272,19 @@ export type ComponentControllerMap = {
 export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
   renderer: ComponentRenderer<Id>;
 };
+
+type ComponentAccessorInput<Id extends ComponentId, Args> = {
+  options: ComponentOptionsById<Id, Args>;
+};
+
+type ComponentAccessor<Id extends ComponentId> =
+  IsAllOptional<ComponentOptionsById<Id>> extends true
+    ? <Args>(
+        input?: ComponentAccessorInput<Id, Args>
+      ) => ComponentSchema<Id, Args>
+    : <Args>(
+        input: ComponentAccessorInput<Id, Args>
+      ) => ComponentSchema<Id, Args>;
 
 /*@__NO_SIDE_EFFECTS__*/
 export function component<Id extends ComponentId>(
@@ -256,11 +295,9 @@ export function component<Id extends ComponentId>(
 
 export function componentAccessor<Id extends string>(
   controller: ComponentController<Id>
-) {
-  return <Args>(
-    input: Omit<ComponentSchema<Id, Args>, 'componentId' | 'config'>
-  ): ComponentSchema<Id, Args> => {
-    return { componentId: controller.meta.id, ...input };
+): ComponentAccessor<Id> {
+  return (input) => {
+    return { componentId: controller.meta.id, options: input?.options ?? {} };
   };
 }
 

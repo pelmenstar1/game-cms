@@ -7,8 +7,8 @@ export type RequiredProperty<T, K extends keyof T> = Replace<
 
 export type MaybeConcat<T extends string, U extends string> = T | `${T}${U}`;
 
-export type InferSetValue<T> = T extends Set<infer R> ? R : never;
-
 type OrVariant<T, U> = T & { [K in keyof U]?: undefined };
 
 export type Or<T, U> = OrVariant<T, U> | OrVariant<U, T>;
+
+export type IsAllOptional<T> = Partial<T> extends T ? true : false;

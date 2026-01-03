@@ -12,19 +12,13 @@ export default entity({
   id: 'demo::test',
   title: 'Test',
   components: {
-    item1: file({
-      options: {},
-    }),
-    spine1: spine({
-      options: {},
-    }),
+    item1: file(),
+    spine1: spine(),
     item2: dynamicZone({
       id: dynamicZoneEntry({
         option: { title: 'Option 1' },
         component: compose({
-          nested1: text({
-            options: {},
-          }),
+          nested1: text(),
         }),
       }),
     }),
