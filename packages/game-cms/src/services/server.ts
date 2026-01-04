@@ -35,7 +35,6 @@ export async function startServer(options: DashboardPluginOptions = {}) {
 
   await initPlugins(app);
 
-  // eslint-disable-next-line @typescript-eslint/await-thenable
   await Promise.all(services.map((service) => service.init?.()));
 
   await app.listen({ port: server.port });

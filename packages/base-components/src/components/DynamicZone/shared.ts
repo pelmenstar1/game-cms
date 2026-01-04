@@ -8,6 +8,8 @@ import {
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 
+import { OwnError } from './types.js';
+
 const id = 'base::dynamic-zone';
 
 type Id = typeof id;
@@ -18,16 +20,32 @@ export const defaultRawData: ComponentDefaultDataHandler<Id> = [];
 
 export const validator: ComponentDataValidator<Id> = <Args>(
   data: ComponentRawDataById<Id, Args>,
-  options: ComponentOptionsById<Id, Args>,
+  { minItems, maxItems, options }: ComponentOptionsById<Id, Args>,
   context: ForeignComponentValidationContext
 ) => {
-  const errors = data.map((dataItem) => {
+  const items = data.map((dataItem) => {
     const { componentId, options: baseOptions } = options[dataItem.key];
 
     return context.validate(componentId, dataItem.data, baseOptions);
   });
 
-  return errors.every((element) => element === undefined)
-    ? undefined
-    : (errors as ComponentErrorById<'base::dynamic-zone', Args>);
+  let ownError: OwnError | undefined;
+
+  if (minItems !== undefined && items.length < minItems) {
+    ownError = 'TOO_FEW_ITEMS';
+  } else if (maxItems !== undefined && items.length > maxItems) {
+    ownError = 'TOO_MANY_ITEMS';
+  }
+
+  console.log(ownError);
+
+  if (
+    ownError !== undefined ||
+    items.some((element) => element !== undefined)
+  ) {
+    return { ownError, items } as ComponentErrorById<
+      'base::dynamic-zone',
+      Args
+    >;
+  }
 };

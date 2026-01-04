@@ -4,24 +4,34 @@ import {
   ComponentOptionsById,
   ComponentProps,
 } from '@game-cms/core';
-import { Button } from '@game-cms/ui';
+import { classNames, Typography } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 
 import { ComponentList } from '../../micro/ComponentList/index.js';
+import { DynamicZonePalette } from '../../micro/DynamicZonePalette/index.js';
 import styles from './renderer.module.scss';
 
 type Id = 'base::dynamic-zone';
 
 export const renderer = <Args,>({
   data,
-  options,
+  options: { maxItems, options },
   error,
   onDataChanged,
 }: ComponentProps<Id, Args>) => {
   type Data = ComponentClientDataById<Id, Args>;
-  type Options = ComponentOptionsById<Id, Args>;
+  type Options = ComponentOptionsById<Id, Args>['options'];
 
   const api = useComponentApi();
+
+  const canAddItems = maxItems === undefined || data.length < maxItems;
+
+  const errorText =
+    error?.ownError === 'TOO_FEW_ITEMS'
+      ? 'Too few items'
+      : error?.ownError === 'TOO_MANY_ITEMS'
+        ? 'Too many items'
+        : '';
 
   const items = useMemo(() => {
     return data.map((itemData, index) => {
@@ -33,7 +43,7 @@ export const renderer = <Args,>({
         options: itemOptions.options,
         title: itemOptions.title,
         data: itemData.data,
-        error: error?.[index],
+        error: error?.items[index],
         itemKey: itemData.key,
       };
     });
@@ -52,38 +62,50 @@ export const renderer = <Args,>({
     [onDataChanged]
   );
 
+  const paletteItems = useMemo(
+    () =>
+      Object.entries<Options[keyof Options]>(options).map(([key, item]) => ({
+        key: key as keyof Options,
+        title: item.option.title,
+      })),
+    [options]
+  );
+
+  const onPaletteClick = (key: keyof Options) => {
+    const { componentId, options: baseOptions } = options[key];
+
+    onDataChanged?.([
+      ...data,
+      {
+        key,
+        clientKey: api.generateId(),
+        data: api.getDefaultData(componentId, baseOptions),
+      },
+    ] as Data);
+  };
+
   return (
-    <div className={styles.root}>
-      <ComponentList items={items} onItemsChanged={onItemsChanged} />
+    <div>
+      <div
+        className={classNames(
+          styles.content,
+          items.length === 0 && styles['content-empty']
+        )}
+      >
+        <ComponentList items={items} onItemsChanged={onItemsChanged} />
 
-      <div className={styles['component-palette']}>
-        {Object.entries<Options[keyof Options]>(options).map(
-          ([key, itemOptions]) => {
-            const onClick = () => {
-              const { componentId, options } = itemOptions;
-
-              onDataChanged?.([
-                ...data,
-                {
-                  key,
-                  clientKey: api.generateId(),
-                  data: api.getDefaultData(componentId, options),
-                },
-              ] as Data);
-            };
-
-            return (
-              <Button
-                key={key}
-                className={styles['component-palette-item']}
-                onClick={onClick}
-              >
-                {itemOptions.option.title}
-              </Button>
-            );
-          }
+        {canAddItems && (
+          <DynamicZonePalette
+            error={errorText.length > 0}
+            items={paletteItems}
+            onItemClick={onPaletteClick}
+          />
         )}
       </div>
+
+      {errorText.length > 0 && (
+        <Typography className={styles.error}>{errorText}</Typography>
+      )}
     </div>
   );
 };

@@ -8,6 +8,7 @@ import {
   ComponentRawDataById,
   ComponentResolvedDataById,
   ComponentSchema,
+  ComponentStorageDataById,
 } from '@game-cms/core';
 
 export type ComponentGroupItem<Id extends ComponentId = ComponentId> = {
@@ -28,6 +29,7 @@ export type GetSchemaParams<T = unknown> =
         id: Id;
         resolvedData: ComponentResolvedDataById<Id, Args>;
         clientData: ComponentClientDataById<Id, Args>;
+        storageData: ComponentStorageDataById<Id, Args>;
       }
     : {
         options: ComponentOptions;
@@ -36,4 +38,5 @@ export type GetSchemaParams<T = unknown> =
         id: ComponentId;
         resolvedData: ComponentData;
         clientData: ComponentData;
+        storageData: ComponentData;
       };

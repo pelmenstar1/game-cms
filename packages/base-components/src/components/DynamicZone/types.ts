@@ -26,12 +26,25 @@ export type DynamicZoneInputEntry<
   Args,
 > = BaseDynamicZoneInputEntry<Id, Args, TitleSpecById<Id, Args>>;
 
-export type DynamicZoneInput = Record<
-  string,
-  BaseDynamicZoneInputEntry<ComponentId, unknown, TitleSpec>
->;
+interface SharedOptions {
+  minItems?: number;
+  maxItems?: number;
+}
 
-type ResolveInput<T> = T extends DynamicZoneInput ? T : DynamicZoneInput;
+export interface DynamicZoneInput extends SharedOptions {
+  options: Record<
+    string,
+    BaseDynamicZoneInputEntry<ComponentId, unknown, TitleSpec>
+  >;
+}
+
+type DynamicZoneInputComponents = Record<string, ComponentSchema>;
+
+type ResolveInputComponents<T> = T extends DynamicZoneInput
+  ? {
+      [K in keyof T['options']]: T['options'][K]['component'];
+    }
+  : DynamicZoneInputComponents;
 
 type DataEntry<Data, K> = {
   key: K;
@@ -64,10 +77,10 @@ type GetSchemaParams<T = unknown, K = string> =
       };
 
 type DynamicZoneArray<
-  Input extends DynamicZoneInput,
+  Input extends DynamicZoneInputComponents,
   TK extends keyof GetSchemaParams,
 > = {
-  [K in keyof Input]: GetSchemaParams<Input[K]['component'], K>[TK];
+  [K in keyof Input]: GetSchemaParams<Input[K], K>[TK];
 }[keyof Input][];
 
 type OptionsEntry<Options, Id extends ComponentId, Args> = {
@@ -77,25 +90,38 @@ type OptionsEntry<Options, Id extends ComponentId, Args> = {
   options: Options;
 };
 
-type Options<Input extends DynamicZoneInput> = {
-  [K in keyof Input]: Input[K]['component'] extends ComponentSchema<
-    infer Id,
-    infer Args
-  >
-    ? OptionsEntry<ComponentOptionsById<Id, Args>, Id, Args>
-    : OptionsEntry<ComponentOptions, ComponentId, unknown>;
+interface Options<
+  Input extends DynamicZoneInputComponents,
+> extends SharedOptions {
+  minItems?: number;
+  maxItems?: number;
+  options: {
+    [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
+      ? OptionsEntry<ComponentOptionsById<Id, Args>, Id, Args>
+      : OptionsEntry<ComponentOptions, ComponentId, unknown>;
+  };
+}
+
+export type OwnError = 'TOO_FEW_ITEMS' | 'TOO_MANY_ITEMS';
+
+type Error<Input extends DynamicZoneInputComponents> = {
+  ownError?: OwnError;
+  items: DynamicZoneArray<Input, 'error'>;
 };
 
-type DynamicZoneEntry<Input extends DynamicZoneInput> = {
+type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
   rawData: DynamicZoneArray<Input, 'rawData'>;
   options: Options<Input>;
-  error: DynamicZoneArray<Input, 'error'>;
+  error: Error<Input>;
   resolvedData: DynamicZoneArray<Input, 'resolvedData'>;
   clientData: DynamicZoneArray<Input, 'clientData'>;
+  storageData: DynamicZoneArray<Input, 'storageData'>;
 };
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
-    'base::dynamic-zone': ComponentEntry<DynamicZoneEntry<ResolveInput<_Args>>>;
+    'base::dynamic-zone': ComponentEntry<
+      DynamicZoneEntry<ResolveInputComponents<_Args>>
+    >;
   }
 }

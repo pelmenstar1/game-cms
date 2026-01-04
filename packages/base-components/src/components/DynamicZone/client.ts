@@ -6,7 +6,8 @@ export const clientResolver: ComponentClientDataResolver<'base::dynamic-zone'> =
     toClient: (data, options, context) => {
       return Promise.all(
         data.map(async (dataItem) => {
-          const { componentId, options: baseOptions } = options[dataItem.key];
+          const { componentId, options: baseOptions } =
+            options.options[dataItem.key];
 
           return {
             clientKey: context.idSource(),
@@ -22,7 +23,8 @@ export const clientResolver: ComponentClientDataResolver<'base::dynamic-zone'> =
     },
     fromClient: (clientData, options, context) => {
       const result = clientData.map((value) => {
-        const { componentId, options: baseOptions } = options[value.key];
+        const { componentId, options: baseOptions } =
+          options.options[value.key];
 
         return context.fromClient(componentId, value.data, baseOptions);
       });
@@ -30,7 +32,7 @@ export const clientResolver: ComponentClientDataResolver<'base::dynamic-zone'> =
       const errors = result.map(({ error }) => error);
 
       if (errors.some((value) => value !== undefined)) {
-        return { error: errors };
+        return { error: { items: errors } };
       }
 
       return {

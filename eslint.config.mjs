@@ -66,6 +66,7 @@ export default defineConfig(
       'unicorn/no-process-exit': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/await-thenable': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

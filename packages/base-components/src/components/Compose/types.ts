@@ -19,15 +19,16 @@ export type ComposeOptionsEntry<T extends ComponentSchema = ComponentSchema> =
 export type ComposeEntry<Args> = BaseComposeEntry<ResolveComposeInput<Args>>;
 
 type BaseComposeEntry<Input extends ComposeInput> = {
-  rawData: ComposeMap<Input, 'rawData'>;
   options: {
     [K in keyof Input]: ComposeOptionsEntry<Input[K]>;
   };
   error: {
     [K in keyof Input]: GetSchemaParams<Input[K]>['error'] | undefined;
   };
+  rawData: ComposeMap<Input, 'rawData'>;
   resolvedData: ComposeMap<Input, 'resolvedData'>;
   clientData: ComposeMap<Input, 'clientData'>;
+  storageData: ComposeMap<Input, 'storageData'>;
 };
 
 declare module '@game-cms/core' {

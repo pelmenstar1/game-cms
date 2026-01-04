@@ -1,81 +1,8 @@
-import {
-  componentAccessor,
-  type ComponentId,
-  type ComponentOptionsById,
-  type ComponentSchema,
-} from '@game-cms/core';
-import { mapObject } from '@game-cms/shared/object';
-
-import type { ComposeInput } from './components/Compose/types.js';
-import { DynamicZoneInput } from './components/DynamicZone/types.js';
-import File from './components/File/controller.js';
-import Number from './components/Number/controller.js';
-import Text from './components/Text/controller.js';
-import { TitleSpecById } from './internal/title.js';
-
-export type * from './components/Alternative/types.js';
-export type * from './components/Compose/types.js';
-export * from './components/DynamicZone/factory.js';
-export type * from './components/DynamicZone/types.js';
-export type * from './components/File/types.js';
-export type * from './components/Number/types.js';
-export type * from './components/Repeatable/types.js';
-export type * from './components/Text/types.js';
-
-export const text = componentAccessor(Text);
-export const number = componentAccessor(Number);
-export const file = componentAccessor(File);
-
-export function repeatable<Id extends ComponentId, Args>(args: {
-  title?: TitleSpecById<Id, Args>;
-  component: ComponentSchema<Id, Args>;
-}): ComponentSchema<'base::repeatable', { id: Id; baseArgs: Args }> {
-  const { title, component: baseComponent } = args;
-
-  return {
-    componentId: 'base::repeatable',
-    options: {
-      title,
-      componentId: baseComponent.componentId,
-      baseOptions: baseComponent.options,
-    },
-  };
-}
-
-export function compose<const T extends ComposeInput>(
-  map: T
-): ComponentSchema<'base::compose', T> {
-  return {
-    componentId: 'base::compose',
-    options: mapObject(map, (schema) => ({
-      componentId: schema.componentId,
-      options: schema.options,
-    })) as ComponentOptionsById<'base::compose', T>,
-  };
-}
-
-export function alternative<Id extends ComponentId, Args>(
-  baseComponent: ComponentSchema<Id, Args>
-): ComponentSchema<'base::alternative', { id: Id; baseArgs: Args }> {
-  return {
-    componentId: 'base::alternative',
-    options: {
-      componentId: baseComponent.componentId,
-      baseOptions: baseComponent.options,
-    },
-  };
-}
-
-export function dynamicZone<const T extends DynamicZoneInput>(
-  input: T
-): ComponentSchema<'base::dynamic-zone', T> {
-  return {
-    componentId: 'base::dynamic-zone',
-    options: mapObject(input, (item) => ({
-      title: item.title,
-      option: item.option,
-      componentId: item.component.componentId,
-      options: item.component.options,
-    })) as ComponentOptionsById<'base::dynamic-zone', T>,
-  };
-}
+export * from './components/Alternative/index.js';
+export * from './components/Compose/index.js';
+export * from './components/DynamicZone/index.js';
+export * from './components/DynamicZone/types.js';
+export * from './components/File/index.js';
+export * from './components/Number/index.js';
+export * from './components/Repeatable/index.js';
+export * from './components/Text/index.js';

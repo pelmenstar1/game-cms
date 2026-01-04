@@ -29,7 +29,6 @@ export function combineAsyncFactories<T, Args extends unknown[]>(
 ): MaybeAsyncFactory<T[], Args> {
   return async (...args: Args) => {
     const result = await Promise.all(
-      // eslint-disable-next-line @typescript-eslint/await-thenable
       factories.map((factory) => resolveMaybeFactory(factory, ...args))
     );
 

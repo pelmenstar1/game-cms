@@ -18,7 +18,6 @@ export default component({
       const { componentId, baseOptions } = options;
 
       return Promise.all(
-        // eslint-disable-next-line @typescript-eslint/await-thenable
         data.map((item) => context.fromStorage(componentId, item, baseOptions))
       );
     },
@@ -26,7 +25,6 @@ export default component({
       const { componentId, baseOptions } = options;
 
       return Promise.all(
-        // eslint-disable-next-line @typescript-eslint/await-thenable
         data.map((item) => context.toStorage(componentId, item, baseOptions))
       );
     },

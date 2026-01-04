@@ -22,9 +22,39 @@ export default component({
     args: ComponentDataResolverArgs
   ) => {
     return raw.map((item) => {
-      const { componentId, options: baseOptions } = options[item.key];
+      const { componentId, options: baseOptions } = options.options[item.key];
 
       return context.resolveRawData(componentId, item.data, baseOptions, args);
     }) as ComponentResolvedDataById<Id, Args>;
+  },
+  storageResolver: {
+    fromStorage: (data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return Promise.all(
+        data.map((item) => {
+          const { componentId, options: baseOptions } = optionsMap[item.key];
+
+          return {
+            key: item.key,
+            data: context.fromStorage(componentId, item.data, baseOptions),
+          };
+        })
+      );
+    },
+    toStorage: (data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return Promise.all(
+        data.map((item) => {
+          const { componentId, options: baseOptions } = optionsMap[item.key];
+
+          return {
+            key: item.key,
+            data: context.toStorage(componentId, item.data, baseOptions),
+          };
+        })
+      );
+    },
   },
 });

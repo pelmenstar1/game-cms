@@ -1,24 +1,29 @@
 import { spine } from '@game-cms/game-plugin';
-import {
-  compose,
-  dynamicZone,
-  dynamicZoneEntry,
-  entity,
-  file,
-  text,
-} from 'game-cms';
+import { compose, dynamicZone, entity, file, repeatable, text } from 'game-cms';
 
 export default entity({
   id: 'demo::test',
   title: 'Test',
   components: {
-    item1: file(),
-    spine1: spine(),
-    item2: dynamicZone({
-      id: dynamicZoneEntry({
-        option: { title: 'Option 1' },
-        component: compose({
-          nested1: text(),
+    assets: repeatable({
+      component: compose({
+        name: text(),
+        bundle: text(),
+        content: dynamicZone({
+          minItems: 1,
+          maxItems: 1,
+          options: {
+            image: {
+              option: { title: 'Image' },
+              component: compose({
+                file: file(),
+              }),
+            },
+            spine: {
+              option: { title: 'Spine' },
+              component: spine(),
+            },
+          },
         }),
       }),
     }),
