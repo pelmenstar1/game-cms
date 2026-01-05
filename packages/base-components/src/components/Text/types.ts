@@ -7,7 +7,7 @@ export type TextOptions = {
 
 export type TextData = string;
 
-export type TextError = 'TEXT_TOO_SHORT' | 'TEXT_TOO_LONG';
+export type TextError = 'INVALID_TYPE' | 'TEXT_TOO_SHORT' | 'TEXT_TOO_LONG';
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

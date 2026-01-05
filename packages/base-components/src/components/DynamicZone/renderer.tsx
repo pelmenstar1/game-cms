@@ -43,7 +43,7 @@ export const renderer = <Args,>({
         options: itemOptions.options,
         title: itemOptions.title,
         data: itemData.data,
-        error: error?.items[index],
+        error: error?.items?.[index],
         itemKey: itemData.key,
       };
     });

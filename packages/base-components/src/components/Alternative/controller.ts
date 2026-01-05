@@ -13,7 +13,7 @@ export default component({
   resolver: (raw, _options, _context, args) => {
     return resolveConditionalData(raw, args as ConditionalValueInput);
   },
-  storageResolver: {
+  storageTransformer: {
     fromStorage: async (data, options, context) => {
       const { baseOptions, componentId } = options;
 

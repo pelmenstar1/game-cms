@@ -1,6 +1,7 @@
 import type {
   EntityId,
   EntityRawDataById,
+  EntityRawInDataById,
   EntityStorageDataById,
 } from '@game-cms/base-types';
 import { ApiError } from '@game-cms/base-utils';
@@ -46,7 +47,7 @@ async function getRawById<T extends EntityId>(entityId: T, id: ObjectId) {
   const { _id, ...ownResult } = result;
   const { foreignStorageResolverContext } = cms().service('base::component');
 
-  const rawResult = mapObject(
+  const rawResult = await asyncMapObject(
     ownResult as unknown as EntityStorageDataById<T>,
     (item, key) => {
       const { componentId, options } = entitySchema.components[key];
@@ -64,7 +65,7 @@ async function getRawById<T extends EntityId>(entityId: T, id: ObjectId) {
 
 async function toStorageData<T extends EntityId>(
   entityId: T,
-  rawData: EntityRawDataById<T>
+  rawData: EntityRawInDataById<T>
 ): Promise<EntityStorageDataById<T>> {
   const entitySchema = getEntitySchema(entityId);
   const { foreignStorageResolverContext } = cms().service('base::component');
@@ -78,18 +79,18 @@ async function toStorageData<T extends EntityId>(
 
 export default service({
   id: 'base::entity',
-  create: async <T extends EntityId>(id: T, data: EntityRawDataById<T>) => {
+  create: async <T extends EntityId>(id: T, data: EntityRawInDataById<T>) => {
     const storageData = await toStorageData(id, data);
     const result = await collection(id).insertOne(
-      storageData as OptionalUnlessRequiredId<EntityRawDataById<T>>
+      storageData as OptionalUnlessRequiredId<EntityRawInDataById<T>>
     );
 
     return { _id: result.insertedId, ...storageData };
   },
-  update: async <T extends EntityId>(
-    entityId: T,
+  update: async <Id extends EntityId>(
+    entityId: Id,
     id: ObjectId,
-    data: EntityRawDataById<T>
+    data: EntityRawInDataById<Id>
   ) => {
     const result = await collection(entityId).updateOne(idFilter(id), {
       $set: await toStorageData(entityId, data),

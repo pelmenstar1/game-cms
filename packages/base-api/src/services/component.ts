@@ -4,16 +4,15 @@ import type {
   ComponentId,
   ComponentOptionsById,
   ComponentRawDataById,
+  ComponentRawInDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
   ForeignComponentDataResolverContext,
-  ForeignComponentDefaultDataContext,
   ForeignComponentStorageDataResolverContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
-import { resolveMaybeFactory } from '@game-cms/shared';
 
 function getController<T extends ComponentId>(id: T) {
   const controller = env().components.controllers[id];
@@ -29,14 +28,6 @@ function getController<T extends ComponentId>(id: T) {
 const foreignValidationContext: ForeignComponentValidationContext = {
   validate: (id, data, options) =>
     getController(id).validator(data, options, foreignValidationContext),
-};
-
-const foreignDefaultContext: ForeignComponentDefaultDataContext = {
-  getDefault: (id, options) => {
-    const { defaultRawData } = getController(id);
-
-    return resolveMaybeFactory(defaultRawData, options, foreignDefaultContext);
-  },
 };
 
 const foreignResolverContext: ForeignComponentDataResolverContext = {
@@ -61,7 +52,7 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
       data: ComponentStorageDataById<Id, Args>,
       options: ComponentOptionsById<Id, Args>
     ) => {
-      const { storageResolver } = getController(id);
+      const { storageTransformer: storageResolver } = getController(id);
 
       return storageResolver
         ? storageResolver.fromStorage(
@@ -73,10 +64,10 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
     },
     toStorage: <Id extends ComponentId, Args>(
       id: Id,
-      data: ComponentRawDataById<Id, Args>,
+      data: ComponentRawInDataById<Id, Args>,
       options: ComponentOptionsById<Id, Args>
     ) => {
-      const { storageResolver } = getController(id);
+      const { storageTransformer: storageResolver } = getController(id);
 
       return storageResolver
         ? storageResolver.toStorage(
@@ -91,7 +82,6 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
 export default service({
   id: 'base::component',
   foreignValidationContext,
-  foreignDefaultContext,
   foreignResolverContext,
   foreignStorageResolverContext,
   getController,

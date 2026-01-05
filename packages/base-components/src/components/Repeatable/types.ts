@@ -5,6 +5,7 @@ import {
   ComponentId,
   ComponentOptionsById,
   ComponentRawDataById,
+  ComponentRawInDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
@@ -25,14 +26,18 @@ type ResolveArgs<Args> = Args extends {
   : RepeatableArgs;
 
 type RepeatableEntry<Args extends RepeatableArgs> = {
-  rawData: ComponentRawDataById<Args['id'], Args['baseArgs']>[];
   options: {
     componentId: Args['id'];
     title?: TitleSpecById<Args['id'], Args['baseArgs']>;
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
   };
-  error: (ComponentErrorById<Args['id'], Args['baseArgs']> | undefined)[];
+  error: {
+    ownError?: 'INVALID_TYPE';
+    items?: (ComponentErrorById<Args['id'], Args['baseArgs']> | undefined)[];
+  };
   resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>[];
+  rawData: ComponentRawDataById<Args['id'], Args['baseArgs']>[];
+  rawInData: ComponentRawInDataById<Args['id'], Args['baseArgs']>[];
   clientData: {
     clientKey: Key;
     data: ComponentClientDataById<Args['id'], Args['baseArgs']>;

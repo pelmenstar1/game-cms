@@ -17,9 +17,13 @@ export const meta = componentMeta({
   },
 });
 
-export const defaultRawData: ComponentDefaultDataHandler<Id> = '';
+export const defaultRawData: ComponentDefaultDataHandler<Id> = () => '';
 
 export const validator: ComponentDataValidator<Id> = (text, options) => {
+  if (typeof text !== 'string') {
+    return 'INVALID_TYPE';
+  }
+
   const { minLength, maxLength } = options;
 
   if (minLength !== undefined && text.length < minLength) {

@@ -65,7 +65,7 @@ export const renderer: ComponentRenderer<Id> = ({
           key={i}
           group={group}
           data={data}
-          error={error}
+          error={error?.properties}
           onValueChanged={onDataChanged}
         />
       ))}

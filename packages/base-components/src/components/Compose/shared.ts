@@ -4,9 +4,9 @@ import {
   ComponentErrorById,
   componentMeta,
   ComponentOptionsById,
-  ComponentRawDataById,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
 
 const id = 'base::compose';
@@ -27,13 +27,24 @@ export const defaultRawData: ComponentDefaultDataHandler<Id> = (
 };
 
 export const validator: ComponentDataValidator<Id> = <Args>(
-  data: ComponentRawDataById<Id, Args>,
+  data: unknown,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentValidationContext
 ) => {
+  if (!isNonNullObject(data)) {
+    return { ownError: 'INVALID_TYPE' };
+  }
+
   const entries = Object.entries(options).map(
     ([key, { componentId, options }]) =>
-      [key, context.validate(componentId, data[key], options)] as const
+      [
+        key,
+        context.validate(
+          componentId,
+          (data as Record<string, unknown>)[key],
+          options
+        ),
+      ] as const
   );
 
   if (entries.some(([, value]) => value !== undefined)) {

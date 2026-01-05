@@ -1,5 +1,5 @@
 import { component } from '@game-cms/core';
-import { mapObject } from '@game-cms/shared/object';
+import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
 import { defaultRawData, meta, validator } from './shared.js';
 
@@ -14,19 +14,19 @@ export default component({
       return context.resolveRawData(componentId, value, baseOptions, args);
     });
   },
-  storageResolver: {
+  storageTransformer: {
     fromStorage: (data, options, context) => {
-      return mapObject(data, (item, key) => {
+      return asyncMapObject(data, (item, key) => {
         const { componentId, options: baseOptions } = options[key];
 
         return context.fromStorage(componentId, item as never, baseOptions);
       });
     },
     toStorage: (data, options, context) => {
-      return mapObject(data, (item, key) => {
+      return asyncMapObject(data, (item, key) => {
         const { componentId, options: baseOptions } = options[key];
 
-        return context.toStorage(componentId, item, baseOptions);
+        return context.toStorage(componentId, item as never, baseOptions);
       });
     },
   },

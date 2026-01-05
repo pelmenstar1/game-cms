@@ -3,32 +3,37 @@ import type {
   ComponentEntry,
   ComponentErrorById,
   ComponentRawDataById,
+  ComponentRawInDataById,
+  ComponentStorageDataById,
 } from '@game-cms/core';
 
 type FileError = ComponentErrorById<'base::file'>;
 type FileData = ComponentRawDataById<'base::file'>;
+type FileDataIn = ComponentRawInDataById<'base::file'>;
+type FileStorageData = ComponentStorageDataById<'base::file'>;
 type FileClientData = ComponentClientDataById<'base::file'>;
+
+type BaseData<T> = {
+  skeleton: T;
+  atlas: T;
+  images: T;
+};
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentTypeMap<_Args> {
     'game::spine': ComponentEntry<{
-      rawData: {
-        skeleton: FileData;
-        atlas: FileData;
-        images: FileData;
-      };
       options: Record<never, never>;
       error: {
-        skeleton: FileError | undefined;
-        atlas: FileError | undefined;
-        images: FileError | undefined;
+        ownError?: 'INVALID_TYPE';
+        skeleton?: FileError;
+        atlas?: FileError;
+        images?: FileError;
       };
-      clientData: {
-        skeleton: FileClientData;
-        atlas: FileClientData;
-        images: FileClientData;
-      };
+      rawData: BaseData<FileData>;
+      rawInData: BaseData<FileDataIn>;
+      clientData: BaseData<FileClientData>;
+      storageData: BaseData<FileStorageData>;
     }>;
   }
 }

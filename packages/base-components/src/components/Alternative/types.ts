@@ -6,6 +6,7 @@ import {
   ComponentId,
   ComponentOptionsById,
   ComponentRawDataById,
+  ComponentRawInDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
 
@@ -32,18 +33,22 @@ type Data<Args extends AlternativeArgs> = ComponentRawDataById<
 >;
 
 type AlternativeEntry<Args extends AlternativeArgs> = {
-  rawData: ConditionalData<Data<Args>>;
   options: {
     componentId: Args['id'];
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: {
-    default: Error<Args> | undefined;
-    alternative: {
+    ownError?: 'INVALID_TYPE';
+    default?: Error<Args>;
+    alternative?: {
       data: Error<Args> | undefined;
       condition: string | undefined;
     }[];
   };
+  rawData: ConditionalData<Data<Args>>;
+  rawInData: ConditionalData<
+    ComponentRawInDataById<Args['id'], Args['baseArgs']>
+  >;
   resolvedData: Data<Args>;
   clientData: ConditionalData<
     ComponentClientDataById<Args['id'], Args['baseArgs']>,

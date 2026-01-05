@@ -1,5 +1,5 @@
 import type {
-  ComponentClientDataResolver,
+  ComponentClientDataTransformer,
   ComponentClientModule,
   ComponentControllerConfig,
   ComponentDataValidator,
@@ -20,9 +20,9 @@ export interface ComponentConnector {
     id: Id
   ): ComponentDataValidator<Id>;
 
-  getComponentClientResolver<Id extends ComponentId>(
+  getComponentClientTransformer<Id extends ComponentId>(
     id: Id
-  ): ComponentClientDataResolver<Id> | undefined;
+  ): ComponentClientDataTransformer<Id> | undefined;
 
   getComponentConfig(id: ComponentId): ComponentControllerConfig;
 

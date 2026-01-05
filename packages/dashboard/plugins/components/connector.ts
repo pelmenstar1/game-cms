@@ -52,9 +52,6 @@ const clientImports = emitImportBase(
   (paths) => paths.client
 );
 
-const helperImports: EmitStep = () =>
-  `import { resolveMaybeFactory } from '@game-cms/shared';`;
-
 const componentInfoMap: EmitStep = (info) => {
   const mapEntries = Object.entries(info)
     .map(
@@ -75,7 +72,7 @@ const connectorSteps: Record<keyof ComponentConnector, EmitStep> = {
     return `(id) => componentInfoMap[id].renderer();`;
   },
   getComponentDefaultData: () => {
-    return `(id, options, context) => resolveMaybeFactory(componentInfoMap[id].shared.defaultRawData, options, context);`;
+    return `(id, options, context) => componentInfoMap[id].shared.defaultRawData(options, context);`;
   },
   getComponentValidator: () => {
     return `(id) => componentInfoMap[id].shared.validator;`;
@@ -83,15 +80,14 @@ const connectorSteps: Record<keyof ComponentConnector, EmitStep> = {
   getComponentConfig: () => {
     return `(id) => componentInfoMap[id].shared.meta.config;`;
   },
-  getComponentClientResolver: () => {
-    return `(id) => componentInfoMap[id].client.clientResolver;`;
+  getComponentClientTransformer: () => {
+    return `(id) => componentInfoMap[id].client.clientTransformer;`;
   },
 };
 
 const steps = [
   sharedImports,
   clientImports,
-  helperImports,
   componentInfoMap,
   ...Object.entries(connectorSteps).map(
     ([key, step]) =>

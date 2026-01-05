@@ -1,19 +1,21 @@
 import { StorageFileItemWithId } from '@game-cms/base-types';
-import { ComponentEntry } from '@game-cms/core';
+import { ComponentEntry, ToClientType } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 
-export type FileClientDataItem = Omit<StorageFileItemWithId, 'parent'>;
+export type FileRawDataItem = Omit<StorageFileItemWithId<ObjectId>, 'parent'>;
+export type FileClientDataItem = ToClientType<FileRawDataItem>;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap {
     'base::file': ComponentEntry<{
-      rawData: string[];
+      rawData: FileRawDataItem[];
+      rawInData: string[];
       options: {
         supportedMimeTypes?: string[];
         minItems?: number;
         maxItems?: number;
       };
-      error: 'TOO_FEW_ITEMS' | 'TOO_MANY_ITEMS';
+      error: 'INVALID_TYPE' | 'TOO_FEW_ITEMS' | 'TOO_MANY_ITEMS';
       clientData: FileClientDataItem[];
       storageData: ObjectId[];
     }>;

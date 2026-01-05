@@ -1,8 +1,6 @@
 import type {
-  ComponentClientDataById,
   ComponentControllerConfig,
   ComponentId,
-  ComponentOptionsById,
   ComponentRenderer,
   ForeignComponentClientDataResolverContext,
 } from '@game-cms/core';
@@ -13,16 +11,13 @@ import type { IdSource } from '../../shared/src/idSource.js';
 export type ComponentApi = {
   generateId: IdSource<Key>;
 
-  getDefaultData: <Id extends ComponentId, Args = unknown>(
-    id: Id,
-    options: ComponentOptionsById<Id, Args>
-  ) => ComponentClientDataById<Id, Args>;
+  getDefaultData: ForeignComponentClientDataResolverContext['getDefaultData'];
 
   getComponent: <Id extends ComponentId>(id: Id) => ComponentRenderer<Id>;
 
   getConfig: (id: ComponentId) => ComponentControllerConfig | undefined;
 
-  clientResolverContext: ForeignComponentClientDataResolverContext;
+  clientTransformerContext: ForeignComponentClientDataResolverContext;
 };
 
 export const ComponentApiContext =

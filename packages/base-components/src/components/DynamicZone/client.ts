@@ -1,6 +1,6 @@
-import { ComponentClientDataResolver } from '@game-cms/core';
+import { ComponentClientDataTransformer } from '@game-cms/core';
 
-export const clientResolver: ComponentClientDataResolver<'base::dynamic-zone'> =
+export const clientTransformer: ComponentClientDataTransformer<'base::dynamic-zone'> =
   {
     getDefaultData: () => [],
     toClient: (data, options, context) => {

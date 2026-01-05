@@ -12,6 +12,7 @@
       "node",
       "vite/client",
       "@game-cms/base-api/clientTypes",
+      "@game-cms/base-components",
       "./src/types/virtualComponentConnector.d.ts"
     ],
     "target": "ES2022",

@@ -2,7 +2,7 @@ import {
   conditionalAstExpressionToString,
   parseConditionalNotation,
 } from '@game-cms/conditional';
-import { ComponentClientDataResolver } from '@game-cms/core';
+import { ComponentClientDataTransformer } from '@game-cms/core';
 
 function parseCondition(text: string) {
   try {
@@ -12,7 +12,7 @@ function parseCondition(text: string) {
   }
 }
 
-export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
+export const clientTransformer: ComponentClientDataTransformer<'base::alternative'> =
   {
     getDefaultData: (options, context) => ({
       default: context.getDefaultData(options.componentId, options.baseOptions),
@@ -69,7 +69,7 @@ export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
 
       return {
         result: {
-          default: defaultResult.result,
+          default: defaultResult.result as never,
           alternative: alternativeResult.map(({ value }) => {
             if (value === undefined) {
               throw new Error('Value is undefined');
@@ -77,7 +77,7 @@ export const clientResolver: ComponentClientDataResolver<'base::alternative'> =
 
             return {
               condition: value.condition,
-              value: value.data,
+              value: value.data as never,
             };
           }),
         },

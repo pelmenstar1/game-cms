@@ -1,6 +1,8 @@
 import type {
   EntityId,
   EntityRawDataById,
+  EntityRawInDataById,
+  EntityResolvedDataById,
   EntitySchema,
   EntitySchemaById,
 } from '@game-cms/base-types';
@@ -16,8 +18,13 @@ export type EntityDataByIdWithId<T extends EntityId> = EntityRawDataById<T> & {
   _id: string;
 };
 
+export type EntityDataInByIdWithId<T extends EntityId> =
+  EntityRawInDataById<T> & {
+    _id: string;
+  };
+
 export type EntityResolvedDataByIdWithId<T extends EntityId> =
-  EntityRawDataById<T> & {
+  EntityResolvedDataById<T> & {
     _id: string;
   };
 
@@ -36,16 +43,16 @@ export const getEntitySchema = <T extends EntityId>(
     response: json<EntitySchemaById<T>>(),
   });
 
-export const createEntity = <T extends EntityId>(
+export const createEntity = <Id extends EntityId>(
   context: RequestContext,
-  entityId: T,
-  body: EntityRawDataById<T>
+  entityId: Id,
+  body: EntityRawInDataById<Id>
 ) =>
   request(context, {
     url: `/entity/${entityId}`,
     method: 'POST',
     body: jsonInit(body),
-    response: json<EntityDataByIdWithId<T>>(),
+    response: json<EntityDataInByIdWithId<Id>>(),
   });
 
 export const getEntityById = <T extends EntityId>(
@@ -66,7 +73,7 @@ export const updateEntityById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
   id: string,
-  data: EntityRawDataById<T>
+  data: EntityRawInDataById<T>
 ) =>
   request(context, {
     url: `/entity/${entityId}/byId/${id}`,

@@ -3,6 +3,7 @@ import {
   type ComponentDefaultDataHandler,
   componentMeta,
 } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 
 import {
   ATLAS_OPTIONS,
@@ -30,6 +31,17 @@ export const defaultRawData: ComponentDefaultDataHandler<Id> = () => ({
 });
 
 export const validator: ComponentDataValidator<Id> = (data, _, context) => {
+  if (
+    !(
+      isNonNullObject(data) &&
+      'atlas' in data &&
+      'images' in data &&
+      'skeleton' in data
+    )
+  ) {
+    return { ownError: 'INVALID_TYPE' };
+  }
+
   const result = {
     atlas: context.validate('base::file', data.atlas, ATLAS_OPTIONS),
     images: context.validate('base::file', data.images, IMAGES_OPTIONS),

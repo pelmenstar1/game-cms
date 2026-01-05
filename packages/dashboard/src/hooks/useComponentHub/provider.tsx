@@ -8,6 +8,7 @@ import type {
   ComponentId,
   ComponentOptionsById,
   ComponentRawDataById,
+  ComponentRawInDataById,
   ComponentRenderer,
   ForeignComponentClientDataResolverContext,
   ForeignComponentDefaultDataContext,
@@ -17,7 +18,7 @@ import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
 import { type PropsWithChildren, useMemo } from 'react';
 import React from 'react';
 import {
-  getComponentClientResolver,
+  getComponentClientTransformer,
   getComponentConfig,
   getComponentDefaultData,
   getComponentValidator,
@@ -57,7 +58,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
     []
   );
 
-  const clientResolverContext = useMemo(
+  const clientTransformerContext = useMemo(
     (): ForeignComponentClientDataResolverContext => ({
       idSource: incrementingIdSource,
       makeRequest: (fn, args) => {
@@ -67,31 +68,35 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
         id: Id,
         options: ComponentOptionsById<Id, Args>
       ) => {
-        const resolver = getComponentClientResolver(id);
+        const resolver = getComponentClientTransformer(id);
 
         return resolver
-          ? resolver.getDefaultData(options, clientResolverContext)
+          ? resolver.getDefaultData(options, clientTransformerContext)
           : (defaultDataContext.getDefault(
               id,
               options
             ) as ComponentClientDataById<Id, Args>);
       },
-      fromClient: (id, clientData, options) => {
-        const resolver = getComponentClientResolver(id);
+      fromClient: <Id extends ComponentId, Args>(
+        id: Id,
+        clientData: ComponentClientDataById<Id, Args>,
+        options: ComponentOptionsById<Id, Args>
+      ) => {
+        const resolver = getComponentClientTransformer(id);
 
         return resolver
-          ? resolver.fromClient(clientData, options, clientResolverContext)
-          : { result: clientData };
+          ? resolver.fromClient(clientData, options, clientTransformerContext)
+          : { result: clientData as ComponentRawInDataById<Id, Args> };
       },
       toClient: <Id extends ComponentId, Args>(
         id: Id,
         data: ComponentRawDataById<Id, Args>,
         options: ComponentOptionsById<Id>
       ) => {
-        const resolver = getComponentClientResolver(id);
+        const resolver = getComponentClientTransformer(id);
 
         return resolver
-          ? resolver.toClient(data, options, clientResolverContext)
+          ? resolver.toClient(data, options, clientTransformerContext)
           : (data as ComponentClientDataById<Id, Args>);
       },
     }),
@@ -101,13 +106,13 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const api = useMemo(
     (): ComponentApi => ({
       generateId: incrementingIdSource,
-      getDefaultData: clientResolverContext.getDefaultData,
+      getDefaultData: clientTransformerContext.getDefaultData,
       getComponent: <Id extends ComponentId>(id: Id) =>
         componentCache.get(id, null) as unknown as ComponentRenderer<Id>,
       getConfig: getComponentConfig,
-      clientResolverContext,
+      clientTransformerContext,
     }),
-    [clientResolverContext]
+    [clientTransformerContext]
   );
 
   const hub = useMemo(

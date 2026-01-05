@@ -1,12 +1,11 @@
 import {
   ComponentDataValidator,
   ComponentDefaultDataHandler,
-  ComponentErrorById,
   componentMeta,
   ComponentOptionsById,
-  ComponentRawDataById,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 
 import { OwnError } from './types.js';
 
@@ -16,13 +15,23 @@ type Id = typeof id;
 
 export const meta = componentMeta({ id });
 
-export const defaultRawData: ComponentDefaultDataHandler<Id> = [];
+export const defaultRawData: ComponentDefaultDataHandler<Id> = () => [];
 
 export const validator: ComponentDataValidator<Id> = <Args>(
-  data: ComponentRawDataById<Id, Args>,
+  data: unknown,
   { minItems, maxItems, options }: ComponentOptionsById<Id, Args>,
   context: ForeignComponentValidationContext
 ) => {
+  if (
+    !Array.isArray(data) ||
+    !data.every(
+      (item): item is { key: string; data: unknown } =>
+        isNonNullObject(item) && 'key' in item && 'data' in item
+    )
+  ) {
+    return { ownError: 'INVALID_TYPE' };
+  }
+
   const items = data.map((dataItem) => {
     const { componentId, options: baseOptions } = options[dataItem.key];
 
@@ -37,15 +46,10 @@ export const validator: ComponentDataValidator<Id> = <Args>(
     ownError = 'TOO_MANY_ITEMS';
   }
 
-  console.log(ownError);
-
   if (
     ownError !== undefined ||
     items.some((element) => element !== undefined)
   ) {
-    return { ownError, items } as ComponentErrorById<
-      'base::dynamic-zone',
-      Args
-    >;
+    return { ownError, items };
   }
 };

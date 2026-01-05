@@ -1,14 +1,12 @@
 import type {
   EntityId,
+  EntityMap,
   EntityRawDataById,
+  EntityRawInDataById,
   EntitySchemaById,
 } from '@game-cms/base-types';
 import { useComponentApi } from '@game-cms/component-api';
-import type {
-  ComponentClientDataById,
-  ComponentOptionsById,
-} from '@game-cms/core';
-import { mapObject } from '@game-cms/shared/object';
+import type { ComponentClientDataById } from '@game-cms/core';
 import {
   Button,
   classNames,
@@ -19,15 +17,22 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useComponentHub } from '@/hooks/useComponentHub';
-import { transformDataToClientData } from '@/services/entity/transform';
+import {
+  type EntityComposeOptions,
+  transformDataToClientData,
+} from '@/services/entity/transform';
 
 import styles from './AccessEntityView.module.scss';
+
+const composeId = 'base::compose';
+
+type ComposeId = typeof composeId;
 
 export interface AccessEntityViewProps<Id extends EntityId> {
   className?: string;
   schema: EntitySchemaById<Id>;
   initialValue?: EntityRawDataById<Id>;
-  onSave?: (value: EntityRawDataById<Id>) => void;
+  onSave?: (value: EntityRawInDataById<Id>) => void;
   onDelete?: () => void;
 }
 
@@ -38,22 +43,17 @@ export function AccessEntityView<Id extends EntityId>({
   onSave,
   onDelete,
 }: AccessEntityViewProps<Id>) {
+  type Args = EntityMap[Id];
+  type ClientData = ComponentClientDataById<ComposeId, Args>;
+
   const api = useComponentApi();
   const hub = useComponentHub();
 
-  const Compose = api.getComponent('base::compose');
+  const Compose = api.getComponent(composeId);
 
-  const composeOptions = useMemo(
-    (): ComponentOptionsById<'base::compose'> =>
-      mapObject(schema.components, (component) => ({
-        componentId: component.componentId as string,
-        options: component.options,
-      })),
-    [schema]
-  );
+  const composeOptions = schema.components as EntityComposeOptions<Id>;
 
-  const [clientData, setClientData] =
-    useState<ComponentClientDataById<'base::compose'>>();
+  const [clientData, setClientData] = useState<ClientData>();
 
   useEffect(() => {
     const worker = async () => {
@@ -70,35 +70,35 @@ export function AccessEntityView<Id extends EntityId>({
     void worker();
   }, [api, composeOptions, initialValue, schema]);
 
-  const data = useMemo(
-    () =>
-      clientData
-        ? api.clientResolverContext.fromClient(
-            'base::compose',
-            clientData,
-            composeOptions
-          )
-        : undefined,
-    [api, clientData, composeOptions]
-  );
+  const data = useMemo(() => {
+    if (clientData) {
+      return api.clientTransformerContext.fromClient<ComposeId, Args>(
+        composeId,
+        clientData,
+        composeOptions
+      );
+    }
+  }, [api, clientData, composeOptions]);
 
-  const error = useMemo(
-    () =>
-      data?.result
-        ? hub.validationContext.validate(
-            'base::compose',
-            data.result,
-            composeOptions
-          )
-        : data?.error,
-    [data, hub.validationContext, composeOptions]
-  );
+  const error = useMemo(() => {
+    if (data) {
+      if (data.result) {
+        return hub.validationContext.validate<ComposeId, Args>(
+          composeId,
+          data.result,
+          composeOptions
+        );
+      }
+
+      return data.error;
+    }
+  }, [data, hub.validationContext, composeOptions]);
 
   const onSaveTransformed = useCallback(() => {
-    const dataValue = data?.result;
+    const rawData = data?.result;
 
-    if (dataValue !== undefined) {
-      onSave?.(dataValue as EntityRawDataById<Id>);
+    if (rawData !== undefined) {
+      onSave?.(rawData);
     }
   }, [data, onSave]);
 

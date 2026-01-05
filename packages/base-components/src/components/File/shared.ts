@@ -17,9 +17,13 @@ export const meta = componentMeta({
   },
 });
 
-export const defaultRawData: ComponentDefaultDataHandler<Id> = [];
+export const defaultRawData: ComponentDefaultDataHandler<Id> = () => [];
 
 export const validator: ComponentDataValidator<Id> = (data, options) => {
+  if (!Array.isArray(data) || data.some((item) => typeof item !== 'string')) {
+    return 'INVALID_TYPE';
+  }
+
   if (options.minItems !== undefined && data.length < options.minItems) {
     return 'TOO_FEW_ITEMS';
   }

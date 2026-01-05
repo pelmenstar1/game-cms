@@ -1,6 +1,8 @@
-import { ComponentEntry, ComponentSchema } from '@game-cms/core';
-
-import { GetSchemaParams } from '../../internal/types.js';
+import {
+  ComponentEntry,
+  ComponentSchema,
+  GetComponentSchemaTypes,
+} from '@game-cms/core';
 
 export type ComposeInput = Record<string, ComponentSchema>;
 
@@ -8,9 +10,9 @@ export type ResolveComposeInput<T> = T extends ComposeInput ? T : ComposeInput;
 
 type ComposeMap<
   Input extends ComposeInput,
-  TK extends keyof GetSchemaParams,
+  TK extends keyof GetComponentSchemaTypes,
 > = {
-  [K in keyof Input]: GetSchemaParams<Input[K]>[TK];
+  [K in keyof Input]: GetComponentSchemaTypes<Input[K]>[TK];
 };
 
 export type ComposeOptionsEntry<T extends ComponentSchema = ComponentSchema> =
@@ -23,9 +25,15 @@ type BaseComposeEntry<Input extends ComposeInput> = {
     [K in keyof Input]: ComposeOptionsEntry<Input[K]>;
   };
   error: {
-    [K in keyof Input]: GetSchemaParams<Input[K]>['error'] | undefined;
+    ownError?: 'INVALID_TYPE';
+    properties?: {
+      [K in keyof Input]:
+        | GetComponentSchemaTypes<Input[K]>['error']
+        | undefined;
+    };
   };
   rawData: ComposeMap<Input, 'rawData'>;
+  rawInData: ComposeMap<Input, 'rawInData'>;
   resolvedData: ComposeMap<Input, 'resolvedData'>;
   clientData: ComposeMap<Input, 'clientData'>;
   storageData: ComposeMap<Input, 'storageData'>;

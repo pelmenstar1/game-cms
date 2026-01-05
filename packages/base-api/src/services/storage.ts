@@ -88,6 +88,13 @@ export default service({
 
     return result && hydrateItem(result);
   },
+  getInfoList: async (ids: ObjectId[]): Promise<StorageItemWithMeta[]> => {
+    const result = await collection()
+      .find({ _id: { $in: ids } })
+      .toArray();
+
+    return Promise.all(result.map((item) => hydrateItem(item)));
+  },
   list: async (options: ListStorageItemsOptions) => {
     const { parent } = options;
     const { items, meta } = await getPage(

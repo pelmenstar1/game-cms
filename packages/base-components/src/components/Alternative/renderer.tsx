@@ -106,7 +106,7 @@ export const renderer = <Args,>({
               });
             };
 
-            const itemError = error?.alternative[item.key];
+            const itemError = error?.alternative?.[item.key];
 
             return (
               <EntityComponentChoice

@@ -13,7 +13,7 @@ export default component({
       context.resolveRawData(componentId, item, baseOptions, args)
     );
   },
-  storageResolver: {
+  storageTransformer: {
     fromStorage: (data, options, context) => {
       const { componentId, baseOptions } = options;
 

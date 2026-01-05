@@ -27,17 +27,21 @@ export default component({
       return context.resolveRawData(componentId, item.data, baseOptions, args);
     }) as ComponentResolvedDataById<Id, Args>;
   },
-  storageResolver: {
+  storageTransformer: {
     fromStorage: (data, options, context) => {
       const { options: optionsMap } = options;
 
       return Promise.all(
-        data.map((item) => {
+        data.map(async (item) => {
           const { componentId, options: baseOptions } = optionsMap[item.key];
 
           return {
             key: item.key,
-            data: context.fromStorage(componentId, item.data, baseOptions),
+            data: await context.fromStorage(
+              componentId,
+              item.data,
+              baseOptions
+            ),
           };
         })
       );
@@ -46,12 +50,12 @@ export default component({
       const { options: optionsMap } = options;
 
       return Promise.all(
-        data.map((item) => {
+        data.map(async (item) => {
           const { componentId, options: baseOptions } = optionsMap[item.key];
 
           return {
             key: item.key,
-            data: context.toStorage(componentId, item.data, baseOptions),
+            data: await context.toStorage(componentId, item.data, baseOptions),
           };
         })
       );

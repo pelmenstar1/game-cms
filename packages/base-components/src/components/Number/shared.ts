@@ -10,6 +10,6 @@ type Id = typeof id;
 
 export const meta = componentMeta({ id });
 
-export const defaultRawData: ComponentDefaultDataHandler<Id> = 0;
+export const defaultRawData: ComponentDefaultDataHandler<Id> = () => 0;
 
 export const validator: ComponentDataValidator<Id> = () => undefined;

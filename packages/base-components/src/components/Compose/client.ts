@@ -1,6 +1,6 @@
 import {
   ComponentClientDataById,
-  ComponentClientDataResolver,
+  ComponentClientDataTransformer,
   ComponentDataOrError,
   ComponentOptionsById,
   ComponentRawDataById,
@@ -12,7 +12,7 @@ import { ComposeEntry } from './types.js';
 
 type Id = 'base::compose';
 
-export const clientResolver: ComponentClientDataResolver<Id> = {
+export const clientTransformer: ComponentClientDataTransformer<Id> = {
   getDefaultData: (options, context) =>
     mapObject(options, (item) =>
       context.getDefaultData(item.componentId, item.options)

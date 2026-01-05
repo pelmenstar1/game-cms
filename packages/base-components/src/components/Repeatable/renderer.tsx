@@ -23,7 +23,7 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
       title,
       options: baseOptions,
       data: dataItem.data,
-      error: error?.[index],
+      error: error?.items?.[index],
     }));
   }, [data, error, options]);
 

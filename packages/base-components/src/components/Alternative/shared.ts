@@ -4,6 +4,7 @@ import {
   ComponentErrorById,
   componentMeta,
 } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 
 const id = 'base::alternative';
 
@@ -26,6 +27,17 @@ export const validator: ComponentDataValidator<Id> = (
   options,
   context
 ) => {
+  if (
+    !(
+      isNonNullObject(data) &&
+      'default' in data &&
+      'alternative' in data &&
+      Array.isArray(data.alternative)
+    )
+  ) {
+    return { ownError: 'INVALID_TYPE' };
+  }
+
   const { componentId, baseOptions } = options;
 
   const result: ComponentErrorById<Id> = {
@@ -38,7 +50,7 @@ export const validator: ComponentDataValidator<Id> = (
 
   if (
     result.default !== undefined ||
-    result.alternative.some((item) => item.data !== undefined)
+    result.alternative?.some((item) => item.data !== undefined)
   ) {
     return result;
   }
