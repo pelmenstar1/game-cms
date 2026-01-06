@@ -1,0 +1,103 @@
+import fs from 'node:fs';
+import fsp from 'node:fs/promises';
+import path from 'node:path';
+import { Readable } from 'node:stream';
+
+import type { FileSource } from '@game-cms/base-types';
+import { temporalDirectory } from '@game-cms/testing-lib';
+import { describe, expect, test } from 'vitest';
+
+import { localStorageProvider } from './index.js';
+
+async function createProvider() {
+  const result = await temporalDirectory();
+
+  return {
+    value: localStorageProvider({ storagePath: result.path }),
+    path: result.path,
+    [Symbol.asyncDispose]: result[Symbol.asyncDispose],
+  };
+}
+
+async function uploadAndCheckContent(content: FileSource) {
+  await using provider = await createProvider();
+
+  const { url } = await provider.value.protocol.upload({
+    name: '123',
+    mime: 'text/plain',
+    content,
+  });
+
+  return await fsp.readFile(path.join(provider.path, path.basename(url)));
+}
+
+describe('localStorageProvider', () => {
+  describe('uploadFile', () => {
+    test('string', async () => {
+      const actual = await uploadAndCheckContent('123');
+
+      expect(actual.toString('utf8')).toEqual('123');
+    });
+
+    test('buffer', async () => {
+      const buffer = Buffer.from('123');
+      const actual = await uploadAndCheckContent(buffer);
+
+      expect(actual.equals(buffer)).toEqual(true);
+    });
+
+    test('stream', async () => {
+      const buffer = Buffer.from('123');
+      const stream = Readable.from([buffer]);
+      const actual = await uploadAndCheckContent(stream);
+
+      expect(actual.equals(buffer)).toEqual(true);
+    });
+  });
+
+  test('delete', async () => {
+    await using provider = await createProvider();
+
+    const { url } = await provider.value.protocol.upload({
+      name: '123',
+      mime: 'text/plain',
+      content: '123',
+    });
+
+    const filePath = path.join(provider.path, path.basename(url));
+
+    expect(fs.existsSync(filePath)).toEqual(true);
+
+    await provider.value.protocol.delete(url);
+
+    expect(fs.existsSync(filePath)).toEqual(false);
+  });
+
+  test('getMeta', async () => {
+    await using provider = await createProvider();
+
+    const { url } = await provider.value.protocol.upload({
+      name: '123',
+      mime: 'text/plain',
+      content: '123',
+    });
+
+    const meta = await provider.value.protocol.getMeta(url);
+
+    expect(meta).toEqual({ size: 3 });
+  });
+
+  test('getContent', async () => {
+    await using provider = await createProvider();
+
+    const { url } = await provider.value.protocol.upload({
+      name: '123',
+      mime: 'text/plain',
+      content: '123',
+    });
+
+    const content = await provider.value.protocol.getContent(url);
+
+    expect(Buffer.from(content).toString('utf8')).toEqual('123');
+  });
+});

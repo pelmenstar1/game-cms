@@ -11,7 +11,8 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.958.0",
+    "@aws-sdk/client-s3": "^3.964.0",
+    "@aws-sdk/lib-storage": "^3.964.0",
     "@game-cms/shared": "workspace:*",
     "mime-types": "^3.0.2"
   }

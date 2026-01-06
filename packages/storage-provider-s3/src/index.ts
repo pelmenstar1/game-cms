@@ -1,18 +1,22 @@
-import path from 'node:path';
-
 import {
   DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
-  PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 import type { StorageProvider } from '@game-cms/base-types';
 
 import type { S3StorageProviderConfig } from './types.js';
 import { createFileKey, getFileUrl } from './utils.js';
 
 export * from './types.js';
+
+function getKeyFromUrl(url: string) {
+  const { pathname } = new URL(url);
+
+  return pathname.slice(1);
+}
 
 export function s3StorageProvider(
   config: S3StorageProviderConfig
@@ -24,20 +28,22 @@ export function s3StorageProvider(
     protocol: {
       upload: async (info) => {
         const key = createFileKey(info.mime);
-
-        await client.send(
-          new PutObjectCommand({
+        const upload = new Upload({
+          client,
+          params: {
             Bucket: bucket,
             Key: key,
             ContentType: info.mime,
             Body: info.content,
-          })
-        );
+          },
+        });
+
+        await upload.done();
 
         return { url: getFileUrl(config, key) };
       },
-      getMeta: async (file) => {
-        const key = path.basename(file.url);
+      getMeta: async (url) => {
+        const key = getKeyFromUrl(url);
 
         const result = await client.send(
           new HeadObjectCommand({
@@ -49,7 +55,7 @@ export function s3StorageProvider(
         return { size: result.ContentLength ?? 0 };
       },
       delete: async (url) => {
-        const key = path.basename(url);
+        const key = getKeyFromUrl(url);
 
         await client.send(
           new DeleteObjectCommand({
@@ -59,17 +65,17 @@ export function s3StorageProvider(
         );
       },
       getContent: async (url) => {
-        const { pathname } = new URL(url);
+        const key = getKeyFromUrl(url);
 
         const result = await client.send(
-          new GetObjectCommand({ Bucket: bucket, Key: pathname.slice(1) })
+          new GetObjectCommand({ Bucket: bucket, Key: key })
         );
 
         if (result.Body) {
           return result.Body.transformToByteArray();
         }
 
-        return Buffer.of();
+        return new Uint8Array();
       },
     },
   };

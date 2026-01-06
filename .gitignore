@@ -6,3 +6,4 @@ build
 *.tsbuildinfo
 .eslintcache
 .stylelintcache
+.env.test

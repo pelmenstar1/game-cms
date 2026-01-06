@@ -5,9 +5,12 @@ import util from 'node:util';
 
 import { isFileNotFoundError } from '../errors/index.js';
 
-export async function loadEnvFileIfExists(baseDir: string = './') {
+export async function loadEnvFileIfExists(
+  baseDir: string = './',
+  fileName: string = '.env'
+) {
   try {
-    const content = await fsp.readFile(path.join(baseDir, '.env'), 'utf8');
+    const content = await fsp.readFile(path.join(baseDir, fileName), 'utf8');
 
     const env = util.parseEnv(content);
 

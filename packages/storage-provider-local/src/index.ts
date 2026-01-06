@@ -1,7 +1,5 @@
-import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import { pipeline } from 'node:stream/promises';
 
 import send from '@fastify/send';
 import {
@@ -92,11 +90,11 @@ export function localStorageProvider(
     },
     routes: [getFileRoute(storagePath)],
     protocol: {
-      upload: async (info) => {
-        const fileName = createNewFileName(storagePath, info.name);
-        const output = fs.createWriteStream(path.join(storagePath, fileName));
+      upload: async ({ name, content }) => {
+        const fileName = createNewFileName(storagePath, name);
+        const outputPath = path.join(storagePath, fileName);
 
-        await pipeline(info.content, output);
+        await fsp.writeFile(outputPath, content);
 
         return { url: createFileUrl(fileName) };
       },

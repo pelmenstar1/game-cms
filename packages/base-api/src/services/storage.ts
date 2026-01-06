@@ -42,7 +42,7 @@ async function hydrateItem(
   }
 
   const { _id, mime, name, url, parent } = item;
-  const { size } = await storageProvider().protocol.getMeta(item);
+  const { size } = await storageProvider().protocol.getMeta(item.url);
 
   return {
     type: StorageItemType.FILE,

@@ -3,7 +3,7 @@ import type { Readable } from 'node:stream';
 import type { UnknownApiRoute } from '@game-cms/core';
 import type { MaybePromise } from '@game-cms/shared';
 
-import type { StorageFileItem, UploadFileMeta } from './storage.js';
+import type { UploadFileMeta } from './storage.js';
 
 export type FileSource = Readable | string | Uint8Array;
 
@@ -23,7 +23,7 @@ export interface StorageProviderProtocol {
   upload: (info: UploadFileToProviderInfo) => Promise<{ url: string }>;
   delete: (url: string) => Promise<void>;
 
-  getMeta: (file: StorageFileItem) => Promise<StorageProviderFileMeta>;
+  getMeta: (url: string) => Promise<StorageProviderFileMeta>;
   getContent: (url: string) => Promise<Uint8Array>;
 }
 
