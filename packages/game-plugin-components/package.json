@@ -9,18 +9,24 @@
     "storybook:start": "storybook dev --port 6006"
   },
   "dependencies": {
-    "@game-cms/shared": "workspace:*",
-    "@game-cms/component-api": "workspace:*",
-    "@game-cms/ui": "workspace:*",
-    "@game-cms/base-components": "workspace:*",
     "@esotericsoftware/spine-pixi-v8": "^4.2.96",
+    "@game-cms/base-components": "workspace:*",
+    "@game-cms/component-api": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/ui": "workspace:*",
+    "@game-cms/spritesheet": "workspace:*",
+    "@game-cms/global": "workspace:*",
+    "mongodb": "catalog:",
     "pixi.js": "^8.14.3"
   },
   "devDependencies": {
-    "typescript": "catalog:",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/core": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
-    "storybook": "catalog:"
+    "@game-cms/base-api": "workspace:*",
+    "@game-cms/base-types": "workspace:*",
+    "mongodb": "catalog:",
+    "storybook": "catalog:",
+    "typescript": "catalog:"
   }
 }

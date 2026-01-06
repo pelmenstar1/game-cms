@@ -9,6 +9,7 @@ import {
 import { Key } from 'react';
 
 import { TitleSpec, TitleSpecById } from '../../internal/title.js';
+import { ConcatValuePath } from '../Compose/types.js';
 
 type BaseDynamicZoneInputEntry<Id extends ComponentId, Args, Title> = {
   title?: Title;
@@ -106,6 +107,12 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
   resolvedData: DynamicZoneArray<Input, 'resolvedData'>;
   clientData: DynamicZoneArray<Input, 'clientData'>;
   storageData: DynamicZoneArray<Input, 'storageData'>;
+  nestedPath: {
+    [K in keyof Input & string]: ConcatValuePath<
+      `[${K}]`,
+      GetComponentSchemaTypes<Input[K]>['nestedPath']
+    >;
+  }[keyof Input & string];
 };
 
 declare module '@game-cms/core' {

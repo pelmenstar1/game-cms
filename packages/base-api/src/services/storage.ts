@@ -88,12 +88,16 @@ export default service({
 
     return result && hydrateItem(result);
   },
-  getInfoList: async (ids: ObjectId[]): Promise<StorageItemWithMeta[]> => {
-    const result = await collection()
-      .find({ _id: { $in: ids } })
-      .toArray();
+  getContent: async (id: ObjectId): Promise<Uint8Array> => {
+    const result = await collection().findOne({ _id: id });
 
-    return Promise.all(result.map((item) => hydrateItem(item)));
+    const { protocol } = storageProvider();
+
+    if (result?.type !== StorageItemType.FILE) {
+      throw new Error('Expected all items to be files');
+    }
+
+    return protocol.getContent(result.url);
   },
   list: async (options: ListStorageItemsOptions) => {
     const { parent } = options;

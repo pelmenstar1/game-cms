@@ -20,6 +20,10 @@ export type ComposeOptionsEntry<T extends ComponentSchema = ComponentSchema> =
 
 export type ComposeEntry<Args> = BaseComposeEntry<ResolveComposeInput<Args>>;
 
+export type ConcatValuePath<T extends string, Suffix> = Suffix extends string
+  ? T | `${T}.${Suffix}`
+  : T;
+
 type BaseComposeEntry<Input extends ComposeInput> = {
   options: {
     [K in keyof Input]: ComposeOptionsEntry<Input[K]>;
@@ -37,6 +41,12 @@ type BaseComposeEntry<Input extends ComposeInput> = {
   resolvedData: ComposeMap<Input, 'resolvedData'>;
   clientData: ComposeMap<Input, 'clientData'>;
   storageData: ComposeMap<Input, 'storageData'>;
+  nestedPath: {
+    [K in keyof Input]: ConcatValuePath<
+      K & string,
+      GetComponentSchemaTypes<Input[K]>['nestedPath']
+    >;
+  }[keyof Input];
 };
 
 declare module '@game-cms/core' {

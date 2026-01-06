@@ -41,7 +41,9 @@ type GetComponentTypes<Types extends ComponentTypes> = Pick<
   GetOrRawData<
     Types,
     'rawInData' | 'resolvedData' | 'clientData' | 'storageData'
-  >;
+  > & {
+    nestedPath: Types extends { nestedPath: infer Path } ? Path : null;
+  };
 
 type GetComponentTypesById<
   Id extends ComponentId,
@@ -83,6 +85,11 @@ export type ComponentErrorById<
   Args = unknown,
 > = GetComponentTypesById<T, Args>['error'];
 
+export type ComponentRawInDataByIdPath<
+  Id extends ComponentId,
+  Args,
+> = GetComponentTypesById<Id, Args>['nestedPath'];
+
 export type ComponentSchema<
   Id extends ComponentId = ComponentId,
   Args = unknown,
@@ -105,6 +112,7 @@ export type GetComponentSchemaTypes<Schema = unknown> =
         options: ComponentOptions;
         error: unknown;
         componentId: ComponentId;
+        nestedPath: null;
       };
 
 export type ComponentProps<Id extends ComponentId, Args> = {
@@ -176,7 +184,7 @@ export type ForeignComponentClientDataResolverContext = {
   ) => ComponentDataOrError<Id, Args>;
 };
 
-export type ForeignComponentStorageDataResolverContext = {
+export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
   toStorage: <Id extends ComponentId, Args>(
     id: Id,
     data: ComponentRawInDataById<Id, Args>,
@@ -188,10 +196,10 @@ export type ForeignComponentStorageDataResolverContext = {
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
   ) => MaybePromiseWithMarker<ComponentRawDataById<Id, Args>>;
-};
+}
 
 export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
-  data: unknown, // ComponentRawInDataById<Id, Args>,
+  data: unknown,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentValidationContext
 ) => ComponentErrorById<Id, Args> | undefined;
@@ -248,6 +256,28 @@ export type ComponentDefaultDataHandler<Id extends ComponentId> = <Args>(
   context: ForeignComponentDefaultDataContext
 ) => ComponentRawDataById<Id, Args>;
 
+export type ForeignComponentPathWalkerContext = {
+  applyAtPath: <Id extends ComponentId, Args>(
+    id: ComponentId,
+    data: ComponentRawInDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    path: ComponentRawInDataByIdPath<Id, Args>,
+    apply: ComponentPathWalkerApplyFn
+  ) => void;
+};
+
+export const COMPONENT_WALK_NOT_FOUND = Symbol();
+
+export type ComponentPathWalkerApplyFn = (value: unknown) => void;
+
+export type ComponentPathWalker<Id extends ComponentId> = <Args>(
+  data: ComponentRawInDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  path: ComponentRawInDataByIdPath<Id, Args>,
+  apply: ComponentPathWalkerApplyFn,
+  context: ForeignComponentPathWalkerContext
+) => void;
+
 export type ComponentMeta<Id extends ComponentId = ComponentId> = {
   id: Id;
   config?: ComponentControllerConfig;
@@ -280,6 +310,11 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
       { storageTransformer?: ComponentStorageDataTransformer<Id> },
       Id,
       'storageData'
+    > &
+    RequiredIfExists<
+      { pathWalker?: ComponentPathWalker<Id> },
+      Id,
+      'nestedPath'
     >;
 
 export type ComponentControllerMap = {

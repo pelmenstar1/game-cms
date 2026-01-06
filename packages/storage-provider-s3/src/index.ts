@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import {
   DeleteObjectCommand,
+  GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -56,6 +57,19 @@ export function s3StorageProvider(
             Key: key,
           })
         );
+      },
+      getContent: async (url) => {
+        const { pathname } = new URL(url);
+
+        const result = await client.send(
+          new GetObjectCommand({ Bucket: bucket, Key: pathname.slice(1) })
+        );
+
+        if (result.Body) {
+          return result.Body.transformToByteArray();
+        }
+
+        return Buffer.of();
       },
     },
   };

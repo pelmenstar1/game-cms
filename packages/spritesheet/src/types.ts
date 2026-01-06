@@ -18,7 +18,7 @@ export interface TaggedSize<Tag> extends Size {
 export type SpriteRect<Tag> = TaggedRect<Tag> & RotatedRect;
 
 export type SpritesheetMapEntrySource = {
-  data: Buffer;
+  data: Uint8Array;
   size: Size;
 };
 

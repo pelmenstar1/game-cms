@@ -11,9 +11,9 @@
     { "path": "../base-api" },
     { "path": "../base-types" },
     { "path": "../base-utils" },
+    { "path": "../core" },
     { "path": "../global" },
     { "path": "../shared" },
-    { "path": "../testing-lib" },
-    { "path": "../core" }
+    { "path": "../testing-lib" }
   ]
 }

@@ -2,15 +2,12 @@ import type {
   EntityId,
   EntityMap,
   EntityRawDataById,
-  EntitySchemaById,
 } from '@game-cms/base-types';
 import type { ComponentApi } from '@game-cms/component-api';
 import type {
   ComponentClientDataById,
   ComponentOptionsById,
-  ComponentRawDataById,
 } from '@game-cms/core';
-import { mapObject } from '@game-cms/shared/object';
 
 export type EntityComposeData<Id extends EntityId> = ComponentClientDataById<
   'base::compose',
@@ -22,22 +19,19 @@ export type EntityComposeOptions<Id extends EntityId> = ComponentOptionsById<
   EntityMap[Id]
 >;
 
-export function transformDataToClientData<Id extends EntityId>(
+export async function transformDataToClientData<Id extends EntityId>(
   api: ComponentApi,
-  schema: EntitySchemaById<Id>,
   data: EntityRawDataById<Id> | undefined,
   options: EntityComposeOptions<Id>
 ) {
-  const dataOrDefault = (data ??
-    mapObject(schema.components, (propSchema) =>
-      api.getDefaultData(propSchema.componentId, propSchema.options)
-    )) as ComponentRawDataById<Id, EntityMap[Id]>;
+  if (data) {
+    return await api.clientTransformerContext.toClient<
+      'base::compose',
+      EntityMap[Id]
+    >('base::compose', data as never, options);
+  }
 
-  return api.clientTransformerContext.toClient<'base::compose', EntityMap[Id]>(
-    'base::compose',
-    dataOrDefault as never,
-    options
-  );
+  return api.getDefaultData('base::compose', options) as EntityComposeData<Id>;
 }
 
 export function transformClientDataToData<Id extends EntityId>(

@@ -59,7 +59,6 @@ export function AccessEntityView<Id extends EntityId>({
     const worker = async () => {
       const result = await transformDataToClientData(
         api,
-        schema,
         initialValue,
         composeOptions
       );

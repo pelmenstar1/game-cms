@@ -17,7 +17,7 @@ export function buildSpritesheetImage(map: SpritesheetMap) {
     },
   }).composite(
     map.entries.map((entry) => ({
-      input: entry.source.data,
+      input: Buffer.from(entry.source.data),
       left: entry.target.x - bounds.x,
       top: entry.target.y - bounds.y,
     }))

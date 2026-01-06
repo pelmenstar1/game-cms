@@ -703,16 +703,31 @@ importers:
       '@game-cms/component-api':
         specifier: workspace:*
         version: link:../component-api
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
+      '@game-cms/spritesheet':
+        specifier: workspace:*
+        version: link:../spritesheet
       '@game-cms/ui':
         specifier: workspace:*
         version: link:../ui
+      mongodb:
+        specifier: 'catalog:'
+        version: 7.0.0
       pixi.js:
         specifier: ^8.14.3
         version: 8.14.3
     devDependencies:
+      '@game-cms/base-api':
+        specifier: workspace:*
+        version: link:../base-api
+      '@game-cms/base-types':
+        specifier: workspace:*
+        version: link:../base-types
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen

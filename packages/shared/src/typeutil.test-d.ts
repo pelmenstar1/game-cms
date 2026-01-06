@@ -1,6 +1,6 @@
 import { expectTypeOf, test } from 'vitest';
 
-import { type IsAllOptional } from './typeutil.js';
+import type { IsAllOptional } from './typeutil.js';
 
 test('IsAllOptional', () => {
   expectTypeOf<IsAllOptional<{ a?: string }>>().toExtend<true>();

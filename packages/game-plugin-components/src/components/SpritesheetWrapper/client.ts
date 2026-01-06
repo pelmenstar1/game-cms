@@ -13,6 +13,10 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spriteshee
       );
     },
     toClient: (data, options, context) => {
-      return context.toClient(options.componentId, data, options.baseOptions);
+      return context.toClient(
+        options.componentId,
+        data.base,
+        options.baseOptions
+      );
     },
   };

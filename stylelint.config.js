@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @type {import('stylelint').Config} */
 export default {
   extends: ['stylelint-scss', 'stylelint-config-standard-scss'],

@@ -14,7 +14,7 @@ export const defaultRawData: ComponentDefaultDataHandler<Id> = (
   options,
   context
 ) => {
-  return context.getDefault(options.componentId, options.baseOptions);
+  return { base: context.getDefault(options.componentId, options.baseOptions) };
 };
 
 export const validator: ComponentDataValidator<Id> = (

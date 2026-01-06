@@ -11,6 +11,10 @@ import { defaultRawData, meta, validator } from './shared.js';
 
 type Id = (typeof meta)['id'];
 
+function invalidPath(message: string): never {
+  throw new Error(`Invalid path: ${message}`);
+}
+
 export default component({
   meta,
   validator,
@@ -26,6 +30,42 @@ export default component({
 
       return context.resolveRawData(componentId, item.data, baseOptions, args);
     }) as ComponentResolvedDataById<Id, Args>;
+  },
+  pathWalker: (data, { options }, path, apply, context) => {
+    if (!path.startsWith('[')) {
+      invalidPath('expected [');
+    }
+
+    const endBracketIndex = path.indexOf(']', 1);
+    if (endBracketIndex === -1) {
+      invalidPath('expected ]');
+    }
+
+    const zoneName = path.slice(1, endBracketIndex);
+
+    const { componentId, options: baseOptions } = options[zoneName];
+
+    if (path[endBracketIndex + 1] === '.') {
+      const suffix = path.slice(endBracketIndex + 2);
+
+      for (const item of data) {
+        if (item.key === zoneName) {
+          context.applyAtPath(
+            componentId,
+            item.data,
+            baseOptions,
+            suffix as unknown as null,
+            apply
+          );
+        }
+      }
+    } else {
+      for (const item of data) {
+        if (item.key === zoneName) {
+          apply(item.data);
+        }
+      }
+    }
   },
   storageTransformer: {
     fromStorage: (data, options, context) => {

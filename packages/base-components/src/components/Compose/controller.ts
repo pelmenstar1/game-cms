@@ -14,6 +14,27 @@ export default component({
       return context.resolveRawData(componentId, value, baseOptions, args);
     });
   },
+  pathWalker: (data, options, path, apply, context) => {
+    const dotIndex = path.indexOf('.');
+
+    if (dotIndex !== -1) {
+      const prefix = path.slice(0, dotIndex);
+      const suffix = path.slice(dotIndex + 1);
+
+      const value = data[prefix];
+      const { componentId, options: baseOptions } = options[prefix];
+
+      context.applyAtPath(
+        componentId,
+        value,
+        baseOptions,
+        suffix as unknown as null,
+        apply
+      );
+    } else {
+      apply(data[path]);
+    }
+  },
   storageTransformer: {
     fromStorage: (data, options, context) => {
       return asyncMapObject(data, (item, key) => {

@@ -1,1 +1,4 @@
+export * from './algorithms/maxRects.js';
 export * from './build.js';
+export * from './mapping.js';
+export * from './types.js';

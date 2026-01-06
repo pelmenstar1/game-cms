@@ -1,4 +1,8 @@
-import { ComponentRawDataById, ComponentSchema } from '@game-cms/core';
+import {
+  ComponentRawDataById,
+  ComponentRawInDataByIdPath,
+  ComponentSchema,
+} from '@game-cms/core';
 import { expectTypeOf, test } from 'vitest';
 
 test('raw data', () => {
@@ -10,4 +14,15 @@ test('raw data', () => {
   >;
 
   expectTypeOf<RawData>().toExtend<{ abc: string }>();
+});
+
+test('nested path', () => {
+  type Path = ComponentRawInDataByIdPath<
+    'base::compose',
+    {
+      abc: ComponentSchema<'base::text'>;
+    }
+  >;
+
+  expectTypeOf<Path>().toExtend<'abc'>();
 });

@@ -5,10 +5,12 @@ import type { MaybePromise } from '@game-cms/shared';
 
 import type { StorageFileItem, UploadFileMeta } from './storage.js';
 
+export type FileSource = Readable | string | Uint8Array;
+
 export type UploadFileToProviderInfo = {
   name: string;
   mime: string;
-  content: Readable;
+  content: FileSource;
 };
 
 export type StorageProviderFileMeta = {
@@ -22,7 +24,7 @@ export interface StorageProviderProtocol {
   delete: (url: string) => Promise<void>;
 
   getMeta: (file: StorageFileItem) => Promise<StorageProviderFileMeta>;
-  getContent?: (file: StorageFileItem) => Promise<Buffer>;
+  getContent: (url: string) => Promise<Uint8Array>;
 }
 
 export interface StorageProvider {

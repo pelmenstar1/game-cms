@@ -6,6 +6,7 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
+  ComponentRawInDataByIdPath,
   ComponentResolvedDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
@@ -13,17 +14,12 @@ import { Key } from 'react';
 
 import { TitleSpecById } from '../../internal/title.js';
 
-type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
+export type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
   id: Id;
   baseArgs: BaseArgs;
 };
 
-type ResolveArgs<Args> = Args extends {
-  componentId: infer Id extends ComponentId;
-  baseArgs: infer BaseArgs;
-}
-  ? RepeatableArgs<Id, BaseArgs>
-  : RepeatableArgs;
+type ResolveArgs<Args> = Args extends RepeatableArgs ? Args : RepeatableArgs;
 
 type RepeatableEntry<Args extends RepeatableArgs> = {
   options: {
@@ -43,6 +39,7 @@ type RepeatableEntry<Args extends RepeatableArgs> = {
     data: ComponentClientDataById<Args['id'], Args['baseArgs']>;
   }[];
   storageData: ComponentStorageDataById<Args['id'], Args['baseArgs']>[];
+  nestedPath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
 };
 
 declare module '@game-cms/core' {

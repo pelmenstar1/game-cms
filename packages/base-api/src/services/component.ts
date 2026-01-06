@@ -67,15 +67,24 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
       data: ComponentRawInDataById<Id, Args>,
       options: ComponentOptionsById<Id, Args>
     ) => {
-      const { storageTransformer: storageResolver } = getController(id);
+      const { storageTransformer } = getController(id);
 
-      return storageResolver
-        ? storageResolver.toStorage(
+      return storageTransformer
+        ? storageTransformer.toStorage(
             data,
             options,
             foreignStorageResolverContext
           )
         : (data as ComponentStorageDataById<Id, Args>);
+    },
+    applyAtPath: (id, data, options, path, apply) => {
+      const { pathWalker } = getController(id);
+
+      if (pathWalker) {
+        pathWalker(data, options, path, apply, foreignStorageResolverContext);
+      } else {
+        apply(data);
+      }
     },
   };
 

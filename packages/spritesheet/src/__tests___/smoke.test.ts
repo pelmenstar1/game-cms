@@ -16,10 +16,6 @@ async function image(fileName: string) {
 test('smoke', async () => {
   const map = await createSpritesheetMap({
     algorithm: maxRects,
-    limits: {
-      width: 640,
-      height: 1280,
-    },
     images: {
       sprite1: await image('sprite1.jpg'),
       sprite2: await image('sprite2.png'),

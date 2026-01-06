@@ -5,9 +5,12 @@ import type {
   ComponentId,
   ComponentOptionsById,
   ComponentRawDataById,
+  ComponentRawInDataById,
+  ComponentRawInDataByIdPath,
   ComponentResolvedDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
+import type { ObjectId } from 'mongodb';
 
 export type SpritesheetArgs<
   Id extends ComponentId = ComponentId,
@@ -23,10 +26,33 @@ type ResolveSpritesheetArgs<Args> =
     ? Args
     : SpritesheetArgs;
 
+export type SpritesheetStorageEntry = {
+  imageId: ObjectId;
+  atlasId: ObjectId;
+};
+
+export type SpritesheetBundleStorageMap = Record<
+  string,
+  SpritesheetStorageEntry
+>;
+
 type SpritesheetEntry<Args extends SpritesheetArgs> = {
-  rawData: ComponentRawDataById<Args['id'], Args['baseArgs']>;
+  rawData: {
+    base: ComponentRawDataById<Args['id'], Args['baseArgs']>;
+    spritesheets?: Record<
+      string,
+      {
+        imageUrl: string;
+        atlasUrl: string;
+      }
+    >;
+  };
+  rawInData: ComponentRawInDataById<Args['id'], Args['baseArgs']>;
   options: {
     componentId: Args['id'];
+    namePath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
+    bundlePath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
+    imagePath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: ComponentErrorById<Args['id'], Args['baseArgs']>;
@@ -34,6 +60,7 @@ type SpritesheetEntry<Args extends SpritesheetArgs> = {
   resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>;
   storageData: {
     base: ComponentStorageDataById<Args['id'], Args['baseArgs']>;
+    spritesheets: SpritesheetBundleStorageMap;
   };
 };
 

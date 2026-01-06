@@ -14,7 +14,7 @@ export const renderer: ComponentRenderer<'game::spritesheet-wrapper'> = ({
   return (
     <BaseComponent
       data={data}
-      options={options}
+      options={options.baseOptions}
       error={error}
       onDataChanged={onDataChanged}
     />
