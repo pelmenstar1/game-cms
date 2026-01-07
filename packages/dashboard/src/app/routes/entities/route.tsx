@@ -1,8 +1,8 @@
 import { LinkButton, NavTabs, PlusIcon, useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
-import { getEntitySchemas } from 'virtual:dashboard/entityConnector';
 
 import { EntityList } from '@/components/EntityList';
+import { getEntitySchemas } from '@/connector/entity';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';

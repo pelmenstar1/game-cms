@@ -7,10 +7,7 @@ function emitGetEntitySchemas() {
     entitySchemas.map((schema) => [schema.id, schema] as const)
   );
 
-  return `
-const map = ${JSON.stringify(map)};
-export const getEntitySchemas = () => Object.values(map);
-export const getEntitySchemaById = (id) => map[id];`;
+  return `const map = ${JSON.stringify(map)}; export default map;`;
 }
 
 export function emitEntityConnector(): string {

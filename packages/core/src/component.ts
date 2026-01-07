@@ -143,7 +143,7 @@ export type ForeignComponentValidationContext = {
 };
 
 export type ForeignComponentDefaultDataContext = {
-  getDefault: <Id extends ComponentId, Args>(
+  getDefaultData: <Id extends ComponentId, Args>(
     id: Id,
     options: ComponentOptionsById<Id, Args>
   ) => ComponentRawDataById<Id, Args>;
@@ -184,6 +184,11 @@ export type ForeignComponentClientDataResolverContext = {
   ) => ComponentDataOrError<Id, Args>;
 };
 
+export type ForeignComponentClientDefaultDataContext = Pick<
+  ForeignComponentClientDataResolverContext,
+  'getDefaultData'
+>;
+
 export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
   toStorage: <Id extends ComponentId, Args>(
     id: Id,
@@ -221,7 +226,7 @@ export type ComponentDataOrError<Id extends ComponentId, Args = unknown> =
 export type ComponentClientDataTransformer<Id extends ComponentId> = {
   getDefaultData: <Args>(
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentClientDataResolverContext
+    context: ForeignComponentClientDefaultDataContext
   ) => ComponentClientDataById<Id, Args>;
 
   toClient: <Args>(

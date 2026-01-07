@@ -22,7 +22,7 @@ export const defaultRawData: ComponentDefaultDataHandler<Id> = (
   context
 ) => {
   return mapObject(options, (item) =>
-    context.getDefault(item.componentId, item.options)
+    context.getDefaultData(item.componentId, item.options)
   );
 };
 

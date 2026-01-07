@@ -2,7 +2,7 @@ import type { Plugin as VitePlugin } from 'vite';
 
 import { emitEntityConnector } from './connector.js';
 
-const CONNECTOR_ID = 'virtual:dashboard/entityConnector';
+const CONNECTOR_ID = 'virtual:dashboard/entityConnectorData';
 
 export function dashboardEntityPlugin(): VitePlugin {
   return {

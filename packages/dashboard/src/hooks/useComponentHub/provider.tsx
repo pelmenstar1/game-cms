@@ -17,13 +17,14 @@ import type {
 import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
 import { type PropsWithChildren, useMemo } from 'react';
 import React from 'react';
+
 import {
   getComponentClientTransformer,
   getComponentConfig,
   getComponentDefaultData,
   getComponentValidator,
   importComponent,
-} from 'virtual:dashboard/componentConnector';
+} from '@/connector/component';
 
 import { type ComponentHub, ComponentHubContext } from './context';
 
@@ -51,7 +52,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
   const defaultDataContext = useMemo(
     (): ForeignComponentDefaultDataContext => ({
-      getDefault: (id, options) => {
+      getDefaultData: (id, options) => {
         return getComponentDefaultData(id, options, defaultDataContext);
       },
     }),
@@ -72,7 +73,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
         return resolver
           ? resolver.getDefaultData(options, clientTransformerContext)
-          : (defaultDataContext.getDefault(
+          : (defaultDataContext.getDefaultData(
               id,
               options
             ) as ComponentClientDataById<Id, Args>);

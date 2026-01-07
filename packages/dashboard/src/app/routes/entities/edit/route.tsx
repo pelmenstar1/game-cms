@@ -7,9 +7,9 @@ import {
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
 import { useCallback } from 'react';
-import { getEntitySchemaById } from 'virtual:dashboard/entityConnector';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
+import { getEntitySchemaById } from '@/connector/entity';
 
 import type { Route } from './+types/route';
 

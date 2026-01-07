@@ -4,7 +4,7 @@ import { emitComponentConnector } from './connector.js';
 import { type ComponentClientChunkMap, gatherComponents } from './gather.js';
 
 const COMPONENT_PROTOCOL = 'component:';
-const CONNECTOR_ID = 'virtual:dashboard/componentConnector';
+const CONNECTOR_ID = 'virtual:dashboard/componentConnectorData';
 
 export function dashboardComponentsPlugin(): Plugin {
   let components: ComponentClientChunkMap;

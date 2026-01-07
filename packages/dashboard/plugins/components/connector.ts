@@ -1,5 +1,3 @@
-import type { ComponentConnector } from '@/types/componentConnector.js';
-
 import type {
   ComponentClientChunkEntry,
   ComponentClientChunkMap,
@@ -24,33 +22,24 @@ function clientImportName(componentId: string) {
 }
 
 function emitImportBase(
-  nameFactory: (value: string) => string,
-  filePathFactory: (
-    paths: ComponentClientChunkEntry['paths']
-  ) => string | undefined
+  filePathKey: keyof ComponentClientChunkEntry['paths'],
+  nameFactory: (value: string) => string
 ): EmitStep {
   return (info) =>
     Object.entries(info)
       .map(([name, entry]) => {
-        const filePath = filePathFactory(entry.paths);
+        const filePath = entry.paths[filePathKey];
 
         if (filePath) {
-          return `import ${nameFactory(name)} from '${normalizeFilePath(filePath)}';`;
+          return `import * as ${nameFactory(name)} from '${normalizeFilePath(filePath)}';`;
         }
       })
       .filter((value) => value !== undefined)
       .join('');
 }
 
-const sharedImports = emitImportBase(
-  (id) => `* as ${sharedImportName(id)}`,
-  (paths) => paths.shared
-);
-
-const clientImports = emitImportBase(
-  (id) => `* as ${clientImportName(id)}`,
-  (paths) => paths.client
-);
+const sharedImports = emitImportBase('shared', sharedImportName);
+const clientImports = emitImportBase('client', clientImportName);
 
 const componentInfoMap: EmitStep = (info) => {
   const mapEntries = Object.entries(info)
@@ -64,37 +53,10 @@ const componentInfoMap: EmitStep = (info) => {
     )
     .join(',');
 
-  return `const componentInfoMap = {${mapEntries}};`;
+  return `const map = {${mapEntries}}; export default map;`;
 };
 
-const connectorSteps: Record<keyof ComponentConnector, EmitStep> = {
-  importComponent: () => {
-    return `(id) => componentInfoMap[id].renderer();`;
-  },
-  getComponentDefaultData: () => {
-    return `(id, options, context) => componentInfoMap[id].shared.defaultRawData(options, context);`;
-  },
-  getComponentValidator: () => {
-    return `(id) => componentInfoMap[id].shared.validator;`;
-  },
-  getComponentConfig: () => {
-    return `(id) => componentInfoMap[id].shared.meta.config;`;
-  },
-  getComponentClientTransformer: () => {
-    return `(id) => componentInfoMap[id].client.clientTransformer;`;
-  },
-};
-
-const steps = [
-  sharedImports,
-  clientImports,
-  componentInfoMap,
-  ...Object.entries(connectorSteps).map(
-    ([key, step]) =>
-      (info: ComponentClientChunkMap) =>
-        `export const ${key} = ${step(info)}`
-  ),
-];
+const steps = [sharedImports, clientImports, componentInfoMap];
 
 export function emitComponentConnector(info: ComponentClientChunkMap) {
   return steps.map((step) => step(info)).join('');

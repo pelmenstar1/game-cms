@@ -18,7 +18,7 @@ export const defaultRawData: ComponentDefaultDataHandler<Id> = (
   options,
   context
 ) => ({
-  default: context.getDefault(options.componentId, options.baseOptions),
+  default: context.getDefaultData(options.componentId, options.baseOptions),
   alternative: [],
 });
 
