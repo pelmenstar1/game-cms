@@ -34,8 +34,7 @@
   "references": [
     { "path": "../base-api" },
     { "path": "../base-components" },
-    { "path": "../base-types" },
-    { "path": "../base-utils" },
+    { "path": "../base-core" },
     { "path": "../client" },
     { "path": "../codegen" },
     { "path": "../component-api" },

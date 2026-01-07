@@ -1,4 +1,4 @@
-import type { EntityData } from '@game-cms/base-types';
+import type { EntityData } from '@game-cms/base-core';
 import { createEntity } from '@game-cms/client';
 import { useApiAction } from '@game-cms/component-api';
 import { useNotification, useTypedNavigate } from '@game-cms/ui';

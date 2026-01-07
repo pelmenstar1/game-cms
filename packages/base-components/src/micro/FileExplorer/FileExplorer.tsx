@@ -1,4 +1,4 @@
-import { StorageItemWithId } from '@game-cms/base-types';
+import { StorageItemWithId } from '@game-cms/base-core';
 import {
   createFolder,
   deleteStorageItemById,

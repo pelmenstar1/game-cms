@@ -1,4 +1,4 @@
-import { StorageItemType } from '@game-cms/base-types';
+import { StorageItemType } from '@game-cms/base-core';
 import { component } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';

@@ -5,7 +5,7 @@ import type {
   EntityResolvedDataById,
   EntitySchema,
   EntitySchemaById,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import type { ComponentDataResolverArgs, RequestContext } from '@game-cms/core';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import qs from 'qs';

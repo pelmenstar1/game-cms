@@ -1,4 +1,4 @@
-import { ApiError } from '@game-cms/base-utils';
+import { ApiError } from '@game-cms/base-core';
 import type {
   ComponentDataResolverArgs,
   ComponentId,

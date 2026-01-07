@@ -6,8 +6,8 @@ import {
   type StorageFileItem,
   StorageItemType,
   type StorageProvider,
-} from '@game-cms/base-types';
-import { ApiError } from '@game-cms/base-utils';
+} from '@game-cms/base-core';
+import { ApiError } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { isFileNotFoundError } from '@game-cms/shared/errors';

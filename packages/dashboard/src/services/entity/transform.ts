@@ -2,7 +2,7 @@ import type {
   EntityId,
   EntityMap,
   EntityRawDataById,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import type { ComponentApi } from '@game-cms/component-api';
 import type {
   ComponentClientDataById,

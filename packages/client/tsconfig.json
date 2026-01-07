@@ -9,8 +9,8 @@
   "include": ["./src"],
   "references": [
     { "path": "../base-api" },
-    { "path": "../base-types" },
-    { "path": "../base-utils" },
+    { "path": "../base-core" },
+    { "path": "../base-core" },
     { "path": "../conditional" },
     { "path": "../core" },
     { "path": "../shared" }

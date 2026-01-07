@@ -1,4 +1,4 @@
-import type { EntitySchema } from '@game-cms/base-types';
+import type { EntitySchema } from '@game-cms/base-core';
 import type { ValueSourceContext } from '@game-cms/core';
 import { importFile } from '@game-cms/shared/io';
 import { scanDirectory } from '@game-cms/shared/io';

@@ -2,7 +2,7 @@ import {
   StorageFileItemWithId,
   StorageItemType,
   StorageItemWithId,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import { ToClientType } from '@game-cms/core';
 import { Button, ModalDialog, ModalProps } from '@game-cms/ui';
 import { useCallback, useState } from 'react';

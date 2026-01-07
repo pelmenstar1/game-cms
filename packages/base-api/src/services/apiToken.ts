@@ -2,8 +2,8 @@ import type {
   CreateApiTokenPayload,
   OpaqueApiToken,
   OpaqueApiTokenWithId,
-} from '@game-cms/base-types';
-import { ApiError } from '@game-cms/base-utils';
+} from '@game-cms/base-core';
+import { ApiError } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
 import type { PageData, PagingOptions } from '@game-cms/shared';

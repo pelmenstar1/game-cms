@@ -5,7 +5,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
-import type { StorageProvider } from '@game-cms/base-types';
+import type { StorageProvider } from '@game-cms/base-core';
 
 import type { S3StorageProviderConfig } from './types.js';
 import { createFileKey, getFileUrl } from './utils.js';

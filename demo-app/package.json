@@ -3,7 +3,8 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test-build": "tsc && game-cms build"
   },
   "dependencies": {
     "@game-cms/storage-provider-local": "workspace:*",

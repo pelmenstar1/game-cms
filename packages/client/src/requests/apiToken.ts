@@ -6,7 +6,7 @@ import type {
   OpaqueApiToken,
   OpaqueApiTokenWithId,
   SignTokenInPayload,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import type { RequestContext, ToClientType } from '@game-cms/core';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 

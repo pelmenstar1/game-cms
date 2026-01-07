@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import { apiConfig, serviceSource } from '@game-cms/base-api';
-import type { OwnEnvironment } from '@game-cms/base-types';
+import type { OwnEnvironment } from '@game-cms/base-core';
 import type { Plugin } from '@game-cms/core';
 import { getImportDirectory } from '@game-cms/shared/node';
 

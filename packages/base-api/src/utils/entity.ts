@@ -1,4 +1,4 @@
-import type { EntityId, EntityRawDataById } from '@game-cms/base-types';
+import type { EntityId, EntityRawDataById } from '@game-cms/base-core';
 import type {
   ComponentId,
   ComponentRawInDataById,

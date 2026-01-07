@@ -1,5 +1,4 @@
-import type { ApiErrorCode } from '@game-cms/base-types';
-import { ApiError } from '@game-cms/base-utils';
+import { ApiError, type ApiErrorCode } from '@game-cms/base-core';
 import { isNonNullObject, parseJsonOptional } from '@game-cms/shared';
 
 export async function handleResponseError(response: Response) {

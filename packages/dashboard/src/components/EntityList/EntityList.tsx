@@ -1,4 +1,4 @@
-import type { EntitySchema } from '@game-cms/base-types';
+import type { EntitySchema } from '@game-cms/base-core';
 import { listEntities } from '@game-cms/client';
 import { useApiQuery } from '@game-cms/component-api';
 import { classNames, DataLoader, List } from '@game-cms/ui';

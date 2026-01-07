@@ -4,7 +4,7 @@ import type {
   EntityRawDataById,
   EntityRawInDataById,
   EntitySchemaById,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
 import type { ComponentClientDataById } from '@game-cms/core';
 import {

@@ -8,7 +8,7 @@
   },
   "references": [
     { "path": "../base-api" },
-    { "path": "../base-types" },
+    { "path": "../base-core" },
     { "path": "../client" },
     { "path": "../codegen" },
     { "path": "../codegen" },

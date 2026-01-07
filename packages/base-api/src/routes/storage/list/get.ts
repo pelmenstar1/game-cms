@@ -1,7 +1,7 @@
 import {
   listStorageItemsOptions,
   listStorageItemsResponse,
-} from '@game-cms/base-types/schema';
+} from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 

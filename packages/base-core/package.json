@@ -1,5 +1,5 @@
 {
-  "name": "@game-cms/base-types",
+  "name": "@game-cms/base-core",
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "main": "./dist/index.js",

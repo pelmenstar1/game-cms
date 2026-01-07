@@ -6,7 +6,7 @@ import type {
   StorageItemWithMeta,
   UploadFileMeta,
   UploadFileResponse,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import type { RequestContext, ToClientType } from '@game-cms/core';
 
 import { request, url } from '../internal/utils.js';

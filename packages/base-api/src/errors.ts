@@ -1,6 +1,6 @@
-import type { ApiErrorStatusMap } from '@game-cms/base-types';
+import type { ApiErrorStatusMap } from '@game-cms/base-core';
 
-declare module '@game-cms/base-types' {
+declare module '@game-cms/base-core' {
   interface ApiErrorCodeMap {
     base: {
       entity: ['notFound', 'duplicate'];

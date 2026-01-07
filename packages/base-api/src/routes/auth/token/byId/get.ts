@@ -1,5 +1,5 @@
-import { opaqueApiToken } from '@game-cms/base-types/schema';
-import { ApiError } from '@game-cms/base-utils';
+import { ApiError } from '@game-cms/base-core';
+import { opaqueApiToken } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';

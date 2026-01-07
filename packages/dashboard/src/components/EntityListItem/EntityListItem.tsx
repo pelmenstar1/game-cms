@@ -1,4 +1,4 @@
-import type { EntityData, EntityId } from '@game-cms/base-types';
+import type { EntityData, EntityId } from '@game-cms/base-core';
 import { classNames, Link, Typography } from '@game-cms/ui';
 
 import styles from './EntityListItem.module.scss';

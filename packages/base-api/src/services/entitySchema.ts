@@ -1,4 +1,4 @@
-import type { EntityId, EntitySchemaById } from '@game-cms/base-types';
+import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
 

@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
-    "@game-cms/base-types": "workspace:*",
+    "@game-cms/base-core": "workspace:*",
     "@types/mime-types": "^3.0.1",
     "@types/node": "catalog:",
     "typescript": "catalog:"

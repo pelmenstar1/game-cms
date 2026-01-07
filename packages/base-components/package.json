@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@game-cms/base-types": "workspace:*",
+    "@game-cms/base-core": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/component-api": "workspace:*",
     "@game-cms/conditional": "workspace:*",

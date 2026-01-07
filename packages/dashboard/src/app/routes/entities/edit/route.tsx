@@ -1,4 +1,4 @@
-import type { EntityData } from '@game-cms/base-types';
+import type { EntityData } from '@game-cms/base-core';
 import {
   deleteEntityById,
   getRawEntityById,

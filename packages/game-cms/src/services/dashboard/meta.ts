@@ -4,10 +4,8 @@ import path from 'node:path';
 import type { DashboardMeta } from '@game-cms/core';
 
 export async function writeDashboardMeta(dashboardPath: string) {
-  const cwd = process.cwd();
-
   const meta: DashboardMeta = {
-    basePath: cwd,
+    basePath: process.cwd(),
   };
 
   await fsp.writeFile(

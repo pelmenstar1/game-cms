@@ -6,7 +6,7 @@ import {
   StorageItemType,
   type StorageItemWithMeta,
   type UploadFilePayload,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
 import type { ClientSession, ObjectId, WithId } from 'mongodb';

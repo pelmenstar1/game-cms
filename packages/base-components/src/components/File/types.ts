@@ -1,4 +1,4 @@
-import { StorageFileItemWithId } from '@game-cms/base-types';
+import { StorageFileItemWithId } from '@game-cms/base-core';
 import { ComponentEntry, ToClientType } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 

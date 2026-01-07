@@ -3,7 +3,7 @@ import type {
   DatabaseEntityMap,
   EntityId,
   EntityStorageDataById,
-} from '@game-cms/base-types';
+} from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
 import { ClientSession, MongoClient, type TransactionOptions } from 'mongodb';

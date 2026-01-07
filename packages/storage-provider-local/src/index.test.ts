@@ -3,7 +3,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { Readable } from 'node:stream';
 
-import type { FileSource } from '@game-cms/base-types';
+import type { FileSource } from '@game-cms/base-core';
 import { temporalDirectory } from '@game-cms/testing-lib';
 import { describe, expect, test } from 'vitest';
 

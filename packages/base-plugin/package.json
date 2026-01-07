@@ -20,7 +20,7 @@
     "@game-cms/global": "workspace:*"
   },
   "devDependencies": {
-    "@game-cms/base-types": "workspace:*",
+    "@game-cms/base-core": "workspace:*",
     "mongodb": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"

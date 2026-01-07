@@ -1,4 +1,4 @@
-import { StorageItemType, StorageItemWithMeta } from '@game-cms/base-types';
+import { StorageItemType, StorageItemWithMeta } from '@game-cms/base-core';
 import { ToClientType } from '@game-cms/core';
 import { matchMime } from '@game-cms/shared';
 

@@ -223,12 +223,9 @@ importers:
       '@fastify/multipart':
         specifier: 'catalog:'
         version: 9.3.0
-      '@game-cms/base-types':
+      '@game-cms/base-core':
         specifier: workspace:*
-        version: link:../base-types
-      '@game-cms/base-utils':
-        specifier: workspace:*
-        version: link:../base-utils
+        version: link:../base-core
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
@@ -284,9 +281,9 @@ importers:
 
   packages/base-components:
     dependencies:
-      '@game-cms/base-types':
+      '@game-cms/base-core':
         specifier: workspace:*
-        version: link:../base-types
+        version: link:../base-core
       '@game-cms/client':
         specifier: workspace:*
         version: link:../client
@@ -337,38 +334,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
-  packages/base-plugin:
-    dependencies:
-      '@game-cms/base-api':
-        specifier: workspace:*
-        version: link:../base-api
-      '@game-cms/base-components':
-        specifier: workspace:*
-        version: link:../base-components
-      '@game-cms/core':
-        specifier: workspace:*
-        version: link:../core
-      '@game-cms/global':
-        specifier: workspace:*
-        version: link:../global
-      '@game-cms/shared':
-        specifier: workspace:*
-        version: link:../shared
-    devDependencies:
-      '@game-cms/base-types':
-        specifier: workspace:*
-        version: link:../base-types
-      mongodb:
-        specifier: 'catalog:'
-        version: 7.0.0
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
-      vite:
-        specifier: 'catalog:'
-        version: 7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
-
-  packages/base-types:
+  packages/base-core:
     dependencies:
       '@game-cms/global':
         specifier: workspace:*
@@ -387,23 +353,42 @@ importers:
         specifier: workspace:*
         version: link:../core
 
-  packages/base-utils:
-    devDependencies:
-      '@game-cms/base-types':
+  packages/base-plugin:
+    dependencies:
+      '@game-cms/base-api':
         specifier: workspace:*
-        version: link:../base-types
+        version: link:../base-api
+      '@game-cms/base-components':
+        specifier: workspace:*
+        version: link:../base-components
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@game-cms/base-core':
+        specifier: workspace:*
+        version: link:../base-core
+      mongodb:
+        specifier: 'catalog:'
+        version: 7.0.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+      vite:
+        specifier: 'catalog:'
+        version: 7.3.0(@types/node@25.0.3)(sass-embedded@1.97.1)(sass@1.97.1)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/client:
     dependencies:
-      '@game-cms/base-utils':
+      '@game-cms/base-core':
         specifier: workspace:*
-        version: link:../base-utils
+        version: link:../base-core
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -414,9 +399,6 @@ importers:
       '@game-cms/base-api':
         specifier: workspace:*
         version: link:../base-api
-      '@game-cms/base-types':
-        specifier: workspace:*
-        version: link:../base-types
       '@game-cms/conditional':
         specifier: workspace:*
         version: link:../conditional
@@ -508,12 +490,9 @@ importers:
       '@game-cms/base-components':
         specifier: workspace:*
         version: link:../base-components
-      '@game-cms/base-types':
+      '@game-cms/base-core':
         specifier: workspace:*
-        version: link:../base-types
-      '@game-cms/base-utils':
-        specifier: workspace:*
-        version: link:../base-utils
+        version: link:../base-core
       '@game-cms/client':
         specifier: workspace:*
         version: link:../client
@@ -617,15 +596,12 @@ importers:
       '@game-cms/base-components':
         specifier: workspace:*
         version: link:../base-components
+      '@game-cms/base-core':
+        specifier: workspace:*
+        version: link:../base-core
       '@game-cms/base-plugin':
         specifier: workspace:*
         version: link:../base-plugin
-      '@game-cms/base-types':
-        specifier: workspace:*
-        version: link:../base-types
-      '@game-cms/base-utils':
-        specifier: workspace:*
-        version: link:../base-utils
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
@@ -725,9 +701,9 @@ importers:
       '@game-cms/base-api':
         specifier: workspace:*
         version: link:../base-api
-      '@game-cms/base-types':
+      '@game-cms/base-core':
         specifier: workspace:*
-        version: link:../base-types
+        version: link:../base-core
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
@@ -815,9 +791,9 @@ importers:
       '@fastify/send':
         specifier: 'catalog:'
         version: 4.1.0
-      '@game-cms/base-utils':
+      '@game-cms/base-core':
         specifier: workspace:*
-        version: link:../base-utils
+        version: link:../base-core
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
@@ -834,9 +810,6 @@ importers:
       '@game-cms/base-api':
         specifier: workspace:*
         version: link:../base-api
-      '@game-cms/base-types':
-        specifier: workspace:*
-        version: link:../base-types
       '@game-cms/testing-lib':
         specifier: workspace:*
         version: link:../testing-lib
@@ -862,9 +835,9 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
     devDependencies:
-      '@game-cms/base-types':
+      '@game-cms/base-core':
         specifier: workspace:*
-        version: link:../base-types
+        version: link:../base-core
       '@types/mime-types':
         specifier: ^3.0.1
         version: 3.0.1

@@ -16,7 +16,7 @@
   "references": [
     { "path": "../base-api" },
     { "path": "../base-components" },
-    { "path": "../base-types" },
+    { "path": "../base-core" },
     { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../core" },

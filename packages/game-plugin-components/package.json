@@ -24,7 +24,7 @@
     "@game-cms/core": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
     "@game-cms/base-api": "workspace:*",
-    "@game-cms/base-types": "workspace:*",
+    "@game-cms/base-core": "workspace:*",
     "mongodb": "catalog:",
     "storybook": "catalog:",
     "typescript": "catalog:"

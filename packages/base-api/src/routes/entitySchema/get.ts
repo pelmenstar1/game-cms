@@ -1,4 +1,4 @@
-import { ApiError } from '@game-cms/base-utils';
+import { ApiError } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import z from 'zod';

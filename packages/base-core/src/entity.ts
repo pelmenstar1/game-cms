@@ -75,3 +75,11 @@ export type EntitiesToEntries<
 export type ResolveEntities<
   T extends DefaultExport<{ id: string; components: unknown }>[],
 > = FromEntries<EntitiesToEntries<T>>;
+
+/*@__NO_SIDE_EFFECTS__*/
+export function entity<
+  Id extends string,
+  const Components extends EntitySchemaComponents,
+>(value: EntitySchema<Id, Components>) {
+  return value;
+}

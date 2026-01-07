@@ -1,4 +1,4 @@
-import { deleteStorageItemOptions } from '@game-cms/base-types/schema';
+import { deleteStorageItemOptions } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';

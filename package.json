@@ -10,6 +10,7 @@
     "prebuild": "pnpm run -r prebuild && tsc --build tsconfig.packages.json --declaration",
     "prebuild:watch": "pnpm run -r prebuild && tsc --build tsconfig.packages.json --declaration --watch",
     "test": "vitest --run",
+    "test-build": "pnpm run -r test-build",
     "clean": "tsx ./scripts/clean.ts",
     "gen-ts-deps": "tsx ./scripts/tsconfigDeps.ts",
     "prepare": "husky"

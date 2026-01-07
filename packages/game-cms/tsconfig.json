@@ -8,9 +8,8 @@
   "include": ["./src"],
   "references": [
     { "path": "../base-components" },
+    { "path": "../base-core" },
     { "path": "../base-plugin" },
-    { "path": "../base-types" },
-    { "path": "../base-utils" },
     { "path": "../core" },
     { "path": "../global" },
     { "path": "../ignition" },

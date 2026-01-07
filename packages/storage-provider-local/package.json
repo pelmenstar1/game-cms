@@ -6,14 +6,13 @@
   "types": "./dist/index.d.ts",
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
-    "@game-cms/base-types": "workspace:*",
     "@game-cms/testing-lib": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
     "@fastify/send": "catalog:",
-    "@game-cms/base-utils": "workspace:*",
+    "@game-cms/base-core": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/core": "workspace:*",

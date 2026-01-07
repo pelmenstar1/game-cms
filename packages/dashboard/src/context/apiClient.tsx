@@ -1,5 +1,5 @@
-import type { ApiErrorCode, ApiErrorCodeTypeMap } from '@game-cms/base-types';
-import { ApiError } from '@game-cms/base-utils';
+import type { ApiErrorCode, ApiErrorCodeTypeMap } from '@game-cms/base-core';
+import { ApiError } from '@game-cms/base-core';
 import { createStandardClient, refreshUserSession } from '@game-cms/client';
 import {
   ApiClientContext,

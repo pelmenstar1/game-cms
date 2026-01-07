@@ -1,6 +1,21 @@
-import fastify from 'fastify';
+import fastify, { type FastifyLoggerOptions } from 'fastify';
+import type { LoggerOptions } from 'pino';
 
-import { envToLogger } from './logger.js';
+const envToLogger: Record<
+  string,
+  (LoggerOptions & FastifyLoggerOptions) | boolean
+> = {
+  development: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        translateTime: 'HH:MM:ss Z',
+        ignore: 'pid,hostname',
+      },
+    },
+  },
+  production: true,
+};
 
 export function createFastifyApp() {
   const envType = process.env.NODE_ENV ?? 'development';

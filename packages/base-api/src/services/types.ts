@@ -1,4 +1,4 @@
-import type { ApiToken, ServerUser, StorageItem } from '@game-cms/base-types';
+import type { ApiToken, ServerUser, StorageItem } from '@game-cms/base-core';
 import type { FromEntries } from '@game-cms/core';
 
 type ServiceExport = typeof import('./index.js');
@@ -14,7 +14,7 @@ declare module '@game-cms/core' {
   interface ServiceMap extends BaseServicesMap {}
 }
 
-declare module '@game-cms/base-types' {
+declare module '@game-cms/base-core' {
   interface DatabaseEntityMap {
     'base::users': ServerUser;
     'base::apiTokens': ApiToken;
