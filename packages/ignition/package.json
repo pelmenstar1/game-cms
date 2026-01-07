@@ -3,13 +3,14 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "dependencies": {
-    "@game-cms/shared": "workspace:*",
+    "@game-cms/base-plugin": "workspace:*",
     "@game-cms/global": "workspace:*",
-    "@game-cms/base-plugin": "workspace:*"
+    "@game-cms/shared": "workspace:*",
+    "jiti": "^2.6.1"
   },
   "devDependencies": {
-    "@game-cms/core": "workspace:*",
-    "@game-cms/base-api": "workspace:*"
+    "@game-cms/base-api": "workspace:*",
+    "@game-cms/core": "workspace:*"
   },
   "exports": {
     ".": {

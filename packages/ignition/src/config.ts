@@ -1,28 +1,23 @@
 import { basePlugin } from '@game-cms/base-plugin';
 import type { ResolvedCmsConfig, UnresolvedCmsConfig } from '@game-cms/core';
 import { type MaybePromise, resolveMaybeFactory } from '@game-cms/shared';
-import {
-  createEnvAccessor,
-  type EnvAccessor,
-  importFile,
-} from '@game-cms/shared/io';
+import { createEnvAccessor, type EnvAccessor } from '@game-cms/shared/io';
+import { createJiti } from 'jiti';
 
 type MaybeEnv<R extends object> = R | ((env: EnvAccessor) => MaybePromise<R>);
 
 export type ConfigInit = MaybeEnv<UnresolvedCmsConfig>;
 
 async function importConfig(filePath: string) {
-  const { default: result } = await importFile<{ default: ConfigInit }>(
-    filePath
-  );
+  const jiti = createJiti(import.meta.url);
 
-  return result;
+  return jiti.import<ConfigInit>(filePath, { default: true });
 }
 
 export async function resolveConfig(
   compiledFilePath: (value: string) => string
 ): Promise<ResolvedCmsConfig> {
-  const configPath = compiledFilePath('cms.config.js');
+  const configPath = compiledFilePath('cms.config.ts');
   const configInit = await importConfig(configPath);
 
   const instance = await resolveMaybeFactory(configInit, createEnvAccessor());

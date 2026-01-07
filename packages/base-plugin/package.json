@@ -15,9 +15,10 @@
   "dependencies": {
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-components": "workspace:*",
-    "@game-cms/shared": "workspace:*",
     "@game-cms/core": "workspace:*",
-    "@game-cms/global": "workspace:*"
+    "@game-cms/global": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "jiti": "^2.6.1"
   },
   "devDependencies": {
     "@game-cms/base-core": "workspace:*",

@@ -3,7 +3,8 @@
   "packageManager": "pnpm@10.25.0",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "game-cms build",
+    "dev": "game-cms dev",
     "test-build": "tsc && game-cms build"
   },
   "dependencies": {

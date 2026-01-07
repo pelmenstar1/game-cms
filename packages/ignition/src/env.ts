@@ -36,7 +36,7 @@ function getPluginEnvResolvers(config: ResolvedCmsConfig) {
 }
 
 export async function initEnvFromConfigs(baseDir: string = './') {
-  const compiledFilePath = (value: string) => path.join(baseDir, 'dist', value);
+  const compiledFilePath = (value: string) => path.join(baseDir, 'src', value);
 
   await loadEnvFileIfExists(baseDir);
 
