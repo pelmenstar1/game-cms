@@ -26,11 +26,7 @@ async function gatherComponentClientChunk(dirPath: string) {
   const shared = path.join(dirPath, 'shared.js');
   const client = path.join(dirPath, 'client.js');
 
-  if (
-    fs.existsSync(renderer) &&
-    fs.existsSync(shared) &&
-    fs.existsSync(client)
-  ) {
+  if (fs.existsSync(renderer) && fs.existsSync(shared)) {
     const componentId = await getComponentIdFromSharedFile(shared);
 
     const entry: ComponentClientChunkEntry = {

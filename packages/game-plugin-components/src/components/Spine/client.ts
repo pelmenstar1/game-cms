@@ -48,13 +48,15 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spine'> =
         },
       };
     },
-    toClient: async (data, _, context) => {
-      const [images, atlas, skeleton] = await Promise.all([
-        context.toClient('base::file', data.images, IMAGES_OPTIONS),
-        context.toClient('base::file', data.atlas, ATLAS_OPTIONS),
-        context.toClient('base::file', data.skeleton, SKELETON_OPTIONS),
-      ]);
-
-      return { images, atlas, skeleton };
+    toClient: (data, _, context) => {
+      return {
+        images: context.toClient('base::file', data.images, IMAGES_OPTIONS),
+        atlas: context.toClient('base::file', data.atlas, ATLAS_OPTIONS),
+        skeleton: context.toClient(
+          'base::file',
+          data.skeleton,
+          SKELETON_OPTIONS
+        ),
+      };
     },
   };

@@ -175,7 +175,7 @@ export type ForeignComponentClientDataResolverContext = {
     id: Id,
     data: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => MaybePromiseWithMarker<ComponentClientDataById<Id, Args>>;
+  ) => ComponentClientDataById<Id, Args>;
 
   fromClient: <Id extends ComponentId, Args>(
     id: Id,
@@ -233,7 +233,7 @@ export type ComponentClientDataTransformer<Id extends ComponentId> = {
     data: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentClientDataResolverContext
-  ) => MaybePromiseWithMarker<ComponentClientDataById<Id, Args>>;
+  ) => ComponentClientDataById<Id, Args>;
 
   fromClient: <Args>(
     clientData: ComponentClientDataById<Id, Args>,

@@ -27,7 +27,7 @@ export function getComponentValidator<Id extends ComponentId>(
 export function getComponentClientTransformer<Id extends ComponentId>(
   id: Id
 ): ComponentClientDataTransformer<Id> | undefined {
-  return data[id].client.clientTransformer;
+  return data[id].client?.clientTransformer;
 }
 
 export function getComponentConfig(

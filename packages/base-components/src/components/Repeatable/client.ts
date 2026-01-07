@@ -4,16 +4,10 @@ export const clientTransformer: ComponentClientDataTransformer<'base::repeatable
   {
     getDefaultData: () => [],
     toClient: (data, options, context) => {
-      return Promise.all(
-        data.map(async (item) => ({
-          clientKey: context.idSource(),
-          data: await context.toClient(
-            options.componentId,
-            item,
-            options.baseOptions
-          ),
-        }))
-      );
+      return data.map((item) => ({
+        clientKey: context.idSource(),
+        data: context.toClient(options.componentId, item, options.baseOptions),
+      }));
     },
     fromClient: (clientData, options, context) => {
       const result = clientData.map((item) =>

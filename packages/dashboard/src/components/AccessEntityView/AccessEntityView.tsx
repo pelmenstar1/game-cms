@@ -14,7 +14,7 @@ import {
   IconButton,
   Typography,
 } from '@game-cms/ui';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { useComponentHub } from '@/hooks/useComponentHub';
 import {
@@ -53,48 +53,32 @@ export function AccessEntityView<Id extends EntityId>({
 
   const composeOptions = schema.components as EntityComposeOptions<Id>;
 
-  const [clientData, setClientData] = useState<ClientData>();
-
-  useEffect(() => {
-    const worker = async () => {
-      const result = await transformDataToClientData(
-        api,
-        initialValue,
-        composeOptions
-      );
-
-      setClientData(result);
-    };
-
-    void worker();
-  }, [api, composeOptions, initialValue, schema]);
+  const [clientData, setClientData] = useState<ClientData>(() =>
+    transformDataToClientData(api, initialValue, composeOptions)
+  );
 
   const data = useMemo(() => {
-    if (clientData) {
-      return api.clientTransformerContext.fromClient<ComposeId, Args>(
-        composeId,
-        clientData,
-        composeOptions
-      );
-    }
+    return api.clientTransformerContext.fromClient<ComposeId, Args>(
+      composeId,
+      clientData,
+      composeOptions
+    );
   }, [api, clientData, composeOptions]);
 
   const error = useMemo(() => {
-    if (data) {
-      if (data.result) {
-        return hub.validationContext.validate<ComposeId, Args>(
-          composeId,
-          data.result,
-          composeOptions
-        );
-      }
-
-      return data.error;
+    if (data.result) {
+      return hub.validationContext.validate<ComposeId, Args>(
+        composeId,
+        data.result,
+        composeOptions
+      );
     }
+
+    return data.error;
   }, [data, hub.validationContext, composeOptions]);
 
   const onSaveTransformed = useCallback(() => {
-    const rawData = data?.result;
+    const rawData = data.result;
 
     if (rawData !== undefined) {
       onSave?.(rawData);
@@ -121,14 +105,12 @@ export function AccessEntityView<Id extends EntityId>({
 
       <div className={styles.content}>
         <div className={styles['component-grid']}>
-          {clientData !== undefined && (
-            <Compose
-              data={clientData}
-              options={composeOptions}
-              error={error}
-              onDataChanged={setClientData}
-            />
-          )}
+          <Compose
+            data={clientData}
+            options={composeOptions}
+            error={error}
+            onDataChanged={setClientData}
+          />
         </div>
 
         <div className={styles['action-block']}>

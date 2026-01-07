@@ -11,7 +11,7 @@ import { useCallback } from 'react';
 
 import { FileExplorerModal } from '../../micro/FileExplorerModal/index.js';
 import { FileList } from '../../micro/FileList/index.js';
-import styles from './client.module.scss';
+import styles from './renderer.module.scss';
 import { FileClientDataItem } from './types.js';
 
 export const renderer: ComponentRenderer<'base::file'> = ({

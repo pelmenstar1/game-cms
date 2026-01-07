@@ -19,13 +19,13 @@ export type EntityComposeOptions<Id extends EntityId> = ComponentOptionsById<
   EntityMap[Id]
 >;
 
-export async function transformDataToClientData<Id extends EntityId>(
+export function transformDataToClientData<Id extends EntityId>(
   api: ComponentApi,
   data: EntityRawDataById<Id> | undefined,
   options: EntityComposeOptions<Id>
 ) {
   if (data) {
-    return await api.clientTransformerContext.toClient<
+    return api.clientTransformerContext.toClient<
       'base::compose',
       EntityMap[Id]
     >('base::compose', data as never, options);

@@ -17,25 +17,14 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
     mapObject(options, (item) =>
       context.getDefaultData(item.componentId, item.options)
     ),
-  toClient: async <Args>(
+  toClient: <Args>(
     data: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentClientDataResolverContext
   ) => {
-    type Options = ComposeEntry<Args>['options'];
-    type OptionsEntry = Options[keyof Options];
-
-    const entries = await Promise.all(
-      Object.entries<OptionsEntry>(options).map(
-        async ([key, prop]) =>
-          [
-            key,
-            await context.toClient(prop.componentId, data[key], prop.options),
-          ] as const
-      )
+    return mapObject(options, (prop, key) =>
+      context.toClient(prop.componentId, data[key], prop.options)
     );
-
-    return Object.fromEntries(entries) as ComponentRawDataById<Id, Args>;
   },
   fromClient: <Args>(
     data: ComponentClientDataById<Id, Args>,

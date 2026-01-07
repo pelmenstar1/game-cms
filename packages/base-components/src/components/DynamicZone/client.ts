@@ -4,22 +4,16 @@ export const clientTransformer: ComponentClientDataTransformer<'base::dynamic-zo
   {
     getDefaultData: () => [],
     toClient: (data, options, context) => {
-      return Promise.all(
-        data.map(async (dataItem) => {
-          const { componentId, options: baseOptions } =
-            options.options[dataItem.key];
+      return data.map((dataItem) => {
+        const { componentId, options: baseOptions } =
+          options.options[dataItem.key];
 
-          return {
-            clientKey: context.idSource(),
-            key: dataItem.key,
-            data: await context.toClient(
-              componentId,
-              dataItem.data,
-              baseOptions
-            ),
-          };
-        })
-      );
+        return {
+          clientKey: context.idSource(),
+          key: dataItem.key,
+          data: context.toClient(componentId, dataItem.data, baseOptions),
+        };
+      });
     },
     fromClient: (clientData, options, context) => {
       const result = clientData.map((value) => {

@@ -7,8 +7,8 @@ import { IconButton, Labeled, PreviewIcon, useModal } from '@game-cms/ui';
 import { useCallback } from 'react';
 
 import { SpineModal } from '../../micro/SpineModal';
-import styles from './client.module.scss';
 import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './constants';
+import styles from './renderer.module.scss';
 
 type FileData = ComponentClientDataById<'base::file'>[number];
 

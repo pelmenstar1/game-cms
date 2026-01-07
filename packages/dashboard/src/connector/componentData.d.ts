@@ -16,7 +16,7 @@ declare module 'virtual:dashboard/componentConnectorData' {
         defaultRawData: ComponentDefaultDataHandler<Id>;
         validator: ComponentDataValidator<Id>;
       };
-      client: {
+      client?: {
         clientTransformer: ComponentClientDataTransformer<Id>;
       };
     };
