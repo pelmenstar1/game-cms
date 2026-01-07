@@ -10,12 +10,14 @@ import { ModalOverlay, type ModalOverlayEffect } from '../ModalOverlay';
 import { Typography } from '../Typography';
 import styles from './ModalDialog.module.scss';
 
+type ModalDialogVariant = 'tight' | 'wide';
+
 interface ModalDialogProps extends ModalProps {
   title?: string;
   contentClassName?: string;
   footer?: ReactElement;
-  tightLayout?: boolean;
   effect?: ModalOverlayEffect;
+  variant?: ModalDialogVariant;
   children: ReactNode;
 }
 
@@ -24,7 +26,7 @@ export function ModalDialog({
   footer,
   children,
   contentClassName,
-  tightLayout,
+  variant,
   effect = 'tint',
   onClose,
 }: ModalDialogProps) {
@@ -37,7 +39,7 @@ export function ModalDialog({
       <div
         className={classNames(
           styles.dialog,
-          tightLayout && styles['dialog-tight-layout']
+          styles[`dialog-variant-${variant}`]
         )}
         role="dialog"
         aria-labelledby={titleId}

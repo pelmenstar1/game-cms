@@ -78,11 +78,10 @@ async function getAtlasPages(url: string): Promise<string[]> {
   return text.split('\n\n').map((page) => page.split('\n', 2)[0]);
 }
 
-export async function createSpineApplication(container: HTMLElement) {
+export async function createSpineApplication() {
   const app = new Application();
   await app.init({
     autoDensity: true,
-    resizeTo: container,
     backgroundAlpha: 0,
     antialias: true,
   });
@@ -123,6 +122,12 @@ export async function createSpineApplication(container: HTMLElement) {
     }
 
     return rect;
+  }
+
+  function setSize(size: Size) {
+    app.renderer.resize(size.width, size.height);
+
+    onSizeChanged();
   }
 
   function onSizeChanged() {
@@ -332,6 +337,7 @@ export async function createSpineApplication(container: HTMLElement) {
   return {
     pixiApp: app,
     setSpine,
+    setSize,
     onSizeChanged,
     getAnimations,
     destroy,

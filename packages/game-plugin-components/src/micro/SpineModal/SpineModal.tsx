@@ -3,6 +3,7 @@ import type { FC } from 'react';
 
 import { SpineController } from '../SpineController';
 import type { SpineData } from '../SpineRenderer/types';
+import styles from './SpineModal.module.scss';
 
 export interface SpineModalProps extends ModalProps {
   spine: SpineData;
@@ -10,8 +11,12 @@ export interface SpineModalProps extends ModalProps {
 
 export const SpineModal: FC<SpineModalProps> = ({ spine, onClose }) => {
   return (
-    <ModalDialog onClose={onClose}>
-      <SpineController spine={spine} />
+    <ModalDialog
+      variant="wide"
+      onClose={onClose}
+      contentClassName={styles.content}
+    >
+      <SpineController className={styles.controller} spine={spine} />
     </ModalDialog>
   );
 };

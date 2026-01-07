@@ -41,7 +41,12 @@
 
     border-radius: 10px;
 
-    &-tight-layout {
+    &-variant-wide {
+      width: 80%;
+      height: 70%;
+    }
+
+    &-variant-tight-layout {
       min-height: auto;
     }
   }

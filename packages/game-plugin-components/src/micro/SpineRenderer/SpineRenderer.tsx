@@ -65,12 +65,12 @@ export function SpineRenderer({
     if (container) {
       let currentApp: SpineApplication | undefined;
 
-      createSpineApplication(container)
+      createSpineApplication()
         .then((app) => {
           currentApp = app;
           setApp(app);
 
-          container.append(app.pixiApp.canvas);
+          container.replaceChildren(app.pixiApp.canvas);
         })
         .catch((error: unknown) => {
           console.error(error);
@@ -79,6 +79,9 @@ export function SpineRenderer({
         });
 
       return () => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        container.childNodes[0]?.remove();
+
         currentApp?.destroy();
       };
     }
@@ -98,7 +101,7 @@ export function SpineRenderer({
   }, [app, notification, spine]);
 
   useEffect(() => {
-    app?.onSizeChanged();
+    app?.setSize(size);
   }, [app, size]);
 
   useEffect(() => {

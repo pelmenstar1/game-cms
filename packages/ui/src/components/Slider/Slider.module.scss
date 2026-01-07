@@ -4,6 +4,10 @@ $track-height: 2px;
 .root {
   position: relative;
   height: $thumb-size;
+
+  &:active {
+    cursor: pointer;
+  }
 }
 
 .track {
@@ -40,6 +44,7 @@ $track-height: 2px;
   height: $thumb-size;
 
   user-select: none;
+  cursor: pointer;
 
   border-radius: $thumb-size * 0.5;
   background: var(--color-primary);

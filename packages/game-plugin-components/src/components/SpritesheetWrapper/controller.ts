@@ -48,7 +48,14 @@ function splitDataToBundles<Args>(
     options.baseOptions,
     options.imagePath,
     (result) => {
-      images.push((result as File[])[0]);
+      if (Array.isArray(result)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const [image] = result;
+
+        if (typeof image === 'string') {
+          images.push(image);
+        }
+      }
     }
   );
 
@@ -64,7 +71,7 @@ function splitDataToBundles<Args>(
 
   const result: Record<string, { id: File; name: string }[]> = {};
 
-  for (let i = 0; i < bundles.length; i++) {
+  for (let i = 0; i < images.length; i++) {
     const bundle = bundles[i];
 
     let list = result[bundle];

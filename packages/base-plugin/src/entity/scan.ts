@@ -5,11 +5,17 @@ import { createJiti, type Jiti } from 'jiti';
 
 async function importEntitySchema(filePath: string, jiti: Jiti) {
   if (filePath.endsWith('.js') || filePath.endsWith('.ts')) {
-    return jiti.import<EntitySchema>(filePath);
+    const schema = await jiti.import<EntitySchema>(filePath, {
+      default: true,
+    });
+
+    if ('id' in schema) {
+      return schema;
+    }
   }
 }
 
-export async function scanEntitySchemas(
+export function scanEntitySchemas(
   context: ValueSourceContext
 ): Promise<EntitySchema[]> {
   const jiti = createJiti(import.meta.url);
