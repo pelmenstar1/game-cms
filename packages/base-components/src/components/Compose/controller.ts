@@ -24,13 +24,7 @@ export default component({
       const value = data[prefix];
       const { componentId, options: baseOptions } = options[prefix];
 
-      context.applyAtPath(
-        componentId,
-        value,
-        baseOptions,
-        suffix as unknown as null,
-        apply
-      );
+      context.applyAtPath(componentId, value, baseOptions, suffix, apply);
     } else {
       apply(data[path]);
     }

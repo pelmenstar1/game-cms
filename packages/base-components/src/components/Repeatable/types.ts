@@ -3,10 +3,10 @@ import {
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
+  ComponentNestedPath,
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
-  ComponentRawInDataByIdPath,
   ComponentResolvedDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
@@ -39,11 +39,18 @@ type RepeatableEntry<Args extends RepeatableArgs> = {
     data: ComponentClientDataById<Args['id'], Args['baseArgs']>;
   }[];
   storageData: ComponentStorageDataById<Args['id'], Args['baseArgs']>[];
-  nestedPath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
+};
+
+type BaseNestedPath<T, Args extends RepeatableArgs> = {
+  path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;
 };
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::repeatable': ComponentEntry<RepeatableEntry<ResolveArgs<_Args>>>;
+  }
+
+  interface ComponentNestedPathMap<T, Args> {
+    'base::repeatable': BaseNestedPath<T, ResolveArgs<Args>>;
   }
 }

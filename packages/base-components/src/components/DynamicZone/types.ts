@@ -4,12 +4,13 @@ import {
   ComponentOptions,
   ComponentOptionsById,
   ComponentSchema,
+  ComponentSchemaNestedPath,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
 import { Key } from 'react';
 
 import { TitleSpec, TitleSpecById } from '../../internal/title.js';
-import { ConcatValuePath } from '../Compose/types.js';
+import { NestedPathDot } from '../Compose/types.js';
 
 type BaseDynamicZoneInputEntry<Id extends ComponentId, Args, Title> = {
   title?: Title;
@@ -107,10 +108,13 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
   resolvedData: DynamicZoneArray<Input, 'resolvedData'>;
   clientData: DynamicZoneArray<Input, 'clientData'>;
   storageData: DynamicZoneArray<Input, 'storageData'>;
-  nestedPath: {
-    [K in keyof Input & string]: ConcatValuePath<
+};
+
+type NestedPath<T, Input extends DynamicZoneInputComponents> = {
+  path: {
+    [K in keyof Input & string]: NestedPathDot<
       `[${K}]`,
-      GetComponentSchemaTypes<Input[K]>['nestedPath']
+      ComponentSchemaNestedPath<T, Input[K]>
     >;
   }[keyof Input & string];
 };
@@ -120,5 +124,9 @@ declare module '@game-cms/core' {
     'base::dynamic-zone': ComponentEntry<
       DynamicZoneEntry<ResolveInputComponents<_Args>>
     >;
+  }
+
+  interface ComponentNestedPathMap<T, Args> {
+    'base::dynamic-zone': NestedPath<T, ResolveInputComponents<Args>>;
   }
 }

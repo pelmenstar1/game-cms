@@ -21,8 +21,14 @@ test('nested path', () => {
     'base::compose',
     {
       abc: ComponentSchema<'base::text'>;
+      abc2: ComponentSchema<
+        'base::compose',
+        {
+          nested1: ComponentSchema<'base::text'>;
+        }
+      >;
     }
   >;
 
-  expectTypeOf<Path>().toExtend<'abc'>();
+  expectTypeOf<'abc'>().toExtend<Path>();
 });

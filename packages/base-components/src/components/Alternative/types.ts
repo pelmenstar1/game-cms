@@ -4,6 +4,7 @@ import {
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
+  ComponentNestedPath,
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
@@ -59,8 +60,16 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
   >;
 };
 
+type BaseNestedPath<T, Args extends AlternativeArgs> = {
+  path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;
+};
+
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::alternative': ComponentEntry<AlternativeEntry<ResolveArgs<_Args>>>;
+  }
+
+  interface ComponentNestedPathMap<T, Args> {
+    'base::alternative': BaseNestedPath<T, ResolveArgs<Args>>;
   }
 }

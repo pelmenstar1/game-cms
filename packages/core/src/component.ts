@@ -28,6 +28,12 @@ export interface ComponentTypeMap<_Args = unknown> extends Record<
   ComponentTypes
 > {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+export interface ComponentNestedPathMap<T, Args = unknown> extends Record<
+  string,
+  string | null
+> {}
+
 export type ComponentId = keyof ComponentTypeMap;
 
 type GetOrRawData<Types extends ComponentTypes, K extends string> = {
@@ -41,9 +47,7 @@ type GetComponentTypes<Types extends ComponentTypes> = Pick<
   GetOrRawData<
     Types,
     'rawInData' | 'resolvedData' | 'clientData' | 'storageData'
-  > & {
-    nestedPath: Types extends { nestedPath: infer Path } ? Path : null;
-  };
+  >;
 
 type GetComponentTypesById<
   Id extends ComponentId,
@@ -85,10 +89,18 @@ export type ComponentErrorById<
   Args = unknown,
 > = GetComponentTypesById<T, Args>['error'];
 
+export type ComponentNestedPath<T, Id extends ComponentId, Args = unknown> =
+  ComponentNestedPathMap<T, Args> extends Record<
+    Id,
+    infer R extends { path: string }
+  >
+    ? R['path']
+    : string;
+
 export type ComponentRawInDataByIdPath<
   Id extends ComponentId,
   Args,
-> = GetComponentTypesById<Id, Args>['nestedPath'];
+> = ComponentNestedPath<ComponentRawInDataById<Id, Args>, Id, Args>;
 
 export type ComponentSchema<
   Id extends ComponentId = ComponentId,
@@ -97,6 +109,11 @@ export type ComponentSchema<
   componentId: Id;
   options: ComponentOptionsById<Id, Args>;
 };
+
+export type ComponentSchemaNestedPath<T, Schema> =
+  Schema extends ComponentSchema<infer Id, infer Args>
+    ? ComponentNestedPath<T, Id, Args>
+    : string;
 
 export type GetComponentSchemaTypes<Schema = unknown> =
   Schema extends ComponentSchema<infer Id, infer Args>
@@ -112,7 +129,6 @@ export type GetComponentSchemaTypes<Schema = unknown> =
         options: ComponentOptions;
         error: unknown;
         componentId: ComponentId;
-        nestedPath: null;
       };
 
 export type ComponentProps<Id extends ComponentId, Args> = {

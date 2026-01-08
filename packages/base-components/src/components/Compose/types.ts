@@ -1,6 +1,7 @@
 import {
   ComponentEntry,
   ComponentSchema,
+  ComponentSchemaNestedPath,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
 
@@ -20,10 +21,6 @@ export type ComposeOptionsEntry<T extends ComponentSchema = ComponentSchema> =
 
 export type ComposeEntry<Args> = BaseComposeEntry<ResolveComposeInput<Args>>;
 
-export type ConcatValuePath<T extends string, Suffix> = Suffix extends string
-  ? T | `${T}.${Suffix}`
-  : T;
-
 type BaseComposeEntry<Input extends ComposeInput> = {
   options: {
     [K in keyof Input]: ComposeOptionsEntry<Input[K]>;
@@ -41,10 +38,19 @@ type BaseComposeEntry<Input extends ComposeInput> = {
   resolvedData: ComposeMap<Input, 'resolvedData'>;
   clientData: ComposeMap<Input, 'clientData'>;
   storageData: ComposeMap<Input, 'storageData'>;
-  nestedPath: {
-    [K in keyof Input]: ConcatValuePath<
+};
+
+export type NestedPathDot<T extends string, Suffix> = string extends Suffix
+  ? T
+  : Suffix extends string
+    ? T | `${T}.${Suffix}`
+    : T;
+
+type NestedPath<T, Input extends ComposeInput> = {
+  path: {
+    [K in keyof Input]: NestedPathDot<
       K & string,
-      GetComponentSchemaTypes<Input[K]>['nestedPath']
+      ComponentSchemaNestedPath<T, Input[K]>
     >;
   }[keyof Input];
 };
@@ -52,5 +58,9 @@ type BaseComposeEntry<Input extends ComposeInput> = {
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::compose': ComponentEntry<ComposeEntry<_Args>>;
+  }
+
+  interface ComponentNestedPathMap<T, Args> {
+    'base::compose': NestedPath<T, ResolveComposeInput<Args>>;
   }
 }

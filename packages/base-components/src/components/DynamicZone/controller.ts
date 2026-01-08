@@ -54,7 +54,7 @@ export default component({
             componentId,
             item.data,
             baseOptions,
-            suffix as unknown as null,
+            suffix,
             apply
           );
         }
