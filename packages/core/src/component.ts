@@ -346,17 +346,13 @@ export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
   renderer: ComponentRenderer<Id>;
 };
 
-type ComponentAccessorInput<Id extends ComponentId, Args> = {
-  options: ComponentOptionsById<Id, Args>;
-};
-
 type ComponentAccessor<Id extends ComponentId> =
   IsAllOptional<ComponentOptionsById<Id>> extends true
     ? <Args>(
-        input?: ComponentAccessorInput<Id, Args>
+        input?: ComponentOptionsById<Id, Args>
       ) => ComponentSchema<Id, Args>
     : <Args>(
-        input: ComponentAccessorInput<Id, Args>
+        input: ComponentOptionsById<Id, Args>
       ) => ComponentSchema<Id, Args>;
 
 /*@__NO_SIDE_EFFECTS__*/
@@ -369,8 +365,8 @@ export function component<Id extends ComponentId>(
 export function componentAccessor<Id extends string>(
   controller: ComponentController<Id>
 ): ComponentAccessor<Id> {
-  return (input) => {
-    return { componentId: controller.meta.id, options: input?.options ?? {} };
+  return (options = {}) => {
+    return { componentId: controller.meta.id, options };
   };
 }
 

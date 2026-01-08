@@ -58,6 +58,8 @@ export const renderer: ComponentRenderer<Id> = ({
     [api, options]
   );
 
+  console.log(error);
+
   return (
     <div className={styles.root}>
       {groups.map((group, i) => (

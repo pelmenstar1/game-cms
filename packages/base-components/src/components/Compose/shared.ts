@@ -48,6 +48,9 @@ export const validator: ComponentDataValidator<Id> = <Args>(
   );
 
   if (entries.some(([, value]) => value !== undefined)) {
-    return Object.fromEntries(entries) as ComponentErrorById<Id, Args>;
+    return { properties: Object.fromEntries(entries) } as ComponentErrorById<
+      'base::compose',
+      Args
+    >;
   }
 };

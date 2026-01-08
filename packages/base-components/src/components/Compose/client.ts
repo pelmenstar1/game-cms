@@ -52,7 +52,7 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
     const error = result.map(([key, item]) => [key, item.error] as const);
 
     const resultOrError = error.some(([, error]) => error !== undefined)
-      ? { error: Object.fromEntries(error) }
+      ? { error: { properties: Object.fromEntries(error) } }
       : {
           result: Object.fromEntries(
             result.map(([key, item]) => [key, item.result] as const)
