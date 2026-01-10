@@ -110,9 +110,9 @@ export default service({
     return users().findOne(filter);
   },
   list: async (options: PagingOptions) => {
-    const result = await getPage<ServerUser, NoPasswordUser>(users(), options, [
-      { $projection: { passwordHash: 0 } },
-    ]);
+    const result = await getPage<ServerUser, NoPasswordUser>(users(), options, {
+      post: [{ $projection: { passwordHash: 0 } }],
+    });
 
     return result;
   },

@@ -17,6 +17,7 @@ export interface ClientUploadFilePayload {
   content: Blob;
   filename: string;
   parent?: string;
+  hidden?: boolean;
 }
 
 export const getStorageItemInfo = (
@@ -62,14 +63,14 @@ export const uploadFile = (
     url: '/storage/file',
     method: 'POST',
     body: (init) => {
-      const { content, filename, parent } = payload;
+      const { content, filename, parent, hidden } = payload;
 
       const formData = new FormData();
       formData.set('file', content, filename);
 
-      if (parent !== undefined) {
-        const fileMeta: ToClientType<UploadFileMeta> = { parent };
+      const fileMeta: ToClientType<UploadFileMeta> = { parent, hidden };
 
+      if (parent !== undefined || hidden !== undefined) {
         formData.set('meta', JSON.stringify(fileMeta));
       }
 

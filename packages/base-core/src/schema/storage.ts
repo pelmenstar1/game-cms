@@ -16,6 +16,7 @@ export const storageFileItem = z.object({
   mime: z.string(),
   url: z.string(),
   parent: objectId.optional(),
+  hidden: z.boolean().optional(),
 });
 
 export const storageFolderItem = z.object({
@@ -59,6 +60,7 @@ export const createFolderResponse = z.object({
 
 export const uploadFileMeta = z.object({
   parent: stringObjectId.optional(),
+  hidden: z.boolean().optional(),
 });
 
 export const uploadFileResponse = z.object({
@@ -68,6 +70,7 @@ export const uploadFileResponse = z.object({
 
 export const listStorageItemsOptions = z.object({
   ...pagingOptionsSchema.shape,
+  includeHidden: z.boolean().optional(),
   parent: stringObjectId.optional(),
 });
 

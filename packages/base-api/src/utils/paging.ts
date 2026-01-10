@@ -10,12 +10,12 @@ type MongoPageData<T> = {
 export async function getPage<T extends Document, R = T>(
   collection: Collection<T>,
   options: PagingOptions,
-  operators: Document[] = []
+  operators: { pre?: Document[]; post?: Document[] } = {}
 ): Promise<PageData<WithId<R>>> {
   const result = await collection
     .aggregate<
       MongoPageData<R>
-    >([pagingAggregatePipeline(options), ...operators])
+    >([...(operators.pre ?? []), pagingAggregatePipeline(options), ...(operators.post ?? [])])
     .next();
 
   if (result === null) {

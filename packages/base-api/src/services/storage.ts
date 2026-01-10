@@ -9,7 +9,7 @@ import {
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
-import type { ClientSession, ObjectId, WithId } from 'mongodb';
+import type { ClientSession, Document, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
@@ -41,7 +41,7 @@ async function hydrateItem(
     };
   }
 
-  const { _id, mime, name, url, parent } = item;
+  const { _id, mime, name, url, parent, hidden } = item;
   const { size } = await storageProvider().protocol.getMeta(item.url);
 
   return {
@@ -52,6 +52,7 @@ async function hydrateItem(
     url,
     size,
     parent,
+    hidden: hidden ?? false,
   };
 }
 
@@ -59,7 +60,7 @@ export default service({
   id: 'base::storage',
   collection,
   uploadFile: async (payload: UploadFilePayload) => {
-    const { mime, name, parent } = payload;
+    const { mime, name, parent, hidden } = payload;
     const { url } = await storageProvider().protocol.upload(payload);
 
     const { insertedId } = await collection().insertOne({
@@ -68,6 +69,7 @@ export default service({
       mime,
       name,
       parent,
+      hidden,
     });
 
     return { id: insertedId, url };
@@ -101,11 +103,21 @@ export default service({
   },
   list: async (options: ListStorageItemsOptions) => {
     const { parent } = options;
-    const { items, meta } = await getPage(
-      collection(),
-      options,
-      parent ? [{ $match: { parent } }] : []
-    );
+    let matchOperator: Document | undefined;
+
+    if (parent) {
+      (matchOperator ??= {}).parent = parent;
+    }
+
+    if (!options.includeHidden) {
+      (matchOperator ??= {}).hidden = {
+        $ne: true,
+      };
+    }
+
+    const { items, meta } = await getPage(collection(), options, {
+      pre: matchOperator && [{ $match: matchOperator }],
+    });
 
     return {
       items: await Promise.all(items.map((item) => hydrateItem(item))),

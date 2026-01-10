@@ -113,12 +113,14 @@ async function generateSpritesheet(
     name: 'spritesheet.png',
     mime: 'image/png',
     content: spriteImage,
+    hidden: true,
   });
 
   const { id: atlasId } = await storageService.uploadFile({
     name: 'spritesheet.json',
     mime: 'application/json',
     content: JSON.stringify(atlas),
+    hidden: true,
   });
 
   return { atlasId, imageId };

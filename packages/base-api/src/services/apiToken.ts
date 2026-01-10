@@ -47,14 +47,16 @@ export default service({
   list: async (
     options: PagingOptions
   ): Promise<PageData<OpaqueApiTokenWithId>> => {
-    const { items, meta } = await getPage(collection(), options, [
-      {
-        $project: {
-          items: opaqueProjectionWithId,
-          meta: 1,
+    const { items, meta } = await getPage(collection(), options, {
+      post: [
+        {
+          $project: {
+            items: opaqueProjectionWithId,
+            meta: 1,
+          },
         },
-      },
-    ]);
+      ],
+    });
 
     return {
       items: items.map(({ _id, ...rest }) => ({ id: _id, ...rest })),
