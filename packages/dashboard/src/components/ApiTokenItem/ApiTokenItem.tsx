@@ -11,11 +11,8 @@ export interface ApiTokenItemProps {
 
 export function ApiTokenItem({ className, info }: ApiTokenItemProps) {
   return (
-    <Link
-      to={`/settings/api-tokens/${info.id}`}
-      className={classNames(styles.root, className)}
-    >
-      {info.name}
-    </Link>
+    <li className={classNames(styles.root, className)}>
+      <Link to={`/settings/api-tokens/${info.id}`}>{info.name}</Link>
+    </li>
   );
 }

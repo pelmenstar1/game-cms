@@ -1,13 +1,13 @@
 import { ApiError } from '@game-cms/base-core';
 import { type ApiRouteContextConfig } from '@game-cms/core';
 import { cms } from '@game-cms/global';
-import type { FastifyPluginCallback, RouteGenericInterface } from 'fastify';
+import type { FastifyInstance, RouteGenericInterface } from 'fastify';
 
 import { SESSION_JWT_COOKIE_NAME } from '../utils/authCookie.js';
 import { getRequestJwt, type JwtSourceOptions } from '../utils/jwtSource.js';
 import { hydrateRouteId } from '../utils/routeId.js';
 
-export const auth: FastifyPluginCallback = (instance) => {
+export function initAuth(instance: FastifyInstance) {
   instance.addHook<RouteGenericInterface, ApiRouteContextConfig>(
     'preHandler',
     async (req) => {
@@ -30,4 +30,4 @@ export const auth: FastifyPluginCallback = (instance) => {
       }
     }
   );
-};
+}

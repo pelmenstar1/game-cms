@@ -27,13 +27,13 @@ export async function startServer(options: DashboardPluginOptions = {}) {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
+  await initPlugins(app);
+
   for (const route of routes) {
     const url = route.config?.exact ? route.url : `/api${route.url}`;
 
     app.route({ ...route, url });
   }
-
-  await initPlugins(app);
 
   await Promise.all(services.map((service) => service.init?.()));
 

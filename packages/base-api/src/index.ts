@@ -4,7 +4,7 @@ import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
 import { combineAsyncFactories } from '@game-cms/shared';
 
 import { errorStatuses } from './errors.js';
-import { auth } from './plugins/auth.js';
+import { initAuth } from './plugins/auth.js';
 import { scanDirectorySource } from './scan.js';
 import * as services from './services/index.js';
 import { errorHandler } from './utils/errorHandler.js';
@@ -24,7 +24,7 @@ export const apiConfig: PluginApiConfig = {
   },
   fastify: {
     setup: (app) => {
-      app.register(auth);
+      initAuth(app);
       app.setErrorHandler(errorHandler());
     },
   },
