@@ -25,7 +25,7 @@ function splitEntitySchemaComponentsToGroups<Args>(
   const groups: unknown[] = [];
 
   for (const [key, schema] of Object.entries<ComposeOptionsEntry>(options)) {
-    const config = api.getConfig(schema.componentId);
+    const config = api.getMeta(schema.componentId);
     const compact = config?.ui?.compact ?? false;
 
     if (compact) {

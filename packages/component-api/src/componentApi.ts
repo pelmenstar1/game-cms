@@ -1,6 +1,6 @@
 import type {
-  ComponentControllerConfig,
   ComponentId,
+  ComponentMeta,
   ComponentRenderer,
   ForeignComponentClientDataResolverContext,
 } from '@game-cms/core';
@@ -15,7 +15,7 @@ export type ComponentApi = {
 
   getComponent: <Id extends ComponentId>(id: Id) => ComponentRenderer<Id>;
 
-  getConfig: (id: ComponentId) => ComponentControllerConfig | undefined;
+  getMeta: (id: ComponentId) => ComponentMeta | undefined;
 
   clientTransformerContext: ForeignComponentClientDataResolverContext;
 };

@@ -20,8 +20,8 @@ import React from 'react';
 
 import {
   getComponentClientTransformer,
-  getComponentConfig,
   getComponentDefaultData,
+  getComponentMeta,
   getComponentValidator,
   importComponent,
 } from '@/connector/component';
@@ -110,7 +110,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
       getDefaultData: clientTransformerContext.getDefaultData,
       getComponent: <Id extends ComponentId>(id: Id) =>
         componentCache.get(id, null) as unknown as ComponentRenderer<Id>,
-      getConfig: getComponentConfig,
+      getMeta: getComponentMeta,
       clientTransformerContext,
     }),
     [clientTransformerContext]

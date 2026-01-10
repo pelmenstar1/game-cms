@@ -1,3 +1,5 @@
+import { pathToFileURL } from 'node:url';
+
 import type {
   ComponentClientChunkEntry,
   ComponentClientChunkMap,
@@ -5,15 +7,11 @@ import type {
 
 type EmitStep = (info: ComponentClientChunkMap) => string;
 
-function normalizeFilePath(value: string) {
-  return `file://${value.replaceAll('\\', '/')}`;
-}
-
 function sanitizeId(componentId: string) {
   return componentId.replaceAll(/[^\w\d]/g, '_');
 }
 
-function sharedImportName(componentId: string) {
+function coreImportName(componentId: string) {
   return `${sanitizeId(componentId)}_shared`;
 }
 
@@ -31,24 +29,24 @@ function emitImportBase(
         const filePath = entry.paths[filePathKey];
 
         if (filePath) {
-          return `import * as ${nameFactory(name)} from '${normalizeFilePath(filePath)}';`;
+          return `import * as ${nameFactory(name)} from '${pathToFileURL(filePath)}';`;
         }
       })
       .filter((value) => value !== undefined)
       .join('');
 }
 
-const sharedImports = emitImportBase('shared', sharedImportName);
+const coreImports = emitImportBase('core', coreImportName);
 const clientImports = emitImportBase('client', clientImportName);
 
 const componentInfoMap: EmitStep = (info) => {
   const mapEntries = Object.entries(info)
     .map(
-      ([componentId, entry]) =>
+      ([componentId, { paths }]) =>
         `'${componentId}': {
-  renderer: () => import('${normalizeFilePath(entry.paths.renderer)}'),
-  shared: ${sharedImportName(componentId)},
-  ${entry.paths.client !== undefined ? `client: ${clientImportName(componentId)}` : ''}
+  renderer: () => import('component-renderer:${componentId}'),
+  core: ${coreImportName(componentId)},
+  ${paths.client !== undefined ? `client: ${clientImportName(componentId)}` : ''}
 }`
     )
     .join(',');
@@ -56,7 +54,7 @@ const componentInfoMap: EmitStep = (info) => {
   return `const map = {${mapEntries}}; export default map;`;
 };
 
-const steps = [sharedImports, clientImports, componentInfoMap];
+const steps = [coreImports, clientImports, componentInfoMap];
 
 export function emitComponentConnector(info: ComponentClientChunkMap) {
   return steps.map((step) => step(info)).join('');

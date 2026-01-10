@@ -150,12 +150,6 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = <
   props: ComponentProps<Id, Args>
 ) => ReactNode;
 
-export type ComponentControllerConfig = {
-  ui?: {
-    compact?: boolean;
-  };
-};
-
 export type ForeignComponentValidationContext = {
   validate: <Id extends ComponentId, Args>(
     id: Id,
@@ -305,22 +299,28 @@ export type ComponentPathWalker<Id extends ComponentId> = <Args>(
   context: ForeignComponentPathWalkerContext
 ) => void;
 
-export type ComponentMeta<Id extends ComponentId = ComponentId> = {
-  id: Id;
-  config?: ComponentControllerConfig;
+export type ComponentMeta = {
+  ui?: {
+    compact?: boolean;
+  };
 };
 
-export type RequiredIfExists<
+export type ComponentCore<Id extends ComponentId = ComponentId> = {
+  id: Id;
+  meta?: ComponentMeta;
+  defaultRawData: ComponentDefaultDataHandler<Id>;
+  validator: ComponentDataValidator<Id>;
+};
+
+interface BaseComponentController<Id extends ComponentId = ComponentId> {
+  core: ComponentCore<Id>;
+}
+
+type RequiredIfExists<
   T,
   Id extends ComponentId,
   K extends PropertyKey,
 > = RequiredIf<T, AnyKeyInObject<ComponentTypeMap[Id], K>>;
-
-interface BaseComponentController<Id extends ComponentId = ComponentId> {
-  meta: ComponentMeta<Id>;
-  defaultRawData: ComponentDefaultDataHandler<Id>;
-  validator: ComponentDataValidator<Id>;
-}
 
 export type ComponentController<Id extends ComponentId = ComponentId> =
   BaseComponentController<Id> &
@@ -358,20 +358,22 @@ type ComponentAccessor<Id extends ComponentId> =
       ) => ComponentSchema<Id, Args>;
 
 /*@__NO_SIDE_EFFECTS__*/
-export function component<Id extends ComponentId>(
+export function componentController<Id extends ComponentId>(
   value: ComponentController<Id>
 ) {
   return value;
 }
 
+/*@__NO_SIDE_EFFECTS__*/
 export function componentAccessor<Id extends string>(
   controller: ComponentController<Id>
 ): ComponentAccessor<Id> {
   return (options = {}) => {
-    return { componentId: controller.meta.id, options };
+    return { componentId: controller.core.id, options };
   };
 }
 
-export function componentMeta<Id extends string>(value: ComponentMeta<Id>) {
+/*@__NO_SIDE_EFFECTS__*/
+export function componentCore<Id extends string>(value: ComponentCore<Id>) {
   return value;
 }

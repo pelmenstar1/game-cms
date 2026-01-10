@@ -2,14 +2,12 @@ import {
   ConditionalValueInput,
   resolveConditionalData,
 } from '@game-cms/conditional';
-import { component } from '@game-cms/core';
+import { componentController } from '@game-cms/core';
 
-import { defaultRawData, meta, validator } from './shared.js';
+import core from './core.js';
 
-export default component({
-  meta,
-  defaultRawData,
-  validator,
+export default componentController({
+  core,
   resolver: (raw, _options, _context, args) => {
     return resolveConditionalData(raw, args as ConditionalValueInput);
   },

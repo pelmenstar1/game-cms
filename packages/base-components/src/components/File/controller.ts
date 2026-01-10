@@ -1,14 +1,12 @@
 import { StorageItemType } from '@game-cms/base-core';
-import { component } from '@game-cms/core';
+import { componentController } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
-import { defaultRawData, meta, validator } from './shared.js';
+import core from './core.js';
 
-export default component({
-  meta,
-  validator,
-  defaultRawData,
+export default componentController({
+  core,
   storageTransformer: {
     toStorage: (data) => data.map((item) => new ObjectId(item)),
     fromStorage: async (data) => {

@@ -1,8 +1,8 @@
-import type { ComponentMeta } from '@game-cms/core';
+import type { ComponentCore } from '@game-cms/core';
 import { importFile } from '@game-cms/shared/io';
 
-export async function getComponentIdFromSharedFile(filePath: string) {
-  const module = await importFile<{ meta: ComponentMeta }>(filePath);
+export async function getComponentIdFromCoreFile(filePath: string) {
+  const module = await importFile<{ default: ComponentCore }>(filePath);
 
-  return module.meta.id;
+  return module.default.id;
 }

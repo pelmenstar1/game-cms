@@ -70,7 +70,7 @@ export async function getComponentEnv(
   );
 
   const controllerMap = Object.fromEntries(
-    controllers.flat().map((controller) => [controller.meta.id, controller])
+    controllers.flat().map((controller) => [controller.core.id, controller])
   ) as ComponentControllerMap;
 
   return {

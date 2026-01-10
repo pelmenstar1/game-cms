@@ -1,16 +1,14 @@
-import { component } from '@game-cms/core';
+import { componentController } from '@game-cms/core';
 
 import {
   ATLAS_OPTIONS,
   IMAGES_OPTIONS,
   SKELETON_OPTIONS,
 } from './constants.js';
-import { defaultRawData, meta, validator } from './shared.js';
+import core from './core.js';
 
-export default component({
-  meta,
-  validator,
-  defaultRawData,
+export default componentController({
+  core,
   storageTransformer: {
     toStorage: async (data, _, context) => {
       const [atlas, images, skeleton] = await Promise.all(

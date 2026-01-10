@@ -27,7 +27,7 @@ function getController<T extends ComponentId>(id: T) {
 
 const foreignValidationContext: ForeignComponentValidationContext = {
   validate: (id, data, options) =>
-    getController(id).validator(data, options, foreignValidationContext),
+    getController(id).core.validator(data, options, foreignValidationContext),
 };
 
 const foreignResolverContext: ForeignComponentDataResolverContext = {

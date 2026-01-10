@@ -3,7 +3,7 @@ import type { Plugin } from 'vite';
 import { emitComponentConnector } from './connector.js';
 import { type ComponentClientChunkMap, gatherComponents } from './gather.js';
 
-const COMPONENT_PROTOCOL = 'component:';
+const COMPONENT_RENDERER_PROTOCOL = 'component-renderer:';
 const CONNECTOR_ID = 'virtual:dashboard/componentConnectorData';
 
 export function dashboardComponentsPlugin(): Plugin {
@@ -19,8 +19,8 @@ export function dashboardComponentsPlugin(): Plugin {
         return CONNECTOR_ID;
       }
 
-      if (source.startsWith(COMPONENT_PROTOCOL)) {
-        const componentId = source.slice(COMPONENT_PROTOCOL.length);
+      if (source.startsWith(COMPONENT_RENDERER_PROTOCOL)) {
+        const componentId = source.slice(COMPONENT_RENDERER_PROTOCOL.length);
         const entry = components[componentId];
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

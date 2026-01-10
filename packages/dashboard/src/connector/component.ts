@@ -1,11 +1,6 @@
 import type {
-  ComponentClientDataTransformer,
-  ComponentClientModule,
-  ComponentControllerConfig,
-  ComponentDataValidator,
   ComponentId,
   ComponentOptionsById,
-  ComponentRawDataById,
   ForeignComponentDefaultDataContext,
 } from '@game-cms/core';
 import data from 'virtual:dashboard/componentConnectorData';
@@ -14,30 +9,22 @@ export function getComponentDefaultData<Id extends ComponentId>(
   id: Id,
   options: ComponentOptionsById<Id>,
   context: ForeignComponentDefaultDataContext
-): ComponentRawDataById<Id> {
-  return data[id].shared.defaultRawData(options, context);
+) {
+  return data[id].core.defaultRawData(options, context);
 }
 
-export function getComponentValidator<Id extends ComponentId>(
-  id: Id
-): ComponentDataValidator<Id> {
-  return data[id].shared.validator;
+export function getComponentValidator<Id extends ComponentId>(id: Id) {
+  return data[id].core.validator;
 }
 
-export function getComponentClientTransformer<Id extends ComponentId>(
-  id: Id
-): ComponentClientDataTransformer<Id> | undefined {
+export function getComponentClientTransformer<Id extends ComponentId>(id: Id) {
   return data[id].client?.clientTransformer;
 }
 
-export function getComponentConfig(
-  id: ComponentId
-): ComponentControllerConfig | undefined {
-  return data[id].shared.meta.config;
+export function getComponentMeta(id: ComponentId) {
+  return data[id].core.meta;
 }
 
-export function importComponent<Id extends ComponentId>(
-  id: Id
-): Promise<ComponentClientModule<Id>> {
+export function importComponent<Id extends ComponentId>(id: Id) {
   return data[id].renderer();
 }

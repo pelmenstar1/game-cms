@@ -5,20 +5,18 @@ import {
   ComponentResolvedDataById,
   ForeignComponentDataResolverContext,
 } from '@game-cms/core';
-import { component } from '@game-cms/core';
+import { componentController } from '@game-cms/core';
 
-import { defaultRawData, meta, validator } from './shared.js';
+import core from './core.js';
 
-type Id = (typeof meta)['id'];
+type Id = (typeof core)['id'];
 
 function invalidPath(message: string): never {
   throw new Error(`Invalid path: ${message}`);
 }
 
-export default component({
-  meta,
-  validator,
-  defaultRawData,
+export default componentController({
+  core,
   resolver: <Args>(
     raw: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,

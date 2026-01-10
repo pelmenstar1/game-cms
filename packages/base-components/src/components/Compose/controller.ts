@@ -1,12 +1,10 @@
-import { component } from '@game-cms/core';
+import { componentController } from '@game-cms/core';
 import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
-import { defaultRawData, meta, validator } from './shared.js';
+import core from './core.js';
 
-export default component({
-  meta,
-  validator,
-  defaultRawData,
+export default componentController({
+  core,
   resolver: (raw, options, context, args) => {
     return mapObject(raw, (value, key) => {
       const { componentId, options: baseOptions } = options[key];

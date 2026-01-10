@@ -1,11 +1,9 @@
-import { component } from '@game-cms/core';
+import { componentController } from '@game-cms/core';
 
-import { defaultRawData, meta, validator } from './shared.js';
+import core from './core.js';
 
-export default component({
-  meta,
-  defaultRawData,
-  validator,
+export default componentController({
+  core,
   storageTransformer: {
     fromStorage: (data) => data.toISOString(),
     toStorage: (data) => {

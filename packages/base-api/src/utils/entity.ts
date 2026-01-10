@@ -14,7 +14,7 @@ function getValidatorForComponent<Id extends ComponentId, Args>(
   const { foreignValidationContext, getController } =
     cms().service('base::component');
 
-  const { validator } = getController(component.componentId);
+  const { validator } = getController(component.componentId).core;
 
   return z.custom<ComponentRawInDataById<Id, Args>>((data) => {
     const error = validator(data, component.options, foreignValidationContext);

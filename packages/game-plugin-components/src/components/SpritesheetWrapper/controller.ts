@@ -1,5 +1,5 @@
 import {
-  component,
+  componentController,
   type ComponentOptionsById,
   type ComponentRawInDataById,
   type ForeignComponentStorageDataResolverContext,
@@ -14,7 +14,7 @@ import {
 } from '@game-cms/spritesheet';
 import { ObjectId } from 'mongodb';
 
-import { defaultRawData, meta, validator } from './shared.js';
+import core from './core.js';
 import type {
   SpritesheetBundleStorageMap,
   SpritesheetStorageEntry,
@@ -134,10 +134,8 @@ async function generateSpritesheets<Args>(
   return asyncMapObject(bundles, (images) => generateSpritesheet(images));
 }
 
-export default component({
-  meta,
-  defaultRawData,
-  validator,
+export default componentController({
+  core,
   resolver: (data, options, context, args) => {
     const { componentId, baseOptions } = options;
 
