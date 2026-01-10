@@ -1,8 +1,8 @@
 import childProcess from 'node:child_process';
+import net, { type AddressInfo } from 'node:net';
 
 import { setCmsController } from '@game-cms/global';
 import { initEnvFromConfigs } from '@game-cms/ignition';
-import { delay } from '@game-cms/shared';
 
 import { createController } from '../../services/controller.js';
 import {
@@ -10,27 +10,6 @@ import {
   writeDashboardMeta,
 } from '../../services/dashboard/index.js';
 import { startServer } from '../../services/server.js';
-
-async function isDevServerUp() {
-  try {
-    await fetch('http://localhost:5173', { method: 'HEAD' });
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function waitUntilDevServerStarts() {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  while (true) {
-    if (await isDevServerUp()) {
-      return;
-    }
-
-    await delay(500);
-  }
-}
 
 function runDashboardDev(dashboardPath: string) {
   const p = childProcess.spawn('npm run dev', {
@@ -42,17 +21,53 @@ function runDashboardDev(dashboardPath: string) {
   p.stderr.pipe(process.stderr);
 }
 
+async function startMessageServer() {
+  const server = net.createServer();
+
+  const port = await new Promise<number>((resolve, reject) => {
+    server.once('error', reject);
+
+    server.listen(0, () => {
+      resolve((server.address() as AddressInfo).port);
+    });
+  });
+
+  return {
+    port,
+    waitUntilViteUp: () =>
+      new Promise<void>((resolve) => {
+        server.on('connection', (socket) => {
+          socket.on('data', (data) => {
+            if (data instanceof Buffer) {
+              data = data.toString('utf8');
+            }
+
+            if (data === 'VITE_UP') {
+              resolve(undefined);
+            }
+          });
+        });
+      }),
+    [Symbol.dispose]: () => {
+      server.close();
+    },
+  };
+}
+
 export default async function dev() {
   const dashboardPath = getDashboardPackagePath();
 
-  await writeDashboardMeta(dashboardPath);
-  await initEnvFromConfigs();
+  {
+    using messageServer = await startMessageServer();
 
-  setCmsController(createController());
+    await writeDashboardMeta(dashboardPath, messageServer.port);
+    await initEnvFromConfigs();
 
-  runDashboardDev(dashboardPath);
+    setCmsController(createController());
+    runDashboardDev(dashboardPath);
 
-  await waitUntilDevServerStarts();
+    await messageServer.waitUntilViteUp();
+  }
 
-  void startServer({ dashboard: 'http://localhost:5173' });
+  await startServer({ dashboard: 'http://localhost:5173' });
 }
