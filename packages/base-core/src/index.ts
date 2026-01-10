@@ -4,6 +4,7 @@ export * from './config.js';
 export * from './database.js';
 export * from './entity.js';
 export * from './env.js';
+export * from './i18n.js';
 export * from './storage.js';
 export * from './storageProvider.js';
 export * from './user.js';

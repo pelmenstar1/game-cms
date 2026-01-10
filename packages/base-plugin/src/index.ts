@@ -9,6 +9,7 @@ import { scanEntitySchemas } from './entity/scan.js';
 import { dashboardEntityPlugin } from './entity/vitePlugin.js';
 
 export const basePlugin: Plugin<OwnEnvironment> = {
+  id: 'base',
   api: apiConfig,
   services: serviceSource,
   components: () => {

@@ -2,6 +2,7 @@ import { useComponentApi } from '@game-cms/component-api';
 import { ComponentRenderer } from '@game-cms/core';
 import { IconButton, PlusIcon } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ComponentList } from '../../micro/ComponentList/ComponentList.js';
 import styles from './renderer.module.scss';
@@ -12,6 +13,10 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
   error,
   onDataChanged,
 }) => {
+  const { t } = useTranslation('base', {
+    keyPrefix: 'components.Repeatable',
+  });
+
   const api = useComponentApi();
 
   const items = useMemo(() => {
@@ -56,7 +61,11 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
         onItemsChanged={onItemsChanged}
       />
 
-      <IconButton className={styles.add} title="Add element" onClick={onAdd}>
+      <IconButton
+        className={styles.add}
+        title={t('addElement')}
+        onClick={onAdd}
+      >
         <PlusIcon />
       </IconButton>
     </div>

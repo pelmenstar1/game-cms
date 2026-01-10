@@ -2,6 +2,7 @@ import { useComponentApi } from '@game-cms/component-api';
 import { ComponentClientDataById, ComponentProps } from '@game-cms/core';
 import { removeIndex } from '@game-cms/shared/collections';
 import { DraggableList, IconButton, PlusIcon, Typography } from '@game-cms/ui';
+import { useTranslation } from 'react-i18next';
 
 import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
 import styles from './renderer.module.scss';
@@ -15,6 +16,10 @@ export const renderer = <Args,>({
   onDataChanged,
 }: ComponentProps<Id, Args>) => {
   type ItemData = ComponentClientDataById<Id, Args>['default'];
+
+  const { t } = useTranslation('base', {
+    keyPrefix: 'components.Alternative',
+  });
 
   const api = useComponentApi();
 
@@ -58,7 +63,7 @@ export const renderer = <Args,>({
     <div className={styles['root']}>
       <div className={styles['default-choice']}>
         <Typography className={styles['default-choice-label']}>
-          Default
+          {t('default')}
         </Typography>
 
         <BaseComponent
@@ -128,7 +133,7 @@ export const renderer = <Args,>({
 
       <IconButton
         className={styles['add-alternative-button']}
-        title="Add alternative"
+        title={t('addItem')}
         onClick={onAddItem}
       >
         <PlusIcon />

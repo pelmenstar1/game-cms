@@ -6,6 +6,7 @@ import {
 } from '@game-cms/core';
 import { classNames, Typography } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ComponentList } from '../../micro/ComponentList/index.js';
 import { DynamicZonePalette } from '../../micro/DynamicZonePalette/index.js';
@@ -24,14 +25,13 @@ export const renderer = <Args,>({
 
   const api = useComponentApi();
 
+  const { t } = useTranslation('base', {
+    keyPrefix: 'components.DynamicZone',
+  });
+
   const canAddItems = maxItems === undefined || data.length < maxItems;
 
-  const errorText =
-    error?.ownError === 'TOO_FEW_ITEMS'
-      ? 'Too few items'
-      : error?.ownError === 'TOO_MANY_ITEMS'
-        ? 'Too many items'
-        : '';
+  const errorText = error?.ownError ? t(`errors.${error.ownError}`) : '';
 
   const items = useMemo(() => {
     return data.map((itemData, index) => {

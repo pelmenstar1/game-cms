@@ -7,6 +7,7 @@ import { filterOutNullable } from '@game-cms/shared/collections';
 import type { PluginOption } from 'vite';
 
 import { dashboardComponentsPlugin } from '../components/plugin.js';
+import { i18nPlugin } from '../i18n/plugin.js';
 
 export async function ignitePlugin(): Promise<PluginOption> {
   const meta = JSON.parse(
@@ -19,5 +20,5 @@ export async function ignitePlugin(): Promise<PluginOption> {
     env().config.plugins.flatMap((plugin) => plugin.dashboard?.plugins)
   );
 
-  return [dashboardComponentsPlugin(), ...plugins];
+  return [dashboardComponentsPlugin(), i18nPlugin(), ...plugins];
 }

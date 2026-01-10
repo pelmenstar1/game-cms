@@ -1,0 +1,42 @@
+{
+  "components": {
+    "Text": {
+      "errors": {
+        "TEXT_TOO_LONG": "Text too long",
+        "TEXT_TOO_SHORT": "Text too short",
+        "INVALID_TYPE": ""
+      }
+    },
+    "File": {
+      "addFile": "Add file",
+      "errors": {
+        "TOO_FEW_ITEMS": "Too few files",
+        "TOO_MANY_ITEMS": "Too many files",
+        "INVALID_TYPE": ""
+      }
+    },
+    "Repeatable": {
+      "addElement": "Add element"
+    },
+    "Alternative": {
+      "addItem": "Add alternative",
+      "default": "Default"
+    },
+    "DynamicZone": {
+      "errors": {
+        "TOO_FEW_ITEMS": "Too few items",
+        "TOO_MANY_ITEMS": "Too many items",
+        "INVALID_TYPE": ""
+      }
+    },
+    "Number": {
+      "errors": {
+        "TOO_SMALL": "Min. {{min}}",
+        "TOO_LARGE": "Max. {{max}}",
+        "EXPECTED_INTEGER": "Expected integer",
+        "NAN": "Invalid format",
+        "INVALID_TYPE": ""
+      }
+    }
+  }
+}

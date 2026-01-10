@@ -1,5 +1,6 @@
 import '@game-cms/ui/theme/global';
 import '../theme/global.scss';
+import '@/i18n';
 
 import {
   isRouteErrorResponse,

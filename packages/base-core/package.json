@@ -10,6 +10,7 @@
   "dependencies": {
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
+    "i18next": "catalog:",
     "mongodb": "catalog:",
     "zod": "catalog:"
   },

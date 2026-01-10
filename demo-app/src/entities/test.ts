@@ -1,4 +1,4 @@
-import { entity, number } from 'game-cms';
+import { entity, number, text } from 'game-cms';
 
 export default entity({
   id: 'demo::test',
@@ -8,6 +8,9 @@ export default entity({
       integer: true,
       min: 1,
       max: 5,
+    }),
+    abc2: text({
+      minLength: 1,
     }),
   },
 });

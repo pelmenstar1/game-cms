@@ -32,3 +32,4 @@ catalog:
   vite-tsconfig-paths: 6.0.3
   vitest: 4.0.16
   zod: 4.2.1
+  i18next: ^25.7.4

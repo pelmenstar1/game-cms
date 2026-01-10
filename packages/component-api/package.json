@@ -8,6 +8,7 @@
     "react": "catalog:"
   },
   "devDependencies": {
+    "i18next": "catalog:",
     "typescript": "catalog:"
   },
   "exports": {

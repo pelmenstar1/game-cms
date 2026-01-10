@@ -59,8 +59,8 @@ export async function gatherComponents(): Promise<ComponentClientChunkMap> {
   const { components } = env();
 
   const result = await Promise.all(
-    components.distributions.map((distPath) =>
-      gatherComponentsForDistribution(distPath)
+    components.distributions.map(({ directoryPath }) =>
+      gatherComponentsForDistribution(directoryPath)
     )
   );
 

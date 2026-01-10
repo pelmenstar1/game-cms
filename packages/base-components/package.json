@@ -9,16 +9,18 @@
   },
   "dependencies": {
     "@game-cms/base-core": "workspace:*",
+    "@game-cms/client": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/component-api": "workspace:*",
     "@game-cms/conditional": "workspace:*",
-    "@game-cms/client": "workspace:*",
-    "@game-cms/shared": "workspace:*",
     "@game-cms/core": "workspace:*",
-    "@game-cms/ui": "workspace:*",
     "@game-cms/global": "workspace:*",
-    "zod": "catalog:",
-    "mongodb": "catalog:"
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/ui": "workspace:*",
+    "i18next": "catalog:",
+    "mongodb": "catalog:",
+    "react-i18next": "^16.5.1",
+    "zod": "catalog:"
   },
   "peerDependencies": {
     "react": "*",

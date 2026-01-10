@@ -9,8 +9,13 @@ export interface ApiEnvironment {
   routes: ApiRoute[];
 }
 
+export type ComponentDistributionInfo = {
+  pluginId: string;
+  directoryPath: string;
+};
+
 export type ComponentEnv = {
-  distributions: string[];
+  distributions: ComponentDistributionInfo[];
   controllers: ComponentControllerMap;
 };
 

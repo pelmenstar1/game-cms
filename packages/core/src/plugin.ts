@@ -48,6 +48,7 @@ export type PluginDashboardConfig = {
 };
 
 type BasePlugin = {
+  id: string;
   api?: PluginApiConfig;
 
   services?: ServiceSource;

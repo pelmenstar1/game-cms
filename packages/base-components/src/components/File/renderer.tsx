@@ -8,6 +8,7 @@ import {
   useModal,
 } from '@game-cms/ui';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { FileExplorerModal } from '../../micro/FileExplorerModal/index.js';
 import { FileList } from '../../micro/FileList/index.js';
@@ -20,6 +21,10 @@ export const renderer: ComponentRenderer<'base::file'> = ({
   error,
   onDataChanged,
 }) => {
+  const { t } = useTranslation('base', {
+    keyPrefix: 'components.File',
+  });
+
   const showModal = useModal();
 
   const onAddFile = useAsyncCallback(async () => {
@@ -39,12 +44,7 @@ export const renderer: ComponentRenderer<'base::file'> = ({
     [onDataChanged]
   );
 
-  const errorText =
-    error === 'TOO_FEW_ITEMS'
-      ? 'Too few files'
-      : error === 'TOO_MANY_ITEMS'
-        ? 'Too many items'
-        : '';
+  const errorText = error ? t(`errors.${error}`) : undefined;
 
   return (
     <div>
@@ -64,7 +64,7 @@ export const renderer: ComponentRenderer<'base::file'> = ({
           />
         ) : (
           <IconButton
-            title="Add file"
+            title={t('addFile')}
             onClick={onAddFile}
             className={styles['single-add-button']}
           >

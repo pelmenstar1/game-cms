@@ -7,26 +7,33 @@ import type {
   ComponentControllerMap,
   ValueSourceContext,
 } from '@game-cms/core';
-import type { ComponentEnv } from '@game-cms/global';
+import type { ComponentDistributionInfo, ComponentEnv } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { importFile } from '@game-cms/shared/io';
 
 export async function getAllComponentDistributions(
   context: ValueSourceContext
-) {
+): Promise<ComponentDistributionInfo[]> {
   const { plugins } = context.config;
 
   const result = await Promise.all(
-    plugins.map(
-      async ({ components }) =>
-        components && (await resolveAsyncMaybeFactory(components, context))
-    )
+    plugins.map(async ({ id, components }) => {
+      if (components) {
+        const { distributionPath } = await resolveAsyncMaybeFactory(
+          components,
+          context
+        );
+
+        return {
+          pluginId: id,
+          directoryPath: distributionPath,
+        };
+      }
+    })
   );
 
-  return filterOutNullable(result).map(
-    ({ distributionPath }) => distributionPath
-  );
+  return filterOutNullable(result);
 }
 
 async function getDistributionControllers(distPath: string) {
@@ -57,7 +64,9 @@ export async function getComponentEnv(
   const distributions = await getAllComponentDistributions(context);
 
   const controllers = await Promise.all(
-    distributions.map((distPath) => getDistributionControllers(distPath))
+    distributions.map(({ directoryPath }) =>
+      getDistributionControllers(directoryPath)
+    )
   );
 
   const controllerMap = Object.fromEntries(
