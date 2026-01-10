@@ -6,8 +6,6 @@ export const renderer: ComponentRenderer<'base::date'> = ({
   options,
   onDataChanged,
 }) => {
-  console.log(options);
-
   return (
     <DatePicker
       min={options.minDate}

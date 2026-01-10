@@ -29,7 +29,7 @@ function emitImportBase(
         const filePath = entry.paths[filePathKey];
 
         if (filePath) {
-          return `import * as ${nameFactory(name)} from '${pathToFileURL(filePath)}';`;
+          return `import ${nameFactory(name)} from '${pathToFileURL(filePath)}';`;
         }
       })
       .filter((value) => value !== undefined)
@@ -37,7 +37,10 @@ function emitImportBase(
 }
 
 const coreImports = emitImportBase('core', coreImportName);
-const clientImports = emitImportBase('client', clientImportName);
+const clientImports = emitImportBase(
+  'client',
+  (id) => `* as ${clientImportName(id)}`
+);
 
 const componentInfoMap: EmitStep = (info) => {
   const mapEntries = Object.entries(info)

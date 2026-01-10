@@ -1,4 +1,4 @@
-import { date, entity, number, text } from 'game-cms';
+import { checkbox, date, entity, number, text } from 'game-cms';
 
 export default entity({
   id: 'demo::test',
@@ -14,6 +14,14 @@ export default entity({
     }),
     d: date({
       minDate: '2026-01-01',
+    }),
+    c: checkbox({
+      value: {
+        title: 'Choice 1',
+      },
+      value2: {
+        title: 'Choice 2',
+      },
     }),
   },
 });

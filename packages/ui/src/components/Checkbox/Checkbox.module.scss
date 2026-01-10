@@ -1,9 +1,11 @@
 @use '../../theme/utils' as *;
 
 .root {
+  user-select: none;
+
   input {
     border-radius: 0.25em;
-
+   
     &::before {
       background-color: var(--tick-color) !important;
 
