@@ -2,6 +2,7 @@ export * from './components/Alternative/index.js';
 export * from './components/Checkbox/index.js';
 export * from './components/Compose/index.js';
 export * from './components/Date/index.js';
+export * from './components/Dropdown/index.js';
 export * from './components/DynamicZone/index.js';
 export * from './components/DynamicZone/types.js';
 export * from './components/File/index.js';
