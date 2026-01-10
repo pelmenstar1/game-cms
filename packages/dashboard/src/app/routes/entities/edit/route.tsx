@@ -12,6 +12,7 @@ import { AccessEntityView } from '@/components/AccessEntityView';
 import { getEntitySchemaById } from '@/connector/entity';
 
 import type { Route } from './+types/route';
+import styles from './route.module.scss';
 
 export default function Page({ params }: Route.ComponentProps) {
   const { id, name } = params;
@@ -55,7 +56,7 @@ export default function Page({ params }: Route.ComponentProps) {
   }, [doDeleteEntity, id, name, notification, redirect]);
 
   return (
-    <DataLoader result={entity}>
+    <DataLoader className={styles.content} result={entity}>
       {(entity) => (
         <AccessEntityView
           schema={entitySchema}

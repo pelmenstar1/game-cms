@@ -1,0 +1,11 @@
+.root {
+  border: none;
+  outline: none;
+  background: transparent;
+  color-scheme: dark;
+
+  &,
+  &::-webkit-calendar-picker-indicator {
+    color: var(--color-text-on-background);
+  }
+}

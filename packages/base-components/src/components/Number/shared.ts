@@ -8,7 +8,14 @@ const id = 'base::number';
 
 type Id = typeof id;
 
-export const meta = componentMeta({ id });
+export const meta = componentMeta({
+  id,
+  config: {
+    ui: {
+      compact: true,
+    },
+  },
+});
 
 export const defaultRawData: ComponentDefaultDataHandler<Id> = () => 0;
 

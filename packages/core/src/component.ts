@@ -1,4 +1,10 @@
-import type { IdSource, IsAllOptional, MaybePromise } from '@game-cms/shared';
+import type {
+  AnyKeyInObject,
+  IdSource,
+  IsAllOptional,
+  MaybePromise,
+  RequiredIf,
+} from '@game-cms/shared';
 import type { Key, ReactNode } from 'react';
 
 import type { RequestContext } from './apiClient.js';
@@ -197,7 +203,7 @@ export type ForeignComponentClientDataResolverContext = {
     id: Id,
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => ComponentDataOrError<Id, Args>;
+  ) => ComponentRawInDataOrError<Id, Args>;
 };
 
 export type ForeignComponentClientDefaultDataContext = Pick<
@@ -235,7 +241,7 @@ export type ComponentDataResolver<Id extends ComponentId> = <Args>(
   args: ComponentDataResolverArgs
 ) => ComponentResolvedDataById<Id, Args>;
 
-export type ComponentDataOrError<Id extends ComponentId, Args = unknown> =
+export type ComponentRawInDataOrError<Id extends ComponentId, Args = unknown> =
   | { result: ComponentRawInDataById<Id, Args>; error?: undefined }
   | { result?: undefined; error: ComponentErrorById<Id, Args> };
 
@@ -255,7 +261,7 @@ export type ComponentClientDataTransformer<Id extends ComponentId> = {
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentClientDataResolverContext
-  ) => ComponentDataOrError<Id, Args>;
+  ) => ComponentRawInDataOrError<Id, Args>;
 };
 
 export type ComponentStorageDataTransformer<Id extends ComponentId> = {
@@ -304,15 +310,11 @@ export type ComponentMeta<Id extends ComponentId = ComponentId> = {
   config?: ComponentControllerConfig;
 };
 
-type RequiredIf<T, C> = C extends true ? Required<T> : T;
-type RequiredIfExists<
+export type RequiredIfExists<
   T,
   Id extends ComponentId,
   K extends PropertyKey,
-> = RequiredIf<
-  T,
-  ComponentTypeMap[Id] extends Record<K, unknown> ? true : false
->;
+> = RequiredIf<T, AnyKeyInObject<ComponentTypeMap[Id], K>>;
 
 interface BaseComponentController<Id extends ComponentId = ComponentId> {
   meta: ComponentMeta<Id>;
@@ -330,7 +332,7 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
     RequiredIfExists<
       { storageTransformer?: ComponentStorageDataTransformer<Id> },
       Id,
-      'storageData'
+      'storageData' | 'rawInData'
     > &
     RequiredIfExists<
       { pathWalker?: ComponentPathWalker<Id> },

@@ -4,6 +4,7 @@ export * from './Button';
 export * from './Checkbox';
 export * from './ConfirmationDialog';
 export * from './DataLoader';
+export * from './DatePicker';
 export * from './DraggableList';
 export * from './DragHandle';
 export * from './ErrorBoard';

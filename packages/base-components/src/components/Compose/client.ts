@@ -1,9 +1,9 @@
 import {
   ComponentClientDataById,
   ComponentClientDataTransformer,
-  ComponentDataOrError,
   ComponentOptionsById,
   ComponentRawDataById,
+  ComponentRawInDataOrError,
   ForeignComponentClientDataResolverContext,
 } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
@@ -59,6 +59,6 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
           ),
         };
 
-    return resultOrError as ComponentDataOrError<Id, Args>;
+    return resultOrError as ComponentRawInDataOrError<Id, Args>;
   },
 };

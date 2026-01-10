@@ -1,4 +1,4 @@
-import { entity, number, text } from 'game-cms';
+import { date, entity, number, text } from 'game-cms';
 
 export default entity({
   id: 'demo::test',
@@ -11,6 +11,9 @@ export default entity({
     }),
     abc2: text({
       minLength: 1,
+    }),
+    d: date({
+      minDate: '2026-01-01',
     }),
   },
 });
