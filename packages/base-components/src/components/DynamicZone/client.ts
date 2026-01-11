@@ -2,6 +2,7 @@ import { ComponentClientDataTransformer } from '@game-cms/core';
 
 export const clientTransformer: ComponentClientDataTransformer<'base::dynamic-zone'> =
   {
+    ownValidation: true,
     getDefaultData: () => [],
     toClient: (data, options, context) => {
       return data.map((dataItem) => {
@@ -20,10 +21,24 @@ export const clientTransformer: ComponentClientDataTransformer<'base::dynamic-zo
         const { componentId, options: baseOptions } =
           options.options[value.key];
 
-        return context.fromClient(componentId, value.data, baseOptions);
+        const client = context.fromClient(componentId, value.data, baseOptions);
+
+        return {
+          client,
+          coreError:
+            client.result !== undefined
+              ? context.validation.validate(
+                  componentId,
+                  client.result,
+                  baseOptions
+                )
+              : undefined,
+        };
       });
 
-      const errors = result.map(({ error }) => error);
+      const errors = result.map(
+        ({ client: { error }, coreError }) => error ?? coreError
+      );
 
       if (errors.some((value) => value !== undefined)) {
         return { error: { items: errors } };
@@ -32,7 +47,7 @@ export const clientTransformer: ComponentClientDataTransformer<'base::dynamic-zo
       return {
         result: result.map((item, index) => ({
           key: clientData[index].key,
-          data: item.result,
+          data: item.client.result,
         })),
       };
     },

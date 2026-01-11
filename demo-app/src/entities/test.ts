@@ -7,7 +7,6 @@ import {
   number,
   text,
 } from 'game-cms/components';
-import z from 'zod';
 
 export default entity({
   id: 'demo::test',
@@ -37,10 +36,6 @@ export default entity({
       { key: 'item2', title: 'Item 2' },
       { key: 'item3', title: 'Item 3' },
     ]),
-    j: json({
-      type: z.object({
-        abc: z.string(),
-      }),
-    }),
+    j: json(),
   },
 });

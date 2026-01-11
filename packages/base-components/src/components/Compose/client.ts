@@ -13,6 +13,7 @@ import { ComposeEntry } from './types.js';
 type Id = 'base::compose';
 
 export const clientTransformer: ComponentClientDataTransformer<Id> = {
+  ownValidation: true,
   getDefaultData: (options, context) =>
     mapObject(options, (item) =>
       context.getDefaultData(item.componentId, item.options)
@@ -37,25 +38,30 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
     const result = Object.entries<OptionsEntry>(options).map(([key, prop]) => {
       const { componentId, options } = prop;
 
-      return [
+      const client = context.fromClient(
+        componentId,
+        // TODO: Fix any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+        data[key] as any,
+        options
+      );
+
+      return {
         key,
-        context.fromClient(
-          componentId,
-          // TODO: Fix any
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-          data[key] as any,
-          options
-        ),
-      ] as const;
+        client,
+        coreError: context.validation.validate(componentId, data[key], options),
+      };
     });
 
-    const error = result.map(([key, item]) => [key, item.error] as const);
+    const error = result.map(
+      ({ key, client, coreError }) => [key, client.error ?? coreError] as const
+    );
 
     const resultOrError = error.some(([, error]) => error !== undefined)
       ? { error: { properties: Object.fromEntries(error) } }
       : {
           result: Object.fromEntries(
-            result.map(([key, item]) => [key, item.result] as const)
+            result.map(({ key, client }) => [key, client.result] as const)
           ),
         };
 

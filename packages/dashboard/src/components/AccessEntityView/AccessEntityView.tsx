@@ -16,7 +16,6 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
-import { useComponentHub } from '@/hooks/useComponentHub';
 import {
   type EntityComposeOptions,
   transformDataToClientData,
@@ -47,7 +46,6 @@ export function AccessEntityView<Id extends EntityId>({
   type ClientData = ComponentClientDataById<ComposeId, Args>;
 
   const api = useComponentApi();
-  const hub = useComponentHub();
 
   const Compose = api.getComponent(composeId);
   const composeOptions = schema.components as EntityComposeOptions<Id>;
@@ -63,18 +61,6 @@ export function AccessEntityView<Id extends EntityId>({
       composeOptions
     );
   }, [api, clientData, composeOptions]);
-
-  const error = useMemo(() => {
-    if (data.result) {
-      return hub.validationContext.validate<ComposeId, Args>(
-        composeId,
-        data.result,
-        composeOptions
-      );
-    }
-
-    return data.error;
-  }, [data, hub.validationContext, composeOptions]);
 
   const onSaveTransformed = useCallback(() => {
     const rawData = data.result;
@@ -107,7 +93,7 @@ export function AccessEntityView<Id extends EntityId>({
           <Compose
             data={clientData}
             options={composeOptions}
-            error={error}
+            error={data.error}
             onDataChanged={setClientData}
           />
         </div>
@@ -116,7 +102,7 @@ export function AccessEntityView<Id extends EntityId>({
           <Button
             buttonVariant="solid"
             onClick={onSaveTransformed}
-            disabled={error !== undefined}
+            disabled={data.error !== undefined}
           >
             Save
           </Button>

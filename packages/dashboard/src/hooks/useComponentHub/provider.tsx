@@ -1,7 +1,6 @@
 import {
   type ComponentApi,
   ComponentApiContext,
-  useApiClient,
 } from '@game-cms/component-api';
 import type {
   ComponentClientDataById,
@@ -37,8 +36,6 @@ const componentCache = createInMemoryCache((id: ComponentId) => {
 });
 
 export function ComponentHubProvider({ children }: PropsWithChildren) {
-  const client = useApiClient();
-
   const validationContext = useMemo(
     (): ForeignComponentValidationContext => ({
       validate: (id, data, options) => {
@@ -62,9 +59,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const clientTransformerContext = useMemo(
     (): ForeignComponentClientDataResolverContext => ({
       idSource: incrementingIdSource,
-      makeRequest: (fn, args) => {
-        return client.makeApiRequest(fn, args).promise;
-      },
+      validation: validationContext,
       getDefaultData: <Id extends ComponentId, Args>(
         id: Id,
         options: ComponentOptionsById<Id, Args>
@@ -85,9 +80,23 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
       ) => {
         const resolver = getComponentClientTransformer(id);
 
-        return resolver
+        const response = resolver
           ? resolver.fromClient(clientData, options, clientTransformerContext)
           : { result: clientData as ComponentRawInDataById<Id, Args> };
+
+        if (!resolver?.ownValidation && response.result !== undefined) {
+          const coreError = validationContext.validate(
+            id,
+            response.result,
+            options
+          );
+
+          if (coreError !== undefined) {
+            return { error: coreError };
+          }
+        }
+
+        return response;
       },
       toClient: <Id extends ComponentId, Args>(
         id: Id,
@@ -101,7 +110,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
           : (data as ComponentClientDataById<Id, Args>);
       },
     }),
-    [client, defaultDataContext]
+    [defaultDataContext, validationContext]
   );
 
   const api = useMemo(

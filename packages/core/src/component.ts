@@ -8,8 +8,6 @@ import type {
 } from '@game-cms/shared';
 import type { Key, ReactNode } from 'react';
 
-import type { RequestContext } from './apiClient.js';
-
 type MaybePromiseWithMarker<T> =
   | (T & { $asyncMarker?: never })
   | MaybePromise<T>;
@@ -177,16 +175,12 @@ export type ForeignComponentDataResolverContext = {
 
 export type ForeignComponentClientDataResolverContext = {
   idSource: IdSource<Key>;
+  validation: ForeignComponentValidationContext;
 
   getDefaultData: <Id extends ComponentId, Args>(
     id: Id,
     options: ComponentOptionsById<Id, Args>
   ) => ComponentClientDataById<Id, Args>;
-
-  makeRequest: <Args extends unknown[], R>(
-    fn: (context: RequestContext, ...args: Args) => Promise<R>,
-    args: Args
-  ) => Promise<R>;
 
   toClient: <Id extends ComponentId, Args>(
     id: Id,
@@ -245,6 +239,11 @@ export type ComponentRawInDataOrError<
 >;
 
 export type ComponentClientDataTransformer<Id extends ComponentId> = {
+  /**
+   * Determines whether fromClient will its own validation scheme.
+   */
+  ownValidation?: boolean;
+
   getDefaultData: <Args>(
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentClientDefaultDataContext
