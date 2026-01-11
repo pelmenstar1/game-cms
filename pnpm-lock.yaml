@@ -448,6 +448,9 @@ importers:
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@game-cms/ui':
         specifier: workspace:*
         version: link:../ui

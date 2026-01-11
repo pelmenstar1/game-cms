@@ -17,3 +17,9 @@ export type QueryStatus = QueryResult['status'];
 
 export type InferQueryResult<T> =
   T extends SuccessQueryResult<infer R> ? R : never;
+
+const pendingResult: QueryResult = { status: 'pending' };
+
+export function pendingQueryResult<T>() {
+  return pendingResult as QueryResult<T>;
+}

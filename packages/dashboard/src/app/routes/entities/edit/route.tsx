@@ -5,18 +5,23 @@ import {
   updateEntityById,
 } from '@game-cms/client';
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
-import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
+import {
+  MultipleDataLoader,
+  useNotification,
+  useTypedNavigate,
+} from '@game-cms/ui';
 import { useCallback } from 'react';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
-import { getEntitySchemaById } from '@/connector/entity';
+import { useEntitySchema } from '@/hooks/useEntitySchema';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';
 
 export default function Page({ params }: Route.ComponentProps) {
   const { id, name } = params;
-  const entitySchema = getEntitySchemaById(name);
+
+  const entitySchema = useEntitySchema(name);
 
   const [entity] = useApiQuery(getRawEntityById, [name, id], {
     redirectOnNotFound: true,
@@ -56,8 +61,11 @@ export default function Page({ params }: Route.ComponentProps) {
   }, [doDeleteEntity, id, name, notification, redirect]);
 
   return (
-    <DataLoader className={styles.content} result={entity}>
-      {(entity) => (
+    <MultipleDataLoader
+      className={styles.content}
+      result={[entitySchema, entity] as const}
+    >
+      {([entitySchema, entity]) => (
         <AccessEntityView
           schema={entitySchema}
           initialValue={entity}
@@ -65,6 +73,6 @@ export default function Page({ params }: Route.ComponentProps) {
           onDelete={onDelete}
         />
       )}
-    </DataLoader>
+    </MultipleDataLoader>
   );
 }

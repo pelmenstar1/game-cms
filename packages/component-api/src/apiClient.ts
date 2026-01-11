@@ -1,4 +1,5 @@
 import type { RequestFn } from '@game-cms/core';
+import type { QueryResult } from '@game-cms/shared';
 import { contextUseFactory } from '@game-cms/ui';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -39,28 +40,8 @@ export function useApiAction<Args extends unknown[], R>(
   );
 }
 
-export type SuccessApiQueryResult<T = unknown> = {
-  status: 'success';
-  value: T;
-};
-
-export type ApiQueryResult<T = unknown> =
-  | {
-      status: 'pending';
-    }
-  | {
-      status: 'error';
-      error: unknown;
-    }
-  | SuccessApiQueryResult<T>;
-
-export type ApiQueryStatus = ApiQueryResult['status'];
-
-export type InferApiQueryResult<T> =
-  T extends SuccessApiQueryResult<infer R> ? R : never;
-
 type ApiQueryOptions = ApiRedirectOptions;
-type UseApiQueryResult<R> = [value: ApiQueryResult<R>, retry: () => void];
+type UseApiQueryResult<R> = [value: QueryResult<R>, retry: () => void];
 
 export function useApiQuery<Args extends unknown[], R>(
   queryFn: RequestFn<Args, R>,
@@ -69,7 +50,7 @@ export function useApiQuery<Args extends unknown[], R>(
 ): UseApiQueryResult<R> {
   const client = useApiClient();
 
-  const [result, setResult] = useState<ApiQueryResult<R>>({
+  const [result, setResult] = useState<QueryResult<R>>({
     status: 'pending',
   });
 

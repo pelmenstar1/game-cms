@@ -1,12 +1,10 @@
-import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
-import data from 'virtual:dashboard/entityConnectorData';
+import type { EntityId } from '@game-cms/base-core';
+import { fullEntityMap, metaMap } from 'virtual:dashboard/entityConnectorData';
 
-export function getEntitySchemas() {
-  return Object.values(data);
+export function getEntityMetaMap() {
+  return metaMap;
 }
 
-export function getEntitySchemaById<Id extends EntityId>(
-  id: Id
-): EntitySchemaById<Id> {
-  return data[id];
+export function getEntitySchemaById<Id extends EntityId>(id: Id) {
+  return fullEntityMap[id]();
 }

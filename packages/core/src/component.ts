@@ -366,10 +366,10 @@ export function componentController<Id extends ComponentId>(
 
 /*@__NO_SIDE_EFFECTS__*/
 export function componentAccessor<Id extends string>(
-  controller: ComponentController<Id>
+  componentId: Id
 ): ComponentAccessor<Id> {
   return (options = {}) => {
-    return { componentId: controller.core.id, options };
+    return { componentId, options };
   };
 }
 

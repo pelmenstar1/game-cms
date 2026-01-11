@@ -3,9 +3,9 @@ import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
 
 function getById<Id extends EntityId>(id: Id) {
-  const { entitySchemas } = env();
+  const { entities } = env();
 
-  const result = entitySchemas.find((schema) => schema.id === id);
+  const result = entities.find((schema) => schema.id === id);
 
   return (result ?? null) as EntitySchemaById<Id> | null;
 }
@@ -14,6 +14,6 @@ export default service({
   id: 'base::entitySchema',
   getById,
   getAll() {
-    return env().entitySchemas;
+    return env().entities;
   },
 });

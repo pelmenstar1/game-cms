@@ -2,7 +2,7 @@ import { LinkButton, NavTabs, PlusIcon, useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
 
 import { EntityList } from '@/components/EntityList';
-import { getEntitySchemas } from '@/connector/entity';
+import { getEntityMetaMap } from '@/connector/entity';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';
@@ -16,23 +16,26 @@ export function meta() {
 
 export default function Page({ params }: Route.ComponentProps) {
   const { name: selectedEntity } = params;
-  const schemas = getEntitySchemas();
+  const schemas = getEntityMetaMap();
 
-  const selectedSchema = selectedEntity
-    ? schemas.find(({ id }) => id === selectedEntity)
-    : null;
+  const selectedSchema = selectedEntity ? schemas[selectedEntity] : null;
 
   const navigate = useTypedNavigate();
 
   useEffect(() => {
-    if (schemas.length > 0 && selectedEntity === undefined) {
-      const [schema] = schemas;
+    const schemasArray = Object.entries(schemas);
 
-      void navigate(`/entities/${schema.id}`);
+    if (schemasArray.length > 0 && selectedEntity === undefined) {
+      const [[id]] = schemasArray;
+
+      console.log(schemasArray);
+
+      void navigate(`/entities/${id}`);
     }
   }, [navigate, schemas, selectedEntity]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (selectedSchema === undefined) {
       void navigate('/404');
     }
@@ -42,13 +45,13 @@ export default function Page({ params }: Route.ComponentProps) {
     <div className={styles.root}>
       <NavTabs
         className={styles['entities-tabs']}
-        items={schemas.map((schema) => ({
-          text: schema.title,
-          href: `/entities/${schema.id}`,
+        items={Object.entries(schemas).map(([id, { title }]) => ({
+          text: title,
+          href: `/entities/${id}`,
         }))}
       />
 
-      {selectedSchema && (
+      {selectedEntity && selectedSchema && (
         <div className={styles.content}>
           <div className={styles.header}>
             <LinkButton
@@ -62,7 +65,7 @@ export default function Page({ params }: Route.ComponentProps) {
           </div>
 
           <EntityList
-            schema={selectedSchema}
+            entityId={selectedEntity}
             className={styles['entity-list']}
           />
         </div>

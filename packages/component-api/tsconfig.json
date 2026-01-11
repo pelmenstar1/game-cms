@@ -7,5 +7,9 @@
     "moduleResolution": "bundler"
   },
   "include": ["./src"],
-  "references": [{ "path": "../core" }, { "path": "../ui" }]
+  "references": [
+    { "path": "../core" },
+    { "path": "../ui" },
+    { "path": "../shared" }
+  ]
 }

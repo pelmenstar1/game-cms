@@ -1,5 +1,3 @@
 import { componentAccessor } from '@game-cms/core';
 
-import Json from './controller.js';
-
-export const json = componentAccessor(Json);
+export const json = componentAccessor('base::json');

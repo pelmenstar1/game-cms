@@ -1,13 +1,19 @@
+import { pathToFileURL } from 'node:url';
+
 import { env } from '@game-cms/global';
 
 function emitGetEntitySchemas() {
-  const { entitySchemas } = env();
+  const { entities } = env();
 
-  const map = Object.fromEntries(
-    entitySchemas.map((schema) => [schema.id, schema] as const)
-  );
+  return `
+export const fullEntityMap = {
+  ${entities.map((descriptor) => `'${descriptor.id}': import('${pathToFileURL(descriptor.filePath)}')`)}
+};
 
-  return `const map = ${JSON.stringify(map)}; export default map;`;
+export const metaMap = {
+  ${entities.map(({ id, title }) => `'${id}': ${JSON.stringify({ title })}`)}
+};
+`;
 }
 
 export function emitEntityConnector(): string {

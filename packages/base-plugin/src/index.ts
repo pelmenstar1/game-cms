@@ -25,7 +25,7 @@ export const basePlugin: Plugin<OwnEnvironment> = {
     await config.storage.provider.init?.();
   },
   env: {
-    entitySchemas: scanEntitySchemas,
+    entities: scanEntitySchemas,
   },
   dashboard: {
     plugins: [dashboardEntityPlugin()],

@@ -1,4 +1,4 @@
-import type { EntitySchema } from '@game-cms/base-core';
+import type { EntityId } from '@game-cms/base-core';
 import { listEntities } from '@game-cms/client';
 import { useApiQuery } from '@game-cms/component-api';
 import { classNames, DataLoader, List } from '@game-cms/ui';
@@ -12,15 +12,15 @@ import styles from './EntityList.module.scss';
 
 export interface EntityListProps {
   className?: string;
-  schema: EntitySchema;
+  entityId: EntityId;
 }
 
 const PAGE_SIZE = 10;
 
-export function EntityList({ className, schema }: EntityListProps) {
+export function EntityList({ className, entityId }: EntityListProps) {
   const [page] = useQueryPage();
   const options = usePagingOptions(page, PAGE_SIZE);
-  const [itemsResult] = useApiQuery(listEntities, [schema.id, options]);
+  const [itemsResult] = useApiQuery(listEntities, [entityId, options]);
 
   return (
     <DataLoader
@@ -33,15 +33,11 @@ export function EntityList({ className, schema }: EntityListProps) {
           pageSize={PAGE_SIZE}
           totalItems={meta.totalCount}
           className={styles['page-view']}
-          getLink={(page) => `/entities/${schema.id}?page=${page}`}
+          getLink={(page) => `/entities/${entityId}?page=${page}`}
         >
           <List className={styles['list']}>
             {items.map((item) => (
-              <EntityListItem
-                key={item._id}
-                entityId={schema.id}
-                value={item}
-              />
+              <EntityListItem key={item._id} entityId={entityId} value={item} />
             ))}
           </List>
         </PageView>
