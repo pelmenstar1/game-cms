@@ -7,3 +7,7 @@ export function parseJsonOptional(input: string): unknown {
     return InvalidJson;
   }
 }
+
+export function isValidJson(input: string) {
+  return parseJsonOptional(input) !== InvalidJson;
+}

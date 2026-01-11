@@ -4,6 +4,7 @@ export * from './files.js';
 export * from './fileSizeFormatter.js';
 export * from './formatter.js';
 export * from './hex.js';
+export * from './isDigit.js';
 export * from './regex.js';
 export * from './repeatJoin.js';
 export * from './shortenByWord.js';

@@ -1,3 +1,5 @@
+import { isDigit } from './string/isDigit.js';
+
 export function isFloatString(text: string) {
   let start = 0;
   const firstChar = text[0];
@@ -14,9 +16,8 @@ export function isFloatString(text: string) {
 
   for (let i = start; i < text.length; i++) {
     const c = text[i];
-    const codePoint = c.codePointAt(0);
 
-    if (codePoint !== undefined && codePoint >= 48 && codePoint <= 57) {
+    if (isDigit(c)) {
       continue;
     }
 

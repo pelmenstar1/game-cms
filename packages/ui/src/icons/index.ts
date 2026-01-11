@@ -11,6 +11,7 @@ export * from './BoldIcon';
 export * from './BulletListIcon';
 export * from './CalendarIcon';
 export * from './CheckIcon';
+export * from './CheckmarkIcon';
 export * from './CloseIcon';
 export * from './CopyIcon';
 export * from './CopyrightIcon';

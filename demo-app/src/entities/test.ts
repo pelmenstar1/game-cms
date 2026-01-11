@@ -1,4 +1,12 @@
-import { checkbox, date, dropdown, entity, number, text } from 'game-cms';
+import { entity } from 'game-cms';
+import {
+  checkbox,
+  date,
+  dropdown,
+  json,
+  number,
+  text,
+} from 'game-cms/components';
 
 export default entity({
   id: 'demo::test',
@@ -28,5 +36,6 @@ export default entity({
       { key: 'item2', title: 'Item 2' },
       { key: 'item3', title: 'Item 3' },
     ]),
+    j: json(),
   },
 });

@@ -3,7 +3,7 @@ import { ApiError } from '@game-cms/base-core';
 import { uploadFileMeta, uploadFileResponse } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core';
 import { cms } from '@game-cms/global';
-import { parseJsonOptional } from '@game-cms/shared';
+import { parseJsonOptional } from '@game-cms/shared/json';
 
 import { apiValidateValue } from '../../../utils/validate.js';
 

@@ -2,7 +2,6 @@ export * from './clipboard.js';
 export * from './delay.js';
 export * from './idSource.js';
 export * from './isFloat.js';
-export * from './json.js';
 export * from './math.js';
 export * from './maybeFactory.js';
 export * from './memoryCache.js';

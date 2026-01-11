@@ -60,6 +60,14 @@
       "import": "./dist/node/index.js",
       "types": "./dist/node/index.d.ts"
     },
+    "./parser": {
+      "import": "./dist/parser/index.js",
+      "types": "./dist/parser/index.d.ts"
+    },
+    "./json": {
+      "import": "./dist/json/index.js",
+      "types": "./dist/json/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }

@@ -1,8 +1,14 @@
+import { classNames } from '../../utils/classNames';
 import type { SvgProps } from '../types';
+import styles from './index.module.scss';
 
-export function ErrorIcon(props: SvgProps) {
+export function ErrorIcon({ className, ...rest }: SvgProps) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" {...props} stroke="#ff0000">
+    <svg
+      viewBox="0 0 24 24"
+      className={classNames(styles.root, className)}
+      {...rest}
+    >
       <path
         d="M12 8V12"
         strokeWidth="2"

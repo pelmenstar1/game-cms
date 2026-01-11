@@ -2,16 +2,6 @@
   "name": "@game-cms/base-plugin",
   "packageManager": "pnpm@10.25.0",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./types": {
-      "import": "./dist/types.js",
-      "types": "./dist/types.d.ts"
-    }
-  },
   "dependencies": {
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-components": "workspace:*",
@@ -25,5 +15,19 @@
     "mongodb": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    },
+    "./components": {
+      "import": "./dist/components.js",
+      "types": "./dist/components.d.ts"
+    }
   }
 }

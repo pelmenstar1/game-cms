@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
+import { findClosingQuoteIndex } from '@game-cms/shared/parser';
+
 import { stringReader } from './reader.js';
 import { StringTokenType, type Token, TokenType } from './token.js';
-import { findClosingQuoteIndex } from './utils.js';
 
 const tokenInfoMap: Record<string, Token> = {
   '(': TokenType.OPEN_BRACKET,

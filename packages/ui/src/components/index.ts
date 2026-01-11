@@ -16,6 +16,7 @@ export * from './IconComponentBase';
 export * from './IconLinkButton';
 export * from './IndeterminateCircularProgress';
 export * from './InfiniteScroll';
+export * from './JsonEditor';
 export * from './Labeled';
 export * from './Link';
 export * from './LinkButton';
