@@ -28,8 +28,6 @@ export default function Page({ params }: Route.ComponentProps) {
     if (schemasArray.length > 0 && selectedEntity === undefined) {
       const [[id]] = schemasArray;
 
-      console.log(schemasArray);
-
       void navigate(`/entities/${id}`);
     }
   }, [navigate, schemas, selectedEntity]);

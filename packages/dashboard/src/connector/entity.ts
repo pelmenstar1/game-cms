@@ -5,6 +5,8 @@ export function getEntityMetaMap() {
   return metaMap;
 }
 
-export function getEntitySchemaById<Id extends EntityId>(id: Id) {
-  return fullEntityMap[id]();
+export async function getEntitySchemaById<Id extends EntityId>(id: Id) {
+  const { default: result } = await fullEntityMap[id]();
+
+  return result;
 }

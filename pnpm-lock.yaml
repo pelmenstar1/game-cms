@@ -210,6 +210,9 @@ importers:
       game-cms:
         specifier: workspace:*
         version: link:../packages/game-cms
+      zod:
+        specifier: 'catalog:'
+        version: 4.2.1
     devDependencies:
       '@game-cms/core':
         specifier: workspace:*

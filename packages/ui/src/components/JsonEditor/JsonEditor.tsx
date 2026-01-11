@@ -6,7 +6,13 @@ import { Text } from '@tiptap/extension-text';
 import { EditorContent, type EditorEvents, useEditor } from '@tiptap/react';
 import jsonLanguage from 'highlight.js/lib/languages/json';
 import { createLowlight } from 'lowlight';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  type KeyboardEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 
 import { CheckmarkIcon, ErrorIcon } from '../../icons';
 import { classNames } from '../../utils/classNames';
@@ -18,6 +24,7 @@ export interface JsonEditorProps {
   className?: string;
   text: string;
   allowEmpty?: boolean;
+  customError?: string;
   onTextChanged?: (text: string) => void;
 }
 
@@ -35,14 +42,26 @@ export function JsonEditor({
   className,
   text,
   allowEmpty,
+  customError,
   onTextChanged,
 }: JsonEditorProps) {
   const currentText = useRef(text);
   const lowlight = useMemo(() => createLowlight({ json: jsonLanguage }), []);
-  const isValid = useMemo(
-    () => (allowEmpty && text.length === 0) || isValidJson(text),
-    [allowEmpty, text]
-  );
+  const isValid = useMemo(() => {
+    if (allowEmpty && text.length === 0) {
+      return true;
+    }
+
+    if (!isValidJson(text)) {
+      return false;
+    }
+
+    if (customError) {
+      return false;
+    }
+
+    return true;
+  }, [allowEmpty, customError, text]);
 
   const onUpdate = useCallback(
     ({ editor }: EditorEvents['update']) => {
@@ -88,6 +107,17 @@ export function JsonEditor({
     }
   }, [editor, text]);
 
+  const onKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+
+        editor.commands.insertContent('  ');
+      }
+    },
+    [editor]
+  );
+
   return (
     <div className={classNames(styles.root, className)}>
       <div className={styles.header}>
@@ -111,7 +141,7 @@ export function JsonEditor({
           )}
         >
           {isValid ? <CheckmarkIcon /> : <ErrorIcon />}
-          {isValid ? 'OK' : 'Parse error'}
+          {isValid ? 'OK' : (customError ?? 'Parse error')}
         </Typography>
       </div>
 
@@ -119,6 +149,7 @@ export function JsonEditor({
         autoComplete="off"
         autoCorrect="false"
         spellCheck="false"
+        onKeyDown={onKeyDown}
         className={styles.content}
         editor={editor}
       />

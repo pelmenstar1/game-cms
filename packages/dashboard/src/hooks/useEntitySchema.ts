@@ -16,7 +16,7 @@ export function useEntitySchema<T extends EntityId>(id: T) {
       .catch((error: unknown) => {
         setResult({ status: 'error', error });
       });
-  });
+  }, [id]);
 
   return result;
 }

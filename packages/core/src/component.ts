@@ -4,6 +4,7 @@ import type {
   IsAllOptional,
   MaybePromise,
   RequiredIf,
+  ResultOrError,
 } from '@game-cms/shared';
 import type { Key, ReactNode } from 'react';
 
@@ -235,9 +236,13 @@ export type ComponentDataResolver<Id extends ComponentId> = <Args>(
   args: ComponentDataResolverArgs
 ) => ComponentResolvedDataById<Id, Args>;
 
-export type ComponentRawInDataOrError<Id extends ComponentId, Args = unknown> =
-  | { result: ComponentRawInDataById<Id, Args>; error?: undefined }
-  | { result?: undefined; error: ComponentErrorById<Id, Args> };
+export type ComponentRawInDataOrError<
+  Id extends ComponentId,
+  Args = unknown,
+> = ResultOrError<
+  ComponentRawInDataById<Id, Args>,
+  ComponentErrorById<Id, Args>
+>;
 
 export type ComponentClientDataTransformer<Id extends ComponentId> = {
   getDefaultData: <Args>(

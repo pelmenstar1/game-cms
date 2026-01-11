@@ -37,6 +37,11 @@
         "NAN": "Invalid format",
         "INVALID_TYPE": ""
       }
+    },
+    "Json": {
+      "errors": {
+        "INVALID_FORMAT": "Invalid format"
+      }
     }
   }
 }

@@ -50,7 +50,6 @@ export function AccessEntityView<Id extends EntityId>({
   const hub = useComponentHub();
 
   const Compose = api.getComponent(composeId);
-
   const composeOptions = schema.components as EntityComposeOptions<Id>;
 
   const [clientData, setClientData] = useState<ClientData>(() =>

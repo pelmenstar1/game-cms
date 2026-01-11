@@ -1,8 +1,9 @@
 export const InvalidJson = Symbol();
 
-export function parseJsonOptional(input: string): unknown {
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+export function parseJsonOptional<T = unknown>(input: string) {
   try {
-    return JSON.parse(input);
+    return JSON.parse(input) as T;
   } catch {
     return InvalidJson;
   }

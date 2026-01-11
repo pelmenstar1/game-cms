@@ -8,9 +8,10 @@
     "test-build": "tsc && game-cms build"
   },
   "dependencies": {
-    "@game-cms/storage-provider-local": "workspace:*",
     "@game-cms/game-plugin": "workspace:*",
-    "game-cms": "workspace:*"
+    "@game-cms/storage-provider-local": "workspace:*",
+    "game-cms": "workspace:*",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@game-cms/core": "workspace:*",

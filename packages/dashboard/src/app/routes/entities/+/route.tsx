@@ -8,6 +8,7 @@ import { AccessEntityView } from '@/components/AccessEntityView';
 import { useEntitySchema } from '@/hooks/useEntitySchema';
 
 import type { Route } from './+types/route';
+import styles from './route.module.scss';
 
 export default function Page({ params }: Route.ComponentProps) {
   const entitySchema = useEntitySchema(params.name);
@@ -33,7 +34,7 @@ export default function Page({ params }: Route.ComponentProps) {
   );
 
   return (
-    <DataLoader result={entitySchema}>
+    <DataLoader className={styles.root} result={entitySchema}>
       {(schema) => <AccessEntityView schema={schema} onSave={onSave} />}
     </DataLoader>
   );

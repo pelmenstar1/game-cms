@@ -7,7 +7,7 @@ function emitGetEntitySchemas() {
 
   return `
 export const fullEntityMap = {
-  ${entities.map((descriptor) => `'${descriptor.id}': import('${pathToFileURL(descriptor.filePath)}')`)}
+  ${entities.map((descriptor) => `'${descriptor.id}': () => import('${pathToFileURL(descriptor.filePath)}')`)}
 };
 
 export const metaMap = {
