@@ -3,6 +3,8 @@ import { Command } from 'commander';
 import packageInfo from '../package.json' with { type: 'json' };
 import build from './commands/build/index.js';
 import dev from './commands/dev/index.js';
+import newMigration from './commands/new-migration/index.js';
+import runMigrations from './commands/run-migrations/index.js';
 import start from './commands/start/index.js';
 
 const program = new Command();
@@ -24,5 +26,12 @@ program
   .option('-d, --dashboard [DASHBOARD]', 'Dashboard URL')
   .description('Starts CMS server')
   .action(start);
+
+program
+  .command('new-migration [name]')
+  .description('Create new migration file')
+  .action(newMigration);
+
+program.command('run-migrations').action(runMigrations);
 
 program.parse();

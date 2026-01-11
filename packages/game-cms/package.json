@@ -19,6 +19,7 @@
     "@fastify/http-proxy": "^11.4.1",
     "@fastify/multipart": "catalog:",
     "@fastify/static": "9.0.0",
+    "@game-cms/base-api": "workspace:*",
     "@game-cms/base-components": "workspace:*",
     "@game-cms/base-core": "workspace:*",
     "@game-cms/base-plugin": "workspace:*",
@@ -29,6 +30,7 @@
     "@game-cms/shared": "workspace:*",
     "commander": "14.0.2",
     "fastify": "catalog:",
+    "jiti": "^2.6.1",
     "pino": "10.1.1",
     "react-router": "catalog:",
     "zod": "catalog:"

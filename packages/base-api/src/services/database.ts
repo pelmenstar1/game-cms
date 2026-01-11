@@ -51,4 +51,7 @@ export default service({
       await session.endSession();
     }
   },
+  close: async () => {
+    await client().close();
+  },
 });

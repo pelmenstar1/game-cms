@@ -3,10 +3,11 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": ["node"]
+    "types": ["node", "@game-cms/base-api/types"]
   },
   "include": ["./src"],
   "references": [
+    { "path": "../base-api" },
     { "path": "../base-components" },
     { "path": "../base-core" },
     { "path": "../base-plugin" },

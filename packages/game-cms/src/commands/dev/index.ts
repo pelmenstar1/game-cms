@@ -9,6 +9,7 @@ import {
   getDashboardPackagePath,
   writeDashboardMeta,
 } from '../../services/dashboard/index.js';
+import { executeRemainingMigrations } from '../../services/migration.js';
 import { startServer } from '../../services/server.js';
 
 function runDashboardDev(dashboardPath: string) {
@@ -65,6 +66,8 @@ export default async function dev() {
 
     setCmsController(createController());
     runDashboardDev(dashboardPath);
+
+    await executeRemainingMigrations();
 
     await messageServer.waitUntilViteUp();
   }
