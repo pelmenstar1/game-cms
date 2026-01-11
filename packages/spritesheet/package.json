@@ -10,11 +10,11 @@
     }
   },
   "devDependencies": {
-    "pixi.js": "^8.14.3",
+    "pixi.js": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
-    "sharp": "^0.34.5",
-    "@game-cms/shared": "workspace:*"
+    "@game-cms/shared": "workspace:*",
+    "sharp": "^0.34.5"
   }
 }

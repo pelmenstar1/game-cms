@@ -29,7 +29,7 @@
     "@game-cms/shared": "workspace:*",
     "commander": "14.0.2",
     "fastify": "catalog:",
-    "pino": "10.1.0",
+    "pino": "10.1.1",
     "react-router": "catalog:",
     "zod": "catalog:"
   },
