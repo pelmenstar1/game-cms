@@ -1,6 +1,10 @@
-import type { NavTabInfo } from '@game-cms/ui';
+import type { NavTabInfoWithPermission } from '@/types/tabs';
 
-export const items: NavTabInfo[] = [
-  { text: 'API Tokens', href: '/settings/api-tokens' },
-  { text: 'Users', href: '/settings/users' },
+export const items: NavTabInfoWithPermission[] = [
+  {
+    text: 'API Tokens',
+    href: '/settings/api-tokens',
+    permission: 'auth/token$get',
+  },
+  { text: 'Users', href: '/settings/users', permission: 'auth/user$get' },
 ];

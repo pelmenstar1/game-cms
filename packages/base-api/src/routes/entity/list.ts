@@ -9,7 +9,7 @@ export default apiRoute({
   url: `/entity/:entityId/list`,
   method: 'GET',
   config: {
-    id: entityRouteId('list'),
+    id: entityRouteId('get'),
   },
   schema: {
     params: z.object({

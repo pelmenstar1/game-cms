@@ -112,8 +112,25 @@ function hydratePermission(routeId: ApiRouteId, entities: EntityId[]) {
   return routeId;
 }
 
+function getAllPermissions() {
+  const entities = cms()
+    .service('base::entitySchema')
+    .getAll()
+    .map((schema) => schema.id);
+
+  const { routes } = env().api;
+
+  const result = routes
+    .map((route) => route.config?.id)
+    .filter((id) => id !== undefined)
+    .flatMap((permission) => hydratePermission(permission, entities));
+
+  return [...new Set(result)];
+}
+
 export default service({
   id: 'base::auth',
+  getAllPermissions,
   signUserIn: async (payload: SignInPayload) => {
     const user = await cms()
       .service('base::user')
@@ -192,19 +209,16 @@ export default service({
       throw error;
     }
   },
-  getAllPermissions: () => {
-    const entities = cms()
-      .service('base::entitySchema')
-      .getAll()
-      .map((schema) => schema.id);
+  getSessionPermissions: async (token: string) => {
+    const { prms: permissions } = await parseJwtWithSchema(
+      token,
+      sessionJwtPayloadSchema
+    );
 
-    const { routes } = env().api;
+    if (permissions.includes('*')) {
+      return getAllPermissions();
+    }
 
-    const result = routes
-      .map((route) => route.config?.id)
-      .filter((id) => id !== undefined)
-      .flatMap((permission) => hydratePermission(permission, entities));
-
-    return [...new Set(result)];
+    return permissions as ApiRouteId[];
   },
 });

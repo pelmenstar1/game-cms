@@ -5,6 +5,7 @@ import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
 import { useCallback } from 'react';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
+import { useCheckPermissions } from '@/hooks/useCheckPermissions';
 import { useEntitySchema } from '@/hooks/useEntitySchema';
 
 import type { Route } from './+types/route';
@@ -17,6 +18,8 @@ export default function Page({ params }: Route.ComponentProps) {
   const redirect = useTypedNavigate();
 
   const doCreateEntity = useApiAction(createEntity);
+
+  useCheckPermissions(`entity/${params.name}$edit`);
 
   const onSave = useCallback(
     (data: EntityData) => {

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import { EntityList } from '@/components/EntityList';
 import { getEntityMetaMap } from '@/connector/entity';
+import { useSelfPermissions } from '@/hooks/useSelfPermissions';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';
@@ -20,6 +21,7 @@ export default function Page({ params }: Route.ComponentProps) {
 
   const selectedSchema = selectedEntity ? schemas[selectedEntity] : null;
 
+  const permissions = useSelfPermissions();
   const navigate = useTypedNavigate();
 
   useEffect(() => {
@@ -43,23 +45,27 @@ export default function Page({ params }: Route.ComponentProps) {
     <div className={styles.root}>
       <NavTabs
         className={styles['entities-tabs']}
-        items={Object.entries(schemas).map(([id, { title }]) => ({
-          text: title,
-          href: `/entities/${id}`,
-        }))}
+        items={Object.entries(schemas)
+          .filter(([id]) => permissions.has(`entity/${id}$get`))
+          .map(([id, { title }]) => ({
+            text: title,
+            href: `/entities/${id}`,
+          }))}
       />
 
       {selectedEntity && selectedSchema && (
         <div className={styles.content}>
           <div className={styles.header}>
-            <LinkButton
-              className={styles['new-entity-button']}
-              to={`/entities/${selectedEntity}/+`}
-              buttonVariant="outlined"
-            >
-              <PlusIcon />
-              New entity
-            </LinkButton>
+            {permissions.has(`entity/${selectedEntity}$create`) && (
+              <LinkButton
+                className={styles['new-entity-button']}
+                to={`/entities/${selectedEntity}/+`}
+                buttonVariant="outlined"
+              >
+                <PlusIcon />
+                New entity
+              </LinkButton>
+            )}
           </div>
 
           <EntityList

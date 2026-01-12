@@ -16,6 +16,7 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
+import { useSelfPermissions } from '@/hooks/useSelfPermissions';
 import {
   type EntityComposeOptions,
   transformDataToClientData,
@@ -46,6 +47,7 @@ export function AccessEntityView<Id extends EntityId>({
   type ClientData = ComponentClientDataById<ComposeId, Args>;
 
   const api = useComponentApi();
+  const permissions = useSelfPermissions();
 
   const Compose = api.getComponent(composeId);
   const composeOptions = schema.components as EntityComposeOptions<Id>;
@@ -77,15 +79,16 @@ export function AccessEntityView<Id extends EntityId>({
           {schema.title}
         </Typography>
 
-        {initialValue !== undefined && (
-          <IconButton
-            className={styles.delete}
-            title="Delete"
-            onClick={onDelete}
-          >
-            <DeleteIcon />
-          </IconButton>
-        )}
+        {initialValue !== undefined &&
+          permissions.has(`entity/${schema.id}$delete`) && (
+            <IconButton
+              className={styles.delete}
+              title="Delete"
+              onClick={onDelete}
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
       </div>
 
       <div className={styles.content}>

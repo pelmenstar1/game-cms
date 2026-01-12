@@ -3,6 +3,7 @@ import '@game-cms/core/api';
 declare module '@game-cms/core/api' {
   interface ApiRouteMap {
     'GET /auth/permissions': typeof import('./auth/permissions/get.js');
+    'GET /auth/permissions/self': typeof import('./auth/permissions/self.js');
     'DELETE /auth/token/byId/:id': typeof import('./auth/token/byId/delete.js');
     'GET /auth/token/byId/:id': typeof import('./auth/token/byId/get.js');
     'POST /auth/token': typeof import('./auth/token/create.js');

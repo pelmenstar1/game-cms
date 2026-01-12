@@ -13,6 +13,7 @@ import {
 import { useCallback } from 'react';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
+import { useCheckPermissions } from '@/hooks/useCheckPermissions';
 import { useEntitySchema } from '@/hooks/useEntitySchema';
 
 import type { Route } from './+types/route';
@@ -32,6 +33,8 @@ export default function Page({ params }: Route.ComponentProps) {
 
   const doUpdateEntity = useApiAction(updateEntityById);
   const doDeleteEntity = useApiAction(deleteEntityById);
+
+  useCheckPermissions(`entity/${id}$edit`);
 
   const onSave = useCallback(
     (data: EntityData) => {
