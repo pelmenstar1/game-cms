@@ -1,0 +1,17 @@
+.content {
+  display: grid;
+  grid-template-columns: repeat(2, 50%);
+  width: 80vw;
+}
+
+.preview {
+  padding-right: 1em;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  border-left: 1px solid var(--color-background-dark);
+  padding-left: 1em;
+}

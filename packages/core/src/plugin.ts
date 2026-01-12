@@ -7,7 +7,7 @@ import type {
 } from 'fastify';
 import type { Plugin as VitePlugin } from 'vite';
 
-import type { ApiRoute } from './api.js';
+import type { ApiRoute } from './api/route.js';
 import type { ResolvedCmsConfig } from './config.js';
 import type { Service } from './service.js';
 

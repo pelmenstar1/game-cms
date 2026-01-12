@@ -1,4 +1,4 @@
-import { StorageItemWithId } from '@game-cms/base-core';
+import { StorageItemType, StorageItemWithId } from '@game-cms/base-core';
 import {
   createFolder,
   deleteStorageItemById,
@@ -16,33 +16,39 @@ import {
   useModal,
   useNotification,
 } from '@game-cms/ui';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { FileControlHeader } from '../FileControlHeader/index.js';
-import { FileGrid, type FileItem } from '../FileGrid/index.js';
+import { FileGrid } from '../FileGrid/index.js';
 import { FolderNameModal } from '../FolderNameModal/index.js';
 import { UploadFileDialog } from '../UploadFileDialog/index.js';
 import styles from './FileExplorer.module.scss';
 import { transformItems } from './transform.js';
+
+const FileInfoModal = React.lazy(async () => {
+  const { FileInfoModal } = await import('../FileInfoModal/index.js');
+
+  return { default: FileInfoModal };
+});
 
 type FolderId = string | undefined;
 
 export interface FileExplorerProps {
   className?: string;
   visibleMimeTypes?: string[];
+  multiple?: boolean;
   folderId: FolderId;
   onFolderChanged: (value: FolderId) => void;
-  onSelectedItemChanged?: (
-    value: ToClientType<StorageItemWithId> | undefined
-  ) => void;
+  onSelectedItemsChanged?: (value: ToClientType<StorageItemWithId[]>) => void;
 }
 
 export function FileExplorer({
   className,
   folderId,
   visibleMimeTypes,
+  multiple,
   onFolderChanged,
-  onSelectedItemChanged,
+  onSelectedItemsChanged,
 }: FileExplorerProps) {
   const showModal = useModal();
   const notification = useNotification();
@@ -52,7 +58,7 @@ export function FileExplorer({
     [folderId]
   );
 
-  const [selectedItem, setSelectedItem] = useState<FileItem>();
+  const [selectedItemIds, setSelectedItems] = useState<string[]>([]);
 
   const [itemInfo] = useApiQuery(
     async (context, id) => (id ? getStorageItemInfo(context, id) : null),
@@ -101,14 +107,14 @@ export function FileExplorer({
 
   const onDelete = useAsyncCallback(async () => {
     try {
-      if (selectedItem) {
+      if (selectedItemIds.length > 0) {
         const proceed = await showModal(ConfirmationDialog, {
           prompt:
             'Do you want to delete this file? This action is irreversible',
         });
 
         if (proceed) {
-          await doDeleteItem(selectedItem.id);
+          await Promise.all(selectedItemIds.map((id) => doDeleteItem(id)));
 
           refreshItems();
 
@@ -118,7 +124,7 @@ export function FileExplorer({
     } catch {
       notification.error('Failed to delete item');
     }
-  }, [doDeleteItem, notification, refreshItems, selectedItem, showModal]);
+  }, [doDeleteItem, notification, refreshItems, selectedItemIds, showModal]);
 
   const onCreateFolder = useAsyncCallback(async () => {
     try {
@@ -137,10 +143,22 @@ export function FileExplorer({
   }, [showModal, doCreateFolder, folderId, notification, refreshItems]);
 
   const onItemDoubleClick = useCallback(() => {
-    if (selectedItem && selectedItem.type === 'folder') {
-      onFolderChanged(selectedItem.id);
+    if (itemsResult.status === 'success' && selectedItemIds.length === 1) {
+      const [id] = selectedItemIds;
+
+      const item = itemsResult.value.items.find((item) => item.id === id);
+
+      if (item) {
+        if (item.type === StorageItemType.FOLDER) {
+          onFolderChanged(id);
+        } else {
+          void showModal(FileInfoModal, {
+            item,
+          });
+        }
+      }
     }
-  }, [onFolderChanged, selectedItem]);
+  }, [onFolderChanged, showModal, selectedItemIds, itemsResult]);
 
   const onGoToParent = useCallback(() => {
     if (itemInfo.status === 'success' && itemInfo.value) {
@@ -152,13 +170,13 @@ export function FileExplorer({
 
   useEffect(() => {
     if (itemsResult.status === 'success') {
-      const item = itemsResult.value.items.find(
-        (item) => item.id === selectedItem?.id
+      const items = itemsResult.value.items.filter((item) =>
+        selectedItemIds.includes(item.id)
       );
 
-      onSelectedItemChanged?.(item);
+      onSelectedItemsChanged?.(items);
     }
-  }, [itemsResult, onSelectedItemChanged, selectedItem]);
+  }, [itemsResult, selectedItemIds, onSelectedItemsChanged]);
 
   return (
     <DataLoader
@@ -168,18 +186,20 @@ export function FileExplorer({
       {({ items }) => (
         <>
           <FileControlHeader
-            isDeleteEnabled={selectedItem !== undefined}
+            isDeleteEnabled={selectedItemIds.length > 0}
             hasParent={folderId !== undefined}
             onDelete={onDelete}
             onUpload={onUpload}
             onCreateFolder={onCreateFolder}
+            onRefresh={refreshItems}
             onGoToParent={onGoToParent}
           />
           <FileGrid
             className={styles.grid}
+            multiple={multiple}
             items={transformItems(items, visibleMimeTypes)}
-            selectedItemId={selectedItem?.id}
-            onItemSelected={setSelectedItem}
+            selectedItemIds={selectedItemIds}
+            onItemsSelected={setSelectedItems}
             onItemDoubleClick={onItemDoubleClick}
           />
         </>

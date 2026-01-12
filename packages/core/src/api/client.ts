@@ -1,6 +1,6 @@
 import type { Replace } from '@game-cms/shared';
 
-import type { ApiRouteMap, HttpMethod, HttpMethodWithBody } from './api.js';
+import type { ApiRouteMap, HttpMethod, HttpMethodWithBody } from './route.js';
 
 type MaybeSearch<T extends string> = T | `${T}?${string}`;
 

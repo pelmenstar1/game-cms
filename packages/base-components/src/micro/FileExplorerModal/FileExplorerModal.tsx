@@ -22,17 +22,20 @@ export function FileExplorerModal({
 }: FileExplorerModalProps) {
   const [folderId, setFolderId] = useState<string>();
 
-  const [selectedItem, setSelectedItem] =
-    useState<ToClientType<StorageItemWithId>>();
+  const [selectedItems, setSelectedItems] = useState<
+    ToClientType<StorageItemWithId>[]
+  >([]);
 
+  const singleItem = selectedItems[0];
   const isFileSelected =
-    selectedItem !== undefined && selectedItem.type === StorageItemType.FILE;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    singleItem?.type === StorageItemType.FILE;
 
   const handleClose = useCallback(() => {
     if (isFileSelected) {
-      onClose(selectedItem);
+      onClose(singleItem);
     }
-  }, [isFileSelected, selectedItem, onClose]);
+  }, [isFileSelected, singleItem, onClose]);
 
   return (
     <ModalDialog
@@ -46,7 +49,7 @@ export function FileExplorerModal({
         className={styles['explorer']}
         folderId={folderId}
         onFolderChanged={setFolderId}
-        onSelectedItemChanged={setSelectedItem}
+        onSelectedItemsChanged={setSelectedItems}
         visibleMimeTypes={supportedMimeTypes}
       />
 

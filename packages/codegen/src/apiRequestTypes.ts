@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import type { HttpMethod, UnknownApiRoute } from '@game-cms/core';
+import type { HttpMethod, UnknownApiRoute } from '@game-cms/core/api';
 import { importFile } from '@game-cms/shared/io';
 import { glob } from 'glob';
 
@@ -38,7 +38,8 @@ function createMetaFileContent(routes: RouteInfo[]) {
     return `    '${method} ${url}': typeof import('./${jsFile}');`;
   });
 
-  let result = `declare module '@game-cms/core' {\n`;
+  let result = `import '@game-cms/core/api';\n\n`;
+  result += `declare module '@game-cms/core/api' {\n`;
   result += `  interface ApiRouteMap {\n`;
   result += routesArray.join('\n');
   result += `\n  }\n`;

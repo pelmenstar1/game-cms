@@ -8,7 +8,7 @@ import {
   type StorageProvider,
 } from '@game-cms/base-core';
 import { ApiError } from '@game-cms/base-core';
-import { apiRoute } from '@game-cms/core';
+import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { isFileNotFoundError } from '@game-cms/shared/errors';
 import z from 'zod';

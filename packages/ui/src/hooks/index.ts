@@ -3,6 +3,7 @@ export * from './useAsyncCallback';
 export * from './useBounds';
 export * from './useCacheInvalidate';
 export * from './useDataLoader';
+export * from './useFetch';
 export * from './useInterval';
 export * from './useModal';
 export * from './usePageFetcher';

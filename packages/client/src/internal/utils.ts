@@ -4,7 +4,7 @@ import type {
   RequestOptions,
   RequestOptionsWithResult,
   RequestUrl,
-} from '@game-cms/core';
+} from '@game-cms/core/api';
 import { formatSearchParams, type SearchParams } from '@game-cms/shared';
 
 import type { MaybeSearch } from './utilTypes.js';

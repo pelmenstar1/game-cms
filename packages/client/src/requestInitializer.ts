@@ -1,4 +1,4 @@
-import { type RequestInitializer } from '@game-cms/core';
+import { type RequestInitializer } from '@game-cms/core/api';
 
 export function jsonInit(body: unknown): RequestInitializer {
   return (init) => {

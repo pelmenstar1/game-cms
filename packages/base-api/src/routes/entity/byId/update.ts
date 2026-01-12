@@ -1,5 +1,5 @@
 import { ApiError } from '@game-cms/base-core';
-import { apiRoute } from '@game-cms/core';
+import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';

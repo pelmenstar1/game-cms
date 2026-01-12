@@ -1,5 +1,3 @@
-export * from './api.js';
-export * from './apiClient.js';
 export * from './component.js';
 export * from './config.js';
 export * from './controller.js';

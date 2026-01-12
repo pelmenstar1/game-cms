@@ -1,4 +1,4 @@
-import { apiRoute } from '@game-cms/core';
+import { apiRoute } from '@game-cms/core/api';
 import { pagingOptionsSchema } from '@game-cms/core/schema';
 import { cms } from '@game-cms/global';
 

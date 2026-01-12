@@ -1,5 +1,5 @@
 import { type SignInPayload } from '@game-cms/base-core';
-import type { RequestContext } from '@game-cms/core';
+import type { RequestContext } from '@game-cms/core/api';
 
 import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';

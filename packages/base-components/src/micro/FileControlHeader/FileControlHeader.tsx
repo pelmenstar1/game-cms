@@ -5,6 +5,7 @@ import {
   IconButton,
   List,
   NewFolderIcon,
+  RefreshIcon,
   UploadIcon,
 } from '@game-cms/ui';
 
@@ -19,6 +20,7 @@ export interface FileControlHeaderProps {
   onDelete?: () => void;
   onUpload?: () => void;
   onCreateFolder?: () => void;
+  onRefresh?: () => void;
   onGoToParent?: () => void;
 }
 
@@ -29,6 +31,7 @@ export function FileControlHeader({
   onDelete,
   onUpload,
   onCreateFolder,
+  onRefresh,
   onGoToParent,
 }: FileControlHeaderProps) {
   return (
@@ -43,6 +46,10 @@ export function FileControlHeader({
         )}
       >
         <ArrowLeftIcon />
+      </IconButton>
+
+      <IconButton title="Refresh" onClick={onRefresh} hover="fill">
+        <RefreshIcon />
       </IconButton>
 
       <IconButton

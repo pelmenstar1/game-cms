@@ -2,7 +2,7 @@ import {
   getApiTokenJwtResponse,
   signTokenInPayload,
 } from '@game-cms/base-core/schema';
-import { apiRoute } from '@game-cms/core';
+import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
 export default apiRoute({

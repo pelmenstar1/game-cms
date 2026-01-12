@@ -1,6 +1,6 @@
 import { createApiToken } from '@game-cms/client';
 import { useApiAction } from '@game-cms/component-api';
-import type { ApiRouteId } from '@game-cms/core';
+import type { ApiRouteId } from '@game-cms/core/api';
 import {
   parseTimeSpec,
   type RelativeTime,

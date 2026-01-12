@@ -7,11 +7,11 @@ import type {
   UploadFileMeta,
   UploadFileResponse,
 } from '@game-cms/base-core';
-import type { RequestContext, ToClientType } from '@game-cms/core';
+import type { ToClientType } from '@game-cms/core';
+import { json, type RequestContext } from '@game-cms/core/api';
 
 import { request, url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
-import { json } from '../responseParser.js';
 
 export interface ClientUploadFilePayload {
   content: Blob;

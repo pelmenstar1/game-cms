@@ -6,12 +6,11 @@ import {
   type ApiClientContextType,
   type ApiRedirectOptions,
 } from '@game-cms/component-api';
-import type { RequestContext } from '@game-cms/core';
+import type { RequestContext } from '@game-cms/core/api';
+import { createAbortController } from '@game-cms/shared';
 import type { PageUrl, TypedNavigateFunction } from '@game-cms/ui';
 import { type PropsWithChildren, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-
-import { createAbortController } from '@/utils/abortController';
 
 declare module '@game-cms/component-api' {
   interface ApiRedirectOptions {

@@ -1,9 +1,9 @@
 import type {
-  ApiRoute,
   ComponentControllerMap,
   ResolvedCmsConfig,
   Service,
 } from '@game-cms/core';
+import type { ApiRoute } from '@game-cms/core/api';
 
 export interface ApiEnvironment {
   routes: ApiRoute[];

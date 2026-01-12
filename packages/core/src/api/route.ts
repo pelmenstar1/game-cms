@@ -12,7 +12,7 @@ import type {
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import type z from 'zod';
 
-import type { apiRouteId } from './schema/api.js';
+import type { apiRouteId } from '../schema/api.js';
 
 export const httpMethods = [
   'OPTIONS',

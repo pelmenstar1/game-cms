@@ -21,6 +21,7 @@ export default function Page() {
       className={styles.root}
       folderId={folderId}
       onFolderChanged={onFolderChanged}
+      multiple
     />
   );
 }

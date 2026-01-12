@@ -1,4 +1,5 @@
-import { classNames } from '@game-cms/ui';
+import { classNames, SelectionGrid } from '@game-cms/ui';
+import { useCallback } from 'react';
 
 import { FileGridEntry } from '../FileGridEntry/index.js';
 import styles from './FileGrid.module.scss';
@@ -10,8 +11,9 @@ interface BaseFileItem {
 
 interface PlainFileItem extends BaseFileItem {
   type: 'file';
+  mime: string;
   size: number;
-  thumbnail?: string;
+  url: string;
 }
 
 interface FolderItem extends BaseFileItem {
@@ -23,38 +25,47 @@ export type FileItem = PlainFileItem | FolderItem;
 export interface FileGridProps {
   className?: string;
   items: FileItem[];
+  multiple?: boolean;
+  selectedItemIds: string[];
 
-  selectedItemId?: string;
-
-  onItemSelected?: (item: FileItem | undefined) => void;
+  onItemsSelected?: (ids: string[]) => void;
   onItemDoubleClick?: (item: FileItem) => void;
 }
 
 export function FileGrid({
   className,
   items,
-  selectedItemId,
-  onItemSelected,
+  multiple,
+  selectedItemIds,
+  onItemsSelected,
   onItemDoubleClick,
 }: FileGridProps) {
+  const onSelectionChanged = useCallback(
+    (selection: number[]) => {
+      onItemsSelected?.(selection.map((i) => items[i].id));
+    },
+    [items, onItemsSelected]
+  );
+
   return (
-    <div
+    <SelectionGrid
       className={classNames(styles.root, className)}
-      onClick={() => onItemSelected?.(undefined)}
+      onSelectionChanged={onSelectionChanged}
+      disabled={!multiple}
     >
       {items.map((item) => (
         <FileGridEntry
-          key={item.name}
+          key={item.id}
           item={item}
-          isSelected={item.id === selectedItemId}
-          onSelectionChanged={(state) =>
-            onItemSelected?.(state ? item : undefined)
-          }
+          isSelected={selectedItemIds.includes(item.id)}
+          onSelectionChanged={(state) => {
+            onItemsSelected?.(state ? [item.id] : []);
+          }}
           onDoubleClick={() => {
             onItemDoubleClick?.(item);
           }}
         />
       ))}
-    </div>
+    </SelectionGrid>
   );
 }

@@ -69,12 +69,12 @@ export function Slider({
   return (
     <div
       className={classNames(styles.root, className)}
-      ref={containerRef}
-      style={{ ['--progress']: progress.toFixed(3), ...style }}
+      {...rest}
       onPointerDown={onThumbPointerDown}
       onPointerUp={onThumbPointerUp}
       onPointerMove={onThumbPointerMove}
-      {...rest}
+      ref={containerRef}
+      style={{ ['--progress']: progress.toFixed(3), ...style }}
     >
       <div className={styles.track} />
       <div

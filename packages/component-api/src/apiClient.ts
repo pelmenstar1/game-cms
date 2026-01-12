@@ -1,4 +1,4 @@
-import type { RequestFn } from '@game-cms/core';
+import type { RequestFn } from '@game-cms/core/api';
 import type { QueryResult } from '@game-cms/shared';
 import { contextUseFactory } from '@game-cms/ui';
 import React, { useCallback, useEffect, useState } from 'react';

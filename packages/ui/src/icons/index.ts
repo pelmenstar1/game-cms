@@ -41,6 +41,7 @@ export * from './PlayIcon';
 export * from './PlusIcon';
 export * from './PreviewIcon';
 export * from './QuestionIcon';
+export * from './RefreshIcon';
 export * from './SaveIcon';
 export * from './SeePasswordIcon';
 export * from './SettingsIcon';

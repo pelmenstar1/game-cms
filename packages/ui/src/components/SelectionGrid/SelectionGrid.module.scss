@@ -1,0 +1,25 @@
+.root {
+  --selection-color: #ffffff5b;
+  --selection-border-color: #fff;
+
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    position: absolute;
+    content: var(--selection-content);
+
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    transform: translate(calc(var(--x) * 100%), calc(var(--y) * 100%))
+      scale(var(--width, 0), var(--height, 0));
+
+    transform-origin: 0 0;
+
+    background: var(--selection-color);
+    border: var(--selection-border-color);
+  }
+}

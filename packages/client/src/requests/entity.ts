@@ -6,13 +6,13 @@ import type {
   EntitySchema,
   EntitySchemaById,
 } from '@game-cms/base-core';
-import type { ComponentDataResolverArgs, RequestContext } from '@game-cms/core';
+import type { ComponentDataResolverArgs } from '@game-cms/core';
+import { json, type RequestContext } from '@game-cms/core/api';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import qs from 'qs';
 
 import { request, url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
-import { json } from '../responseParser.js';
 
 export type EntityDataByIdWithId<T extends EntityId> = EntityRawDataById<T> & {
   _id: string;

@@ -3,7 +3,7 @@ import type {
   InitBodyRequestOptions,
   RequestOptions,
   ResponseParser,
-} from '@game-cms/core';
+} from '@game-cms/core/api';
 
 import { handleResponseError } from './internal/errors.js';
 import { createFullUrl } from './internal/utils.js';

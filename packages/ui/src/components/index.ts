@@ -36,6 +36,7 @@ export * from './Select';
 export * from './SelectableList';
 export * from './SelectBase';
 export * from './SelectHeader';
+export * from './SelectionGrid';
 export * from './SelectItems';
 export * from './Slider';
 export * from './Switch';

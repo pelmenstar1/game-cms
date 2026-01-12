@@ -1,5 +1,4 @@
-import type { ApiRouteId } from '@game-cms/core';
-import { parseApiRouteId } from '@game-cms/core';
+import { type ApiRouteId, parseApiRouteId } from '@game-cms/core/api';
 
 export type PermissionGroup = {
   actions: string[];

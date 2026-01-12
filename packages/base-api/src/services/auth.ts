@@ -11,8 +11,8 @@ import {
   refreshJwtPayloadSchema,
   sessionJwtPayloadSchema,
 } from '@game-cms/base-core/schema';
-import type { ApiRouteId } from '@game-cms/core';
 import { service } from '@game-cms/core';
+import type { ApiRouteId } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import {
   parseRelativeTimeToTotalSeconds,
