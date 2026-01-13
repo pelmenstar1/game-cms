@@ -1,20 +1,7 @@
-@mixin token-colors($map) {
-  @each $key, $value in $map {
-    :global(.hljs-#{$key}) {
-      color: #{$value};
-    }
-  }
-}
+@use '../../theme/jsonColors' as *;
 
 .root {
-  @include token-colors(
-    (
-      'number': #647e4c,
-      'string': #a37e38,
-      'attr': #a37e38,
-      'punctuation': #aaa,
-    )
-  );
+  @include json-colors;
 
   border: 1px solid var(--color-text-on-background);
   border-radius: 0.5em;

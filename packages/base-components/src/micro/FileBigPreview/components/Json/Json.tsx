@@ -1,4 +1,4 @@
-import { DataLoader, Typography, useTextFetch } from '@game-cms/ui';
+import { DataLoader, JsonText, useTextFetch } from '@game-cms/ui';
 
 export interface JsonProps {
   className?: string;
@@ -10,7 +10,7 @@ export function Json({ className, url }: JsonProps) {
 
   return (
     <DataLoader className={className} result={result}>
-      {(text) => <Typography>{text}</Typography>}
+      {(text) => <JsonText text={text} />}
     </DataLoader>
   );
 }

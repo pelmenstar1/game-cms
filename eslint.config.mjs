@@ -28,7 +28,7 @@ export default defineConfig(
       'packages/base-components/scripts/*',
       'packages/game-plugin-components/scripts/*',
       'packages/game-plugin-components/.storybook',
-      'packages/game-plugin-components/vite.storybook.config.ts',
+      'packages/*/vite.storybook.config.ts',
       'coverage',
     ],
   },

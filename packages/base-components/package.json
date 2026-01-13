@@ -5,7 +5,8 @@
   "scripts": {
     "prebuild": "tsx ./scripts/copyStyles.ts",
     "new-component": "tsx ./scripts/newComponent.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "storybook:start": "storybook dev --port 6006"
   },
   "dependencies": {
     "@game-cms/base-core": "workspace:*",
@@ -29,6 +30,8 @@
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
     "@game-cms/codegen": "workspace:*",
+    "@game-cms/storybook-config": "workspace:*",
+    "@storybook/react-vite": "catalog:",
     "@types/node": "catalog:",
     "mongodb": "catalog:",
     "tsx": "catalog:",
@@ -36,12 +39,12 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
     },
     "./micro": {
-      "import": "./dist/micro/index.js",
-      "types": "./dist/micro/index.d.ts"
+      "import": "./dist/src/micro/index.js",
+      "types": "./dist/src/micro/index.d.ts"
     }
   },
   "browserslist": [

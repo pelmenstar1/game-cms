@@ -1,0 +1,12 @@
+@use '../../theme/jsonColors' as *;
+
+.header {
+  display: flex;
+  justify-content: end;
+}
+
+.content {
+  @include json-colors;
+
+  font-family: monospace;
+}

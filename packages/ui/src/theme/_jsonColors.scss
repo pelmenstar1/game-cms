@@ -1,0 +1,18 @@
+@mixin token-colors($map) {
+  @each $key, $value in $map {
+    :global(.hljs-#{$key}) {
+      color: #{$value};
+    }
+  }
+}
+
+@mixin json-colors() {
+  @include token-colors(
+    (
+      'number': #647e4c,
+      'string': #a37e38,
+      'attr': #a37e38,
+      'punctuation': #aaa,
+    )
+  );
+}

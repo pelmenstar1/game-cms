@@ -2,10 +2,10 @@
   "extends": "../../configs/tsconfig.lib.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
     "verbatimModuleSyntax": false,
     "resolveJsonModule": true,
-    "types": ["node", "vite/client", "@game-cms/base-api/types"]
+    "types": ["node", "vite/client", "@game-cms/base-api/types"],
+    "paths": { "#storybook/*": ["./.storybook/*"] }
   },
   "references": [
     { "path": "../base-api" },
@@ -18,8 +18,15 @@
     { "path": "../core" },
     { "path": "../global" },
     { "path": "../shared" },
+    { "path": "../storybook-config" },
     { "path": "../ui" }
   ],
-  "include": ["./src", "./scripts", "./src/**/*.json"],
+  "include": [
+    "./src",
+    "./scripts",
+    "./src/**/*.json",
+    "./.storybook/preview.tsx",
+    "./.storybook/main.ts"
+  ],
   "exclude": ["./scripts"]
 }

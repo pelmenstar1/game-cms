@@ -1,4 +1,4 @@
-import { DataLoader, Typography, useTextFetch } from '@game-cms/ui';
+import { DataLoader, LineCountingText, useTextFetch } from '@game-cms/ui';
 
 import styles from './Text.module.scss';
 
@@ -12,7 +12,7 @@ export function Text({ className, url }: TextProps) {
 
   return (
     <DataLoader className={className} result={result}>
-      {(text) => <Typography className={styles.text}>{text}</Typography>}
+      {(text) => <LineCountingText className={styles.text} text={text} />}
     </DataLoader>
   );
 }

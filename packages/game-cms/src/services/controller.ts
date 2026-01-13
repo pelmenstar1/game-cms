@@ -15,7 +15,6 @@ export function createController(): GameCmsController {
     service(name) {
       const result = serviceMap[name];
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (result === undefined) {
         throw new Error(`Unknown service: ${name}`);
       }

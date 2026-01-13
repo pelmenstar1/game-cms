@@ -104,8 +104,6 @@ export function SelectionGrid({
 
         const selectedIndices: number[] = [];
 
-        console.log(childrenBounds.current);
-
         const cBoundsList = childrenBounds.current;
         for (let i = 0; i < cBoundsList.length; i++) {
           const cBounds = cBoundsList[i];

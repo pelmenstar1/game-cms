@@ -1,0 +1,18 @@
+.root {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.5em;
+}
+
+.number {
+  grid-column: 1;
+  color: var(--color-text-on-background-dark);
+
+  &::before {
+    content: attr(data-content);
+  }
+}
+
+.line {
+  grid-column: 2;
+}
