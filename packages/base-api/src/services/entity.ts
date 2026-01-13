@@ -1,5 +1,6 @@
 import {
   ApiError,
+  type EntityData,
   type EntityId,
   type EntityRawDataById,
   type EntityRawInDataById,
@@ -18,6 +19,24 @@ import type {
 } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
+
+declare module '@game-cms/base-core' {
+  interface AppEventsRegistry {
+    'base::entity::created': {
+      entityId: EntityId;
+      id: ObjectId;
+      data: EntityData;
+    };
+    'base::entity::updated': {
+      entityId: EntityId;
+      id: ObjectId;
+      newData: EntityData;
+    };
+    'base::entity::deleted': {
+      id: ObjectId;
+    };
+  }
+}
 
 function collection<T extends EntityId>(id: T) {
   return cms().service('base::database').entityCollection(id);
@@ -81,25 +100,49 @@ export default service({
   id: 'base::entity',
   create: async <T extends EntityId>(id: T, data: EntityRawInDataById<T>) => {
     const storageData = await toStorageData(id, data);
-    const result = await collection(id).insertOne(
-      storageData as OptionalUnlessRequiredId<EntityRawInDataById<T>>
+    const { insertedId } = await collection(id).insertOne(
+      storageData as OptionalUnlessRequiredId<EntityStorageDataById<T>>
     );
 
-    return { _id: result.insertedId, ...storageData };
+    cms().service('base::appEvents').emit('base::entity::created', {
+      entityId: id,
+      id: insertedId,
+      data: storageData,
+    });
+
+    return { _id: insertedId, ...storageData };
   },
   update: async <Id extends EntityId>(
     entityId: Id,
     id: ObjectId,
     data: EntityRawInDataById<Id>
   ) => {
+    const storageData = await toStorageData(entityId, data);
     const result = await collection(entityId).updateOne(idFilter(id), {
-      $set: await toStorageData(entityId, data),
+      $set: storageData,
     });
 
-    return result.matchedCount > 0;
+    const isUpdated = result.matchedCount > 0;
+
+    if (isUpdated) {
+      cms().service('base::appEvents').emit('base::entity::updated', {
+        entityId,
+        id,
+        newData: storageData,
+      });
+    }
+
+    return isUpdated;
   },
   deleteById: async (entityId: string, id: ObjectId) => {
-    await collection(entityId).deleteOne(idFilter(id));
+    const { deletedCount } = await collection(entityId).deleteOne(idFilter(id));
+    const isDeleted = deletedCount > 0;
+
+    if (isDeleted) {
+      cms().service('base::appEvents').emit('base::entity::deleted', { id });
+    }
+
+    return isDeleted;
   },
   list: async <T extends EntityId>(entityId: T, options: PagingOptions) => {
     const result = await getPage(collection(entityId), options);

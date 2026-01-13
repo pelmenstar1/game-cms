@@ -1,4 +1,5 @@
 export { default as apiToken } from './apiToken.js';
+export { default as appEvents } from './appEvents.js';
 export { default as auth } from './auth.js';
 export { default as component } from './component.js';
 export { default as database } from './database.js';

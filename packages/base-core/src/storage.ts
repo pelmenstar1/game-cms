@@ -7,6 +7,7 @@ import type {
   listStorageItemsOptions,
   listStorageItemsResponse,
   storageFileItem,
+  storageFolderItem,
   storageItem,
   storageItemWithMeta,
   uploadFileMeta,
@@ -24,7 +25,7 @@ export interface StorageFileItemWithId<Id = string> extends StorageFileItem {
   id: Id;
 }
 
-export type StorageFolderItem = z.infer<typeof storageFileItem>;
+export type StorageFolderItem = z.infer<typeof storageFolderItem>;
 export type StorageItem = z.infer<typeof storageItem>;
 
 export type StorageItemWithId<Id = string> = StorageItem & {

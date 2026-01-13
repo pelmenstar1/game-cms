@@ -5,8 +5,23 @@ import type {
   EntityStorageDataById,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
-import { env } from '@game-cms/global';
-import { ClientSession, MongoClient, type TransactionOptions } from 'mongodb';
+import { cms, env } from '@game-cms/global';
+import {
+  ClientSession,
+  CommandFailedEvent,
+  CommandStartedEvent,
+  CommandSucceededEvent,
+  MongoClient,
+  type TransactionOptions,
+} from 'mongodb';
+
+declare module '@game-cms/base-core' {
+  interface AppEventsRegistry {
+    'base::database::commandStarted': CommandStartedEvent;
+    'base::database::commandSucceeded': CommandSucceededEvent;
+    'base::database::commandFailed': CommandFailedEvent;
+  }
+}
 
 let _client: MongoClient | undefined;
 
@@ -22,6 +37,21 @@ function client(): MongoClient {
 
 export default service({
   id: 'base::database',
+  init: () => {
+    const appEvents = cms().service('base::appEvents');
+
+    client().on('commandStarted', (event) => {
+      appEvents.emit('base::database::commandStarted', event);
+    });
+
+    client().on('commandSucceeded', (event) => {
+      appEvents.emit('base::database::commandSucceeded', event);
+    });
+
+    client().on('commandFailed', (event) => {
+      appEvents.emit('base::database::commandFailed', event);
+    });
+  },
   client,
   collection: <T extends DatabaseCollectionId>(id: T) => {
     return client().db().collection<DatabaseEntityMap[T]>(id);

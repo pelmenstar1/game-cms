@@ -2,6 +2,9 @@ import {
   type CreateFolderPayload,
   type DeleteStorageItemOptions,
   type ListStorageItemsOptions,
+  type StorageFileItem,
+  type StorageFileItemWithId,
+  type StorageFolderItem,
   type StorageItem,
   StorageItemType,
   type StorageItemWithMeta,
@@ -12,6 +15,14 @@ import { cms, env } from '@game-cms/global';
 import type { ClientSession, Document, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
+
+declare module '@game-cms/base-core' {
+  interface AppEventsRegistry {
+    'base::storage::fileUploaded': StorageFileItemWithId<ObjectId>;
+    'base::storage::folderCreated': CreateFolderPayload & { id: ObjectId };
+    'base::storage::itemDeleted': { id: ObjectId };
+  }
+}
 
 function collection() {
   return cms().service('base::database').collection('base::storage');
@@ -63,25 +74,41 @@ export default service({
     const { mime, name, parent, hidden } = payload;
     const { url } = await storageProvider().protocol.upload(payload);
 
-    const { insertedId } = await collection().insertOne({
-      type: StorageItemType.FILE,
+    const item: StorageFileItem = {
       url,
       mime,
       name,
       parent,
       hidden,
+    };
+
+    const { insertedId } = await collection().insertOne({
+      ...item,
+      type: StorageItemType.FILE,
     });
+
+    cms()
+      .service('base::appEvents')
+      .emit('base::storage::fileUploaded', { ...item, id: insertedId });
 
     return { id: insertedId, url };
   },
   createFolder: async (payload: CreateFolderPayload) => {
     const { name, parent } = payload;
 
-    const { insertedId } = await collection().insertOne({
-      type: StorageItemType.FOLDER,
+    const item: StorageFolderItem = {
       name,
       parent,
+    };
+
+    const { insertedId } = await collection().insertOne({
+      type: StorageItemType.FOLDER,
+      ...item,
     });
+
+    cms()
+      .service('base::appEvents')
+      .emit('base::storage::folderCreated', { ...item, id: insertedId });
 
     return insertedId;
   },
@@ -144,6 +171,10 @@ export default service({
       }
 
       await collection().deleteOne({ _id: id });
+
+      cms()
+        .service('base::appEvents')
+        .emit('base::storage::itemDeleted', { id });
     }
   },
 });

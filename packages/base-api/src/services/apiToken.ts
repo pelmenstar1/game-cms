@@ -12,6 +12,16 @@ import type { ObjectId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
+declare module '@game-cms/base-core' {
+  interface AppEventsRegistry {
+    'base::apiToken::created': CreateApiTokenPayload & {
+      token: string;
+      id: ObjectId;
+    };
+    'base::apiToken::deleted': { id: ObjectId };
+  }
+}
+
 function collection() {
   return cms().service('base::database').collection('base::apiTokens');
 }
@@ -71,16 +81,22 @@ export default service({
     const token = await generateToken();
 
     const now = Date.now();
-    await collection().insertOne({
+    const { insertedId } = await collection().insertOne({
       token,
       expirationDate: new Date(now + payload.expirationTime),
       name: payload.name,
       permissions: payload.permissions,
     });
 
+    cms()
+      .service('base::appEvents')
+      .emit('base::apiToken::created', { ...payload, token, id: insertedId });
+
     return { token };
   },
   deleteById: async (id: ObjectId) => {
     await collection().deleteOne({ _id: id });
+
+    cms().service('base::appEvents').emit('base::apiToken::deleted', { id });
   },
 });

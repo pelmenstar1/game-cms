@@ -64,6 +64,7 @@ export default defineConfig(
       'unicorn/prefer-at': 'off',
       'unicorn/no-for-loop': 'off',
       'unicorn/no-process-exit': 'off',
+      'unicorn/prefer-event-target': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/await-thenable': 'off',
