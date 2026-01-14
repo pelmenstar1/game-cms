@@ -47,7 +47,7 @@ export function AccessEntityView<Id extends EntityId>({
   type ClientData = ComponentClientDataById<ComposeId, Args>;
 
   const api = useComponentApi();
-  const permissions = useSelfPermissions();
+  const { permissions } = useSelfPermissions();
 
   const Compose = api.getComponent(composeId);
   const composeOptions = schema.components as EntityComposeOptions<Id>;

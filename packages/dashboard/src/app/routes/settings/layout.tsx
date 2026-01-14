@@ -8,7 +8,7 @@ import { items } from './items';
 import styles from './layout.module.scss';
 
 export default function Layout() {
-  const permissions = useSelfPermissions();
+  const { permissions } = useSelfPermissions();
 
   const allowedItems = useMemo(
     () => items.filter((item) => permissions.has(item.permission)),

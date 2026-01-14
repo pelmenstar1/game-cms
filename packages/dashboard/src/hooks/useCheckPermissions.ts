@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useSelfPermissions } from './useSelfPermissions';
 
 export function useCheckPermissions(id: ApiRouteId) {
-  const permissions = useSelfPermissions();
+  const { permissions } = useSelfPermissions();
   const redirect = useTypedNavigate();
 
   useEffect(() => {

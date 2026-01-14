@@ -5,15 +5,16 @@ import { type PropsWithChildren, useMemo } from 'react';
 import { PermissionsContext, type PermissionsContextType } from './context';
 
 export function PermissionsProvider({ children }: PropsWithChildren) {
-  const [permissions] = useApiQuery(getSelfPermissions);
+  const [permissions, refresh] = useApiQuery(getSelfPermissions);
 
   const context = useMemo(
     (): PermissionsContextType => ({
+      refresh,
       permissions: new Set(
         permissions.status === 'success' ? permissions.value.permissions : []
       ),
     }),
-    [permissions]
+    [refresh, permissions]
   );
 
   return (

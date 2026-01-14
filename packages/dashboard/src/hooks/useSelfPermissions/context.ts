@@ -3,6 +3,7 @@ import React from 'react';
 
 export type PermissionsContextType = {
   permissions: Set<ApiRouteId>;
+  refresh: () => void;
 };
 
 export const PermissionsContext =

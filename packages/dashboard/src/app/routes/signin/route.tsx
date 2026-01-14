@@ -14,6 +14,8 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
 
+import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+
 import styles from './route.module.scss';
 
 export default function Page() {
@@ -25,18 +27,22 @@ export default function Page() {
 
   const doSignIn = useApiAction(signUserIn, { redirectOnUnauthorized: false });
 
+  const { refresh: refreshPermissions } = useSelfPermissions();
+
   const redirect = useTypedNavigate();
   const notification = useNotification();
 
   const signIn = useCallback(() => {
     void doSignIn({ email, password })
       .then(() => {
+        refreshPermissions();
+
         return redirect('/');
       })
       .catch(() => {
         notification.error('Invalid email or password');
       });
-  }, [email, notification, password, redirect, doSignIn]);
+  }, [email, notification, password, redirect, doSignIn, refreshPermissions]);
 
   return (
     <div className={styles.root}>

@@ -5,6 +5,5 @@ import { PermissionsProvider } from './provider';
 
 export const useSelfPermissions = createContextHook(
   PermissionsContext,
-  PermissionsProvider,
-  ({ permissions }) => permissions
+  PermissionsProvider
 );

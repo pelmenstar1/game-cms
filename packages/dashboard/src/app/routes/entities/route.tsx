@@ -21,7 +21,7 @@ export default function Page({ params }: Route.ComponentProps) {
 
   const selectedSchema = selectedEntity ? schemas[selectedEntity] : null;
 
-  const permissions = useSelfPermissions();
+  const { permissions } = useSelfPermissions();
   const navigate = useTypedNavigate();
 
   useEffect(() => {

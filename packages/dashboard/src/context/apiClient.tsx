@@ -6,7 +6,7 @@ import {
   type ApiClientContextType,
   type ApiRedirectOptions,
 } from '@game-cms/component-api';
-import type { RequestContext } from '@game-cms/core/api';
+import type { RequestContext, RequestFn } from '@game-cms/core/api';
 import { createAbortController } from '@game-cms/shared';
 import type { PageUrl, TypedNavigateFunction } from '@game-cms/ui';
 import { type PropsWithChildren, useMemo } from 'react';
@@ -54,45 +54,58 @@ export function ApiClientProvider({ children }: PropsWithChildren) {
   const client = useMemo(() => createStandardClient({ baseUrl: `/api` }), []);
   const navigate = useNavigate();
 
+  const baseMakeApiRequest = <T, Args extends unknown[]>(
+    fn: RequestFn<Args, T>,
+    args: Args,
+    redirectOptions?: ApiRedirectOptions,
+    checkExpired: boolean = true
+  ): { promise: Promise<T>; abort: () => void } => {
+    const abortController = createAbortController();
+    const context: RequestContext = {
+      client,
+      abortController,
+    };
+
+    const worker = async () => {
+      try {
+        return await fn(context, ...args);
+      } catch (error: unknown) {
+        if (error instanceof ApiError) {
+          if (
+            checkExpired &&
+            (error.code === 'base::access/expired' ||
+              error.code === 'base::access/unauthorized')
+          ) {
+            await baseMakeApiRequest(
+              refreshUserSession,
+              [],
+              redirectOptions,
+              false
+            ).promise;
+
+            return baseMakeApiRequest(fn, args, redirectOptions, false).promise;
+          } else {
+            await handleRedirects(error, navigate, redirectOptions);
+          }
+        }
+
+        throw error;
+      }
+    };
+
+    return {
+      promise: worker(),
+      abort: () => {
+        abortController?.abort();
+      },
+    };
+  };
+
   const value = useMemo(
     (): ApiClientContextType => ({
-      makeApiRequest: (fn, args, redirectOptions) => {
-        const abortController = createAbortController();
-        const context: RequestContext = {
-          client,
-          abortController,
-        };
-
-        const worker = async () => {
-          try {
-            return await fn(context, ...args);
-          } catch (error: unknown) {
-            if (error instanceof ApiError) {
-              if (error.code === 'base::access/expired') {
-                await value.makeApiRequest(
-                  refreshUserSession,
-                  [],
-                  redirectOptions
-                ).promise;
-
-                return value.makeApiRequest(fn, args, redirectOptions).promise;
-              } else {
-                await handleRedirects(error, navigate, redirectOptions);
-              }
-            }
-
-            throw error;
-          }
-        };
-
-        return {
-          promise: worker(),
-          abort: () => {
-            abortController?.abort();
-          },
-        };
-      },
+      makeApiRequest: baseMakeApiRequest,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [client, navigate]
   );
 
