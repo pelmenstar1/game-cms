@@ -8,6 +8,7 @@ export const renderer: ComponentRenderer<'base::number'> = ({
   data,
   options,
   error,
+  readonly,
   onDataChanged,
 }) => {
   const { t } = useTranslation('base', {
@@ -26,6 +27,7 @@ export const renderer: ComponentRenderer<'base::number'> = ({
       className={styles.root}
       error={errorText}
       value={data}
+      readOnly={readonly}
       onTextChanged={onDataChanged}
     />
   );

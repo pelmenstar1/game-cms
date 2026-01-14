@@ -1,0 +1,31 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.item {
+  display: flex;
+  gap: 0.5em;
+
+  &-name {
+    display: flex;
+    align-items: center;
+    width: 5em;
+
+    &::after {
+      content: '=';
+      display: inline-block;
+      font-family: var(--font-murs-gothic);
+      font-weight: 700;
+    }
+  }
+
+  &-delete {
+    padding: 0.5em;
+  }
+}
+
+.add {
+  align-self: center;
+}

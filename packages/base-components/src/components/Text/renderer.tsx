@@ -7,6 +7,7 @@ import styles from './renderer.module.scss';
 export const renderer: ComponentRenderer<'base::text'> = ({
   data,
   error,
+  readonly,
   onDataChanged,
 }) => {
   const { t } = useTranslation('base');
@@ -18,6 +19,7 @@ export const renderer: ComponentRenderer<'base::text'> = ({
       className={styles.root}
       value={data}
       error={errorMessage}
+      readOnly={readonly}
       onTextChanged={onDataChanged}
     />
   );

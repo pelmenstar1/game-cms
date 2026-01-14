@@ -4,6 +4,11 @@
   gap: 1em;
 }
 
+.header {
+  display: flex;
+  justify-content: end;
+}
+
 .alternative-list {
   display: flex;
   flex-direction: column;

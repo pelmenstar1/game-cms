@@ -19,7 +19,8 @@
     { "path": "../global" },
     { "path": "../shared" },
     { "path": "../storybook-config" },
-    { "path": "../ui" }
+    { "path": "../ui" },
+    { "path": "../vite-plugins" }
   ],
   "include": [
     "./src",

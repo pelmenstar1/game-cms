@@ -1,9 +1,18 @@
 import { useComponentApi } from '@game-cms/component-api';
 import { ComponentClientDataById, ComponentProps } from '@game-cms/core';
 import { removeIndex } from '@game-cms/shared/collections';
-import { DraggableList, IconButton, PlusIcon, Typography } from '@game-cms/ui';
+import {
+  DraggableList,
+  IconButton,
+  PlusIcon,
+  PreviewIcon,
+  Typography,
+  useModal,
+} from '@game-cms/ui';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { AlternativeTestModal } from '../../micro/AlternativeTestModal/index.js';
 import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
 import styles from './renderer.module.scss';
 
@@ -22,6 +31,7 @@ export const renderer = <Args,>({
   });
 
   const api = useComponentApi();
+  const showModal = useModal();
 
   const { baseOptions, componentId } = options;
   const BaseComponent = api.getComponent(componentId);
@@ -59,8 +69,25 @@ export const renderer = <Args,>({
     });
   };
 
+  const onShowTestModal = useCallback(() => {
+    void showModal(AlternativeTestModal<Args>, {
+      data,
+      options,
+    });
+  }, [data, options, showModal]);
+
   return (
     <div className={styles['root']}>
+      <div className={styles['header']}>
+        <IconButton
+          onClick={onShowTestModal}
+          title={t('openTest')}
+          disabled={error !== undefined}
+        >
+          <PreviewIcon />
+        </IconButton>
+      </div>
+
       <div className={styles['default-choice']}>
         <Typography className={styles['default-choice-label']}>
           {t('default')}

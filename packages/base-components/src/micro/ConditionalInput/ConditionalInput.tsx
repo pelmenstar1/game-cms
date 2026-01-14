@@ -1,4 +1,5 @@
 import { TextInput } from '@game-cms/ui';
+import { useTranslation } from 'react-i18next';
 
 export interface ConditionalInputProps {
   className?: string;
@@ -11,5 +12,15 @@ export function ConditionalInput({
   onValueChanged,
   ...rest
 }: ConditionalInputProps) {
-  return <TextInput onTextChanged={onValueChanged} {...rest} />;
+  const { t } = useTranslation('base', {
+    keyPrefix: 'micro.ConditionalInput',
+  });
+
+  return (
+    <TextInput
+      onTextChanged={onValueChanged}
+      placeholder={t('placeholder')}
+      {...rest}
+    />
+  );
 }

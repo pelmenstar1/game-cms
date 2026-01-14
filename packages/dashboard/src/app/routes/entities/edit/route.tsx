@@ -34,7 +34,7 @@ export default function Page({ params }: Route.ComponentProps) {
   const doUpdateEntity = useApiAction(updateEntityById);
   const doDeleteEntity = useApiAction(deleteEntityById);
 
-  useCheckPermissions(`entity/${id}$edit`);
+  useCheckPermissions(`entity/${id}$update`);
 
   const onSave = useCallback(
     (data: EntityData) => {

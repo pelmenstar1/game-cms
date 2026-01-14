@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactNode, Ref } from 'react';
 
 import { classNames } from '../../utils/classNames';
-import { Typography } from '../Typography';
+import { Typography, type TypographyWeight } from '../Typography';
 import styles from './TextInput.module.scss';
 
 export type TextInputVariant = 'bordered' | 'underline';
@@ -11,6 +11,7 @@ export interface TextInputProps extends ComponentProps<'input'> {
   endContent?: ReactNode;
   type?: 'text' | 'password' | 'email' | 'tel';
   variant?: TextInputVariant;
+  weight?: TypographyWeight;
   ref?: Ref<HTMLInputElement>;
 
   onTextChanged?: (text: string) => void;
@@ -21,6 +22,7 @@ export function TextInput({
   error,
   disabled,
   variant = 'bordered',
+  weight = 'plain',
   endContent,
   ref,
   onChange,
@@ -42,6 +44,7 @@ export function TextInput({
           type="text"
           ref={ref}
           disabled={disabled}
+          weight={weight}
           onChange={
             onChange ??
             ((event) => {

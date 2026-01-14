@@ -20,7 +20,8 @@
     },
     "Alternative": {
       "addItem": "Add alternative",
-      "default": "Default"
+      "default": "Default",
+      "openTest": "Open test"
     },
     "DynamicZone": {
       "errors": {
@@ -42,6 +43,24 @@
       "errors": {
         "INVALID_FORMAT": "Invalid format"
       }
+    }
+  },
+  "micro": {
+    "ItemControlHeader": {
+      "delete": "Delete"
+    },
+    "EntityComponentChoice": {
+      "alternative": "Alternative"
+    },
+    "ConditionalInput": {
+      "placeholder": "Condition"
+    },
+    "ResolveArgsInput": {
+      "addArg": "Add argument",
+      "deleteArg": "Delete argument"
+    },
+    "AlternativeTestModal": {
+      "title": "Alternative test"
     }
   }
 }

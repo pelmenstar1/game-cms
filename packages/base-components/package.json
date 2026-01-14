@@ -31,6 +31,7 @@
     "@game-cms/base-api": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
+    "@game-cms/vite-plugins": "workspace:*",
     "@storybook/react-vite": "catalog:",
     "@types/node": "catalog:",
     "mongodb": "catalog:",

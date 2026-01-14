@@ -19,7 +19,7 @@ export default function Page({ params }: Route.ComponentProps) {
 
   const doCreateEntity = useApiAction(createEntity);
 
-  useCheckPermissions(`entity/${params.name}$edit`);
+  useCheckPermissions(`entity/${params.name}$create`);
 
   const onSave = useCallback(
     (data: EntityData) => {

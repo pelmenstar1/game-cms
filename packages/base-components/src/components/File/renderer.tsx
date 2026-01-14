@@ -19,6 +19,7 @@ export const renderer: ComponentRenderer<'base::file'> = ({
   data: items,
   options: { supportedMimeTypes, maxItems },
   error,
+  readonly,
   onDataChanged,
 }) => {
   const { t } = useTranslation('base', {
@@ -63,13 +64,15 @@ export const renderer: ComponentRenderer<'base::file'> = ({
             className={styles['preview-list']}
           />
         ) : (
-          <IconButton
-            title={t('addFile')}
-            onClick={onAddFile}
-            className={styles['single-add-button']}
-          >
-            <PlusIcon />
-          </IconButton>
+          readonly && (
+            <IconButton
+              title={t('addFile')}
+              onClick={onAddFile}
+              className={styles['single-add-button']}
+            >
+              <PlusIcon />
+            </IconButton>
+          )
         )}
       </div>
 

@@ -24,6 +24,8 @@
 
   &-variant-underline {
     border-bottom: $border-decl;
+
+    --input-padding: 8px 4px 4px 4px;
   }
 
   &-error {
@@ -46,7 +48,7 @@
 
     width: 100%;
 
-    padding: 8px 12px;
+    padding: var(--input-padding, 8px 12px);
   }
 
   &:hover,

@@ -140,6 +140,7 @@ export type ComponentProps<Id extends ComponentId, Args> = {
   data: ComponentClientDataById<Id, Args>;
   options: ComponentOptionsById<Id, Args>;
   error?: ComponentErrorById<Id, Args>;
+  readonly?: boolean;
   onDataChanged?: (data: ComponentClientDataById<Id, Args>) => void;
 };
 

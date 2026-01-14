@@ -7,6 +7,7 @@ import type {
 } from '@game-cms/core';
 import { classNames, Typography } from '@game-cms/ui';
 import type { RefObject } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ConditionalInput } from '../ConditionalInput/index.js';
 import { ItemControlHeader } from '../ItemControlHeader/index.js';
@@ -44,6 +45,10 @@ export function EntityComponentChoice<Id extends ComponentId>({
   const api = useComponentApi();
   const Component = api.getComponent(componentId);
 
+  const { t } = useTranslation('base', {
+    keyPrefix: 'micro.EntityComponentChoice',
+  });
+
   return (
     <div className={classNames(styles.root, className)}>
       <ItemControlHeader
@@ -52,7 +57,7 @@ export function EntityComponentChoice<Id extends ComponentId>({
         handleRef={handleRef}
       >
         <Typography className={styles['alternative-label']}>
-          Alternative
+          {t('alternative')}
         </Typography>
       </ItemControlHeader>
 

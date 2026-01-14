@@ -32,7 +32,7 @@ export default componentCore({
       default: context.validate(componentId, data.default, baseOptions),
       alternative: data.alternative.map((item) => ({
         condition: undefined,
-        data: context.validate(componentId, item, baseOptions),
+        data: context.validate(componentId, item.value, baseOptions),
       })),
     };
 
