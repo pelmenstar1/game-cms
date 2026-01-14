@@ -8,6 +8,7 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
+  ComponentResolvedDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
 
@@ -28,11 +29,6 @@ type Error<Args extends AlternativeArgs> = ComponentErrorById<
   Args['baseArgs']
 >;
 
-type Data<Args extends AlternativeArgs> = ComponentRawDataById<
-  Args['id'],
-  Args['baseArgs']
->;
-
 type AlternativeEntry<Args extends AlternativeArgs> = {
   options: {
     componentId: Args['id'];
@@ -46,11 +42,11 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
       condition: string | undefined;
     }[];
   };
-  rawData: ConditionalData<Data<Args>>;
+  rawData: ConditionalData<ComponentRawDataById<Args['id'], Args['baseArgs']>>;
   rawInData: ConditionalData<
     ComponentRawInDataById<Args['id'], Args['baseArgs']>
   >;
-  resolvedData: Data<Args>;
+  resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>;
   clientData: ConditionalData<
     ComponentClientDataById<Args['id'], Args['baseArgs']>,
     string

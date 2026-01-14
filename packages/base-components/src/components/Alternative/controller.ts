@@ -8,8 +8,15 @@ import core from './core.js';
 
 export default componentController({
   core,
-  resolver: (raw, _options, _context, args) => {
-    return resolveConditionalData(raw, args as ConditionalValueInput);
+  resolver: (raw, options, context, args) => {
+    const result = resolveConditionalData(raw, args as ConditionalValueInput);
+
+    return context.resolveRawData(
+      options.componentId,
+      result,
+      options.baseOptions,
+      args
+    );
   },
   pathWalker: (data, options, path, apply, context) => {
     const { baseOptions, componentId } = options;
