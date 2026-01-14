@@ -18,6 +18,7 @@ export const renderer = <Args,>({
   data,
   options: { maxItems, options },
   error,
+  readonly,
   onDataChanged,
 }: ComponentProps<Id, Args>) => {
   type Data = ComponentClientDataById<Id, Args>;
@@ -29,7 +30,8 @@ export const renderer = <Args,>({
     keyPrefix: 'components.DynamicZone',
   });
 
-  const canAddItems = maxItems === undefined || data.length < maxItems;
+  const canAddItems =
+    !readonly && (maxItems === undefined || data.length < maxItems);
 
   const errorText = error?.ownError ? t(`errors.${error.ownError}`) : '';
 
@@ -92,7 +94,11 @@ export const renderer = <Args,>({
           items.length === 0 && styles['content-empty']
         )}
       >
-        <ComponentList items={items} onItemsChanged={onItemsChanged} />
+        <ComponentList
+          items={items}
+          readonly={readonly}
+          onItemsChanged={onItemsChanged}
+        />
 
         {canAddItems && (
           <DynamicZonePalette

@@ -11,6 +11,7 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
   options,
   data,
   error,
+  readonly,
   onDataChanged,
 }) => {
   const { t } = useTranslation('base', {
@@ -58,16 +59,19 @@ export const renderer: ComponentRenderer<'base::repeatable'> = ({
       <ComponentList
         className={styles.list}
         items={items}
+        readonly={readonly}
         onItemsChanged={onItemsChanged}
       />
 
-      <IconButton
-        className={styles.add}
-        title={t('addElement')}
-        onClick={onAdd}
-      >
-        <PlusIcon />
-      </IconButton>
+      {!readonly && (
+        <IconButton
+          className={styles.add}
+          title={t('addElement')}
+          onClick={onAdd}
+        >
+          <PlusIcon />
+        </IconButton>
+      )}
     </div>
   );
 };

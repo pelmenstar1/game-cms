@@ -66,7 +66,7 @@ export function AlternativeTestModal<Args>({
         className={styles.input}
       />
 
-      <BaseComponent data={componentData} options={baseOptions} />
+      <BaseComponent data={componentData} options={baseOptions} readonly />
     </ModalDialog>
   );
 }

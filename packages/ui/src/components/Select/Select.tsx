@@ -10,6 +10,7 @@ export interface SelectProps<
   selectedItem?: T;
   placeholder: string;
   disabled?: boolean;
+  openDisabled?: boolean;
 
   onItemSelected?: (value: T) => void;
 }
@@ -18,13 +19,16 @@ export function Select<T extends SelectItemKey>({
   items,
   placeholder,
   selectedItem,
+  openDisabled,
   ...rest
 }: SelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
 
   const switchOpen = useCallback(() => {
-    setIsOpen((state) => !state);
-  }, []);
+    if (!openDisabled) {
+      setIsOpen((state) => !state);
+    }
+  }, [openDisabled]);
 
   return (
     <SelectBase

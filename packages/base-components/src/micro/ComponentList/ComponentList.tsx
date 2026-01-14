@@ -42,6 +42,7 @@ export type ComponentListProps<
 > = {
   className?: string;
   items: T[];
+  readonly?: boolean;
   onItemsChanged: (items: T[]) => void;
 };
 
@@ -49,7 +50,12 @@ export function ComponentList<
   Id extends ComponentId,
   Args,
   T extends ComponentListItem<Id, Args>,
->({ className, items, onItemsChanged }: ComponentListProps<Id, Args, T>) {
+>({
+  className,
+  items,
+  readonly,
+  onItemsChanged,
+}: ComponentListProps<Id, Args, T>) {
   const api = useComponentApi();
 
   return (
@@ -82,30 +88,33 @@ export function ComponentList<
           );
         };
 
+        const header = (
+          <>
+            <IconButton
+              title="Delete item"
+              className={styles['delete-button']}
+              onClick={onDelete}
+            >
+              <DeleteIcon />
+            </IconButton>
+
+            <DragHandle ref={handleRef} />
+          </>
+        );
+
         return (
           <Accordion
             key={item.key}
             title={title}
             className={styles['item-container']}
-            headerContent={
-              <>
-                <IconButton
-                  title="Delete item"
-                  className={styles['delete-button']}
-                  onClick={onDelete}
-                >
-                  <DeleteIcon />
-                </IconButton>
-
-                <DragHandle ref={handleRef} />
-              </>
-            }
+            headerContent={readonly ? undefined : header}
             initiallyOpened={index === items.length - 1}
           >
             <BaseComponent
               data={item.data}
               options={item.options}
               error={item.error}
+              readonly={readonly}
               onDataChanged={onItemDataChanged}
             />
           </Accordion>

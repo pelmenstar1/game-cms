@@ -57,14 +57,15 @@ export const renderer: ComponentRenderer<'base::file'> = ({
       >
         {items.length > 0 ? (
           <FileList
+            className={styles['preview-list']}
             items={items}
             maxItems={maxItems}
+            readonly={readonly}
             onItemsChanged={onItemsChanged}
             onAddFile={onAddFile}
-            className={styles['preview-list']}
           />
         ) : (
-          readonly && (
+          !readonly && (
             <IconButton
               title={t('addFile')}
               onClick={onAddFile}

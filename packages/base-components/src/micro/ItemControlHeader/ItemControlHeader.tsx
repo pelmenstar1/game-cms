@@ -8,6 +8,7 @@ interface ItemControlHeaderProps {
   className?: string;
   handleRef?: Ref<HTMLButtonElement | null>;
 
+  readonly?: boolean;
   onDelete?: () => void;
 
   children?: ReactNode;
@@ -16,8 +17,9 @@ interface ItemControlHeaderProps {
 export function ItemControlHeader({
   className,
   handleRef,
-  onDelete,
   children,
+  readonly,
+  onDelete,
 }: ItemControlHeaderProps) {
   const { t } = useTranslation('base', {
     keyPrefix: 'micro.ItemControlHeader',
@@ -27,7 +29,7 @@ export function ItemControlHeader({
     <div className={classNames(styles.root, className)}>
       {children}
 
-      {onDelete && (
+      {onDelete && !readonly && (
         <IconButton
           title={t('delete')}
           className={styles['delete-button']}
@@ -36,7 +38,7 @@ export function ItemControlHeader({
           <DeleteIcon />
         </IconButton>
       )}
-      <DragHandle ref={handleRef} />
+      {!readonly && <DragHandle ref={handleRef} />}
     </div>
   );
 }

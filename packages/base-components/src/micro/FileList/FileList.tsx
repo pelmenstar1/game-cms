@@ -25,6 +25,7 @@ export interface FileListProps<T extends FileListItem> {
   className?: string;
   maxItems?: number;
   items: T[];
+  readonly?: boolean;
   onItemsChanged?: (items: T[]) => void;
   onAddFile?: () => void;
 }
@@ -43,12 +44,14 @@ export function FileList<T extends FileListItem>({
   className,
   items,
   maxItems,
+  readonly,
   onItemsChanged,
   onAddFile,
 }: FileListProps<T>) {
   const [item, setItem] = useState({ index: 0, value: items[0] });
 
-  const canAddItem = maxItems === undefined || items.length < maxItems;
+  const canAddItem =
+    !readonly && (maxItems === undefined || items.length < maxItems);
 
   const onDelete = useCallback(() => {
     onItemsChanged?.(removeIndex(items, item.index));
@@ -112,9 +115,11 @@ export function FileList<T extends FileListItem>({
             </IconButton>
           )}
 
-          <IconButton title="Delete item" onClick={onDelete} hover="fill">
-            <DeleteIcon />
-          </IconButton>
+          {!readonly && (
+            <IconButton title="Delete item" onClick={onDelete} hover="fill">
+              <DeleteIcon />
+            </IconButton>
+          )}
         </div>
       </div>
     </div>

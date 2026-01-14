@@ -22,6 +22,7 @@ export const renderer = <Args,>({
   data,
   options,
   error,
+  readonly,
   onDataChanged,
 }: ComponentProps<Id, Args>) => {
   type ItemData = ComponentClientDataById<Id, Args>['default'];
@@ -97,6 +98,7 @@ export const renderer = <Args,>({
           data={data.default}
           options={baseOptions}
           error={error?.default}
+          readonly={readonly}
           onDataChanged={onDefaultChange}
         />
       </div>
@@ -149,6 +151,7 @@ export const renderer = <Args,>({
                 conditionError={itemError?.condition}
                 options={options}
                 handleRef={handleRef}
+                readonly={readonly}
                 onDataChanged={onItemDataChanged}
                 onConditionChanged={onItemConditionChanged}
                 onDelete={onItemDelete}
@@ -158,13 +161,15 @@ export const renderer = <Args,>({
         </DraggableList>
       )}
 
-      <IconButton
-        className={styles['add-alternative-button']}
-        title={t('addItem')}
-        onClick={onAddItem}
-      >
-        <PlusIcon />
-      </IconButton>
+      {!readonly && (
+        <IconButton
+          className={styles['add-alternative-button']}
+          title={t('addItem')}
+          onClick={onAddItem}
+        >
+          <PlusIcon />
+        </IconButton>
+      )}
     </div>
   );
 };
