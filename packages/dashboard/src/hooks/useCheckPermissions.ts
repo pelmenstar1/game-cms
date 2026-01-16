@@ -9,8 +9,7 @@ export function useCheckPermissions(id: ApiRouteId) {
   const redirect = useTypedNavigate();
 
   useEffect(() => {
-    if (!permissions.has(id)) {
-      console.log(permissions);
+    if (!permissions.has(id) && !import.meta.env.DEV) {
       void redirect('/404');
     }
   }, [id, permissions, redirect]);

@@ -1,5 +1,5 @@
 import { type MaybeArray } from '@game-cms/shared/collections';
-import { type ReactElement, useId } from 'react';
+import { type ReactElement, useEffect, useId } from 'react';
 import React from 'react';
 
 import { classNames } from '../../utils/classNames';
@@ -37,10 +37,12 @@ export function Tabs<K extends string>({
     childrenArray.find(({ props }) => props.tabId === selectedTab) ??
     childrenArray[0];
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (selectedChild === undefined) {
-    throw new Error('Invalid state: selected child is undefined');
-  }
+  useEffect(() => {
+    const effectiveTab = selectedChild.props.tabId;
+    if (effectiveTab !== selectedTab) {
+      onSelectedTabChanged(effectiveTab);
+    }
+  }, [selectedChild, onSelectedTabChanged, selectedTab]);
 
   return (
     <div className={classNames(styles.root, className)}>

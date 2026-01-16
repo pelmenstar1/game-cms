@@ -40,7 +40,6 @@ async function handleRedirects(
   const config = redirectConfigMap[error.code as ApiErrorCode];
 
   if (config && (options?.[config.key] ?? config.defaultValue)) {
-    console.log('redirect', config);
     await navigate(config.route);
   }
 }
