@@ -1,4 +1,4 @@
-import type { EntityData } from '@game-cms/base-core';
+import type { EntityVariant, EntityVariantData } from '@game-cms/base-core';
 import { createEntity } from '@game-cms/client';
 import { useApiAction } from '@game-cms/component-api';
 import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
@@ -22,8 +22,8 @@ export default function Page({ params }: Route.ComponentProps) {
   useCheckPermissions(`entity/${params.name}$create`);
 
   const onSave = useCallback(
-    (data: EntityData) => {
-      doCreateEntity(params.name, data)
+    (data: EntityVariantData, variant: EntityVariant) => {
+      doCreateEntity(params.name, data, variant)
         .then(() => {
           void redirect('/entities');
 
@@ -38,7 +38,13 @@ export default function Page({ params }: Route.ComponentProps) {
 
   return (
     <DataLoader className={styles.root} result={entitySchema}>
-      {(schema) => <AccessEntityView schema={schema} onSave={onSave} />}
+      {(schema) => (
+        <AccessEntityView
+          entityId={params.name}
+          schema={schema}
+          onSave={onSave}
+        />
+      )}
     </DataLoader>
   );
 }

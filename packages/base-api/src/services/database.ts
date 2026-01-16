@@ -1,8 +1,8 @@
 import type {
   DatabaseCollectionId,
   DatabaseEntityMap,
+  EntityDataVariantsById,
   EntityId,
-  EntityStorageDataById,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
@@ -56,10 +56,10 @@ export default service({
   collection: <T extends DatabaseCollectionId>(id: T) => {
     return client().db().collection<DatabaseEntityMap[T]>(id);
   },
-  entityCollection: <T extends EntityId>(id: T) => {
+  entityCollection: <Id extends EntityId>(id: Id) => {
     return client()
       .db()
-      .collection<EntityStorageDataById<T>>(`base::entity::${id}`);
+      .collection<EntityDataVariantsById<Id>>(`base::entity::${id}`);
   },
   withTransaction: async <R>(
     action: (session: ClientSession) => Promise<R>

@@ -1,4 +1,4 @@
-import type { EntityData, EntityId } from '@game-cms/base-core';
+import type { EntityId } from '@game-cms/base-core';
 import { classNames, Link, Typography } from '@game-cms/ui';
 
 import styles from './EntityListItem.module.scss';
@@ -6,7 +6,7 @@ import styles from './EntityListItem.module.scss';
 export interface EntityListItemProps {
   className?: string;
   entityId: EntityId;
-  value: EntityData & { _id: string };
+  value: { _id: string };
 }
 
 export function EntityListItem({

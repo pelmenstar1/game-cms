@@ -1,39 +1,30 @@
 import { ApiError } from '@game-cms/base-core';
-import { entityVariant } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
-import { entityRouteId } from '../../../../utils/routeId.js';
+import { entityRouteId } from '../../../utils/routeId.js';
 
 export default apiRoute({
-  url: '/entity/:entityId/raw/byId/:id',
-  method: 'GET',
+  url: '/entity/:entityId/byId/:id/unpublish',
+  method: 'POST',
   config: {
-    id: entityRouteId('get'),
+    id: entityRouteId('delete'),
   },
   schema: {
     params: z.object({
       entityId: z.string(),
       id: stringObjectId,
     }),
-    querystring: z.object({
-      variant: entityVariant.default('published'),
-    }),
   },
   handler: async (req) => {
     const { entityId, id } = req.params;
-    const { variant } = req.query;
 
-    const result = await cms()
-      .service('base::entity')
-      .getRawById(entityId, id, variant);
+    const result = await cms().service('base::entity').unpublish(entityId, id);
 
-    if (result === null) {
+    if (!result) {
       throw new ApiError('Entity not found', 'base::entity/notFound');
     }
-
-    return result;
   },
 });

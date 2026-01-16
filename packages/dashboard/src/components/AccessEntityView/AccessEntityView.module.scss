@@ -17,18 +17,11 @@
   gap: 0.5em;
 }
 
-.component-grid {
+.entity-data {
   flex-grow: 1;
 }
 
 .action-block {
-  display: flex;
-  flex-direction: column;
-  padding: 1em;
   min-width: 15%;
-  gap: 0.5em;
-  border-radius: 0.5em;
-
-  background: var(--color-background-dark);
   height: fit-content;
 }

@@ -6,6 +6,7 @@ import type {
 import type { ComponentApi } from '@game-cms/component-api';
 import type {
   ComponentClientDataById,
+  ComponentErrorById,
   ComponentOptionsById,
 } from '@game-cms/core';
 
@@ -15,6 +16,11 @@ export type EntityComposeData<Id extends EntityId> = ComponentClientDataById<
 >;
 
 export type EntityComposeOptions<Id extends EntityId> = ComponentOptionsById<
+  'base::compose',
+  EntityMap[Id]
+>;
+
+export type EntityComposeError<Id extends EntityId> = ComponentErrorById<
   'base::compose',
   EntityMap[Id]
 >;

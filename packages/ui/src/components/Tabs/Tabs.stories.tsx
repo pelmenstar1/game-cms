@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import preview from '#storybook/preview';
 
 import { Tab } from '../Tab';
@@ -5,8 +7,10 @@ import { Typography } from '../Typography';
 import { Tabs } from '.';
 
 function Component() {
+  const [tab, setTab] = useState('tab1');
+
   return (
-    <Tabs>
+    <Tabs selectedTab={tab} onSelectedTabChanged={setTab}>
       <Tab tabId="tab1" title="Tab 1">
         <Typography>Tab 1 content</Typography>
       </Tab>

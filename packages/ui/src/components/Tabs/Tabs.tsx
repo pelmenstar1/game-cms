@@ -1,5 +1,5 @@
-import type { MaybeArray } from '@game-cms/shared/collections';
-import { type ReactElement, useId, useState } from 'react';
+import { type MaybeArray } from '@game-cms/shared/collections';
+import { type ReactElement, useId } from 'react';
 import React from 'react';
 
 import { classNames } from '../../utils/classNames';
@@ -7,38 +7,37 @@ import { Button } from '../Button';
 import { List } from '../List';
 import styles from './Tabs.module.scss';
 
+type TabComponent<K extends string> = ReactElement<{
+  id?: string;
+  tabId: K;
+  isSelected?: boolean;
+  title: string;
+  labelledBy?: string;
+}>;
+
 export type TabsProps<K extends string> = {
   className?: string;
-  children: MaybeArray<
-    ReactElement<{
-      id?: string;
-      tabId: K;
-      isSelected?: boolean;
-      title: string;
-      labelledBy?: string;
-    }>
-  >;
+  selectedTab: K;
+  onSelectedTabChanged: (value: K) => void;
+  children: MaybeArray<TabComponent<K> | undefined | null | false>;
 };
 
-export function Tabs<K extends string>({ className, children }: TabsProps<K>) {
+export function Tabs<K extends string>({
+  className,
+  selectedTab,
+  onSelectedTabChanged,
+  children,
+}: TabsProps<K>) {
   const globalId = useId();
-  const childrenArray = Array.isArray(children) ? children : [children];
+  const childrenArray = (Array.isArray(children) ? children : [children])
+    // eslint-disable-next-line unicorn/prefer-native-coercion-functions
+    .filter((value): value is TabComponent<K> => Boolean(value));
 
-  const [selected, setSelected] = useState<K>(() => {
-    const tabId = childrenArray[0]?.props.tabId;
+  const selectedChild =
+    childrenArray.find(({ props }) => props.tabId === selectedTab) ??
+    childrenArray[0];
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (tabId === undefined) {
-      throw new Error('No children');
-    }
-
-    return tabId;
-  });
-
-  const selectedChild = childrenArray.find(
-    ({ props }) => props.tabId === selected
-  );
-
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (selectedChild === undefined) {
     throw new Error('Invalid state: selected child is undefined');
   }
@@ -51,10 +50,10 @@ export function Tabs<K extends string>({ className, children }: TabsProps<K>) {
             id={`${globalId}-tab-${props.tabId}`}
             key={props.tabId}
             role="tab"
-            aria-selected={props.tabId === selected}
+            aria-selected={props.tabId === selectedTab}
             aria-controls={`${globalId}-panel-${props.tabId}`}
             onClick={() => {
-              setSelected(props.tabId);
+              onSelectedTabChanged(props.tabId);
             }}
           >
             {props.title}

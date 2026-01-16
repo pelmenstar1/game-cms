@@ -1,22 +1,19 @@
 import {
   ApiError,
-  type EntityData,
   type EntityId,
   type EntityRawDataById,
   type EntityRawInDataById,
+  type EntityResolvedDataById,
   type EntityStorageDataById,
+  type EntityVariant,
+  type EntityVariantData,
 } from '@game-cms/base-core';
 import type { ComponentDataResolverArgs } from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { asyncMapObject, mapObject } from '@game-cms/shared/object';
-import type {
-  Filter,
-  ObjectId,
-  OptionalUnlessRequiredId,
-  WithId,
-} from 'mongodb';
+import type { Filter, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
@@ -25,14 +22,21 @@ declare module '@game-cms/base-core' {
     'base::entity::created': {
       entityId: EntityId;
       id: ObjectId;
-      data: EntityData;
+      variant: EntityVariant;
+      data: EntityVariantData;
     };
     'base::entity::updated': {
       entityId: EntityId;
       id: ObjectId;
-      newData: EntityData;
+      variant: EntityVariant;
+      newData: EntityVariantData;
     };
     'base::entity::deleted': {
+      entityId: EntityId;
+      id: ObjectId;
+    };
+    'base::entity::unpublished': {
+      entityId: EntityId;
       id: ObjectId;
     };
   }
@@ -55,29 +59,36 @@ function getEntitySchema<T extends EntityId>(entityId: T) {
   return result;
 }
 
-async function getRawById<T extends EntityId>(entityId: T, id: ObjectId) {
+async function getRawById<T extends EntityId>(
+  entityId: T,
+  id: ObjectId,
+  variant: EntityVariant = 'published'
+) {
   const entitySchema = getEntitySchema(entityId);
-  const result = await collection(entityId).findOne(idFilter(id));
+  const result = await collection(entityId).findOne(idFilter(id), {
+    projection: { [variant]: 1 },
+  });
 
   if (result === null) {
     return null;
   }
 
-  const { _id, ...ownResult } = result;
+  const { _id, [variant]: data } = result;
+  if (data === undefined) {
+    return null;
+  }
+
   const { foreignStorageResolverContext } = cms().service('base::component');
 
-  const rawResult = await asyncMapObject(
-    ownResult as unknown as EntityStorageDataById<T>,
-    (item, key) => {
-      const { componentId, options } = entitySchema.components[key];
+  const rawResult = await asyncMapObject(data, (item, key) => {
+    const { componentId, options } = entitySchema.components[key];
 
-      return foreignStorageResolverContext.fromStorage(
-        componentId,
-        item,
-        options
-      );
-    }
-  );
+    return foreignStorageResolverContext.fromStorage(
+      componentId,
+      item,
+      options
+    );
+  });
 
   return { _id, ...rawResult } as WithId<EntityRawDataById<T>>;
 }
@@ -96,17 +107,34 @@ async function toStorageData<T extends EntityId>(
   });
 }
 
+function createEntityVariants<Id extends EntityId>(
+  value: EntityStorageDataById<Id>,
+  variant: EntityVariant
+) {
+  return variant == 'published'
+    ? {
+        published: value,
+        draft: value,
+      }
+    : { draft: value };
+}
+
 export default service({
   id: 'base::entity',
-  create: async <T extends EntityId>(id: T, data: EntityRawInDataById<T>) => {
+  create: async <T extends EntityId>(
+    id: T,
+    data: EntityRawInDataById<T>,
+    variant: EntityVariant = 'published'
+  ) => {
     const storageData = await toStorageData(id, data);
     const { insertedId } = await collection(id).insertOne(
-      storageData as OptionalUnlessRequiredId<EntityStorageDataById<T>>
+      createEntityVariants(storageData, variant)
     );
 
     cms().service('base::appEvents').emit('base::entity::created', {
       entityId: id,
       id: insertedId,
+      variant,
       data: storageData,
     });
 
@@ -115,11 +143,13 @@ export default service({
   update: async <Id extends EntityId>(
     entityId: Id,
     id: ObjectId,
-    data: EntityRawInDataById<Id>
+    data: EntityRawInDataById<Id>,
+    variant: EntityVariant = 'published'
   ) => {
     const storageData = await toStorageData(entityId, data);
+
     const result = await collection(entityId).updateOne(idFilter(id), {
-      $set: storageData,
+      $set: createEntityVariants(storageData, variant),
     });
 
     const isUpdated = result.matchedCount > 0;
@@ -128,6 +158,7 @@ export default service({
       cms().service('base::appEvents').emit('base::entity::updated', {
         entityId,
         id,
+        variant,
         newData: storageData,
       });
     }
@@ -139,7 +170,9 @@ export default service({
     const isDeleted = deletedCount > 0;
 
     if (isDeleted) {
-      cms().service('base::appEvents').emit('base::entity::deleted', { id });
+      cms()
+        .service('base::appEvents')
+        .emit('base::entity::deleted', { entityId, id });
     }
 
     return isDeleted;
@@ -150,15 +183,24 @@ export default service({
     return result;
   },
   getRawById,
+  getRawVariantsById: async <Id extends EntityId>(
+    entityId: Id,
+    id: ObjectId
+  ) => {
+    const result = await collection(entityId).findOne({ _id: id });
+
+    return result;
+  },
   getResolvedById: async <Id extends EntityId>(
     entityId: Id,
     id: ObjectId,
-    args: ComponentDataResolverArgs
-  ) => {
+    args: ComponentDataResolverArgs,
+    variant: EntityVariant = 'published'
+  ): Promise<EntityResolvedDataById<Id> | null> => {
     const entitySchema = getEntitySchema(entityId);
     const { foreignResolverContext } = cms().service('base::component');
 
-    const result = await getRawById(entityId, id);
+    const result = await getRawById(entityId, id, variant);
 
     if (result === null) {
       return null;
@@ -181,5 +223,23 @@ export default service({
         );
       }
     );
+  },
+  unpublish: async (entityId: EntityId, id: ObjectId) => {
+    const { matchedCount } = await collection(entityId).updateOne(
+      {
+        _id: id,
+      },
+      {
+        $unset: { published: 1 },
+      }
+    );
+
+    if (matchedCount > 0) {
+      cms()
+        .service('base::appEvents')
+        .emit('base::entity::unpublished', { entityId, id });
+    }
+
+    return matchedCount > 0;
   },
 });

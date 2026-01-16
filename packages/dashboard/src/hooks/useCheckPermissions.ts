@@ -10,6 +10,7 @@ export function useCheckPermissions(id: ApiRouteId) {
 
   useEffect(() => {
     if (!permissions.has(id)) {
+      console.log(permissions);
       void redirect('/404');
     }
   }, [id, permissions, redirect]);

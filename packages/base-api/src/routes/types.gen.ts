@@ -15,6 +15,7 @@ declare module '@game-cms/core/api' {
     'GET /entitySchema/list': typeof import('./entitySchema/list.js');
     'DELETE /entity/:entityId/byId/:id': typeof import('./entity/byId/delete.js');
     'GET /entity/:entityId/byId/:id': typeof import('./entity/byId/get.js');
+    'POST /entity/:entityId/byId/:id/unpublish': typeof import('./entity/byId/unpublish.js');
     'PUT /entity/:entityId/byId/:id': typeof import('./entity/byId/update.js');
     'POST /entity/:entityId': typeof import('./entity/create.js');
     'GET /entity/:entityId/list': typeof import('./entity/list.js');

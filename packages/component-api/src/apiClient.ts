@@ -3,15 +3,30 @@ import type { QueryResult } from '@game-cms/shared';
 import { contextUseFactory } from '@game-cms/ui';
 import React, { useCallback, useEffect, useState } from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ApiRedirectOptions {}
+export interface ApiRequestOptions {
+  redirectOnUnauthorized?: boolean;
+  redirectOnNotFound?: boolean;
+  nullIfNotFound?: boolean;
+}
+
+export type ResolveApiRequestResult<
+  T,
+  Options extends ApiActionOptions,
+> = Options['nullIfNotFound'] extends true ? T | null : T;
 
 export type ApiClientContextType = {
-  makeApiRequest: <Args extends unknown[], T>(
+  makeApiRequest: <
+    Args extends unknown[],
+    T,
+    Options extends ApiRequestOptions,
+  >(
     fn: RequestFn<Args, T>,
     args: Args,
-    redirectOptions?: ApiRedirectOptions
-  ) => { promise: Promise<T>; abort: () => void };
+    options?: ApiRequestOptions
+  ) => {
+    promise: Promise<ResolveApiRequestResult<T, Options>>;
+    abort: () => void;
+  };
 };
 
 export const ApiClientContext =
@@ -22,45 +37,61 @@ export const useApiClient = contextUseFactory(
   'ApiClientContext'
 );
 
-type ApiActionOptions = ApiRedirectOptions;
+type ApiActionOptions = ApiRequestOptions;
 
-export function useApiAction<Args extends unknown[], R>(
-  queryFn: RequestFn<Args, R>,
-  redirectOptions?: ApiActionOptions
-) {
+export function useApiAction<
+  Args extends unknown[],
+  R,
+  Options extends ApiActionOptions,
+>(queryFn: RequestFn<Args, R>, options?: Options) {
   const client = useApiClient();
 
   return useCallback(
     (...args: Args) => {
-      const { promise } = client.makeApiRequest(queryFn, args, redirectOptions);
+      const { promise } = client.makeApiRequest<Args, R, Options>(
+        queryFn,
+        args,
+        options
+      );
 
       return promise;
     },
-    [client, queryFn, redirectOptions]
+    [client, queryFn, options]
   );
 }
 
-type ApiQueryOptions = ApiRedirectOptions;
-type UseApiQueryResult<R> = [value: QueryResult<R>, retry: () => void];
+type ApiQueryOptions = ApiRequestOptions;
+type QueryResultWithOptions<T, Options extends ApiQueryOptions> = QueryResult<
+  ResolveApiRequestResult<T, Options>
+>;
 
-export function useApiQuery<Args extends unknown[], R>(
+type UseApiQueryResult<R, Options extends ApiQueryOptions> = [
+  value: QueryResultWithOptions<R, Options>,
+  retry: () => void,
+];
+
+export function useApiQuery<
+  Args extends unknown[],
+  R,
+  Options extends ApiQueryOptions,
+>(
   queryFn: RequestFn<Args, R>,
   args?: Args,
-  redirectOptions?: ApiQueryOptions
-): UseApiQueryResult<R> {
+  options?: Options
+): UseApiQueryResult<R, Options> {
   const client = useApiClient();
 
-  const [result, setResult] = useState<QueryResult<R>>({
+  const [result, setResult] = useState<QueryResultWithOptions<R, Options>>({
     status: 'pending',
   });
 
   const resolvedArgs = (args ?? []) as Args;
 
   const worker = useCallback(() => {
-    const { promise, abort } = client.makeApiRequest(
+    const { promise, abort } = client.makeApiRequest<Args, R, Options>(
       queryFn,
       resolvedArgs,
-      redirectOptions
+      options
     );
 
     promise
@@ -79,5 +110,5 @@ export function useApiQuery<Args extends unknown[], R>(
 
   useEffect(worker, [worker]);
 
-  return [result, worker] as const;
+  return [result, worker];
 }

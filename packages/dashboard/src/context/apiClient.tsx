@@ -4,7 +4,8 @@ import { createStandardClient, refreshUserSession } from '@game-cms/client';
 import {
   ApiClientContext,
   type ApiClientContextType,
-  type ApiRedirectOptions,
+  type ApiRequestOptions,
+  type ResolveApiRequestResult,
 } from '@game-cms/component-api';
 import type { RequestContext, RequestFn } from '@game-cms/core/api';
 import { createAbortController } from '@game-cms/shared';
@@ -12,15 +13,8 @@ import type { PageUrl, TypedNavigateFunction } from '@game-cms/ui';
 import { type PropsWithChildren, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 
-declare module '@game-cms/component-api' {
-  interface ApiRedirectOptions {
-    redirectOnUnauthorized?: boolean;
-    redirectOnNotFound?: boolean;
-  }
-}
-
 type RedirectConfig = {
-  key: keyof ApiRedirectOptions;
+  key: keyof ApiRequestOptions;
   defaultValue?: boolean;
   route: PageUrl;
 };
@@ -41,11 +35,12 @@ const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
 async function handleRedirects(
   error: ApiError,
   navigate: TypedNavigateFunction,
-  options?: ApiRedirectOptions
+  options?: ApiRequestOptions
 ) {
   const config = redirectConfigMap[error.code as ApiErrorCode];
 
   if (config && (options?.[config.key] ?? config.defaultValue)) {
+    console.log('redirect', config);
     await navigate(config.route);
   }
 }
@@ -54,19 +49,26 @@ export function ApiClientProvider({ children }: PropsWithChildren) {
   const client = useMemo(() => createStandardClient({ baseUrl: `/api` }), []);
   const navigate = useNavigate();
 
-  const baseMakeApiRequest = <T, Args extends unknown[]>(
+  const baseMakeApiRequest = <
+    T,
+    Args extends unknown[],
+    Options extends ApiRequestOptions,
+  >(
     fn: RequestFn<Args, T>,
     args: Args,
-    redirectOptions?: ApiRedirectOptions,
+    options?: Options,
     checkExpired: boolean = true
-  ): { promise: Promise<T>; abort: () => void } => {
+  ): {
+    promise: Promise<ResolveApiRequestResult<T, Options>>;
+    abort: () => void;
+  } => {
     const abortController = createAbortController();
     const context: RequestContext = {
       client,
       abortController,
     };
 
-    const worker = async () => {
+    const worker = async (): Promise<ResolveApiRequestResult<T, Options>> => {
       try {
         return await fn(context, ...args);
       } catch (error: unknown) {
@@ -76,16 +78,17 @@ export function ApiClientProvider({ children }: PropsWithChildren) {
             (error.code === 'base::access/expired' ||
               error.code === 'base::access/unauthorized')
           ) {
-            await baseMakeApiRequest(
-              refreshUserSession,
-              [],
-              redirectOptions,
-              false
-            ).promise;
+            await baseMakeApiRequest(refreshUserSession, [], options, false)
+              .promise;
 
-            return baseMakeApiRequest(fn, args, redirectOptions, false).promise;
+            return baseMakeApiRequest(fn, args, options, false).promise;
+          } else if (
+            error.code === 'base::entity/notFound' &&
+            options?.nullIfNotFound
+          ) {
+            return null as ResolveApiRequestResult<T, Options>;
           } else {
-            await handleRedirects(error, navigate, redirectOptions);
+            await handleRedirects(error, navigate, options);
           }
         }
 

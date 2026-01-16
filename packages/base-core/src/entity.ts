@@ -5,6 +5,9 @@ import type {
   FromEntries,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
+import type z from 'zod';
+
+import type { entityVariant } from './schema/entity.js';
 
 export type EntitySchemaComponents = Record<string, ComponentSchema>;
 
@@ -13,7 +16,14 @@ export interface EntityMap extends Record<string, EntitySchemaComponents> {}
 
 export type EntityId = keyof EntityMap;
 
-export type EntityData = Record<string, ComponentData>;
+export type EntityVariant = z.infer<typeof entityVariant>;
+export type EntityVariantData = Record<string, ComponentData>;
+export type EntityData = Record<EntityVariant, EntityVariantData>;
+
+export type EntityDataVariantsById<Id extends EntityId> = {
+  draft: EntityStorageDataById<Id>;
+  published?: EntityStorageDataById<Id>;
+};
 
 type ComponentsToData<T, DataKey extends keyof GetComponentSchemaTypes> = {
   [K in keyof T]: GetComponentSchemaTypes<T[K]>[DataKey];

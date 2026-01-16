@@ -4,16 +4,11 @@ import type {
   EntityRawDataById,
   EntityRawInDataById,
   EntitySchemaById,
+  EntityVariant,
 } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
 import type { ComponentClientDataById } from '@game-cms/core';
-import {
-  Button,
-  classNames,
-  DeleteIcon,
-  IconButton,
-  Typography,
-} from '@game-cms/ui';
+import { classNames, DeleteIcon, IconButton, Typography } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
 import { useSelfPermissions } from '@/hooks/useSelfPermissions';
@@ -22,7 +17,9 @@ import {
   transformDataToClientData,
 } from '@/services/entity/transform';
 
+import { EntityVariantTabs } from '../EntityVariantTabs';
 import styles from './AccessEntityView.module.scss';
+import { ActionBlock } from './ActionBlock';
 
 const composeId = 'base::compose';
 
@@ -30,18 +27,24 @@ type ComposeId = typeof composeId;
 
 export interface AccessEntityViewProps<Id extends EntityId> {
   className?: string;
+  entityId: Id;
   schema: EntitySchemaById<Id>;
+  initialId?: string;
   initialValue?: EntityRawDataById<Id>;
-  onSave?: (value: EntityRawInDataById<Id>) => void;
+  onSave?: (value: EntityRawInDataById<Id>, variant: EntityVariant) => void;
   onDelete?: () => void;
+  onUnpublish?: () => void;
 }
 
 export function AccessEntityView<Id extends EntityId>({
   className,
   schema,
+  entityId,
+  initialId,
   initialValue,
   onSave,
   onDelete,
+  onUnpublish,
 }: AccessEntityViewProps<Id>) {
   type Args = EntityMap[Id];
   type ClientData = ComponentClientDataById<ComposeId, Args>;
@@ -56,6 +59,9 @@ export function AccessEntityView<Id extends EntityId>({
     transformDataToClientData(api, initialValue, composeOptions)
   );
 
+  const [selectedVariant, setSelectedVariant] =
+    useState<EntityVariant>('draft');
+
   const data = useMemo(() => {
     return api.clientTransformerContext.fromClient<ComposeId, Args>(
       composeId,
@@ -64,11 +70,19 @@ export function AccessEntityView<Id extends EntityId>({
     );
   }, [api, clientData, composeOptions]);
 
+  const onPublishTransformed = useCallback(() => {
+    const rawData = data.result;
+
+    if (rawData !== undefined) {
+      onSave?.(rawData, 'published');
+    }
+  }, [data, onSave]);
+
   const onSaveTransformed = useCallback(() => {
     const rawData = data.result;
 
     if (rawData !== undefined) {
-      onSave?.(rawData);
+      onSave?.(rawData, 'draft');
     }
   }, [data, onSave]);
 
@@ -92,24 +106,40 @@ export function AccessEntityView<Id extends EntityId>({
       </div>
 
       <div className={styles.content}>
-        <div className={styles['component-grid']}>
-          <Compose
-            data={clientData}
-            options={composeOptions}
-            error={data.error}
-            onDataChanged={setClientData}
-          />
+        <div className={styles['entity-data']}>
+          {entityId && initialId ? (
+            <EntityVariantTabs
+              entityId={entityId}
+              id={initialId}
+              selectedVariant={selectedVariant}
+              options={composeOptions}
+              draftData={clientData}
+              draftError={data.error}
+              onDraftDataChanged={setClientData}
+              onSelectedVariantChanged={setSelectedVariant}
+            />
+          ) : (
+            <Compose
+              data={clientData}
+              options={composeOptions}
+              error={data.error}
+              onDataChanged={setClientData}
+            />
+          )}
         </div>
 
-        <div className={styles['action-block']}>
-          <Button
-            buttonVariant="solid"
-            onClick={onSaveTransformed}
-            disabled={data.error !== undefined}
-          >
-            Save
-          </Button>
-        </div>
+        <ActionBlock
+          className={styles['action-block']}
+          onPublish={
+            selectedVariant !== 'published' ? onPublishTransformed : undefined
+          }
+          onSave={
+            selectedVariant !== 'published' ? onSaveTransformed : undefined
+          }
+          onUnpublish={
+            selectedVariant === 'published' ? onUnpublish : undefined
+          }
+        />
       </div>
     </div>
   );
