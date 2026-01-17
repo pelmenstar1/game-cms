@@ -20,7 +20,7 @@ export type SpritesheetArgs<
   baseArgs: Args;
 };
 
-type ResolveSpritesheetArgs<Args> =
+export type ResolveSpritesheetArgs<Args> =
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Args extends SpritesheetArgs<infer _Id extends ComponentId, infer _BaseArgs>
     ? Args
@@ -36,16 +36,15 @@ export type SpritesheetBundleStorageMap = Record<
   SpritesheetStorageEntry
 >;
 
+export type SpritesheetUrlEntry = {
+  imageUrl: string;
+  atlasUrl: string;
+};
+
 type SpritesheetEntry<Args extends SpritesheetArgs> = {
   rawData: {
     base: ComponentRawDataById<Args['id'], Args['baseArgs']>;
-    spritesheets?: Record<
-      string,
-      {
-        imageUrl: string;
-        atlasUrl: string;
-      }
-    >;
+    spritesheets?: Record<string, SpritesheetUrlEntry>;
   };
   rawInData: ComponentRawInDataById<Args['id'], Args['baseArgs']>;
   options: {
@@ -56,7 +55,10 @@ type SpritesheetEntry<Args extends SpritesheetArgs> = {
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: ComponentErrorById<Args['id'], Args['baseArgs']>;
-  clientData: ComponentClientDataById<Args['id'], Args['baseArgs']>;
+  clientData: {
+    base: ComponentClientDataById<Args['id'], Args['baseArgs']>;
+    spritesheets?: Record<string, SpritesheetUrlEntry>;
+  };
   resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>;
   storageData: {
     base: ComponentStorageDataById<Args['id'], Args['baseArgs']>;

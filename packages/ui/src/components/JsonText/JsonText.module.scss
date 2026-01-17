@@ -1,12 +1,14 @@
 @use '../../theme/jsonColors' as *;
 
-.header {
+.root {
   display: flex;
-  justify-content: end;
+  flex-direction: column;
 }
 
 .content {
   @include json-colors;
 
   font-family: monospace;
+  overflow-y: auto;
+  flex-grow: 1;
 }

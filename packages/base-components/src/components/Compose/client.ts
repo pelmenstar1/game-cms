@@ -49,7 +49,11 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
       return {
         key,
         client,
-        coreError: context.validation.validate(componentId, data[key], options),
+        coreError: context.validation.validate(
+          componentId,
+          client.result,
+          options
+        ),
       };
     });
 

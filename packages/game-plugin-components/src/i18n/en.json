@@ -1,7 +1,9 @@
 {
+  "common": {
+    "preview": "Preview"
+  },
   "components": {
     "Spine": {
-      "preview": "Preview",
       "atlas": "Atlas",
       "skeleton": "Skeleton",
       "images": "Images"

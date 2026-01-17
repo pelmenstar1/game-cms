@@ -1,1 +1,3 @@
-export { viteConfig as default } from '@game-cms/storybook-config';
+import { viteConfig } from '@game-cms/storybook-config';
+
+export default viteConfig();

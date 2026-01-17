@@ -5,9 +5,11 @@ export default {
   extends: ['stylelint-scss', 'stylelint-config-standard-scss'],
   ignoreFiles: [
     '**/node_modules',
+    '**/dist/**',
     'packages/dashboard/build/**',
     'demo-app/build/**',
     'packages/base-components/dist/**',
+    'packages/ui/dist/**',
     'packages/**/storybook-static',
     'coverage/**',
   ],
@@ -17,7 +19,6 @@ export default {
     'value-keyword-case': null,
     'scss/dollar-variable-pattern': null,
     'media-feature-range-notation': null,
-    'no-empty-source': null,
     'selector-pseudo-class-no-unknown': [
       true,
       { ignorePseudoClasses: ['global'] },

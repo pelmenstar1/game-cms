@@ -6,7 +6,6 @@ import {
   BasePermissionsEditor,
   type BasePermissionsEditorProps,
 } from '../BasePermissionsEditor';
-import styles from './PermissionsEditor.module.scss';
 
 export interface PermissionsEditorProps extends Omit<
   BasePermissionsEditorProps,
@@ -24,10 +23,7 @@ export function PermissionsEditor({
   const [permissionsResult] = useApiQuery(getPermissions);
 
   return (
-    <DataLoader
-      className={classNames(styles.root, className)}
-      result={permissionsResult}
-    >
+    <DataLoader className={className} result={permissionsResult}>
       {({ permissions }) => (
         <BasePermissionsEditor
           permissions={permissions}

@@ -25,6 +25,7 @@
     { "path": "../shared" },
     { "path": "../spritesheet" },
     { "path": "../storybook-config" },
-    { "path": "../ui" }
+    { "path": "../ui" },
+    { "path": "../vite-plugins" }
   ]
 }

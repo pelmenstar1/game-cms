@@ -1,0 +1,33 @@
+.content {
+  display: flex;
+  min-height: 0;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-width: 100%;
+}
+
+.tab {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 0.5em;
+  min-height: 0;
+}
+
+.atlas {
+  overflow-y: scroll;
+
+  > * {
+    height: 100%;
+  }
+}
+
+.image,
+.atlas {
+  border: 1px solid var(--color-background-dark-variant);
+  border-radius: 0.5em;
+  padding: 0.5em;
+}

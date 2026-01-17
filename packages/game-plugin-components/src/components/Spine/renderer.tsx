@@ -3,15 +3,26 @@ import type {
   ComponentClientDataById,
   ComponentRenderer,
 } from '@game-cms/core';
-import { IconButton, Labeled, PreviewIcon, useModal } from '@game-cms/ui';
-import { useCallback } from 'react';
+import {
+  IconButton,
+  Labeled,
+  PreviewIcon,
+  Toolbar,
+  useModal,
+} from '@game-cms/ui';
+import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { SpineModal } from '../../micro/SpineModal';
 import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './constants';
 import styles from './renderer.module.scss';
 
 type FileData = ComponentClientDataById<'base::file'>[number];
+
+const SpineModal = React.lazy(async () => {
+  const { SpineModal } = await import('../../micro/SpineModal');
+
+  return { default: SpineModal };
+});
 
 export const renderer: ComponentRenderer<'game::spine'> = ({
   data,
@@ -20,9 +31,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
 }) => {
   const showModal = useModal();
   const api = useComponentApi();
-  const { t } = useTranslation('game', {
-    keyPrefix: 'components.Spine',
-  });
+  const { t } = useTranslation('game');
 
   const FileComponent = api.getComponent('base::file');
 
@@ -64,18 +73,18 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
 
   return (
     <div className={styles.root}>
-      <div className={styles.header}>
+      <Toolbar className={styles.header}>
         <IconButton
-          title={t('preview')}
+          title={t('common.preview')}
           disabled={!previewEnabled}
           onClick={onShowPreview}
         >
           <PreviewIcon />
         </IconButton>
-      </div>
+      </Toolbar>
 
       <div className={styles.data}>
-        <Labeled title={t('skeleton')}>
+        <Labeled title={t('components.Spine.skeleton')}>
           <FileComponent
             data={data.skeleton}
             options={SKELETON_OPTIONS}
@@ -84,7 +93,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
           />
         </Labeled>
 
-        <Labeled title={t('atlas')}>
+        <Labeled title={t('components.Spine.atlas')}>
           <FileComponent
             data={data.atlas}
             options={ATLAS_OPTIONS}
@@ -93,7 +102,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
           />
         </Labeled>
 
-        <Labeled title={t('images')}>
+        <Labeled title={t('components.Spine.images')}>
           <FileComponent
             data={data.images}
             options={IMAGES_OPTIONS}

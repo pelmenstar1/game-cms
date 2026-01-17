@@ -130,6 +130,7 @@ export function AccessEntityView<Id extends EntityId>({
 
         <ActionBlock
           className={styles['action-block']}
+          disabled={data.error !== undefined}
           onPublish={
             selectedVariant !== 'published' ? onPublishTransformed : undefined
           }

@@ -16,6 +16,7 @@ async function runDashboardBuild(dashboardPath: string) {
 }
 
 async function copyDashboardOutput(dashboardPath: string) {
+  await fsp.rm('./build', { recursive: true });
   await fsp.cp(path.join(dashboardPath, 'build/client'), './build', {
     recursive: true,
   });

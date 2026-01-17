@@ -6,6 +6,7 @@
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "prebuild": "tsx ./scripts/copyStyles.ts",
+    "new-component": "tsx ./scripts/newComponent.ts",
     "storybook:start": "storybook dev --port 6006"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "@game-cms/codegen": "workspace:*",
     "@game-cms/core": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
+    "@game-cms/vite-plugins": "workspace:*",
     "mongodb": "catalog:",
     "storybook": "catalog:",
     "typescript": "catalog:"

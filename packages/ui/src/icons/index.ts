@@ -16,6 +16,7 @@ export * from './CloseIcon';
 export * from './CopyIcon';
 export * from './CopyrightIcon';
 export * from './DeleteIcon';
+export * from './DownloadIcon';
 export * from './DragHandleIcon';
 export * from './EditIcon';
 export * from './ErrorIcon';

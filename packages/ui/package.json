@@ -26,7 +26,8 @@
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-zoom-pan-pinch": "^3.7.0"
   },
   "devDependencies": {
     "@game-cms/codegen": "workspace:*",

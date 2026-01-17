@@ -147,7 +147,7 @@ export default componentController({
     fromStorage: async (data, options, context) => {
       const { componentId, baseOptions } = options;
 
-      const spritesheet = await asyncMapObject(
+      const spritesheets = await asyncMapObject(
         data.spritesheets,
         async (entry) => {
           const [atlasFile] = await context.fromStorage(
@@ -171,7 +171,7 @@ export default componentController({
 
       return {
         base: await context.fromStorage(componentId, data.base, baseOptions),
-        spritesheet,
+        spritesheets,
       };
     },
     toStorage: async (data, options, context) => {

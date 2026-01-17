@@ -3,20 +3,26 @@ import type { ComponentClientDataTransformer } from '@game-cms/core';
 export const clientTransformer: ComponentClientDataTransformer<'game::spritesheet-wrapper'> =
   {
     getDefaultData: (options, context) => {
-      return context.getDefaultData(options.componentId, options.baseOptions);
+      return {
+        base: context.getDefaultData(options.componentId, options.baseOptions),
+      };
     },
     fromClient: (clientData, options, context) => {
       return context.fromClient(
         options.componentId,
-        clientData,
+        clientData.base,
         options.baseOptions
       );
     },
     toClient: (data, options, context) => {
-      return context.toClient(
-        options.componentId,
-        data.base,
-        options.baseOptions
-      );
+      console.log('client', data);
+      return {
+        base: context.toClient(
+          options.componentId,
+          data.base,
+          options.baseOptions
+        ),
+        spritesheets: data.spritesheets,
+      };
     },
   };
