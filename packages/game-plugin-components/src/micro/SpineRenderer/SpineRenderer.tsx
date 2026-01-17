@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { createSpineApplication, type SpineApplication } from './app.js';
 import styles from './SpineRenderer.module.scss';
@@ -42,6 +43,9 @@ export function SpineRenderer({
   ...rest
 }: SpineRendererProps) {
   const notification = useNotification();
+  const { t } = useTranslation('game', {
+    keyPrefix: 'micro.SpineRenderer',
+  });
 
   const [app, setApp] = useState<SpineApplication | null>(null);
   const [isSpineLoaded, setSpineLoaded] = useState(false);
@@ -75,7 +79,7 @@ export function SpineRenderer({
         .catch((error: unknown) => {
           console.error(error);
 
-          notification.error('Failed to create scene');
+          notification.error(t('sceneFailed'));
         });
 
       return () => {
@@ -85,6 +89,7 @@ export function SpineRenderer({
         currentApp?.destroy();
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notification]);
 
   useEffect(() => {
@@ -96,8 +101,9 @@ export function SpineRenderer({
       .catch((error: unknown) => {
         console.error(error);
 
-        notification.error('Failed to load spine');
+        notification.error(t('spineFailed'));
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [app, notification, spine]);
 
   useEffect(() => {

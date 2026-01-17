@@ -45,7 +45,7 @@ ${resourceEntries.map(({ varName, filePath }) => `import ${varName} from '${path
 
 export const resources = {
   '${language}': {
-    ${resourceEntries.map(({ varName, pluginId }) => `'${pluginId}': ${varName}`).join('')}
+    ${resourceEntries.map(({ varName, pluginId }) => `'${pluginId}': ${varName}`).join(',')}
   }
 };
 

@@ -10,9 +10,10 @@
       "@game-cms/base-components",
       "@game-cms/base-api/types"
     ],
+    "resolveJsonModule": true,
     "paths": { "#storybook/*": ["./.storybook/*"] }
   },
-  "include": ["./src", "./.storybook/preview.tsx"],
+  "include": ["./src", "./.storybook/preview.tsx", "./src/**/*.json"],
   "references": [
     { "path": "../base-api" },
     { "path": "../base-components" },

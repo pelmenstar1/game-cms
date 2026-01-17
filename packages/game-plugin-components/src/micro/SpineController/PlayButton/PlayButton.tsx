@@ -5,6 +5,7 @@ import {
   PauseIcon,
   PlayIcon,
 } from '@game-cms/ui';
+import { useTranslation } from 'react-i18next';
 
 import styles from './PlayButton.module.scss';
 
@@ -20,6 +21,10 @@ export function PlayButton({
   onRunningChanged,
   ...rest
 }: PlayButtonProps) {
+  const { t } = useTranslation('game', {
+    keyPrefix: 'micro.SpineController.PlayButton',
+  });
+
   const onClick = () => {
     onRunningChanged?.(!isRunning);
   };
@@ -27,7 +32,7 @@ export function PlayButton({
   return (
     <IconButton
       className={classNames(styles.root, className)}
-      title={isRunning ? 'Pause' : 'Play'}
+      title={t(isRunning ? 'pause' : 'play')}
       onClick={onClick}
       {...rest}
     >

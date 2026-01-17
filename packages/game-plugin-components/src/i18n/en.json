@@ -1,0 +1,22 @@
+{
+  "components": {
+    "Spine": {
+      "preview": "Preview",
+      "atlas": "Atlas",
+      "skeleton": "Skeleton",
+      "images": "Images"
+    }
+  },
+  "micro": {
+    "SpineRenderer": {
+      "sceneFailed": "Failed to create a game scene",
+      "spineFailed": "Failed to load a spine animation"
+    },
+    "SpineController": {
+      "PlayButton": {
+        "play": "Play",
+        "pause": "Pause"
+      }
+    }
+  }
+}

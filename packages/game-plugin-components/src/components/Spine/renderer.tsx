@@ -5,6 +5,7 @@ import type {
 } from '@game-cms/core';
 import { IconButton, Labeled, PreviewIcon, useModal } from '@game-cms/ui';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SpineModal } from '../../micro/SpineModal';
 import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './constants';
@@ -19,6 +20,9 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
 }) => {
   const showModal = useModal();
   const api = useComponentApi();
+  const { t } = useTranslation('game', {
+    keyPrefix: 'components.Spine',
+  });
 
   const FileComponent = api.getComponent('base::file');
 
@@ -62,7 +66,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
     <div className={styles.root}>
       <div className={styles.header}>
         <IconButton
-          title="View"
+          title={t('preview')}
           disabled={!previewEnabled}
           onClick={onShowPreview}
         >
@@ -71,7 +75,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
       </div>
 
       <div className={styles.data}>
-        <Labeled title="Skeleton">
+        <Labeled title={t('skeleton')}>
           <FileComponent
             data={data.skeleton}
             options={SKELETON_OPTIONS}
@@ -80,7 +84,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
           />
         </Labeled>
 
-        <Labeled title="Atlas">
+        <Labeled title={t('atlas')}>
           <FileComponent
             data={data.atlas}
             options={ATLAS_OPTIONS}
@@ -89,7 +93,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
           />
         </Labeled>
 
-        <Labeled title="Images">
+        <Labeled title={t('images')}>
           <FileComponent
             data={data.images}
             options={IMAGES_OPTIONS}

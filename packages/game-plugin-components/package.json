@@ -16,8 +16,10 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/spritesheet": "workspace:*",
     "@game-cms/ui": "workspace:*",
+    "i18next": "catalog:",
     "mongodb": "catalog:",
-    "pixi.js": "catalog:"
+    "pixi.js": "catalog:",
+    "react-i18next": "catalog:"
   },
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
