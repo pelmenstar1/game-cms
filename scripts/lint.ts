@@ -28,6 +28,7 @@ async function main() {
         phase('stylelint', `stylelint --cache ${STYLELINT_PATTERN}`),
         phase('prettier', `prettier --cache --check ${PRETTIER_PATTERN}`),
         phase('build', 'tsc --build tsconfig.ref.json'),
+        phase('knip', 'knip'),
       ]);
     }
   } catch {

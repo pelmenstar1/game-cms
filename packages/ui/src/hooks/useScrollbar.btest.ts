@@ -3,7 +3,7 @@ import { renderHook } from 'vitest-browser-react';
 
 import { useScrollbar } from './useScrollbar';
 
-function expectOverlowY(value: string) {
+function expectOverflowY(value: string) {
   expect(document.body.style.overflowY).toBe(value);
 }
 
@@ -13,11 +13,11 @@ test('enabled/true', async () => {
   });
 
   await act(() => {
-    expectOverlowY('auto');
+    expectOverflowY('auto');
   });
 
   await unmount();
-  expectOverlowY('auto');
+  expectOverflowY('auto');
 });
 
 test('enabled/false', async () => {
@@ -26,9 +26,9 @@ test('enabled/false', async () => {
   });
 
   await act(() => {
-    expectOverlowY('hidden');
+    expectOverflowY('hidden');
   });
 
   await unmount();
-  expectOverlowY('auto');
+  expectOverflowY('auto');
 });

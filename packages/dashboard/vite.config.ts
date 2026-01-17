@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { libraryWatcherPlugin } from '@game-cms/vite-plugins';
 import { ignitePlugin } from './plugins/ignite/plugin';
 
-export default defineConfig({
+export default defineConfig(() => ({
   plugins: [
     reactRouter(),
     tsconfigPaths(),
@@ -15,4 +15,4 @@ export default defineConfig({
     ]) as Plugin,
     ignitePlugin() as PluginOption,
   ],
-});
+}));

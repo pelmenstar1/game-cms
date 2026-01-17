@@ -6,6 +6,3 @@ void i18n.use(initReactI18next).init({
   lng: language,
   resources,
 });
-
-// eslint-disable-next-line unicorn/prefer-export-from
-export default i18n;

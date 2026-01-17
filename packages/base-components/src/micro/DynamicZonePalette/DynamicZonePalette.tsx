@@ -2,7 +2,7 @@ import { Button, classNames } from '@game-cms/ui';
 
 import styles from './DynamicZonePalette.module.scss';
 
-export type DynamicZonePaletteItem<K> = {
+type DynamicZonePaletteItem<K> = {
   key: K;
   title: string;
 };

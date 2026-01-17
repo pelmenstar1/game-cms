@@ -13,10 +13,7 @@ import type { ClientSession, Filter, ObjectId } from 'mongodb';
 import { getPage } from '../utils/paging.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 
-export type NoPasswordUser = Omit<
-  ServerUser & { _id: ObjectId },
-  'passwordHash'
->;
+type NoPasswordUser = Omit<ServerUser & { _id: ObjectId }, 'passwordHash'>;
 
 function users() {
   return cms().service('base::database').collection('base::users');

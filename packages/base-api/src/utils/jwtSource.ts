@@ -5,7 +5,7 @@ export type JwtSourceOptions = {
   cookieName: string;
 };
 
-export type JwtSource = (
+type JwtSource = (
   req: FastifyRequest,
   options: JwtSourceOptions
 ) => string | undefined;

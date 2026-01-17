@@ -1,0 +1,36 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "tags": ["knip"],
+  "include": ["files", "exports", "types", "catalog", "unlisted"],
+  "ignore": [
+    "**/*.stories.tsx",
+    "**/*.{test,btest}.ts",
+    "**/.storybook/*.{ts,tsx}",
+    "**/vite.storybook.config.ts"
+  ],
+  "workspaces": {
+    "packages/*": {
+      "entry": ["src/index.ts", "src/bin.ts"],
+      "project": "src/**/*.{ts,tsx}"
+    },
+    "packages/{base,game-plugin}-components": {
+      "entry": [
+        "src/components/*/{client,controller,core,renderer,types}.{ts,tsx}",
+        "src/i18n/types.ts"
+      ],
+      "project": "src/**/*.{ts,tsx}",
+      "ignore": ["src/micro/FileBigPreview/**/*.ts"]
+    },
+    "packages/dashboard": {
+      "entry": ["src/app/routes/**/*/route.tsx", "src/types/page.ts"],
+      "project": "**/*.{ts,tsx}"
+    },
+    "packages/base-api": {
+      "entry": ["src/index.ts", "src/types.ts", "src/routes/**/*.ts"],
+      "project": "**/*.{ts,tsx}"
+    },
+    "demo-app": {
+      "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]
+    }
+  }
+}

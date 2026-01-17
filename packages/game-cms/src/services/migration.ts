@@ -18,7 +18,7 @@ declare module '@game-cms/base-core' {
 
 export const MIGRATIONS_DIRECTORY_PATH = './src/migrations';
 
-export async function listMigrations() {
+async function listMigrations() {
   const result = await fsp.readdir(MIGRATIONS_DIRECTORY_PATH);
 
   return result

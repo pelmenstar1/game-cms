@@ -5,8 +5,7 @@ import { createEnvAccessor, type EnvAccessor } from '@game-cms/shared/io';
 import { createJiti } from 'jiti';
 
 type MaybeEnv<R extends object> = R | ((env: EnvAccessor) => MaybePromise<R>);
-
-export type ConfigInit = MaybeEnv<UnresolvedCmsConfig>;
+type ConfigInit = MaybeEnv<UnresolvedCmsConfig>;
 
 async function importConfig(filePath: string) {
   const jiti = createJiti(import.meta.url);

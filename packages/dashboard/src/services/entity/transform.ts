@@ -39,14 +39,3 @@ export function transformDataToClientData<Id extends EntityId>(
 
   return api.getDefaultData('base::compose', options) as EntityComposeData<Id>;
 }
-
-export function transformClientDataToData<Id extends EntityId>(
-  api: ComponentApi,
-  clientData: EntityComposeData<Id>,
-  options: EntityComposeOptions<Id>
-) {
-  return api.clientTransformerContext.fromClient<
-    'base::compose',
-    EntityMap[Id]
-  >('base::compose', clientData, options);
-}

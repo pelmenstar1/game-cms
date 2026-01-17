@@ -1,5 +1,3 @@
-export type StringReader = ReturnType<typeof stringReader>;
-
 export function stringReader(text: string) {
   let position = 0;
 
