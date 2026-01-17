@@ -1,5 +1,12 @@
-import { classNames, useJsonFetch } from '@game-cms/ui';
-import { useMemo } from 'react';
+import {
+  classNames,
+  IconButton,
+  LegendToggleIcon,
+  TransformView,
+  useJsonFetch,
+} from '@game-cms/ui';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SpritesheetMap } from '../../SpritesheetMap';
 import { spritesheetDataWithSize } from '../../SpritesheetMap/schema';
@@ -16,7 +23,13 @@ export function ImagePreview({
   imageUrl,
   atlasUrl,
 }: ImagePreviewProps) {
+  const { t } = useTranslation('game', {
+    keyPrefix: 'micro.SpritesheetPreviewModal.ImagePreview',
+  });
+
   const atlasResult = useJsonFetch(atlasUrl);
+
+  const [isMapDisplayed, setIsMapDisplayed] = useState(false);
 
   const atlasData = useMemo(() => {
     if (atlasResult.status === 'success') {
@@ -34,10 +47,24 @@ export function ImagePreview({
 
   return (
     <div className={classNames(styles.root, className)}>
-      <img src={imageUrl} />
-      {atlasData && (
-        <SpritesheetMap className={styles.map} spritesheet={atlasData} />
-      )}
+      <TransformView>
+        <div className={styles.content}>
+          <img src={imageUrl} />
+          {atlasData && isMapDisplayed && (
+            <SpritesheetMap className={styles.map} spritesheet={atlasData} />
+          )}
+        </div>
+      </TransformView>
+
+      <IconButton
+        className={styles['toggle-map']}
+        title={t('toggleMap')}
+        onClick={() => {
+          setIsMapDisplayed((prev) => !prev);
+        }}
+      >
+        <LegendToggleIcon />
+      </IconButton>
     </div>
   );
 }

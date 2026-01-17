@@ -24,10 +24,10 @@ export function SpritesheetMap({
             key={name}
             className={styles.frame}
             style={{
-              '--x': x / imageWidth,
-              '--y': y / imageHeight,
-              '--w': w / imageWidth,
-              '--h': h / imageHeight,
+              '--x': (x / imageWidth).toFixed(3),
+              '--y': (y / imageHeight).toFixed(3),
+              '--w': (w / imageWidth).toFixed(3),
+              '--h': (h / imageHeight).toFixed(3),
             }}
           />
         );
