@@ -1,14 +1,15 @@
 import {
-  ImageView,
   ModalDialog,
   type ModalProps,
   Tab,
   Tabs,
+  TransformView,
 } from '@game-cms/ui';
 import { useState } from 'react';
 
 import type { SpritesheetUrlEntry } from '../../components/SpritesheetWrapper/types';
 import { AtlasPreview } from './AtlasPreview';
+import { ImagePreview } from './ImagePreview';
 import styles from './SpritesheetPreviewModal.module.scss';
 
 export interface SpritesheetPreviewModalProps extends ModalProps {
@@ -31,7 +32,10 @@ export function SpritesheetPreviewModal({
       >
         {entries.map(([key, { imageUrl, atlasUrl }]) => (
           <Tab key={key} tabId={key} title={key} className={styles['tab']}>
-            <ImageView src={imageUrl} className={styles['image']} />
+            <TransformView className={styles['image']}>
+              <ImagePreview atlasUrl={atlasUrl} imageUrl={imageUrl} />
+            </TransformView>
+
             <AtlasPreview url={atlasUrl} className={styles['atlas']} />
           </Tab>
         ))}

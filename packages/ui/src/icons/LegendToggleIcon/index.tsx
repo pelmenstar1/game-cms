@@ -1,0 +1,5 @@
+import { googleIcon } from '../google';
+
+export const LegendToggleIcon = googleIcon(
+  'M160-200v-80h640v80H160Zm0-160v-80h640v80H160Zm0-160v-94l240-146 200 142 200-142v98L600-520 397-664 160-520Z'
+);

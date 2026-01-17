@@ -25,6 +25,8 @@ export function buildSpritesheetImage(map: SpritesheetMap) {
 }
 
 export function buildSpritesheetAtlas(map: SpritesheetMap): SpritesheetData {
+  const { bounds } = map.output;
+
   return {
     frames: Object.fromEntries(
       map.entries.map((entry) => {
@@ -42,6 +44,11 @@ export function buildSpritesheetAtlas(map: SpritesheetMap): SpritesheetData {
     ),
     meta: {
       scale: 1,
+      format: 'RGBA8888',
+      size: {
+        w: bounds.width,
+        h: bounds.height,
+      },
     },
   };
 }

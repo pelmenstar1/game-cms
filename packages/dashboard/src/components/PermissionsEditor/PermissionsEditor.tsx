@@ -1,6 +1,6 @@
 import { getPermissions } from '@game-cms/client';
 import { useApiQuery } from '@game-cms/component-api';
-import { classNames, DataLoader } from '@game-cms/ui';
+import { DataLoader } from '@game-cms/ui';
 
 import {
   BasePermissionsEditor,

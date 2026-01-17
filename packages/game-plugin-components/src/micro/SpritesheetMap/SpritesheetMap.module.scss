@@ -1,0 +1,18 @@
+@mixin percent-var($prop, $var-name) {
+  #{$prop}: calc(var(--#{$var-name}) * 100%);
+}
+
+.root {
+  position: relative;
+}
+
+.frame {
+  position: absolute;
+  border: 1px solid #f00;
+  box-sizing: border-box;
+
+  @include percent-var(left, x);
+  @include percent-var(top, y);
+  @include percent-var(width, w);
+  @include percent-var(height, h);
+}

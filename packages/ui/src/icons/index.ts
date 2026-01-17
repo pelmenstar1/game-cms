@@ -30,6 +30,7 @@ export * from './ImageIcon';
 export * from './InfoIcon';
 export * from './InstagramIcon';
 export * from './ItalicIcon';
+export * from './LegendToggleIcon';
 export * from './LinkIcon';
 export * from './MagicWandIcon';
 export * from './MailIcon';

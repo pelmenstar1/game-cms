@@ -1,24 +1,24 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 
 import { classNames } from '../../utils/classNames';
-import styles from './ImageView.module.scss';
+import styles from './TransformView.module.scss';
 
-export interface ImageViewProps {
+export interface TransformViewProps {
   className?: string;
   style?: CSSProperties;
-  src: string;
+  children: ReactNode;
 }
 
-export function ImageView({ className, style, src }: ImageViewProps) {
+export function TransformView({
+  className,
+  style,
+  children,
+}: TransformViewProps) {
   return (
     <div className={classNames(styles.root, className)} style={style}>
       <TransformWrapper minScale={0.1}>
-        {() => (
-          <TransformComponent>
-            <img src={src} />
-          </TransformComponent>
-        )}
+        {() => <TransformComponent>{children}</TransformComponent>}
       </TransformWrapper>
     </div>
   );

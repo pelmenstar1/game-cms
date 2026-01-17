@@ -751,6 +751,9 @@ importers:
       react-i18next:
         specifier: 'catalog:'
         version: 16.5.2(i18next@25.7.4(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
     devDependencies:
       '@game-cms/base-api':
         specifier: workspace:*

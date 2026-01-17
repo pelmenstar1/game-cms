@@ -20,7 +20,8 @@
     "i18next": "catalog:",
     "mongodb": "catalog:",
     "pixi.js": "catalog:",
-    "react-i18next": "catalog:"
+    "react-i18next": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
