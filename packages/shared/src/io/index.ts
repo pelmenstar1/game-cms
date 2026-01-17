@@ -4,3 +4,4 @@ export * from './file.js';
 export * from './import.js';
 export * from './path.js';
 export * from './scan.js';
+export * from './tempDir.js';

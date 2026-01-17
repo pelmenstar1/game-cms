@@ -4,7 +4,7 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 
 import type { FileSource } from '@game-cms/base-core';
-import { temporalDirectory } from '@game-cms/testing-lib';
+import { temporalDirectory } from '@game-cms/shared/io';
 import { describe, expect, test } from 'vitest';
 
 import { localStorageProvider } from './index.js';
