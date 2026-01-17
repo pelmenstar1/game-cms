@@ -9,7 +9,6 @@ import { useQueryPage } from '@/hooks/useQueryPage';
 import { EntityListItem } from '../EntityListItem';
 import { PageView } from '../PageView';
 import styles from './EntityList.module.scss';
-
 export interface EntityListProps {
   className?: string;
   entityId: EntityId;
@@ -18,7 +17,7 @@ export interface EntityListProps {
 const PAGE_SIZE = 10;
 
 export function EntityList({ className, entityId }: EntityListProps) {
-  const [page] = useQueryPage();
+  const page = useQueryPage();
   const options = usePagingOptions(page, PAGE_SIZE);
   const [itemsResult] = useApiQuery(listEntities, [entityId, options]);
 

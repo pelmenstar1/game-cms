@@ -12,7 +12,7 @@ import styles from './route.module.scss';
 const PAGE_SIZE = 10;
 
 export default function Page() {
-  const [page] = useQueryPage();
+  const page = useQueryPage();
   const pagingOptions = usePagingOptions(page, PAGE_SIZE);
 
   const [listResult] = useApiQuery(listApiTokens, [pagingOptions]);

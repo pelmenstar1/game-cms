@@ -1,13 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useMemo } from 'react';
+import { type Location, useLocation } from 'react-router';
 
-const parsePageNumber = (searchParams: URLSearchParams) => {
-  const value = searchParams.get('page');
+const parsePageNumber = (location: Location) => {
+  const value = new URLSearchParams(location.search).get('page');
 
   if (value) {
     const numberValue = Number.parseInt(value);
 
-    if (!Number.isNaN(numberValue)) {
+    if (!Number.isNaN(numberValue) && numberValue > 0) {
       return numberValue;
     }
   }
@@ -16,21 +16,7 @@ const parsePageNumber = (searchParams: URLSearchParams) => {
 };
 
 export const useQueryPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(() => parsePageNumber(searchParams));
+  const location = useLocation();
 
-  const setPageWithUrl = useCallback(
-    (value: number) => {
-      setPage(value);
-      setSearchParams((params) => {
-        const result = new URLSearchParams(params);
-        result.set('page', value.toString());
-
-        return result;
-      });
-    },
-    [setSearchParams]
-  );
-
-  return useMemo(() => [page, setPageWithUrl] as const, [page, setPageWithUrl]);
+  return useMemo(() => parsePageNumber(location), [location]);
 };
