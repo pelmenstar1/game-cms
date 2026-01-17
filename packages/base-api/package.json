@@ -6,9 +6,9 @@
     "typegen": "tsx ./scripts/generateTypes.ts"
   },
   "devDependencies": {
-    "@game-cms/testing-lib": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/conditional": "workspace:*",
+    "@game-cms/testing-lib": "workspace:*",
     "@types/node": "catalog:",
     "@types/qs": "^6.14.0",
     "tsx": "catalog:",
@@ -17,11 +17,12 @@
   "dependencies": {
     "@fastify/multipart": "catalog:",
     "@game-cms/base-core": "workspace:*",
+    "@game-cms/core": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "@game-cms/core": "workspace:*",
     "@node-rs/argon2": "2.0.2",
     "cookie": "1.1.1",
+    "fastify-type-provider-zod": "catalog:",
     "jose": "6.1.3",
     "mongodb": "catalog:",
     "qs": "catalog:",

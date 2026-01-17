@@ -35,13 +35,16 @@
     "@storybook/react-vite": "catalog:",
     "@types/node": "catalog:",
     "mongodb": "catalog:",
+    "react-router": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:"
   },
   "exports": {
     ".": {
       "import": "./dist/src/index.js",
-      "types": "./dist/src/index.d.ts"
+      "types": "./dist/src/index.d.ts",
+      "require": "./dist/src/index.js"
     },
     "./micro": {
       "import": "./dist/src/micro/index.js",

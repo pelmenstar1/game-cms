@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: mongo:latest
+    logging:
+      driver: none
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    environment:
+      JWT_SECRET_KEY: uuIDEn4b+RdyPZAGgVBFeebpgqRRbMux0cuJRGgwfdcriLUQ97IJlGOkEM6QTD0qD00TN8jigrH4ElMRUsXsqPvPnV0qFJy6KY5v+y0v6+Opnr83amQUgaLicKaY5UayN63h5rsRnM88seD3KKmG0a1FlgdL13mrRcQMXOYljto=
+    depends_on:
+      - mongodb

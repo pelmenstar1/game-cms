@@ -4,14 +4,8 @@ import type {
   QueryStatus,
   SuccessQueryResult,
 } from '@game-cms/shared';
-import {
-  classNames,
-  ErrorMessage,
-  IndeterminateCircularProgress,
-} from '@game-cms/ui';
+import { ErrorMessage, IndeterminateCircularProgress } from '@game-cms/ui';
 import type { ReactNode } from 'react';
-
-import styles from './MultipleDataLoader.module.scss';
 
 type InferValues<T extends QueryResult[]> = {
   [K in keyof T]: InferQueryResult<T[K]>;
@@ -48,7 +42,7 @@ export function MultipleDataLoader<T extends QueryResult[]>({
   children,
 }: MultipleDataLoaderProps<T>) {
   return (
-    <div className={classNames(styles.root, className)}>
+    <div className={className}>
       {isAnyHaveStatus(result, 'pending') ? (
         <IndeterminateCircularProgress />
       ) : isAnyHaveStatus(result, 'error') ? (

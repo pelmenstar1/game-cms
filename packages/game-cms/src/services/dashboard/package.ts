@@ -1,11 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { getImportDirectory } from '@game-cms/shared/node';
+import { resolveImportDirectory } from '@game-cms/shared/node';
 
 export function getDashboardPackagePath() {
-  return getImportDirectory(
-    import.meta.resolve('@game-cms/dashboard/package.json')
+  return resolveImportDirectory(
+    import.meta,
+    '@game-cms/dashboard/package.json'
   );
 }
 

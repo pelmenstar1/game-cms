@@ -2,12 +2,10 @@ import type { RelativeTime, TimeSpec } from '@game-cms/shared/chrono';
 import { useCallback, useMemo } from 'react';
 
 import { useModal } from '../../hooks';
-import { classNames } from '../../utils/classNames';
 import { formatTimeSpec } from '../../utils/timeFormatter';
 import { Select } from '../Select';
 import type { SelectItem } from '../SelectBase';
 import { TimeSelectCustomDialog } from '../TimeSelectCustomDialog';
-import styles from './TimeSelect.module.scss';
 
 const CUSTOM_ITEM = '$c';
 
@@ -69,7 +67,7 @@ export function TimeSelect({
 
   return (
     <Select
-      className={classNames(styles.root, className)}
+      className={className}
       items={items}
       selectedItem={isCustomItem ? CUSTOM_ITEM : selectedItem}
       onItemSelected={onBaseItemSelected}

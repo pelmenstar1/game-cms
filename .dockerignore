@@ -1,0 +1,72 @@
+# Dependencies
+node_modules
+**/node_modules
+
+**/*.tsbuildinfo
+
+# Build outputs
+dist
+**/dist
+build
+**/build
+!packages/game-cms/src/commands/build
+.next
+.nuxt
+.output
+out
+
+# Cache directories
+.cache
+.turbo
+.vite
+.vitest
+**/.cache
+
+# Coverage reports
+coverage
+**/coverage
+.nyc_output
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+*.test.ts.snap
+test-results
+
+# Misc
+.husky
+README.md

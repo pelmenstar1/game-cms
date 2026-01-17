@@ -35,6 +35,15 @@ export default defineConfig({
           },
         },
       },
+      {
+        plugins,
+        test: {
+          include: ['**/*.e2e-test.ts'],
+          globalSetup: ['e2e/globalSetup.ts'],
+          name: 'e2e',
+          environment: 'node',
+        },
+      },
     ],
   },
 });

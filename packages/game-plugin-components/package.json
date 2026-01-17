@@ -30,8 +30,11 @@
     "@game-cms/core": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
+    "@storybook/react-vite": "catalog:",
     "mongodb": "catalog:",
+    "react-router": "catalog:",
     "storybook": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

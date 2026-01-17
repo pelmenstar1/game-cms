@@ -1,9 +1,8 @@
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
-import type { HttpMethod, UnknownApiRoute } from '@game-cms/core/api';
-import { importFile } from '@game-cms/shared/io';
 import { glob } from 'glob';
 
 const routesDir = path.resolve('./src/routes');
@@ -11,7 +10,7 @@ const outFileName = 'types.gen.ts';
 
 type RouteInfo = {
   filePath: string;
-  method: HttpMethod;
+  method: string;
   url: string;
 };
 
@@ -24,10 +23,13 @@ async function scanRoutes(): Promise<string[]> {
 }
 
 async function transformRoute(filePath: string): Promise<RouteInfo> {
-  const moduleValue = await importFile<{ default: UnknownApiRoute }>(filePath);
+  const moduleValue = (await import(pathToFileURL(filePath).href)) as {
+    default: { method: string; url: string };
+  };
+
   const { method, url } = moduleValue.default;
 
-  return { filePath, method: method as HttpMethod, url };
+  return { filePath, method: method, url };
 }
 
 function createMetaFileContent(routes: RouteInfo[]) {

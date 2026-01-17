@@ -1,13 +1,14 @@
 import path from 'node:path';
 
 import type { Plugin } from '@game-cms/core';
-import { getImportDirectory } from '@game-cms/shared/node';
+import { resolveImportDirectory } from '@game-cms/shared/node';
 
 export const gamePlugin: Plugin = {
   id: 'game',
   components: () => {
-    const rootDir = getImportDirectory(
-      import.meta.resolve('@game-cms/game-plugin-components')
+    const rootDir = resolveImportDirectory(
+      import.meta,
+      '@game-cms/game-plugin-components'
     );
 
     return {

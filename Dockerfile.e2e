@@ -1,0 +1,12 @@
+FROM node:24-alpine AS deps
+
+RUN corepack enable
+
+WORKDIR /app
+
+COPY . .
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm prebuild
+
+CMD ["pnpm", "test:e2e"]

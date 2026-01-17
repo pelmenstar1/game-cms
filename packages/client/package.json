@@ -7,6 +7,7 @@
     "@game-cms/base-core": "workspace:*",
     "@game-cms/conditional": "workspace:*",
     "@game-cms/core": "workspace:*",
+    "@types/qs": "^6.14.0",
     "typescript": "catalog:"
   },
   "exports": {
@@ -20,8 +21,8 @@
     }
   },
   "dependencies": {
-    "qs": "catalog:",
+    "@game-cms/base-core": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "@game-cms/base-core": "workspace:*"
+    "qs": "catalog:"
   }
 }

@@ -3,7 +3,7 @@ import path from 'node:path';
 import { apiConfig, serviceSource } from '@game-cms/base-api';
 import type { OwnEnvironment } from '@game-cms/base-core';
 import type { Plugin } from '@game-cms/core';
-import { getImportDirectory } from '@game-cms/shared/node';
+import { resolveImportDirectory } from '@game-cms/shared/node';
 
 import { scanEntitySchemas } from './entity/scan.js';
 import { dashboardEntityPlugin } from './entity/vitePlugin.js';
@@ -13,8 +13,9 @@ export const basePlugin: Plugin<OwnEnvironment> = {
   api: apiConfig,
   services: serviceSource,
   components: () => {
-    const rootDir = getImportDirectory(
-      import.meta.resolve('@game-cms/base-components')
+    const rootDir = resolveImportDirectory(
+      import.meta,
+      '@game-cms/base-components'
     );
 
     return {

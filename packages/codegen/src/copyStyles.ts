@@ -1,8 +1,19 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import { isEntityExistsError } from '@game-cms/shared/errors';
 import { glob } from 'glob';
+
+function isErrorWithCode(value: unknown, code: string) {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    (value as { code?: string }).code === code
+  );
+}
+
+function isEntityExistsError(value: unknown) {
+  return isErrorWithCode(value, 'EEXIST');
+}
 
 async function findFiles(baseDir: string): Promise<string[]> {
   return glob(path.join(baseDir, '**/*.scss').replaceAll('\\', '/'));
