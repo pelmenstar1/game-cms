@@ -11,6 +11,8 @@ async function phase(name: string, command: string) {
   } catch (error: unknown) {
     console.error(`> ${name}`);
     console.error(error);
+
+    throw error;
   }
 }
 
@@ -23,13 +25,17 @@ async function main() {
       await phase('stylelint', `stylelint --cache ${STYLELINT_PATTERN} --fix`);
       await phase('prettier', `prettier --cache --write ${PRETTIER_PATTERN}`);
     } else {
-      await Promise.allSettled([
+      const result = await Promise.allSettled([
         phase('eslint', ESLINT_COMMAND),
         phase('stylelint', `stylelint --cache ${STYLELINT_PATTERN}`),
         phase('prettier', `prettier --cache --check ${PRETTIER_PATTERN}`),
         phase('build', 'tsc --build tsconfig.ref.json'),
         phase('knip', 'knip'),
       ]);
+
+      if (result.some((value) => value.status === 'rejected')) {
+        throw new Error('Lint failed');
+      }
     }
   } catch {
     // Messages about errors are already in the terminal

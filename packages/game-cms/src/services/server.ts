@@ -1,5 +1,6 @@
 import multipart from '@fastify/multipart';
 import { env } from '@game-cms/global';
+import { initServices } from '@game-cms/ignition';
 import {
   serializerCompiler,
   validatorCompiler,
@@ -16,7 +17,6 @@ export async function startServer(options: DashboardPluginOptions = {}) {
   const {
     config: { server },
     api: { routes },
-    services,
   } = env();
 
   const app = createFastifyApp();
@@ -35,7 +35,7 @@ export async function startServer(options: DashboardPluginOptions = {}) {
     app.route({ ...route, url });
   }
 
-  await Promise.all(services.map((service) => service.init?.()));
+  await initServices();
 
   await app.listen({ port: server.port });
 }

@@ -2,9 +2,8 @@ import childProcess from 'node:child_process';
 import net, { type AddressInfo } from 'node:net';
 
 import { setCmsController } from '@game-cms/global';
-import { initEnvFromConfigs } from '@game-cms/ignition';
+import { createController, initEnvFromConfigs } from '@game-cms/ignition';
 
-import { createController } from '../../services/controller.js';
 import {
   getDashboardPackagePath,
   writeDashboardMeta,

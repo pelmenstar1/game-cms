@@ -13,7 +13,7 @@ export default config((env) => ({
   },
   database: {
     mongo: {
-      url: 'mongodb://localhost:27017',
+      url: 'mongodb://mongodb:27017',
       auth: {
         username: 'admin',
         password: 'password',

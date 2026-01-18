@@ -1,5 +1,14 @@
-import { initEnvFromConfigs } from '@game-cms/ignition';
+import { cms, setCmsController } from '@game-cms/global';
+import {
+  initEnvFromConfigs,
+  createController,
+  initServices,
+} from '@game-cms/ignition';
+import { beforeAll } from 'vitest';
 
-export default async function setup() {
+beforeAll(async () => {
   await initEnvFromConfigs(import.meta.dirname);
-}
+  setCmsController(createController());
+
+  await initServices();
+});

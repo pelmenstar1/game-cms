@@ -1,7 +1,6 @@
 import { setCmsController } from '@game-cms/global';
-import { initEnvFromConfigs } from '@game-cms/ignition';
+import { createController, initEnvFromConfigs } from '@game-cms/ignition';
 
-import { createController } from '../../services/controller.js';
 import type { DashboardPluginOptions } from '../../services/dashboard/index.js';
 import { startServer } from '../../services/server.js';
 

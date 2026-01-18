@@ -92,7 +92,7 @@ export default service({
       .service('base::appEvents')
       .emit('base::apiToken::created', { ...payload, token, id: insertedId });
 
-    return { token };
+    return { id: insertedId, token };
   },
   deleteById: async (id: ObjectId) => {
     await collection().deleteOne({ _id: id });

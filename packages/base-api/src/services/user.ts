@@ -83,10 +83,14 @@ async function createUser(payload: CreateUserPayload) {
 async function addAdminUser() {
   const { email, password } = env().config.auth.admin;
 
-  const adminExists = (await users().countDocuments({ email })) > 0;
-
-  if (!adminExists) {
+  try {
     await createUser({ name: 'Admin', email, password, permissions: ['*'] });
+  } catch (error) {
+    if (
+      !(error instanceof ApiError && error.code === 'base::entity/duplicate')
+    ) {
+      throw error;
+    }
   }
 }
 
@@ -108,7 +112,7 @@ export default service({
   },
   list: async (options: PagingOptions) => {
     const result = await getPage<ServerUser, NoPasswordUser>(users(), options, {
-      post: [{ $projection: { passwordHash: 0 } }],
+      post: [{ $project: { passwordHash: 0 } }],
     });
 
     return result;
@@ -123,23 +127,15 @@ export default service({
     oldPassword: string,
     newPassword: string
   ) => {
-    return await cms()
-      .service('base::database')
-      .withTransaction(async (session) => {
-        const passwordMatch = await verifyUserPassword(
-          email,
-          oldPassword,
-          session
-        );
+    const passwordMatch = await verifyUserPassword(email, oldPassword);
 
-        if (!passwordMatch) {
-          return false;
-        }
+    if (!passwordMatch) {
+      return false;
+    }
 
-        await updatePassword(email, newPassword, session);
+    await updatePassword(email, newPassword);
 
-        return true;
-      });
+    return true;
   },
   verifyPassword: verifyUserPassword,
   updatePermissions: async (email: string, permissions: PermissionId[]) => {

@@ -117,6 +117,9 @@ importers:
       '@game-cms/game-plugin':
         specifier: workspace:*
         version: link:packages/game-plugin
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:packages/global
       '@game-cms/ignition':
         specifier: workspace:*
         version: link:packages/ignition

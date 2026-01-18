@@ -1,2 +1,2 @@
-// eslint-disable-next-line prettier/prettier, unicorn/require-module-specifiers
+// eslint-disable-next-line unicorn/require-module-specifiers
 export {};
