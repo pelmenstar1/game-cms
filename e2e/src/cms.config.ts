@@ -13,7 +13,7 @@ export default config((env) => ({
   },
   database: {
     mongo: {
-      url: 'mongodb://mongodb:27017',
+      url: process.env.MONGO_CONNECTION_URL ?? 'mongodb://localhost:27017',
       auth: {
         username: 'admin',
         password: 'password',

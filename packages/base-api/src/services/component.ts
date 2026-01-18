@@ -8,6 +8,7 @@ import type {
   ComponentResolvedDataById,
   ComponentStorageDataById,
   ForeignComponentDataResolverContext,
+  ForeignComponentDefaultDataContext,
   ForeignComponentStorageDataResolverContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
@@ -24,6 +25,11 @@ function getController<T extends ComponentId>(id: T) {
 
   return controller;
 }
+
+const foreignDefaultContext: ForeignComponentDefaultDataContext = {
+  getDefaultData: (id, options) =>
+    getController(id).core.defaultRawData(options, foreignDefaultContext),
+};
 
 const foreignValidationContext: ForeignComponentValidationContext = {
   validate: (id, data, options) =>
@@ -90,6 +96,7 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
 
 export default service({
   id: 'base::component',
+  foreignDefaultContext,
   foreignValidationContext,
   foreignResolverContext,
   foreignStorageResolverContext,

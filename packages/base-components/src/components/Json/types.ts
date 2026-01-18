@@ -1,7 +1,7 @@
 import type { ComponentEntry } from '@game-cms/core';
 import type { ZodType } from 'zod';
 
-type JsonArgs = { allowEmpty: boolean; type: ZodType };
+type JsonArgs = { allowEmpty: boolean; type: unknown };
 
 type ResolveArgs<T> = T extends JsonArgs ? T : JsonArgs;
 

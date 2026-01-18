@@ -32,6 +32,7 @@
     "@game-cms/codegen": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
+    "@game-cms/component-testing-lib": "workspace:*",
     "@storybook/react-vite": "catalog:",
     "@types/node": "catalog:",
     "mongodb": "catalog:",

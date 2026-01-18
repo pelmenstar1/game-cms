@@ -13,6 +13,7 @@ services:
       dockerfile: Dockerfile.e2e
     environment:
       JWT_SECRET_KEY: uuIDEn4b+RdyPZAGgVBFeebpgqRRbMux0cuJRGgwfdcriLUQ97IJlGOkEM6QTD0qD00TN8jigrH4ElMRUsXsqPvPnV0qFJy6KY5v+y0v6+Opnr83amQUgaLicKaY5UayN63h5rsRnM88seD3KKmG0a1FlgdL13mrRcQMXOYljto=
+      MONGO_CONNECTION_URL: mongodb://mongodb:27017
     depends_on:
       - mongodb
     links:

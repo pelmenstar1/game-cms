@@ -1,0 +1,20 @@
+{
+  "name": "@game-cms/component-testing-lib",
+  "packageManager": "pnpm@10.25.0",
+  "type": "module",
+  "dependencies": {
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/core": "workspace:*",
+    "@game-cms/base-api": "workspace:*",
+    "@game-cms/global": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
+}

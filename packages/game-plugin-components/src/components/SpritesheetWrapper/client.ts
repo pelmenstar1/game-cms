@@ -15,7 +15,6 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spriteshee
       );
     },
     toClient: (data, options, context) => {
-      console.log('client', data);
       return {
         base: context.toClient(
           options.componentId,

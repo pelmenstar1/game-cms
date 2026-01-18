@@ -239,7 +239,9 @@ export type ComponentRawInDataOrError<
   ComponentErrorById<Id, Args>
 >;
 
-export type ComponentClientDataTransformer<Id extends ComponentId> = {
+export type ComponentClientDataTransformer<
+  Id extends ComponentId = ComponentId,
+> = {
   /**
    * Determines whether fromClient will its own validation scheme.
    */

@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { expect, test } from 'vitest';
 
-import { readJson } from '../packages/shared/src/io/file';
+import { readJson, readJson5 } from '../packages/shared/src/io/file';
 import { TsConfig } from './types';
 
 type PackageInfo = {
@@ -60,7 +60,7 @@ async function createPackageRegistry() {
 async function checkPackage(rootDir: string, registry: PackageRegistry) {
   const [packageInfo, tsConfig] = await Promise.all([
     readJson<PackageInfo>(path.join(rootDir, 'package.json')),
-    readJson<TsConfig>(path.join(rootDir, 'tsconfig.json')),
+    readJson5<TsConfig>(path.join(rootDir, 'tsconfig.json')),
   ]);
 
   const workspaceDeps = getWorkspaceDependencies(packageInfo);

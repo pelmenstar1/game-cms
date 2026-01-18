@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { format, resolveConfig } from 'prettier';
 
-import { readJson } from '../packages/shared/src/io/file';
+import { readJson, readJson5 } from '../packages/shared/src/io/file';
 
 type PackageInfo = {
   dependencies?: Record<string, string>;
@@ -56,7 +56,7 @@ async function getWorkspaceDependencies(baseDir: string) {
 
 async function processPackage(baseDir: string, prettier: PrettierApi) {
   const configPath = path.join(baseDir, 'tsconfig.json');
-  const config = await readJson<TsConfig>(configPath);
+  const config = await readJson5<TsConfig>(configPath);
 
   const deps = await getWorkspaceDependencies(baseDir);
   const refs = deps.map((name) => ({ path: `../${name}` }));

@@ -7,3 +7,4 @@ build
 .eslintcache
 .stylelintcache
 .env.test
+.game-cms-storage

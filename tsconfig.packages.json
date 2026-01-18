@@ -21,7 +21,8 @@
     { "path": "./packages/spritesheet" },
     { "path": "./packages/component-api" },
     { "path": "./packages/storybook-config" },
-    { "path": "./packages/ignition" }
+    { "path": "./packages/ignition" },
+    { "path": "./packages/component-testing-lib" }
   ],
   "include": []
 }
