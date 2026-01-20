@@ -4,7 +4,7 @@ import { objectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/users/byId/:id',
+  url: '/user/byId/:id',
   method: 'GET',
   config: {
     id: 'user$get',

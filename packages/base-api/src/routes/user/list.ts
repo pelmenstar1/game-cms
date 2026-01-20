@@ -5,6 +5,9 @@ import { cms } from '@game-cms/global';
 export default apiRoute({
   url: '/user/list',
   method: 'GET',
+  config: {
+    id: 'user$get',
+  },
   schema: {
     querystring: pagingOptionsSchema,
   },

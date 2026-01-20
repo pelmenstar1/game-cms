@@ -6,5 +6,5 @@ export const items: NavTabInfoWithPermission[] = [
     href: '/settings/api-tokens',
     permission: 'auth/token$get',
   },
-  { text: 'Users', href: '/settings/users', permission: 'auth/user$get' },
+  { text: 'Users', href: '/settings/users', permission: 'user$get' },
 ];

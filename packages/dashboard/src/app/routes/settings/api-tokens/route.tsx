@@ -24,7 +24,7 @@ export default function Page() {
           to="/settings/api-tokens/+"
           className={styles['new-token-button']}
           buttonVariant="outlined"
-          icon
+          hasIcon
         >
           <PlusIcon />
           Create token

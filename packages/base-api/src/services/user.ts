@@ -1,8 +1,8 @@
 import {
   ApiError,
   type CreateUserPayload,
-  type PermissionId,
-  type ServerUser,
+  type UpdateUserPayload,
+  type User,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
@@ -13,9 +13,9 @@ import type { ClientSession, Filter, ObjectId } from 'mongodb';
 import { getPage } from '../utils/paging.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 
-type NoPasswordUser = Omit<ServerUser & { _id: ObjectId }, 'passwordHash'>;
+type NoPasswordServerUser = Omit<User, 'passwordHash'> & { _id: ObjectId };
 
-function users() {
+function collection() {
   return cms().service('base::database').collection('base::users');
 }
 
@@ -26,7 +26,11 @@ async function updatePassword(
 ) {
   const passwordHash = await hashPassword(newPassword);
 
-  await users().updateOne({ email }, { $set: { passwordHash } }, { session });
+  await collection().updateOne(
+    { email },
+    { $set: { passwordHash } },
+    { session }
+  );
 }
 
 async function verifyUserPassword(
@@ -34,7 +38,7 @@ async function verifyUserPassword(
   password: string,
   session?: ClientSession
 ) {
-  const user = await users().findOne(
+  const user = await collection().findOne(
     { email },
     { session, projection: { passwordHash: 1 } }
   );
@@ -46,22 +50,22 @@ async function verifyUserPassword(
   return await verifyPassword(user.passwordHash, password);
 }
 
-function getByFilter(filter: Filter<ServerUser>) {
-  return users().findOne<NoPasswordUser>(filter, {
+function getByFilter(filter: Filter<User>) {
+  return collection().findOne<NoPasswordServerUser>(filter, {
     projection: { passwordHash: 0 },
   });
 }
 
 async function createIndices() {
-  await users().createIndex({ email: 1 }, { unique: true });
+  await collection().createIndex({ email: 1 }, { unique: true });
 }
 
 async function createUser(payload: CreateUserPayload) {
   try {
     const passwordHash = await hashPassword(payload.password);
 
-    const user = await users().insertOne({
-      name: payload.name,
+    const user = await collection().insertOne({
+      displayName: payload.displayName,
       email: payload.email,
       passwordHash: passwordHash,
       permissions: payload.permissions,
@@ -84,7 +88,12 @@ async function addAdminUser() {
   const { email, password } = env().config.auth.admin;
 
   try {
-    await createUser({ name: 'Admin', email, password, permissions: ['*'] });
+    await createUser({
+      displayName: 'Admin',
+      email,
+      password,
+      permissions: ['*'],
+    });
   } catch (error) {
     if (
       !(error instanceof ApiError && error.code === 'base::entity/duplicate')
@@ -107,19 +116,23 @@ export default service({
   getByEmail: async (email: string) => {
     return await getByFilter({ email });
   },
-  fullGetBy: (filter: Filter<ServerUser>) => {
-    return users().findOne(filter);
+  fullGetBy: (filter: Filter<User>) => {
+    return collection().findOne(filter);
   },
   list: async (options: PagingOptions) => {
-    const result = await getPage<ServerUser, NoPasswordUser>(users(), options, {
-      post: [{ $project: { passwordHash: 0 } }],
-    });
+    const result = await getPage<User, NoPasswordServerUser>(
+      collection(),
+      options,
+      {
+        post: [{ $project: { passwordHash: 0 } }],
+      }
+    );
 
     return result;
   },
   create: createUser,
   delete: async (id: ObjectId) => {
-    await users().deleteOne({ _id: id });
+    await collection().deleteOne({ _id: id });
   },
   updatePassword,
   updatePasswordIfOldMatches: async (
@@ -138,7 +151,15 @@ export default service({
     return true;
   },
   verifyPassword: verifyUserPassword,
-  updatePermissions: async (email: string, permissions: PermissionId[]) => {
-    await users().updateOne({ email }, { $set: { permissions } });
+  updateById: async (
+    id: ObjectId,
+    { password, ...rest }: UpdateUserPayload
+  ) => {
+    const passwordHash = password ? await hashPassword(password) : undefined;
+
+    await collection().updateOne(
+      { _id: id },
+      { $set: { passwordHash, ...rest } }
+    );
   },
 });

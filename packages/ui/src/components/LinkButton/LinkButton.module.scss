@@ -1,14 +1,8 @@
 .root {
   text-decoration: none;
 
-  &-icon {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    &-outlined svg {
-      color: var(--color-primary);
-      fill: var(--color-primary);
-    }
+  &-icon-outlined svg {
+    color: var(--color-primary);
+    fill: var(--color-primary);
   }
 }

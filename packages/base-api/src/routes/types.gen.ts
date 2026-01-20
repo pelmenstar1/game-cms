@@ -26,7 +26,8 @@ declare module '@game-cms/core/api' {
     'POST /storage/folder': typeof import('./storage/folder/create.js');
     'GET /storage/list': typeof import('./storage/list/get.js');
     'DELETE /user/byId/:id': typeof import('./user/byId/delete.js');
-    'GET /users/byId/:id': typeof import('./user/byId/get.js');
+    'GET /user/byId/:id': typeof import('./user/byId/get.js');
+    'PUT /user/byId/:id': typeof import('./user/byId/update.js');
     'POST /user': typeof import('./user/create.js');
     'GET /user/list': typeof import('./user/list.js');
   }

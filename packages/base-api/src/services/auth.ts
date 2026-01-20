@@ -64,13 +64,13 @@ async function createSessionToken(
   type: ExpirationTimeType,
   actor: {
     _id: ObjectId | string;
-    name: string;
+    displayName: string;
     permissions: PermissionId[];
   }
 ) {
   return createJwtToken<SessionJwtPayload>(type, {
     id: actor._id.toString(),
-    name: actor.name,
+    name: actor.displayName,
     prms: actor.permissions,
   });
 }
@@ -184,7 +184,7 @@ export default service({
 
     return createSessionToken('apiToken', {
       _id: 'API token',
-      name: tokenInfo.name,
+      displayName: tokenInfo.name,
       permissions: tokenInfo.permissions,
     });
   },

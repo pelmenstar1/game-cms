@@ -10,13 +10,13 @@ describe('signUserIn', () => {
 
     const email = 'test@example.com';
     const password = 'testPassword123';
-    const name = 'Test User';
+    const displayName = 'Test User';
     const permissions: ApiRouteId[] = ['storage$list'];
 
     const { id } = await userService.create({
       email,
       password,
-      name,
+      displayName,
       permissions,
     });
 
@@ -54,7 +54,7 @@ describe('signUserIn', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Test User 2',
+      displayName: 'Test User 2',
       permissions: [],
     });
 
@@ -80,7 +80,7 @@ describe('refreshUserSession', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Test User 3',
+      displayName: 'Test User 3',
       permissions: ['storage$list'],
     });
 
@@ -163,7 +163,7 @@ describe('verifySessionJwt', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Test User 4',
+      displayName: 'Test User 4',
       permissions: ['storage$list'],
     });
 
@@ -187,7 +187,7 @@ describe('verifySessionJwt', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Test User 5',
+      displayName: 'Test User 5',
       permissions: [routeId],
     });
 
@@ -212,7 +212,7 @@ describe('verifySessionJwt', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Test User 6',
+      displayName: 'Test User 6',
       permissions: [allowedRoute],
     });
 
@@ -235,7 +235,7 @@ describe('verifySessionJwt', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Admin User',
+      displayName: 'Admin User',
       permissions: ['*'],
     });
 
@@ -261,7 +261,7 @@ describe('getSessionPermissions', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Test User 8',
+      displayName: 'Test User 8',
       permissions,
     });
 
@@ -286,7 +286,7 @@ describe('getSessionPermissions', () => {
     const { id } = await userService.create({
       email,
       password,
-      name: 'Admin User 2',
+      displayName: 'Admin User 2',
       permissions: ['*'],
     });
 

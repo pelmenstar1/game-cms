@@ -36,19 +36,19 @@ describe('create', () => {
 
     const email = 'newuser@example.com';
     const password = 'password123';
-    const name = 'New User';
+    const displayName = 'New User';
     const permissions: ApiRouteId[] = ['storage$list'];
 
     await using u = await createTemporalUser({
       email,
       password,
-      name,
+      displayName,
       permissions,
     });
 
     const user = await userService.getById(u.result.id);
 
-    expect(user).toMatchObject({ email, name, permissions });
+    expect(user).toMatchObject({ email, displayName, permissions });
   });
 
   it('should throw error when creating duplicate user', async () => {
@@ -56,12 +56,12 @@ describe('create', () => {
 
     const email = 'duplicate@example.com';
     const password = 'password123';
-    const name = 'Duplicate User';
+    const displayName = 'Duplicate User';
 
     await using _ = await createTemporalUser({
       email,
       password,
-      name,
+      displayName,
       permissions: [],
     });
 
@@ -69,7 +69,7 @@ describe('create', () => {
       userService.create({
         email,
         password,
-        name: 'Another Name',
+        displayName: 'Another Name',
         permissions: [],
       })
     ).rejects.toThrow(ApiError);
@@ -81,18 +81,18 @@ describe('getById', () => {
     const userService = cms().service('base::user');
 
     const email = 'getbyid@example.com';
-    const name = 'Get By Id User';
+    const displayName = 'Get By Id User';
 
     await using u = await createTemporalUser({
       email,
       password: 'password123',
-      name,
+      displayName,
       permissions: [],
     });
 
     const user = await userService.getById(u.result.id);
 
-    expect(user).toMatchObject({ _id: u.result.id, email, name });
+    expect(user).toMatchObject({ _id: u.result.id, email, displayName });
   });
 
   it('should return null for non-existent user', async () => {
@@ -109,18 +109,18 @@ describe('getByEmail', () => {
     const userService = cms().service('base::user');
 
     const email = 'getbyemail@example.com';
-    const name = 'Get By Email User';
+    const displayName = 'Get By Email User';
 
     await using _ = await createTemporalUser({
       email,
       password: 'password123',
-      name,
+      displayName,
       permissions: [],
     });
 
     const user = await userService.getByEmail(email);
 
-    expect(user).toMatchObject({ email, name });
+    expect(user).toMatchObject({ email, displayName });
   });
 
   it('should return null for non-existent email', async () => {
@@ -141,7 +141,7 @@ describe('delete', () => {
     const { id } = await userService.create({
       email,
       password: 'password123',
-      name: 'Delete User',
+      displayName: 'Delete User',
       permissions: [],
     });
 
@@ -162,7 +162,7 @@ describe('list', () => {
         .create({
           email: 'list1@example.com',
           password: 'password123',
-          name: 'List User 1',
+          displayName: 'List User 1',
           permissions: [],
         })
         .then((r) => r.id),
@@ -170,7 +170,7 @@ describe('list', () => {
         .create({
           email: 'list2@example.com',
           password: 'password123',
-          name: 'List User 2',
+          displayName: 'List User 2',
           permissions: [],
         })
         .then((r) => r.id),
@@ -190,7 +190,7 @@ describe('list', () => {
     await using u = await createTemporalUser({
       email: 'listnohash@example.com',
       password: 'password123',
-      name: 'No Hash User',
+      displayName: 'No Hash User',
       permissions: [],
     });
 
@@ -211,7 +211,7 @@ describe('updatePassword', () => {
     await using _ = await createTemporalUser({
       email,
       password: oldPassword,
-      name: 'Update Password User',
+      displayName: 'Update Password User',
       permissions: [],
     });
 
@@ -236,7 +236,7 @@ describe('updatePasswordIfOldMatches', () => {
     await using _ = await createTemporalUser({
       email,
       password: oldPassword,
-      name: 'Update Password Match User',
+      displayName: 'Update Password Match User',
       permissions: [],
     });
 
@@ -263,7 +263,7 @@ describe('updatePasswordIfOldMatches', () => {
     await using _ = await createTemporalUser({
       email,
       password,
-      name: 'Update Password No Match User',
+      displayName: 'Update Password No Match User',
       permissions: [],
     });
 
@@ -290,7 +290,7 @@ describe('verifyPassword', () => {
     await using _ = await createTemporalUser({
       email,
       password,
-      name: 'Verify Password User',
+      displayName: 'Verify Password User',
       permissions: [],
     });
 
@@ -308,7 +308,7 @@ describe('verifyPassword', () => {
     await using _ = await createTemporalUser({
       email,
       password,
-      name: 'Verify Wrong Password User',
+      displayName: 'Verify Wrong Password User',
       permissions: [],
     });
 
@@ -329,7 +329,7 @@ describe('verifyPassword', () => {
   });
 });
 
-describe('updatePermissions', () => {
+describe('updateById', () => {
   it('should update user permissions', async () => {
     const userService = cms().service('base::user');
 
@@ -344,11 +344,11 @@ describe('updatePermissions', () => {
     await using u = await createTemporalUser({
       email,
       password: 'password123',
-      name: 'Update Permissions User',
+      displayName: 'Update Permissions User',
       permissions: initialPermissions,
     });
 
-    await userService.updatePermissions(email, newPermissions);
+    await userService.updateById(u.result.id, { permissions: newPermissions });
 
     const user = await userService.getById(u.result.id);
 
@@ -363,11 +363,11 @@ describe('updatePermissions', () => {
     await using u = await createTemporalUser({
       email,
       password: 'password123',
-      name: 'Wildcard User',
+      displayName: 'Wildcard User',
       permissions: [],
     });
 
-    await userService.updatePermissions(email, ['*']);
+    await userService.updateById(u.result.id, { permissions: ['*'] });
 
     const user = await userService.getById(u.result.id);
 
@@ -385,7 +385,7 @@ describe('fullGetBy', () => {
     await using _ = await createTemporalUser({
       email,
       password,
-      name: 'Full Get User',
+      displayName: 'Full Get User',
       permissions: [],
     });
 
