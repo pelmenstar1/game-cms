@@ -1,0 +1,13 @@
+{
+  "name": "@game-cms/e2e",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "game-cms": "workspace:*",
+    "@game-cms/ignition": "workspace:*",
+    "@game-cms/global": "workspace:*",
+    "@game-cms/game-plugin": "workspace:*",
+    "@game-cms/storage-provider-local": "workspace:*"
+  }
+}

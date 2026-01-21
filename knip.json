@@ -12,7 +12,7 @@
   "ignoreFiles": ["e2e/src/cms.config.ts"],
   "workspaces": {
     "packages/*": {
-      "entry": ["src/index.ts", "src/bin.ts"],
+      "entry": ["src/index.ts", "src/bin.ts", "src/cms.config.ts"],
       "project": "src/**/*.{ts,tsx}"
     },
     "packages/{base,game-plugin}-components": {
