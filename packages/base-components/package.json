@@ -18,6 +18,7 @@
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/ui": "workspace:*",
+    "@xyflow/react": "^12.10.0",
     "i18next": "catalog:",
     "mongodb": "catalog:",
     "react-i18next": "catalog:",
@@ -30,9 +31,9 @@
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
     "@game-cms/codegen": "workspace:*",
+    "@game-cms/component-testing-lib": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
-    "@game-cms/component-testing-lib": "workspace:*",
     "@storybook/react-vite": "catalog:",
     "@types/node": "catalog:",
     "mongodb": "catalog:",

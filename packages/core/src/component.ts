@@ -341,10 +341,9 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
       Id,
       'storageData' | 'rawInData'
     > &
-    RequiredIfExists<
+    RequiredIf<
       { pathWalker?: ComponentPathWalker<Id> },
-      Id,
-      'nestedPath'
+      AnyKeyInObject<ComponentNestedPathMap<unknown>, Id>
     >;
 
 export type ComponentControllerMap = {

@@ -6,6 +6,7 @@ export * from './components/Dropdown/index.js';
 export * from './components/DynamicZone/index.js';
 export * from './components/DynamicZone/types.js';
 export * from './components/File/index.js';
+export * from './components/Graph/index.js';
 export * from './components/Json/index.js';
 export * from './components/Number/index.js';
 export * from './components/Repeatable/index.js';

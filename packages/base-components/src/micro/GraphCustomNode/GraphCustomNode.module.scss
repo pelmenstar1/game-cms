@@ -1,0 +1,11 @@
+.root {
+  padding: 1em;
+  background: var(--color-background);
+  border: 1px solid var(--color-text-on-background-dark);
+  border-radius: 0.5em;
+
+  &-selected {
+    border: 1px solid var(--color-text-on-background);
+    box-shadow: 0 0 4px var(--color-text-on-background);
+  }
+}

@@ -1,8 +1,9 @@
 import { ComponentEntry } from '@game-cms/core';
+import { IfExtends } from '@game-cms/shared';
 
 type DropdownArgs = { key: string };
 
-type ResolveArgs<T> = T extends DropdownArgs ? T : DropdownArgs;
+type ResolveArgs<T> = IfExtends<T, DropdownArgs>;
 
 export type DropdownItem<K> = {
   key: K;

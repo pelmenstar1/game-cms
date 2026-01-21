@@ -1,8 +1,9 @@
 import { ComponentEntry } from '@game-cms/core';
+import { IfExtends } from '@game-cms/shared';
 
 export type CheckboxArgs = { key: string };
 
-type ResolveArgs<T> = T extends CheckboxArgs ? T : CheckboxArgs;
+type ResolveArgs<T> = IfExtends<T, CheckboxArgs>;
 
 export type CheckboxChoice = { title: string };
 

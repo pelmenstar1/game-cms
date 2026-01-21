@@ -1,0 +1,12 @@
+.flow-wrapper {
+  width: 100%;
+  height: 500px;
+}
+
+.flow {
+  --xy-controls-button-background-color-default: var(--color-background);
+  --xy-controls-button-background-color-hover: var(
+    --color-background-dark-variant
+  );
+  --xy-attribution-background-color-default: var(--color-background);
+}

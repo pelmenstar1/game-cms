@@ -20,3 +20,5 @@ export type AnyKeyInObject<T, K extends PropertyKey> = [true] extends {
 export type ResultOrError<T, Error> =
   | { result: T; error?: undefined }
   | { result?: undefined; error: Error };
+
+export type IfExtends<T, U> = T extends U ? T : U;

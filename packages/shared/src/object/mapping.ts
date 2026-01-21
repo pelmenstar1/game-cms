@@ -1,6 +1,5 @@
 import type { MaybePromise } from '../typeutil.js';
-
-type UnknownObject = Record<PropertyKey, unknown>;
+import type { UnknownObject } from './types.js';
 
 type ObjectMapping<T, R> = (value: T[keyof T], key: keyof T) => R;
 

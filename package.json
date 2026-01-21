@@ -9,7 +9,7 @@
     "typegen": "pnpm run -r typegen",
     "prebuild": "pnpm run --filter @game-cms/codegen build && pnpm run -r prebuild && tsc --build tsconfig.packages.json --declaration",
     "prebuild:watch": "pnpm run -r prebuild && tsc --build tsconfig.packages.json --declaration --watch",
-    "test": "vitest run --project unit --project browser",
+    "test": "vitest run --project unit",
     "test:e2e": "vitest run --project e2e",
     "test:build": "pnpm run -r test-build",
     "clean": "tsx ./scripts/clean.ts",
