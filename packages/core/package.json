@@ -11,7 +11,8 @@
     "@types/node": "catalog:",
     "fastify": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "pino": "catalog:"
   },
   "dependencies": {
     "@game-cms/shared": "workspace:*",

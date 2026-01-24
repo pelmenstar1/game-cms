@@ -29,8 +29,8 @@
     "bson": "^7.0.0",
     "commander": "14.0.2",
     "fastify": "catalog:",
-    "jiti": "^2.6.1",
-    "pino": "10.1.1",
+    "jiti": "catalog:",
+    "pino": "catalog:",
     "react-router": "catalog:",
     "zod": "catalog:"
   },

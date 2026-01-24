@@ -35,3 +35,5 @@ catalog:
   vite-tsconfig-paths: 6.0.4
   vitest: 4.0.17
   zod: 4.3.5
+  pino: 10.1.1
+  jiti: ^2.6.1

@@ -1,12 +1,9 @@
 import type { MaybeAsyncFactory, MaybePromise } from '@game-cms/shared';
 import type { ObjectResolver } from '@game-cms/shared/object';
-import type {
-  FastifyInstance,
-  FastifyPluginAsync,
-  FastifyPluginCallback,
-} from 'fastify';
+import type { FastifyPluginAsync, FastifyPluginCallback } from 'fastify';
 import type { Plugin as VitePlugin } from 'vite';
 
+import type { CmsFastifyInstance } from './api/fastify.js';
 import type { ApiRoute } from './api/route.js';
 import type { ResolvedCmsConfig } from './config.js';
 import type { Service } from './service.js';
@@ -35,7 +32,7 @@ type MaybeWithUrlPrefix<T> =
 
 export type PluginApiFastifyConfig = {
   plugins?: (FastifyPluginCallback | FastifyPluginAsync)[];
-  setup?: (instance: FastifyInstance) => MaybePromise<void>;
+  setup?: (instance: CmsFastifyInstance) => MaybePromise<void>;
 };
 
 export interface PluginApiConfig {

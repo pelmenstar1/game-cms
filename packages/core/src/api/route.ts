@@ -1,7 +1,5 @@
 import type {
-  FastifyBaseLogger,
   FastifySchema,
-  FastifyTypeProvider,
   RawReplyDefaultExpression,
   RawRequestDefaultExpression,
   RawServerBase,
@@ -10,6 +8,7 @@ import type {
   RouteOptions,
 } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
+import type { Logger } from 'pino';
 import type z from 'zod';
 
 import type { apiRouteId } from '../schema/api.js';
@@ -46,8 +45,6 @@ export type ApiRoute<
     RawReplyDefaultExpression<RawServer>,
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
   SchemaCompiler extends FastifySchema = FastifySchema,
-  TypeProvider extends FastifyTypeProvider = ZodTypeProvider,
-  Logger extends FastifyBaseLogger = FastifyBaseLogger,
 > = RouteOptions<
   RawServer,
   RawRequest,
@@ -55,12 +52,12 @@ export type ApiRoute<
   RouteGeneric,
   ApiRouteContextConfig,
   SchemaCompiler,
-  TypeProvider,
+  ZodTypeProvider,
   Logger
 >;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type UnknownApiRoute = ApiRoute<any, any, any, any, any, any, any>;
+export type UnknownApiRoute = ApiRoute<any, any, any, any, any>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ApiRouteMap {}
@@ -74,17 +71,8 @@ export function apiRoute<
     RawReplyDefaultExpression<RawServer>,
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
   SchemaCompiler extends FastifySchema = FastifySchema,
-  Logger extends FastifyBaseLogger = FastifyBaseLogger,
 >(
-  route: ApiRoute<
-    RawServer,
-    RawRequest,
-    RawReply,
-    RouteGeneric,
-    SchemaCompiler,
-    ZodTypeProvider,
-    Logger
-  >
+  route: ApiRoute<RawServer, RawRequest, RawReply, RouteGeneric, SchemaCompiler>
 ) {
   return route;
 }

@@ -6,7 +6,8 @@
   "types": "./dist/index.d.ts",
   "devDependencies": {
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "pino": "catalog:"
   },
   "dependencies": {
     "@game-cms/core": "workspace:*"

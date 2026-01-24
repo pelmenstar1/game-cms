@@ -17,7 +17,7 @@ import type {
   ComponentId,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
-import { cms } from '@game-cms/global';
+import { cms, log } from '@game-cms/global';
 import { isNonNullObject, type PagingOptions } from '@game-cms/shared';
 import {
   asyncMapObject,
@@ -240,7 +240,9 @@ export default service({
         if (oldStructure === undefined) {
           await col.insertOne({ entityId: schema.id, structure: newStructure });
         } else if (!deepEquals(oldStructure.structure, newStructure)) {
-          console.log('migrating', schema.id);
+          log()
+            .child({ service: 'base::entity' })
+            .info('Migrating %s', schema.id);
 
           await migrateEntityCollection(schema);
 

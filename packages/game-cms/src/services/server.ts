@@ -1,6 +1,7 @@
 import multipart from '@fastify/multipart';
-import { env } from '@game-cms/global';
+import { env, setLogger } from '@game-cms/global';
 import { initServices } from '@game-cms/ignition';
+import fastify from 'fastify';
 import {
   serializerCompiler,
   validatorCompiler,
@@ -10,7 +11,7 @@ import {
   dashboardPlugin,
   type DashboardPluginOptions,
 } from './dashboard/index.js';
-import { createFastifyApp } from './fastify.js';
+import { createLogger } from './logger.js';
 import { initPlugins } from './plugin.js';
 
 export async function startServer(options: DashboardPluginOptions = {}) {
@@ -19,7 +20,9 @@ export async function startServer(options: DashboardPluginOptions = {}) {
     api: { routes },
   } = env();
 
-  const app = createFastifyApp();
+  const app = fastify({ loggerInstance: createLogger() });
+
+  setLogger(app.log);
 
   app.register(dashboardPlugin, options);
   app.register(multipart);

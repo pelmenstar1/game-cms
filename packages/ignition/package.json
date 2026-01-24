@@ -6,7 +6,7 @@
     "@game-cms/base-plugin": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "jiti": "^2.6.1"
+    "jiti": "catalog:"
   },
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
