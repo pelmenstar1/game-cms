@@ -100,7 +100,7 @@ async function createUser(
     const user = await collection().insertOne({
       displayName: payload.displayName,
       email: payload.email,
-      passwordHash: passwordHash,
+      passwordHash,
       permissions: payload.permissions,
       isAdmin: payload.isAdmin,
     });
@@ -150,11 +150,8 @@ export default service({
   getById: (id: ObjectId) => {
     return getByFilter<NoPasswordServerUser>({ _id: id }, { passwordHash: 0 });
   },
-  getByEmail: async (email: string) => {
-    return await getByFilter<NoPasswordServerUser>(
-      { email },
-      { passwordHash: 0 }
-    );
+  getByEmail: (email: string) => {
+    return getByFilter<NoPasswordServerUser>({ email }, { passwordHash: 0 });
   },
   fullGetBy: async (filter: Filter<User>) => {
     const result = await getByFilter<User & { id: ObjectId }>(filter);

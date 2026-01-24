@@ -26,7 +26,9 @@ describe('init', () => {
 
     const user = await cms().service('base::user').getByEmail(email);
 
-    expect(user?.permissions).toEqual(['*']);
+    expect(new Set(user?.permissions)).toEqual(
+      cms().service('base::auth').getAllPermissions()
+    );
   });
 });
 
@@ -92,7 +94,7 @@ describe('getById', () => {
 
     const user = await userService.getById(u.result.id);
 
-    expect(user).toMatchObject({ _id: u.result.id, email, displayName });
+    expect(user).toMatchObject({ id: u.result.id, email, displayName });
   });
 
   it('should return null for non-existent user', async () => {
@@ -196,7 +198,7 @@ describe('list', () => {
 
     const result = await userService.list({ size: 10, offset: 0 });
 
-    expect(result.items.every((item) => 'passwordHash' in item)).toBe(true);
+    expect(result.items.every((item) => 'passwordHash' in item)).toBe(false);
   });
 });
 

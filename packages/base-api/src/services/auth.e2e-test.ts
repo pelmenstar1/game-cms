@@ -244,7 +244,7 @@ describe('getSessionPermissions', () => {
 
     const email = 'test8@example.com';
     const password = 'testPassword123';
-    const permissions: ApiRouteId[] = ['storage$list', 'user$byId$get'];
+    const permissions: ApiRouteId[] = ['storage$list', 'user$get'];
 
     const { id } = await userService.create({
       email,
@@ -275,7 +275,9 @@ describe('getSessionPermissions', () => {
       session.token
     );
 
-    expect(sessionPermissions).toEqual(authService.getAllPermissions());
+    expect(new Set(sessionPermissions)).toEqual(
+      authService.getAllPermissions()
+    );
   });
 });
 

@@ -11,7 +11,7 @@ import {
 export type MakeRequestInjectOptions = Omit<InjectOptions, 'url' | 'path'>;
 
 export type MakeRequestOptions<T> = {
-  inject: MakeRequestInjectOptions;
+  inject?: MakeRequestInjectOptions;
   routeOptions?: RouteShorthandOptions & {
     method?: Exclude<HttpMethod, 'TRACE' | 'CONNECT'>;
   };
