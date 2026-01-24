@@ -17,6 +17,7 @@ export default [
     layout('routes/settings/layout.tsx', [
       ...prefix('/settings', [
         index('routes/settings/route.tsx'),
+        route('public-routes', 'routes/settings/public-routes/route.tsx'),
         ...prefix('api-tokens', [
           index('routes/settings/api-tokens/route.tsx'),
           route('+', 'routes/settings/api-tokens/+/route.tsx'),

@@ -57,4 +57,5 @@ export * from './UnderlineIcon';
 export * from './UnknownDocumentIcon';
 export * from './UpDownIcon';
 export * from './UploadIcon';
+export * from './WarningIcon';
 export * from './ZoomIcon';

@@ -1,0 +1,17 @@
+.content {
+  padding: 1em;
+}
+
+.warning {
+  margin-bottom: 1em;
+}
+
+.content-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.update {
+  align-self: center;
+}

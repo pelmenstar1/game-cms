@@ -18,6 +18,14 @@ export function initAuth(instance: CmsFastifyInstance) {
 
       // If a route has id, it means it's protected.
       if (id !== undefined) {
+        const hydratedId = hydrateRouteId(id, req.params);
+
+        if (
+          await cms().service('base::auth::public').isPublicRoute(hydratedId)
+        ) {
+          return;
+        }
+
         const jwtOptions: JwtSourceOptions = {
           cookieName: SESSION_JWT_COOKIE_NAME,
         };
@@ -26,8 +34,6 @@ export function initAuth(instance: CmsFastifyInstance) {
         if (token === undefined) {
           throw new ApiError('No JWT', 'base::access/expired');
         }
-
-        const hydratedId = hydrateRouteId(id, req.params);
 
         await cms().service('base::auth').verifySessionJwt(token, hydratedId);
       }

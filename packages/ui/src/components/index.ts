@@ -55,3 +55,4 @@ export * from './TransformView';
 export * from './Typography';
 export * from './UnstyledOption';
 export * from './UploadFileButton';
+export * from './WarningBlock';

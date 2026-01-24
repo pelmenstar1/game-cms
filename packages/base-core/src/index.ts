@@ -1,6 +1,7 @@
 export * from './api.js';
 export * from './appEvents.js';
 export * from './auth.js';
+export * from './authPublic.js';
 export * from './config.js';
 export * from './database.js';
 export * from './entity.js';
