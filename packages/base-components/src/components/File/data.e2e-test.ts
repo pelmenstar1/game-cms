@@ -1,13 +1,12 @@
-import { StorageFileItemWithId } from '@game-cms/base-core';
+import { StorageFileItemWithMeta, StorageItemType } from '@game-cms/base-core';
 import { componentDataFlowTests } from '@game-cms/component-testing-lib';
 import { cms } from '@game-cms/global';
-import { ObjectId } from 'mongodb';
 import { beforeAll, describe } from 'vitest';
 
 import { file } from './index.js';
 
 describe('File', () => {
-  let realFile: StorageFileItemWithId<ObjectId>;
+  let realFile: StorageFileItemWithMeta;
 
   beforeAll(async () => {
     const name = '123.txt';
@@ -17,7 +16,12 @@ describe('File', () => {
       .service('base::storage')
       .uploadFile({ name, mime, content: '123' });
 
-    realFile = { id: file.id, url: file.url, mime, name };
+    const meta = await cms().service('base::storage').getInfo(file.id);
+    if (meta?.type !== StorageItemType.FILE) {
+      throw new Error('Item should be file');
+    }
+
+    realFile = meta;
   });
 
   componentDataFlowTests('base::file', () => {

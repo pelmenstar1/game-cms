@@ -12,20 +12,17 @@ import { createFileKey, getFileUrl } from './utils.js';
 
 export * from './types.js';
 
-function getKeyFromUrl(url: string) {
-  const { pathname } = new URL(url);
-
-  return pathname.slice(1);
-}
+type Extra = { key: string };
 
 export function s3StorageProvider(
   config: S3StorageProviderConfig
-): StorageProvider {
+): StorageProvider<Extra> {
   const { bucket } = config;
   const client = new S3Client(config.client);
 
   return {
     protocol: {
+      getUrl: ({ key }) => getFileUrl(config, key),
       upload: async (info) => {
         const key = createFileKey(info.mime);
         const upload = new Upload({
@@ -40,11 +37,9 @@ export function s3StorageProvider(
 
         await upload.done();
 
-        return { url: getFileUrl(config, key) };
+        return { key };
       },
-      getMeta: async (url) => {
-        const key = getKeyFromUrl(url);
-
+      getMeta: async ({ key }) => {
         const result = await client.send(
           new HeadObjectCommand({
             Bucket: bucket,
@@ -54,9 +49,7 @@ export function s3StorageProvider(
 
         return { size: result.ContentLength ?? 0 };
       },
-      delete: async (url) => {
-        const key = getKeyFromUrl(url);
-
+      delete: async ({ key }) => {
         await client.send(
           new DeleteObjectCommand({
             Bucket: bucket,
@@ -64,9 +57,7 @@ export function s3StorageProvider(
           })
         );
       },
-      getContent: async (url) => {
-        const key = getKeyFromUrl(url);
-
+      getContent: async ({ key }) => {
         const result = await client.send(
           new GetObjectCommand({ Bucket: bucket, Key: key })
         );

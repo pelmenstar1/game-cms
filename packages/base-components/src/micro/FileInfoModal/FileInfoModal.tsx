@@ -1,12 +1,10 @@
-import { StorageFileItem } from '@game-cms/base-core';
-import { ToClientType } from '@game-cms/core';
 import { ModalDialog, ModalProps, Prefixed } from '@game-cms/ui';
 
 import { FileBigPreview } from '../FileBigPreview/FileBigPreview.js';
 import styles from './FileInfoModal.module.scss';
 
 export interface FileInfoModalProps extends ModalProps {
-  item: ToClientType<StorageFileItem & { id: string }>;
+  item: { name: string; url: string; id: string; mime: string };
 }
 
 export function FileInfoModal({ item, onClose }: FileInfoModalProps) {

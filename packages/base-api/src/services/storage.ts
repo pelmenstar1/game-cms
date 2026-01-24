@@ -52,8 +52,11 @@ async function hydrateItem(
     };
   }
 
-  const { _id, mime, name, url, parent, hidden } = item;
-  const { size } = await storageProvider().protocol.getMeta(item.url);
+  const { protocol } = storageProvider();
+
+  const { _id, mime, name, extra, parent, hidden } = item;
+  const { size } = await protocol.getMeta(extra);
+  const url = protocol.getUrl(extra);
 
   return {
     type: StorageItemType.FILE,
@@ -74,11 +77,12 @@ export default service({
   },
   collection,
   uploadFile: async (payload: UploadFilePayload) => {
+    const { protocol } = storageProvider();
+
     const { mime, name, parent, hidden } = payload;
-    const { url } = await storageProvider().protocol.upload(payload);
+    const extra = await protocol.upload(payload);
 
     const item: StorageFileItem = {
-      url,
       mime,
       name,
       parent,
@@ -87,8 +91,11 @@ export default service({
 
     const { insertedId } = await collection().insertOne({
       ...item,
+      extra,
       type: StorageItemType.FILE,
     });
+
+    const url = protocol.getUrl(extra);
 
     cms()
       .service('base::appEvents')
@@ -121,15 +128,18 @@ export default service({
     return result && hydrateItem(result);
   },
   getContent: async (id: ObjectId): Promise<Uint8Array> => {
-    const result = await collection().findOne({ _id: id });
+    const result = await collection().findOne(
+      { _id: id },
+      { projection: { type: 1, extra: 1 } }
+    );
 
     const { protocol } = storageProvider();
 
     if (result?.type !== StorageItemType.FILE) {
-      throw new Error('Expected all items to be files');
+      throw new Error('Expected the item to be file');
     }
 
-    return protocol.getContent(result.url);
+    return protocol.getContent(result.extra);
   },
   list: async (options: ListStorageItemsOptions) => {
     const { parent } = options;
@@ -157,13 +167,13 @@ export default service({
   deleteById: async (id: ObjectId, options?: DeleteStorageItemOptions) => {
     const item = await collection().findOne(
       { _id: id },
-      { projection: { url: 1 } }
+      { projection: { type: 1, extra: 1 } }
     );
 
     if (item) {
       if (item.type === StorageItemType.FILE) {
         try {
-          await storageProvider().protocol.delete(item.url);
+          await storageProvider().protocol.delete(item.extra);
         } catch (error) {
           if (!options?.force) {
             throw error;

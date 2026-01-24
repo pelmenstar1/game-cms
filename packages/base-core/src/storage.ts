@@ -7,8 +7,8 @@ import type {
   listStorageItemsOptions,
   listStorageItemsResponse,
   storageFileItem,
+  storageFileItemWithMeta,
   storageFolderItem,
-  storageItem,
   storageItemWithMeta,
   uploadFileMeta,
   uploadFileResponse,
@@ -26,13 +26,20 @@ export interface StorageFileItemWithId<Id = string> extends StorageFileItem {
 }
 
 export type StorageFolderItem = z.infer<typeof storageFolderItem>;
-export type StorageItem = z.infer<typeof storageItem>;
+
+export type StorageItem<Extra = unknown> =
+  | ({
+      type: StorageItemType.FILE;
+      extra: Extra;
+    } & StorageFileItem)
+  | ({ type: StorageItemType.FOLDER } & StorageFolderItem);
 
 export type StorageItemWithId<Id = string> = StorageItem & {
   id: Id;
 };
 
 export type StorageItemWithMeta = z.infer<typeof storageItemWithMeta>;
+export type StorageFileItemWithMeta = z.infer<typeof storageFileItemWithMeta>;
 
 export type UploadFileMeta = z.infer<typeof uploadFileMeta>;
 

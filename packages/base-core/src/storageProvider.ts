@@ -19,17 +19,17 @@ export type StorageProviderFileMeta = {
 
 export type UploadFilePayload = UploadFileToProviderInfo & UploadFileMeta;
 
-export interface StorageProviderProtocol {
-  upload: (info: UploadFileToProviderInfo) => Promise<{ url: string }>;
-  delete: (url: string) => Promise<void>;
-
-  getMeta: (url: string) => Promise<StorageProviderFileMeta>;
-  getContent: (url: string) => Promise<Uint8Array>;
+export interface StorageProviderProtocol<Extra> {
+  upload: (info: UploadFileToProviderInfo) => Promise<Extra>;
+  delete: (extra: Extra) => Promise<void>;
+  getUrl: (extra: Extra) => string;
+  getMeta: (extra: Extra) => Promise<StorageProviderFileMeta>;
+  getContent: (extra: Extra) => Promise<Uint8Array>;
 }
 
-export interface StorageProvider {
+export interface StorageProvider<Extra = unknown> {
   init?: () => MaybePromise<void>;
 
   routes?: UnknownApiRoute[];
-  protocol: StorageProviderProtocol;
+  protocol: StorageProviderProtocol<Extra>;
 }

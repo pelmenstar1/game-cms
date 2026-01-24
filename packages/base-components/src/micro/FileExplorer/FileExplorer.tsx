@@ -1,4 +1,4 @@
-import { StorageItemType, StorageItemWithId } from '@game-cms/base-core';
+import { StorageItemType, StorageItemWithMeta } from '@game-cms/base-core';
 import {
   createFolder,
   deleteStorageItemById,
@@ -39,7 +39,7 @@ export interface FileExplorerProps {
   multiple?: boolean;
   folderId: FolderId;
   onFolderChanged: (value: FolderId) => void;
-  onSelectedItemsChanged?: (value: ToClientType<StorageItemWithId[]>) => void;
+  onSelectedItemsChanged?: (value: ToClientType<StorageItemWithMeta[]>) => void;
 }
 
 export function FileExplorer({

@@ -8,7 +8,8 @@ export type DatabaseConfig = {
 };
 
 export type StorageConfig = {
-  provider: StorageProvider;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  provider: StorageProvider<any>;
 };
 
 export type ExpirationTimeType = 'userSession' | 'userRefresh' | 'apiToken';

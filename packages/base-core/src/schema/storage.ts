@@ -14,7 +14,6 @@ const name = z
 export const storageFileItem = z.object({
   name,
   mime: z.string(),
-  url: z.string(),
   parent: objectId.optional(),
   hidden: z.boolean().optional(),
 });
@@ -24,24 +23,16 @@ export const storageFolderItem = z.object({
   parent: objectId.optional(),
 });
 
-export const storageItem = z.discriminatedUnion('type', [
-  z.object({
-    type: z.literal(StorageItemType.FILE),
-    ...storageFileItem.shape,
-  }),
-  z.object({
-    type: z.literal(StorageItemType.FOLDER),
-    ...storageFolderItem.shape,
-  }),
-]);
+export const storageFileItemWithMeta = z.object({
+  id: objectId,
+  type: z.literal(StorageItemType.FILE),
+  size: z.number(),
+  url: z.string(),
+  ...storageFileItem.shape,
+});
 
 export const storageItemWithMeta = z.discriminatedUnion('type', [
-  z.object({
-    id: objectId,
-    type: z.literal(StorageItemType.FILE),
-    size: z.number(),
-    ...storageFileItem.shape,
-  }),
+  storageFileItemWithMeta,
   z.object({
     id: objectId,
     type: z.literal(StorageItemType.FOLDER),

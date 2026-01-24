@@ -2,11 +2,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import send from '@fastify/send';
-import {
-  type StorageFileItem,
-  StorageItemType,
-  type StorageProvider,
-} from '@game-cms/base-core';
+import type { StorageFileItem, StorageProvider } from '@game-cms/base-core';
 import { ApiError } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
@@ -18,6 +14,8 @@ import { createNewFileName } from './utils.js';
 export type LocalStorageProviderConfig = {
   storagePath?: string;
 };
+
+type Extra = { fileName: string };
 
 const GET_ROUTE = `/storage/provider/get`;
 
@@ -44,10 +42,12 @@ function getFileRoute(storagePath: string) {
       const storageInfo = await cms()
         .service('base::storage')
         .collection()
-        .findOne({
-          type: StorageItemType.FILE,
-          url: createFileUrl(fileName),
-        });
+        .findOne(
+          {
+            extra: { fileName },
+          },
+          { projection: { mime: 1 } }
+        );
 
       if (storageInfo === null) {
         throwFileNotFound();
@@ -71,17 +71,9 @@ function getFileRoute(storagePath: string) {
   });
 }
 
-function getFilePath(storagePath: string, file: StorageFileItem | string) {
-  const url = typeof file === 'string' ? file : file.url;
-
-  const fileName = path.basename(url);
-
-  return path.join(storagePath, fileName);
-}
-
 export function localStorageProvider(
   config?: LocalStorageProviderConfig
-): StorageProvider {
+): StorageProvider<Extra> {
   const storagePath = config?.storagePath ?? './.game-cms-storage';
 
   return {
@@ -90,16 +82,17 @@ export function localStorageProvider(
     },
     routes: [getFileRoute(storagePath)],
     protocol: {
+      getUrl: ({ fileName }) => createFileUrl(fileName),
       upload: async ({ name, content }) => {
         const fileName = createNewFileName(storagePath, name);
         const outputPath = path.join(storagePath, fileName);
 
         await fsp.writeFile(outputPath, content);
 
-        return { url: createFileUrl(fileName) };
+        return { fileName };
       },
-      delete: async (url) => {
-        const filePath = getFilePath(storagePath, url);
+      delete: async ({ fileName }) => {
+        const filePath = path.join(storagePath, fileName);
 
         try {
           await fsp.rm(filePath, { maxRetries: 3 });
@@ -109,14 +102,14 @@ export function localStorageProvider(
           }
         }
       },
-      getMeta: async (file) => {
-        const filePath = getFilePath(storagePath, file);
+      getMeta: async ({ fileName }) => {
+        const filePath = path.join(storagePath, fileName);
         const stats = await fsp.stat(filePath);
 
         return { size: stats.size };
       },
-      getContent: (file) => {
-        return fsp.readFile(getFilePath(storagePath, file));
+      getContent: ({ fileName }) => {
+        return fsp.readFile(path.join(storagePath, fileName));
       },
     },
   };

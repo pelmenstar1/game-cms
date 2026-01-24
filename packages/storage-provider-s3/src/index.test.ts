@@ -27,13 +27,13 @@ function createProvider() {
 async function uploadAndCheckContent(content: FileSource) {
   const provider = createProvider();
 
-  const { url } = await provider.protocol.upload({
+  const extra = await provider.protocol.upload({
     name: '123',
     mime: 'text/plain',
     content,
   });
 
-  return Buffer.from(await provider.protocol.getContent(url));
+  return Buffer.from(await provider.protocol.getContent(extra));
 }
 
 describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
@@ -63,13 +63,13 @@ describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
   test('getMeta', async () => {
     const provider = createProvider();
 
-    const { url } = await provider.protocol.upload({
+    const extra = await provider.protocol.upload({
       name: '123',
       mime: 'text/plain',
       content: '123',
     });
 
-    const meta = await provider.protocol.getMeta(url);
+    const meta = await provider.protocol.getMeta(extra);
 
     expect(meta).toEqual({ size: 3 });
   });
@@ -77,13 +77,13 @@ describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
   test('getContent', async () => {
     const provider = createProvider();
 
-    const { url } = await provider.protocol.upload({
+    const extra = await provider.protocol.upload({
       name: '123',
       mime: 'text/plain',
       content: '123',
     });
 
-    const content = await provider.protocol.getContent(url);
+    const content = await provider.protocol.getContent(extra);
 
     expect(Buffer.from(content).toString('utf8')).toEqual('123');
   });

@@ -29,9 +29,7 @@ export default componentController({
             throw new Error('Expected file');
           }
 
-          const { name, mime, url } = item;
-
-          return { id, name, mime, url };
+          return item;
         })
       );
     },
