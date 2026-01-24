@@ -27,9 +27,10 @@ export class ApiError extends Error {
     message: string,
     // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     codes: ApiErrorCode | { api?: ApiErrorCode; http?: number },
-    details?: unknown
+    details?: unknown,
+    options?: ErrorOptions
   ) {
-    super(message);
+    super(message, options);
 
     this.details = details;
 

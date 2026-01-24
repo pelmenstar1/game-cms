@@ -1,6 +1,6 @@
 import { ApiError } from '@game-cms/base-core';
 import type { ApiRouteId } from '@game-cms/core/api';
-import { cms } from '@game-cms/global';
+import { cms, env } from '@game-cms/global';
 import { describe, expect, it } from 'vitest';
 
 describe('signUserIn', () => {
@@ -226,26 +226,14 @@ describe('verifySessionJwt', () => {
   });
 
   it('should grant all access with wildcard permissions', async () => {
-    const userService = cms().service('base::user');
     const authService = cms().service('base::auth');
-
-    const email = 'test7@example.com';
-    const password = 'testPassword123';
-
-    const { id } = await userService.create({
-      email,
-      password,
-      displayName: 'Admin User',
-      permissions: ['*'],
-    });
+    const { email, password } = env().config.auth.admin;
 
     const { session } = await authService.signUserIn({ email, password });
 
     await expect(
       authService.verifySessionJwt(session.token, 'storage$list')
     ).resolves.not.toThrow();
-
-    await userService.delete(id);
   });
 });
 
@@ -277,18 +265,9 @@ describe('getSessionPermissions', () => {
   });
 
   it('should return all permissions with wildcard', async () => {
-    const userService = cms().service('base::user');
     const authService = cms().service('base::auth');
 
-    const email = 'test9@example.com';
-    const password = 'testPassword123';
-
-    const { id } = await userService.create({
-      email,
-      password,
-      displayName: 'Admin User 2',
-      permissions: ['*'],
-    });
+    const { email, password } = env().config.auth.admin;
 
     const { session } = await authService.signUserIn({ email, password });
 
@@ -297,8 +276,6 @@ describe('getSessionPermissions', () => {
     );
 
     expect(sessionPermissions).toEqual(authService.getAllPermissions());
-
-    await userService.delete(id);
   });
 });
 
@@ -309,6 +286,6 @@ describe('getAllPermissions', () => {
     const permissions = authService.getAllPermissions();
 
     // Check that permissions are hydrated
-    expect(permissions.every((value) => !/\[.+\]/.test(value))).toBe(true);
+    expect([...permissions].every((value) => !/\[.+\]/.test(value))).toBe(true);
   });
 });

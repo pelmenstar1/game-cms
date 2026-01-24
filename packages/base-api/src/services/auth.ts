@@ -2,7 +2,7 @@ import {
   ApiError,
   type EntityId,
   type ExpirationTimeType,
-  type PermissionId,
+  type Permissions,
   type RefreshJwtPayload,
   type SessionJwtPayload,
   type SignInPayload,
@@ -18,6 +18,7 @@ import {
   parseRelativeTimeToTotalSeconds,
   type RelativeTime,
 } from '@game-cms/shared/chrono';
+import { setAddMany } from '@game-cms/shared/collections';
 import { type JWTPayload, jwtVerify, SignJWT } from 'jose';
 import { JWTExpired } from 'jose/errors';
 import { ObjectId } from 'mongodb';
@@ -53,7 +54,7 @@ async function createJwtToken<T extends JWTPayload>(
 
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime(Date.now() / 1000 + expirationTime)
+    .setExpirationTime(Math.floor(Date.now() / 1000) + expirationTime)
     .setIssuedAt()
     .sign(getJwtSignKey());
 
@@ -63,13 +64,13 @@ async function createJwtToken<T extends JWTPayload>(
 async function createSessionToken(
   type: ExpirationTimeType,
   actor: {
-    _id: ObjectId | string;
+    id: ObjectId | string;
     displayName: string;
-    permissions: PermissionId[];
+    permissions: Permissions;
   }
 ) {
   return createJwtToken<SessionJwtPayload>(type, {
-    id: actor._id.toString(),
+    id: actor.id.toString(),
     name: actor.displayName,
     prms: actor.permissions,
   });
@@ -80,7 +81,7 @@ async function createRefreshSessionToken(userId: string) {
 }
 
 function hasPermission(permissions: string[], id: string) {
-  return permissions.includes('*') || permissions.includes(id);
+  return permissions.includes(id);
 }
 
 function getExpirationTime(key: ExpirationTimeType) {
@@ -95,7 +96,12 @@ async function parseJwtWithSchema<T>(token: string, schema: ZodType<T>) {
 
   const payloadResult = schema.safeParse(payload);
   if (!payloadResult.success) {
-    throw new ApiError('Invalid token payload', 'base::access/unauthorized');
+    throw new ApiError(
+      'Invalid token payload',
+      'base::access/unauthorized',
+      null,
+      { cause: payloadResult.error }
+    );
   }
 
   return payloadResult.data;
@@ -120,17 +126,35 @@ function getAllPermissions() {
 
   const { routes } = env().api;
 
-  const result = routes
-    .map((route) => route.config?.id)
-    .filter((id) => id !== undefined)
-    .flatMap((permission) => hydratePermission(permission, entities));
+  const result = new Set<ApiRouteId>();
 
-  return [...new Set(result)];
+  for (const route of routes) {
+    const id = route.config?.id;
+
+    if (id !== undefined) {
+      const hydrated = hydratePermission(id, entities);
+
+      if (Array.isArray(hydrated)) {
+        setAddMany(result, hydrated);
+      } else {
+        result.add(hydrated);
+      }
+    }
+  }
+
+  return result;
+}
+
+function isValidPermissions(permissions: string[]) {
+  const allPermissions = getAllPermissions();
+
+  return permissions.every((name) => allPermissions.has(name));
 }
 
 export default service({
   id: 'base::auth',
   getAllPermissions,
+  isValidPermissions,
   signUserIn: async (payload: SignInPayload) => {
     const user = await cms()
       .service('base::user')
@@ -148,8 +172,12 @@ export default service({
     }
 
     const [session, refresh] = await Promise.all([
-      createSessionToken('userSession', user),
-      createRefreshSessionToken(user._id.toString()),
+      createSessionToken('userSession', {
+        id: user.id,
+        displayName: user.displayName,
+        permissions: user.isAdmin ? '*' : user.permissions,
+      }),
+      createRefreshSessionToken(user.id.toString()),
     ]);
 
     return { session, refresh };
@@ -183,7 +211,7 @@ export default service({
     }
 
     return createSessionToken('apiToken', {
-      _id: 'API token',
+      id: 'API token',
       displayName: tokenInfo.name,
       permissions: tokenInfo.permissions,
     });
@@ -195,7 +223,11 @@ export default service({
         sessionJwtPayloadSchema
       );
 
-      if (routeId !== undefined && !hasPermission(permissions, routeId)) {
+      if (
+        routeId !== undefined &&
+        permissions !== '*' &&
+        !hasPermission(permissions, routeId)
+      ) {
         throw new ApiError(
           'Cannot access this route',
           'base::access/unauthorized'
@@ -216,7 +248,7 @@ export default service({
     );
 
     if (permissions.includes('*')) {
-      return getAllPermissions();
+      return [...getAllPermissions()];
     }
 
     return permissions as ApiRouteId[];

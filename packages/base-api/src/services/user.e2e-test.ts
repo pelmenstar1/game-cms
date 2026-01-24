@@ -354,25 +354,6 @@ describe('updateById', () => {
 
     expect(user?.permissions).toEqual(newPermissions);
   });
-
-  it('should be able to grant wildcard permissions', async () => {
-    const userService = cms().service('base::user');
-
-    const email = 'wildcard@example.com';
-
-    await using u = await createTemporalUser({
-      email,
-      password: 'password123',
-      displayName: 'Wildcard User',
-      permissions: [],
-    });
-
-    await userService.updateById(u.result.id, { permissions: ['*'] });
-
-    const user = await userService.getById(u.result.id);
-
-    expect(user?.permissions).toEqual(['*']);
-  });
 });
 
 describe('fullGetBy', () => {

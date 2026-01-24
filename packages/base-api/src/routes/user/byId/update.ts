@@ -1,3 +1,4 @@
+import { ApiError } from '@game-cms/base-core';
 import { updateUserPayload } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
@@ -20,6 +21,9 @@ export default apiRoute({
     const { id } = req.params;
     const payload = req.body;
 
-    await cms().service('base::user').updateById(id, payload);
+    const result = await cms().service('base::user').updateById(id, payload);
+    if (!result) {
+      throw new ApiError('User not found', 'base::entity/notFound');
+    }
   },
 });

@@ -13,6 +13,6 @@ export default apiRoute({
   handler: () => {
     const permissions = cms().service('base::auth').getAllPermissions();
 
-    return { permissions };
+    return { permissions: [...permissions] };
   },
 });

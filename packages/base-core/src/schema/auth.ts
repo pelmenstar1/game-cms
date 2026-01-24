@@ -2,7 +2,7 @@ import { apiRouteId } from '@game-cms/core/schema';
 import { objectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
-export const permissionId = z.union([z.literal('*'), apiRouteId]);
+export const permissions = z.union([z.literal('*'), z.array(apiRouteId)]);
 
 export const signInPayload = z.object({
   email: z.string(),
@@ -12,7 +12,7 @@ export const signInPayload = z.object({
 export const sessionJwtPayloadSchema = z.object({
   id: z.string(),
   name: z.string(),
-  prms: z.array(permissionId), // permissions
+  prms: permissions,
 });
 
 export const refreshJwtPayloadSchema = z.object({

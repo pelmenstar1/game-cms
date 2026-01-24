@@ -1,6 +1,7 @@
+import { ApiError } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
-import { objectId } from '@game-cms/shared/mongo';
+import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
@@ -11,13 +12,16 @@ export default apiRoute({
   },
   schema: {
     params: z.object({
-      id: objectId,
+      id: stringObjectId,
     }),
   },
   handler: async (req) => {
     const { id } = req.params;
 
     const user = await cms().service('base::user').getById(id);
+    if (user === null) {
+      throw new ApiError('User not found', 'base::entity/notFound');
+    }
 
     return user;
   },

@@ -8,7 +8,7 @@ import type {
   getPermissionsResponse,
   opaqueApiToken,
   opaqueApiTokenWithId,
-  permissionId,
+  permissions,
   refreshJwtPayloadSchema,
   sessionJwtPayloadSchema,
   signInPayload,
@@ -19,7 +19,7 @@ export type OpaqueApiToken = z.infer<typeof opaqueApiToken>;
 export type OpaqueApiTokenWithId = z.infer<typeof opaqueApiTokenWithId>;
 export type ApiToken = z.infer<typeof apiToken>;
 
-export type PermissionId = z.infer<typeof permissionId>;
+export type Permissions = z.infer<typeof permissions>;
 
 export type SignInPayload = z.infer<typeof signInPayload>;
 export type SessionJwtPayload = z.infer<typeof sessionJwtPayloadSchema>;

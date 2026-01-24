@@ -1,13 +1,13 @@
+import type { ApiRouteId } from '@game-cms/core/api';
 import type z from 'zod';
 
-import type { PermissionId } from './auth.js';
 import type { createUserPayload, updateUserPayload } from './schema/user.js';
 
 export type User = {
   displayName: string;
   email: string;
   passwordHash: string;
-  permissions: PermissionId[];
+  permissions: ApiRouteId[];
   isAdmin?: true;
 };
 

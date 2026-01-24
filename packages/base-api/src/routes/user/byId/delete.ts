@@ -1,6 +1,7 @@
+import { ApiError } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
-import { objectId } from '@game-cms/shared/mongo';
+import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
@@ -11,14 +12,15 @@ export default apiRoute({
   },
   schema: {
     params: z.object({
-      id: objectId,
+      id: stringObjectId,
     }),
   },
-  handler: async (req, res) => {
+  handler: async (req) => {
     const { id } = req.params;
 
-    await cms().service('base::user').delete(id);
-
-    res.status(200);
+    const result = await cms().service('base::user').delete(id);
+    if (!result) {
+      throw new ApiError('User not found', 'base::entity/notFound');
+    }
   },
 });

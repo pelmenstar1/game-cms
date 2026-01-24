@@ -34,12 +34,6 @@ async function generateToken() {
   return buffer.toString('base64url');
 }
 
-function isValidPermissions(permissions: string[]) {
-  const allPermissions = cms().service('base::auth').getAllPermissions();
-
-  return permissions.every((name) => allPermissions.includes(name));
-}
-
 const opaqueProjection = { name: 1, expirationDate: 1, permissions: 1 };
 const opaqueProjectionWithId = { _id: 1, ...opaqueProjection };
 
@@ -76,7 +70,9 @@ export default service({
     };
   },
   create: async (payload: CreateApiTokenPayload) => {
-    if (!isValidPermissions(payload.permissions)) {
+    const { permissions } = payload;
+
+    if (!cms().service('base::auth').isValidPermissions(permissions)) {
       throw new ApiError('Unknown permissions', 'base::schema/validation');
     }
 
@@ -87,7 +83,7 @@ export default service({
       token,
       expirationDate: new Date(now + payload.expirationTime),
       name: payload.name,
-      permissions: payload.permissions,
+      permissions,
     });
 
     cms()

@@ -5,15 +5,22 @@ import {
   type User,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
+import type { ApiRouteId } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { isDuplicateKeyError } from '@game-cms/shared/mongo';
-import type { ClientSession, Filter, ObjectId } from 'mongodb';
+import type {
+  ClientSession,
+  Document,
+  Filter,
+  ObjectId,
+  WithId,
+} from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 
-type NoPasswordServerUser = Omit<User, 'passwordHash'> & { _id: ObjectId };
+type NoPasswordServerUser = Omit<User, 'passwordHash'> & { id: ObjectId };
 
 function collection() {
   return cms().service('base::database').collection('base::users');
@@ -50,17 +57,43 @@ async function verifyUserPassword(
   return await verifyPassword(user.passwordHash, password);
 }
 
-function getByFilter(filter: Filter<User>) {
-  return collection().findOne<NoPasswordServerUser>(filter, {
-    projection: { passwordHash: 0 },
+function hydrateUser<T extends { isAdmin?: true; permissions: ApiRouteId[] }>(
+  value: T
+): T {
+  return {
+    ...value,
+    permissions: value.isAdmin
+      ? [...cms().service('base::auth').getAllPermissions()]
+      : value.permissions,
+  };
+}
+
+async function getByFilter<T>(
+  filter: Filter<User>,
+  projection?: Document
+): Promise<T | null> {
+  const result = await collection().findOne(filter, {
+    projection,
   });
+
+  if (result !== null) {
+    const { _id, ...rest } = result;
+
+    return hydrateUser({ id: _id, ...rest }) as T;
+  }
+
+  return null;
 }
 
 async function createIndices() {
   await collection().createIndex({ email: 1 }, { unique: true });
 }
 
-async function createUser(payload: CreateUserPayload) {
+async function createUser(
+  payload: CreateUserPayload & {
+    isAdmin?: true;
+  }
+) {
   try {
     const passwordHash = await hashPassword(payload.password);
 
@@ -69,6 +102,7 @@ async function createUser(payload: CreateUserPayload) {
       email: payload.email,
       passwordHash: passwordHash,
       permissions: payload.permissions,
+      isAdmin: payload.isAdmin,
     });
 
     return { id: user.insertedId };
@@ -92,7 +126,8 @@ async function addAdminUser() {
       displayName: 'Admin',
       email,
       password,
-      permissions: ['*'],
+      permissions: [],
+      isAdmin: true,
     });
   } catch (error) {
     if (
@@ -112,29 +147,50 @@ export default service({
     },
   },
   getBy: getByFilter,
-  getById: async (id: ObjectId) => {
-    return await getByFilter({ _id: id });
+  getById: (id: ObjectId) => {
+    return getByFilter<NoPasswordServerUser>({ _id: id }, { passwordHash: 0 });
   },
   getByEmail: async (email: string) => {
-    return await getByFilter({ email });
+    return await getByFilter<NoPasswordServerUser>(
+      { email },
+      { passwordHash: 0 }
+    );
   },
-  fullGetBy: (filter: Filter<User>) => {
-    return collection().findOne(filter);
+  fullGetBy: async (filter: Filter<User>) => {
+    const result = await getByFilter<User & { id: ObjectId }>(filter);
+
+    return result && hydrateUser(result);
   },
   list: async (options: PagingOptions) => {
-    const result = await getPage<User, NoPasswordServerUser>(
+    const result = await getPage<User, WithId<Omit<User, 'passwordHash'>>>(
       collection(),
       options,
       {
-        post: [{ $project: { passwordHash: 0 } }],
+        post: [{ $project: { items: { passwordHash: 0 } } }],
       }
     );
 
-    return result;
+    return {
+      items: result.items.map(({ _id, ...rest }) =>
+        hydrateUser({ id: _id, ...rest })
+      ),
+      meta: result.meta,
+    };
   },
-  create: createUser,
+  create: async (payload: CreateUserPayload) => {
+    if (!cms().service('base::auth').isValidPermissions(payload.permissions)) {
+      throw new ApiError('Unknown permissions', 'base::schema/validation');
+    }
+
+    return createUser(payload);
+  },
   delete: async (id: ObjectId) => {
-    await collection().deleteOne({ _id: id });
+    const result = await collection().deleteOne({
+      _id: id,
+      isAdmin: { $ne: true },
+    });
+
+    return result.deletedCount > 0;
   },
   updatePassword,
   updatePasswordIfOldMatches: async (
@@ -159,9 +215,11 @@ export default service({
   ) => {
     const passwordHash = password ? await hashPassword(password) : undefined;
 
-    await collection().updateOne(
-      { _id: id },
+    const result = await collection().updateOne(
+      { _id: id, isAdmin: { $ne: true } },
       { $set: { passwordHash, ...rest } }
     );
+
+    return result.modifiedCount > 0;
   },
 });
