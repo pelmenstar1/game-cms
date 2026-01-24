@@ -2,9 +2,25 @@ import { componentController } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
+import { dataShape } from './internal/schema.js';
 
 export default componentController({
   core,
+  migrate: (data, options, context) => {
+    const result = dataShape.safeParse(data);
+
+    if (result.success) {
+      const { componentId, baseOptions } = options;
+
+      return {
+        nodes: mapObject(result.data.nodes, (node) => ({
+          meta: node.meta,
+          value: context.migrate(componentId, node.value, baseOptions),
+        })),
+        edges: result.data.edges,
+      };
+    }
+  },
   resolver: (raw, options, context, args) => {
     const { componentId, baseOptions } = options;
 
@@ -17,6 +33,10 @@ export default componentController({
     };
   },
   storageTransformer: {
+    getDefaultData: () => ({
+      nodes: {},
+      edges: [],
+    }),
     fromStorage: async (data, options, context) => {
       const { componentId, baseOptions } = options;
 

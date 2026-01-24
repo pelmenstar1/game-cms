@@ -138,12 +138,28 @@ async function generateSpritesheets<Args>(
 
 export default componentController({
   core,
+  migrate: (data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    return {
+      base: context.migrate(componentId, data, baseOptions),
+      spritesheets: {},
+    };
+  },
   resolver: (data, options, context, args) => {
     const { componentId, baseOptions } = options;
 
     return context.resolveRawData(componentId, data, baseOptions, args);
   },
   storageTransformer: {
+    getDefaultData: (options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        base: context.getDefaultData(componentId, baseOptions),
+        spritesheets: {},
+      };
+    },
     fromStorage: async (data, options, context) => {
       const { componentId, baseOptions } = options;
 

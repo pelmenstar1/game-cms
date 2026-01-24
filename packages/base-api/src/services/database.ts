@@ -37,20 +37,22 @@ function client(): MongoClient {
 
 export default service({
   id: 'base::database',
-  init: () => {
-    const appEvents = cms().service('base::appEvents');
+  lifecycle: {
+    onInit: () => {
+      const appEvents = cms().service('base::appEvents');
 
-    client().on('commandStarted', (event) => {
-      appEvents.emit('base::database::commandStarted', event);
-    });
+      client().on('commandStarted', (event) => {
+        appEvents.emit('base::database::commandStarted', event);
+      });
 
-    client().on('commandSucceeded', (event) => {
-      appEvents.emit('base::database::commandSucceeded', event);
-    });
+      client().on('commandSucceeded', (event) => {
+        appEvents.emit('base::database::commandSucceeded', event);
+      });
 
-    client().on('commandFailed', (event) => {
-      appEvents.emit('base::database::commandFailed', event);
-    });
+      client().on('commandFailed', (event) => {
+        appEvents.emit('base::database::commandFailed', event);
+      });
+    },
   },
   client,
   collection: <T extends DatabaseCollectionId>(id: T) => {

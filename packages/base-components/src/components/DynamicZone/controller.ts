@@ -6,8 +6,10 @@ import {
   ForeignComponentDataResolverContext,
 } from '@game-cms/core';
 import { componentController } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 
 import core from './core.js';
+import { DataEntry } from './internal/types.js';
 
 type Id = (typeof core)['id'];
 
@@ -17,6 +19,27 @@ function invalidPath(message: string): never {
 
 export default componentController({
   core,
+  migrate: (data, options, context) => {
+    if (Array.isArray(data)) {
+      const result: DataEntry<unknown, string>[] = [];
+
+      for (const item of data) {
+        if (isNonNullObject(item)) {
+          const { key, data } = item as { key?: unknown; data?: unknown };
+
+          if (typeof key === 'string') {
+            const { componentId, options: baseOptions } = options.options[key];
+            result.push({
+              key,
+              data: context.migrate(componentId, data, baseOptions),
+            });
+          }
+        }
+      }
+
+      return result;
+    }
+  },
   resolver: <Args>(
     raw: ComponentRawDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
@@ -66,6 +89,7 @@ export default componentController({
     }
   },
   storageTransformer: {
+    getDefaultData: () => [],
     fromStorage: (data, options, context) => {
       const { options: optionsMap } = options;
 

@@ -1,10 +1,22 @@
 import { componentController } from '@game-cms/core';
-import { asyncMapObject, mapObject } from '@game-cms/shared/object';
+import { isNonNullObject } from '@game-cms/shared';
+import {
+  asyncMapObject,
+  mapObject,
+  UnknownObject,
+} from '@game-cms/shared/object';
 
 import core from './core.js';
 
 export default componentController({
   core,
+  migrate: (data, options, context) => {
+    if (isNonNullObject(data)) {
+      return mapObject(options, ({ componentId, options }, key) =>
+        context.migrate(componentId, (data as UnknownObject)[key], options)
+      );
+    }
+  },
   resolver: (raw, options, context, args) => {
     return mapObject(raw, (value, key) => {
       const { componentId, options: baseOptions } = options[key];
@@ -28,6 +40,11 @@ export default componentController({
     }
   },
   storageTransformer: {
+    getDefaultData: (options, context) => {
+      return mapObject(options, (item) =>
+        context.getDefaultData(item.componentId, item.options)
+      );
+    },
     fromStorage: (data, options, context) => {
       return asyncMapObject(data, (item, key) => {
         const { componentId, options: baseOptions } = options[key];

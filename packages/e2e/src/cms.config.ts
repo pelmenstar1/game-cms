@@ -2,7 +2,7 @@ import { gamePlugin } from '@game-cms/game-plugin';
 import { localStorageProvider } from '@game-cms/storage-provider-local';
 import { config } from 'game-cms';
 
-export default config((env) => ({
+const c: unknown = config((env) => ({
   plugins: [gamePlugin],
   auth: {
     jwtSignKey: env('JWT_SECRET_KEY'),
@@ -27,3 +27,5 @@ export default config((env) => ({
     provider: localStorageProvider(),
   },
 }));
+
+export default c;

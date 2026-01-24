@@ -158,7 +158,7 @@ export type ForeignComponentValidationContext = {
   ) => ComponentErrorById<Id, Args> | undefined;
 };
 
-export type ForeignComponentDefaultDataContext = {
+export type ForeignComponentDefaultRawDataContext = {
   getDefaultData: <Id extends ComponentId, Args>(
     id: Id,
     options: ComponentOptionsById<Id, Args>
@@ -202,6 +202,11 @@ export type ForeignComponentClientDefaultDataContext = Pick<
 >;
 
 export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
+  getDefaultData: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentStorageDataById<Id, Args>;
+
   toStorage: <Id extends ComponentId, Args>(
     id: Id,
     data: ComponentRawInDataById<Id, Args>,
@@ -266,6 +271,11 @@ export type ComponentClientDataTransformer<
 };
 
 export type ComponentStorageDataTransformer<Id extends ComponentId> = {
+  getDefaultData: <Args>(
+    options: ComponentOptionsById<Id, Args>,
+    context: ForeignComponentStorageDataResolverContext
+  ) => ComponentStorageDataById<Id, Args>;
+
   toStorage: <Args>(
     data: ComponentRawInDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
@@ -281,7 +291,7 @@ export type ComponentStorageDataTransformer<Id extends ComponentId> = {
 
 export type ComponentDefaultDataHandler<Id extends ComponentId> = <Args>(
   options: ComponentOptionsById<Id, Args>,
-  context: ForeignComponentDefaultDataContext
+  context: ForeignComponentDefaultRawDataContext
 ) => ComponentRawDataById<Id, Args>;
 
 export type ForeignComponentPathWalkerContext = {
@@ -294,8 +304,6 @@ export type ForeignComponentPathWalkerContext = {
   ) => void;
 };
 
-export const COMPONENT_WALK_NOT_FOUND = Symbol();
-
 export type ComponentPathWalkerApplyFn = (value: unknown) => void;
 
 export type ComponentPathWalker<Id extends ComponentId> = <Args>(
@@ -305,6 +313,20 @@ export type ComponentPathWalker<Id extends ComponentId> = <Args>(
   apply: ComponentPathWalkerApplyFn,
   context: ForeignComponentPathWalkerContext
 ) => void;
+
+export interface ForeignComponentDataMigrationContext {
+  migrate: <Id extends ComponentId, Args>(
+    id: Id,
+    data: unknown,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentStorageDataById<Id, Args>;
+}
+
+export type ComponentDataMigration<Id extends ComponentId> = <Args>(
+  data: unknown,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentDataMigrationContext
+) => ComponentStorageDataById<Id, Args> | undefined;
 
 export type ComponentMeta = {
   ui?: {
@@ -321,6 +343,7 @@ export type ComponentCore<Id extends ComponentId = ComponentId> = {
 
 interface BaseComponentController<Id extends ComponentId = ComponentId> {
   core: ComponentCore<Id>;
+  migrate?: ComponentDataMigration<Id>;
 }
 
 type RequiredIfExists<

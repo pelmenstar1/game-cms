@@ -4,4 +4,9 @@ import core from './core.js';
 
 export default componentController({
   core,
+  migrate: (data) => {
+    if (Array.isArray(data) && data.every((item) => typeof item === 'string')) {
+      return data;
+    }
+  },
 });

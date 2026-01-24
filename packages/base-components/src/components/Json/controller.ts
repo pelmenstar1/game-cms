@@ -4,4 +4,5 @@ import core from './core.js';
 
 export default componentController({
   core,
+  migrate: (data) => data,
 });

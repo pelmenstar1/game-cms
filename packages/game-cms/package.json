@@ -26,6 +26,7 @@
     "@game-cms/global": "workspace:*",
     "@game-cms/ignition": "workspace:*",
     "@game-cms/shared": "workspace:*",
+    "bson": "^7.0.0",
     "commander": "14.0.2",
     "fastify": "catalog:",
     "jiti": "^2.6.1",

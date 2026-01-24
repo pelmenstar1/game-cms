@@ -1,7 +1,7 @@
 import type {
   ComponentId,
   ComponentOptionsById,
-  ForeignComponentDefaultDataContext,
+  ForeignComponentDefaultRawDataContext,
 } from '@game-cms/core';
 import data from 'virtual:dashboard/componentConnectorData';
 
@@ -19,7 +19,7 @@ function getComponent<Id extends ComponentId>(id: Id) {
 export function getComponentDefaultData<Id extends ComponentId>(
   id: Id,
   options: ComponentOptionsById<Id>,
-  context: ForeignComponentDefaultDataContext
+  context: ForeignComponentDefaultRawDataContext
 ) {
   return getComponent(id).core.defaultRawData(options, context);
 }

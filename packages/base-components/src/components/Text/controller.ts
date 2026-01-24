@@ -2,4 +2,11 @@ import { componentController } from '@game-cms/core';
 
 import core from './core.js';
 
-export default componentController({ core });
+export default componentController({
+  core,
+  migrate: (data) => {
+    if (typeof data === 'string' || typeof data === 'number') {
+      return data.toString();
+    }
+  },
+});

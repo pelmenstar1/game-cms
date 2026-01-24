@@ -2,12 +2,28 @@ import {
   ConditionalValueInput,
   resolveConditionalData,
 } from '@game-cms/conditional';
+import { unknownConditionalData } from '@game-cms/conditional/schema';
 import { componentController } from '@game-cms/core';
 
 import core from './core.js';
 
 export default componentController({
   core,
+  migrate: (data, options, context) => {
+    const result = unknownConditionalData.safeParse(data);
+
+    if (result.success) {
+      const { componentId, baseOptions } = options;
+
+      return {
+        default: context.migrate(componentId, result.data.default, baseOptions),
+        alternative: result.data.alternative.map((choice) => ({
+          condition: choice.condition,
+          value: context.migrate(componentId, choice.value, baseOptions),
+        })),
+      };
+    }
+  },
   resolver: (raw, options, context, args) => {
     const result = resolveConditionalData(raw, args as ConditionalValueInput);
 
@@ -28,6 +44,10 @@ export default componentController({
     }
   },
   storageTransformer: {
+    getDefaultData: (options, context) => ({
+      default: context.getDefaultData(options.componentId, options.baseOptions),
+      alternative: [],
+    }),
     fromStorage: async (data, options, context) => {
       const { baseOptions, componentId } = options;
 

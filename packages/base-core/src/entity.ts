@@ -49,6 +49,11 @@ export type EntityStorageDataById<Id extends EntityId> = ComponentsToData<
   'storageData'
 >;
 
+export type EntityErrorById<Id extends EntityId> = {
+  ownError?: 'INVALID_TYPE';
+  properties?: ComponentsToData<EntityMap[Id], 'error'>;
+};
+
 export interface EntitySchemaMeta<Id extends EntityId = EntityId> {
   id: Id;
   title: string;

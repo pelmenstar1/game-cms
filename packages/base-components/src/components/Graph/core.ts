@@ -1,6 +1,6 @@
 import { componentCore } from '@game-cms/core';
 
-import { dataShape } from './schema.js';
+import { dataShape } from './internal/schema.js';
 
 export default componentCore({
   id: 'base::graph',

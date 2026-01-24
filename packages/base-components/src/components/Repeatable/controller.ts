@@ -4,6 +4,15 @@ import core from './core.js';
 
 export default componentController({
   core,
+  migrate: (data, options, context) => {
+    if (Array.isArray(data)) {
+      const { componentId, baseOptions } = options;
+
+      return data.map((item) =>
+        context.migrate(componentId, item, baseOptions)
+      );
+    }
+  },
   resolver: (raw, options, context, args) => {
     const { baseOptions, componentId } = options;
 
@@ -19,6 +28,7 @@ export default componentController({
     }
   },
   storageTransformer: {
+    getDefaultData: () => [],
     fromStorage: (data, options, context) => {
       const { componentId, baseOptions } = options;
 

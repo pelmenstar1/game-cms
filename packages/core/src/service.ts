@@ -4,8 +4,10 @@ import type { DefaultExport, IdArrayToMap } from './typeutil.js';
 
 export interface Service<Id extends string = string> {
   id: Id;
-
-  init?: () => MaybePromise<void>;
+  lifecycle?: {
+    onInit?: () => MaybePromise<void>;
+    onConfigChanged?: () => MaybePromise<void>;
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type

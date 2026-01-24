@@ -7,7 +7,16 @@ import core from './core.js';
 
 export default componentController({
   core,
+  migrate: (data) => {
+    if (
+      Array.isArray(data) &&
+      data.every((value) => value instanceof ObjectId)
+    ) {
+      return data;
+    }
+  },
   storageTransformer: {
+    getDefaultData: () => [],
     toStorage: (data) => data.map((item) => new ObjectId(item)),
     fromStorage: async (data) => {
       const storageService = cms().service('base::storage');

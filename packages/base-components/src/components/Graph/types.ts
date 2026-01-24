@@ -10,6 +10,7 @@ export type GraphArgs<
   Id extends ComponentId = ComponentId,
   BaseArgs = unknown,
 > = { id: Id; baseArgs: BaseArgs };
+
 export type ResolveGraphArgs<T> = IfExtends<T, GraphArgs>;
 
 type PositionMeta = {

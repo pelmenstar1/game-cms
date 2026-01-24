@@ -10,7 +10,7 @@ import type {
   ComponentRawInDataById,
   ComponentRenderer,
   ForeignComponentClientDataResolverContext,
-  ForeignComponentDefaultDataContext,
+  ForeignComponentDefaultRawDataContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
@@ -48,7 +48,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   );
 
   const defaultDataContext = useMemo(
-    (): ForeignComponentDefaultDataContext => ({
+    (): ForeignComponentDefaultRawDataContext => ({
       getDefaultData: (id, options) => {
         return getComponentDefaultData(id, options, defaultDataContext);
       },

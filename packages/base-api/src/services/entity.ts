@@ -1,18 +1,24 @@
 import {
   ApiError,
+  type EntityErrorById,
   type EntityId,
   type EntityRawDataById,
   type EntityRawInDataById,
   type EntityResolvedDataById,
+  type EntitySchemaById,
   type EntityStorageDataById,
   type EntityVariant,
   type EntityVariantData,
 } from '@game-cms/base-core';
-import type { ComponentDataResolverArgs } from '@game-cms/core';
+import type { ComponentDataResolverArgs, ComponentId } from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { cms } from '@game-cms/global';
-import type { PagingOptions } from '@game-cms/shared';
-import { asyncMapObject, mapObject } from '@game-cms/shared/object';
+import { isNonNullObject, type PagingOptions } from '@game-cms/shared';
+import {
+  asyncMapObject,
+  mapObject,
+  type UnknownObject,
+} from '@game-cms/shared/object';
 import type { Filter, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
@@ -119,8 +125,86 @@ function createEntityVariants<Id extends EntityId>(
     : { draft: value };
 }
 
+function migrateEntity<Id extends EntityId>(
+  schema: EntitySchemaById<Id>,
+  oldValue: unknown
+) {
+  const { foreignDataMigrationContext } = cms().service('base::component');
+
+  const newValue = mapObject(schema.components, (prop, key) => {
+    return foreignDataMigrationContext.migrate(
+      prop.componentId,
+      (oldValue as UnknownObject)[key],
+      prop.options
+    );
+  });
+
+  return newValue as EntityStorageDataById<Id>;
+}
+
+function validate<Id extends ComponentId>(
+  value: unknown,
+  schema: EntitySchemaById<Id>
+): EntityErrorById<Id> | undefined {
+  if (!isNonNullObject(value)) {
+    return { ownError: 'INVALID_TYPE' };
+  }
+
+  const { foreignValidationContext } = cms().service('base::component');
+
+  const entries = Object.entries(schema.components).map(([key, prop]) => {
+    const error = foreignValidationContext.validate(
+      prop.componentId,
+      (value as UnknownObject)[key],
+      prop.options
+    );
+
+    return [key, error] as const;
+  });
+
+  if (entries.some(([, value]) => value !== undefined)) {
+    return {
+      properties: Object.fromEntries(
+        entries
+      ) as EntityErrorById<Id>['properties'],
+    };
+  }
+}
+
 export default service({
   id: 'base::entity',
+  lifecycle: {
+    onConfigChanged: async () => {
+      console.log('onConfigChanged');
+
+      const entities = cms().service('base::entitySchema').getAll();
+
+      for (const descriptor of entities) {
+        const col = collection(descriptor.id);
+
+        for await (const oldValue of col.find()) {
+          // Only migrate if old value is no longer valid.
+          if (validate(oldValue, descriptor) !== undefined) {
+            const newDraft = migrateEntity(descriptor, oldValue.draft);
+            const newPublished = oldValue.published
+              ? migrateEntity(descriptor, oldValue.published)
+              : undefined;
+
+            await col.updateOne(
+              { _id: oldValue._id },
+              {
+                $set: {
+                  draft: newDraft,
+                  published: newPublished,
+                },
+              }
+            );
+          }
+        }
+      }
+    },
+  },
+  validate,
   create: async <T extends EntityId>(
     id: T,
     data: EntityRawInDataById<T>,

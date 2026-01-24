@@ -11,6 +11,7 @@ import { Key } from 'react';
 
 import { TitleSpec, TitleSpecById } from '../../internal/title.js';
 import { NestedPathDot } from '../Compose/types.js';
+import { DataEntry } from './internal/types.js';
 
 type BaseDynamicZoneInputEntry<Id extends ComponentId, Args, Title> = {
   title?: Title;
@@ -42,11 +43,6 @@ type ResolveInputComponents<T> = T extends DynamicZoneInput
       [K in keyof T['options']]: T['options'][K]['component'];
     }
   : DynamicZoneInputComponents;
-
-type DataEntry<Data, K> = {
-  key: K;
-  data: Data;
-};
 
 interface ClientDataEntry<Data, K> extends DataEntry<Data, K> {
   clientKey: Key;

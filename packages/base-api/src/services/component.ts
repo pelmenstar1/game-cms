@@ -7,8 +7,9 @@ import type {
   ComponentRawInDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
+  ForeignComponentDataMigrationContext,
   ForeignComponentDataResolverContext,
-  ForeignComponentDefaultDataContext,
+  ForeignComponentDefaultRawDataContext,
   ForeignComponentStorageDataResolverContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
@@ -26,7 +27,7 @@ function getController<T extends ComponentId>(id: T) {
   return controller;
 }
 
-const foreignDefaultContext: ForeignComponentDefaultDataContext = {
+const foreignDefaultContext: ForeignComponentDefaultRawDataContext = {
   getDefaultData: (id, options) =>
     getController(id).core.defaultRawData(options, foreignDefaultContext),
 };
@@ -53,15 +54,31 @@ const foreignResolverContext: ForeignComponentDataResolverContext = {
 
 const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext =
   {
+    getDefaultData: <Id extends ComponentId, Args>(
+      id: Id,
+      options: ComponentOptionsById<Id, Args>
+    ) => {
+      const { core, storageTransformer } = getController(id);
+
+      return storageTransformer
+        ? storageTransformer.getDefaultData(
+            options,
+            foreignStorageResolverContext
+          )
+        : (core.defaultRawData(
+            options,
+            foreignDefaultContext
+          ) as ComponentStorageDataById<Id, Args>);
+    },
     fromStorage: <Id extends ComponentId, Args>(
       id: Id,
       data: ComponentStorageDataById<Id, Args>,
       options: ComponentOptionsById<Id, Args>
     ) => {
-      const { storageTransformer: storageResolver } = getController(id);
+      const { storageTransformer } = getController(id);
 
-      return storageResolver
-        ? storageResolver.fromStorage(
+      return storageTransformer
+        ? storageTransformer.fromStorage(
             data,
             options,
             foreignStorageResolverContext
@@ -95,11 +112,26 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
     },
   };
 
+const foreignDataMigrationContext: ForeignComponentDataMigrationContext = {
+  migrate: (id, data, options) => {
+    const { migrate } = getController(id);
+
+    const result = migrate?.(data, options, foreignDataMigrationContext);
+
+    if (result !== undefined) {
+      return result;
+    }
+
+    return foreignStorageResolverContext.getDefaultData(id, options);
+  },
+};
+
 export default service({
   id: 'base::component',
   foreignDefaultContext,
   foreignValidationContext,
   foreignResolverContext,
   foreignStorageResolverContext,
+  foreignDataMigrationContext,
   getController,
 });

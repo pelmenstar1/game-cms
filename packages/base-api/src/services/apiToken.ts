@@ -45,8 +45,10 @@ const opaqueProjectionWithId = { _id: 1, ...opaqueProjection };
 
 export default service({
   id: 'base::auth::apiToken',
-  init: async () => {
-    await collection().createIndex({ token: 1 }, { unique: true });
+  lifecycle: {
+    onInit: async () => {
+      await collection().createIndex({ token: 1 }, { unique: true });
+    },
   },
   getByToken: (token: string) => {
     return collection().findOne({ token });

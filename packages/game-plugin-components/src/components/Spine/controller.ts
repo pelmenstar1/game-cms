@@ -10,6 +10,11 @@ import core from './core.js';
 export default componentController({
   core,
   storageTransformer: {
+    getDefaultData: () => ({
+      atlas: [],
+      images: [],
+      skeleton: [],
+    }),
     toStorage: async (data, _, context) => {
       const [atlas, images, skeleton] = await Promise.all(
         [
