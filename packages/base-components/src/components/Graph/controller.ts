@@ -6,6 +6,8 @@ import { dataShape } from './internal/schema.js';
 
 export default componentController({
   core,
+  structure: (options, context) =>
+    context.getStructure(options.componentId, options.baseOptions),
   migrate: (data, options, context) => {
     const result = dataShape.safeParse(data);
 

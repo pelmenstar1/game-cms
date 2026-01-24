@@ -7,5 +7,6 @@ export default entity({
   components: {
     abc: text(),
     abc2: number(),
+    abc3: text(),
   },
 });

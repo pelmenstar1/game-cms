@@ -9,6 +9,8 @@ import core from './core.js';
 
 export default componentController({
   core,
+  structure: (options, context) =>
+    context.getStructure(options.componentId, options.baseOptions),
   migrate: (data, options, context) => {
     const result = unknownConditionalData.safeParse(data);
 

@@ -10,6 +10,11 @@ import core from './core.js';
 
 export default componentController({
   core,
+  structure: (options, context) => {
+    return mapObject(options, (prop) =>
+      context.getStructure(prop.componentId, prop.options)
+    );
+  },
   migrate: (data, options, context) => {
     if (isNonNullObject(data)) {
       return mapObject(options, ({ componentId, options }, key) =>

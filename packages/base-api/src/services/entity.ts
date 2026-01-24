@@ -5,17 +5,23 @@ import {
   type EntityRawDataById,
   type EntityRawInDataById,
   type EntityResolvedDataById,
+  type EntitySchema,
   type EntitySchemaById,
   type EntityStorageDataById,
   type EntityVariant,
   type EntityVariantData,
 } from '@game-cms/base-core';
-import type { ComponentDataResolverArgs, ComponentId } from '@game-cms/core';
+import type {
+  ComponentDataResolverArgs,
+  ComponentDataStructure,
+  ComponentId,
+} from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { isNonNullObject, type PagingOptions } from '@game-cms/shared';
 import {
   asyncMapObject,
+  deepEquals,
   mapObject,
   type UnknownObject,
 } from '@game-cms/shared/object';
@@ -44,6 +50,13 @@ declare module '@game-cms/base-core' {
     'base::entity::unpublished': {
       entityId: EntityId;
       id: ObjectId;
+    };
+  }
+
+  interface DatabaseEntityMap {
+    'base::entityStructure': {
+      entityId: EntityId;
+      structure: Record<string, ComponentDataStructure>;
     };
   }
 }
@@ -171,40 +184,74 @@ function validate<Id extends ComponentId>(
   }
 }
 
+async function migrateEntityCollection<Id extends EntityId>(
+  schema: EntitySchemaById<Id>
+) {
+  const col = collection(schema.id);
+
+  for await (const oldValue of col.find()) {
+    // Only migrate if old value is no longer valid.
+    if (validate(oldValue, schema) !== undefined) {
+      const newDraft = migrateEntity(schema, oldValue.draft);
+      const newPublished = oldValue.published
+        ? migrateEntity(schema, oldValue.published)
+        : undefined;
+
+      await col.updateOne(
+        { _id: oldValue._id },
+        {
+          $set: {
+            draft: newDraft,
+            published: newPublished,
+          },
+        }
+      );
+    }
+  }
+}
+
+function getEntityDataStructure(schema: EntitySchema) {
+  const { foreignDataStructureContext } = cms().service('base::component');
+
+  return mapObject(schema.components, (prop) =>
+    foreignDataStructureContext.getStructure(prop.componentId, prop.options)
+  );
+}
+
 export default service({
   id: 'base::entity',
   lifecycle: {
-    onConfigChanged: async () => {
-      console.log('onConfigChanged');
+    onInit: async () => {
+      const schemas = cms().service('base::entitySchema').getAll();
 
-      const entities = cms().service('base::entitySchema').getAll();
+      const col = cms()
+        .service('base::database')
+        .collection('base::entityStructure');
 
-      for (const descriptor of entities) {
-        const col = collection(descriptor.id);
+      const oldStructures = await col.find().toArray();
 
-        for await (const oldValue of col.find()) {
-          // Only migrate if old value is no longer valid.
-          if (validate(oldValue, descriptor) !== undefined) {
-            const newDraft = migrateEntity(descriptor, oldValue.draft);
-            const newPublished = oldValue.published
-              ? migrateEntity(descriptor, oldValue.published)
-              : undefined;
+      for (const schema of schemas) {
+        const oldStructure = oldStructures.find(
+          ({ entityId }) => entityId === schema.id
+        );
 
-            await col.updateOne(
-              { _id: oldValue._id },
-              {
-                $set: {
-                  draft: newDraft,
-                  published: newPublished,
-                },
-              }
-            );
-          }
+        const newStructure = getEntityDataStructure(schema);
+
+        if (oldStructure === undefined) {
+          await col.insertOne({ entityId: schema.id, structure: newStructure });
+        } else if (!deepEquals(oldStructure.structure, newStructure)) {
+          console.log('migrating', schema.id);
+
+          await migrateEntityCollection(schema);
+
+          await col.updateOne(
+            { entityId: schema.id },
+            { $set: { structure: newStructure } }
+          );
         }
       }
     },
   },
-  validate,
   create: async <T extends EntityId>(
     id: T,
     data: EntityRawInDataById<T>,

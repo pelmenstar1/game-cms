@@ -9,12 +9,14 @@ import type {
   ComponentStorageDataById,
   ForeignComponentDataMigrationContext,
   ForeignComponentDataResolverContext,
+  ForeignComponentDataStructureContext,
   ForeignComponentDefaultRawDataContext,
   ForeignComponentStorageDataResolverContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
+import { resolveMaybeFactory } from '@game-cms/shared';
 
 function getController<T extends ComponentId>(id: T) {
   const controller = env().components.controllers[id];
@@ -126,6 +128,17 @@ const foreignDataMigrationContext: ForeignComponentDataMigrationContext = {
   },
 };
 
+const foreignDataStructureContext: ForeignComponentDataStructureContext = {
+  getStructure: (id, options) => {
+    const { structure } = getController(id);
+    if (structure === undefined) {
+      return id;
+    }
+
+    return resolveMaybeFactory(structure, options, foreignDataStructureContext);
+  },
+};
+
 export default service({
   id: 'base::component',
   foreignDefaultContext,
@@ -133,5 +146,6 @@ export default service({
   foreignResolverContext,
   foreignStorageResolverContext,
   foreignDataMigrationContext,
+  foreignDataStructureContext,
   getController,
 });

@@ -341,8 +341,29 @@ export type ComponentCore<Id extends ComponentId = ComponentId> = {
   validator: ComponentDataValidator<Id>;
 };
 
+export type ComponentDataStructure =
+  | string
+  | number
+  | ComponentDataStructure[]
+  | {
+      [K in string]: ComponentDataStructure;
+    };
+
+export interface ForeignComponentDataStructureContext {
+  getStructure: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentDataStructure;
+}
+
 interface BaseComponentController<Id extends ComponentId = ComponentId> {
   core: ComponentCore<Id>;
+  structure?:
+    | ComponentDataStructure
+    | (<Args>(
+        options: ComponentOptionsById<Id, Args>,
+        context: ForeignComponentDataStructureContext
+      ) => ComponentDataStructure);
   migrate?: ComponentDataMigration<Id>;
 }
 

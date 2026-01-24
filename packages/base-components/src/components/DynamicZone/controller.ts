@@ -1,5 +1,6 @@
 import {
   ComponentDataResolverArgs,
+  ComponentDataStructure,
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentResolvedDataById,
@@ -7,6 +8,7 @@ import {
 } from '@game-cms/core';
 import { componentController } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
+import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { DataEntry } from './internal/types.js';
@@ -19,6 +21,11 @@ function invalidPath(message: string): never {
 
 export default componentController({
   core,
+  structure: ({ options }, context) => {
+    return mapObject(options, (prop) =>
+      context.getStructure(prop.componentId, prop.options)
+    ) as ComponentDataStructure;
+  },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {
       const result: DataEntry<unknown, string>[] = [];

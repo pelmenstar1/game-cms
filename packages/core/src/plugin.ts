@@ -56,7 +56,6 @@ type BasePlugin = {
   dashboard?: PluginDashboardConfig;
 
   setup?: (config: ResolvedCmsConfig) => MaybePromise<void>;
-  onConfigChanged?: () => MaybePromise<void>;
 };
 
 export type Plugin<OwnEnv extends object | null = null> = OwnEnv extends null

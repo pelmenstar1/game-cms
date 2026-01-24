@@ -6,7 +6,6 @@ export interface Service<Id extends string = string> {
   id: Id;
   lifecycle?: {
     onInit?: () => MaybePromise<void>;
-    onConfigChanged?: () => MaybePromise<void>;
   };
 }
 

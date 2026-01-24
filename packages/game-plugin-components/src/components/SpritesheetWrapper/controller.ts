@@ -138,6 +138,8 @@ async function generateSpritesheets<Args>(
 
 export default componentController({
   core,
+  structure: (options, context) =>
+    context.getStructure(options.componentId, options.baseOptions),
   migrate: (data, options, context) => {
     const { componentId, baseOptions } = options;
 

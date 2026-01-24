@@ -4,6 +4,8 @@ import core from './core.js';
 
 export default componentController({
   core,
+  structure: (options, context) =>
+    context.getStructure(options.componentId, options.baseOptions),
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {
       const { componentId, baseOptions } = options;

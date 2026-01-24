@@ -6,7 +6,6 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 
-import { runConfigChangedLifecycleHooksIfNecessary } from './config.js';
 import {
   dashboardPlugin,
   type DashboardPluginOptions,
@@ -36,7 +35,6 @@ export async function startServer(options: DashboardPluginOptions = {}) {
 
   await initPlugins(app);
   await initServices();
-  await runConfigChangedLifecycleHooksIfNecessary();
 
   await app.listen({ port: server.port });
 }
