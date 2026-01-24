@@ -7,6 +7,8 @@ const ESLINT_COMMAND = 'eslint --cache --cache-location .eslintcache';
 async function phase(name: string, command: string) {
   try {
     await pnpm(command);
+
+    // eslint-disable-next-line no-console
     console.log(`> ${name} finished`);
   } catch (error: unknown) {
     console.error(`> ${name}`);

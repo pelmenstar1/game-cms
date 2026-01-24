@@ -122,6 +122,7 @@ test.each<[string]>([
   expect(() => {
     const value = parseConditionalNotation(input);
 
+    // eslint-disable-next-line no-console
     console.log(value);
   }, input).toThrow();
 });

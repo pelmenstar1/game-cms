@@ -29,10 +29,6 @@ export function libraryWatcherPlugin(packages: string[]): Plugin {
         for (const [, module] of modulesToReload) {
           void server.reloadModule(module);
         }
-
-        console.log(
-          `Reloaded: ${modulesToReload.map(([key]) => key).join(', ')}`
-        );
       });
 
       server.httpServer?.on('close', () => {

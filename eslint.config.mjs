@@ -55,6 +55,13 @@ export default defineConfig(
       },
     },
     rules: {
+      'no-console': [
+        'error',
+        {
+          allow: ['error'],
+        },
+      ],
+
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/prefer-top-level-await': 'off',
       'unicorn/no-useless-undefined': 'off',
