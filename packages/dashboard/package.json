@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/dashboard",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.1",
   "type": "module",
   "main": "./build/client/index.html",
   "scripts": {

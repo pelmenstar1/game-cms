@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/base-components",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.1",
   "type": "module",
   "scripts": {
     "prebuild": "tsx ./scripts/copyStyles.ts",

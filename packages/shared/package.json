@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/shared",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.1",
   "type": "module",
   "dependencies": {
     "@node-rs/xxhash": "^1.7.6",

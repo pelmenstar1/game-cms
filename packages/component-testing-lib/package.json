@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/component-testing-lib",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.1",
   "type": "module",
   "dependencies": {
     "@game-cms/shared": "workspace:*",

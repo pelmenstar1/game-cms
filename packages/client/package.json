@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/client",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.1",
   "type": "module",
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",

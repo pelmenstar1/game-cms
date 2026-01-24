@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/ui",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.1",
   "type": "module",
   "scripts": {
     "prebuild": "pnpm copy-styles",

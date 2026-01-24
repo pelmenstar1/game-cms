@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/game-plugin-components",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.28.1",
   "type": "module",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
