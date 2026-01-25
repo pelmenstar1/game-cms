@@ -22,7 +22,7 @@ async function createProvider() {
 async function uploadAndCheckContent(content: FileSource) {
   await using provider = await createProvider();
 
-  const extra = await provider.value.protocol.upload({
+  const { extra } = await provider.value.protocol.upload({
     name: '123',
     mime: 'text/plain',
     content,
@@ -34,9 +34,10 @@ async function uploadAndCheckContent(content: FileSource) {
 describe('localStorageProvider', () => {
   describe('uploadFile', () => {
     test('string', async () => {
-      const actual = await uploadAndCheckContent('123');
+      const expected = Buffer.from('123');
+      const actual = await uploadAndCheckContent(expected);
 
-      expect(actual.toString('utf8')).toEqual('123');
+      expect(actual).toEqual(expected);
     });
 
     test('buffer', async () => {
@@ -58,10 +59,10 @@ describe('localStorageProvider', () => {
   test('delete', async () => {
     await using provider = await createProvider();
 
-    const extra = await provider.value.protocol.upload({
+    const { extra } = await provider.value.protocol.upload({
       name: '123',
       mime: 'text/plain',
-      content: '123',
+      content: Buffer.from('123'),
     });
 
     const filePath = path.join(provider.path, extra.fileName);
@@ -73,31 +74,19 @@ describe('localStorageProvider', () => {
     expect(fs.existsSync(filePath)).toEqual(false);
   });
 
-  test('getMeta', async () => {
-    await using provider = await createProvider();
-
-    const extra = await provider.value.protocol.upload({
-      name: '123',
-      mime: 'text/plain',
-      content: '123',
-    });
-
-    const meta = await provider.value.protocol.getMeta(extra);
-
-    expect(meta).toEqual({ size: 3 });
-  });
-
   test('getContent', async () => {
     await using provider = await createProvider();
 
-    const extra = await provider.value.protocol.upload({
+    const expected = Buffer.from('123');
+
+    const { extra } = await provider.value.protocol.upload({
       name: '123',
       mime: 'text/plain',
-      content: '123',
+      content: expected,
     });
 
-    const content = await provider.value.protocol.getContent(extra);
+    const actual = await provider.value.protocol.getContent(extra);
 
-    expect(Buffer.from(content).toString('utf8')).toEqual('123');
+    expect(actual).toEqual(expected);
   });
 });

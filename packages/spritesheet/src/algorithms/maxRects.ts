@@ -1,8 +1,9 @@
+import type { Size } from '@game-cms/shared';
+
 import { isContainedIn } from '../internal/rect.js';
 import type {
   Rect,
   RotatedRect,
-  Size,
   SpritesheetMappingAlgorithm,
   TaggedRect,
   TaggedSize,

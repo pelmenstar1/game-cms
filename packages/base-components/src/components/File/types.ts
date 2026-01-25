@@ -1,9 +1,9 @@
-import { StorageFileItemWithMeta } from '@game-cms/base-core';
+import { StorageFileItemWithId } from '@game-cms/base-core';
 import { ComponentEntry, ToClientType } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 
-export type FileRawDataItem = StorageFileItemWithMeta;
-export type FileClientDataItem = ToClientType<StorageFileItemWithMeta>;
+export type FileRawDataItem = StorageFileItemWithId;
+export type FileClientDataItem = ToClientType<FileRawDataItem>;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap {

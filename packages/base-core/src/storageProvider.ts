@@ -5,25 +5,24 @@ import type { MaybePromise } from '@game-cms/shared';
 
 import type { UploadFileMeta } from './storage.js';
 
-export type FileSource = Readable | string | Uint8Array;
+export type StaticFileSource = Uint8Array;
+export type FileSource = StaticFileSource | Readable;
 
-export type UploadFileToProviderInfo = {
+export type UploadFileToProviderInfo<Source extends FileSource = FileSource> = {
   name: string;
   mime: string;
-  content: FileSource;
+  content: Source;
 };
 
-export type StorageProviderFileMeta = {
-  size: number;
-};
-
-export type UploadFilePayload = UploadFileToProviderInfo & UploadFileMeta;
+export type UploadFilePayload<Source extends FileSource = FileSource> =
+  UploadFileToProviderInfo<Source> & UploadFileMeta;
 
 export interface StorageProviderProtocol<Extra> {
-  upload: (info: UploadFileToProviderInfo) => Promise<Extra>;
+  upload: (
+    info: UploadFileToProviderInfo
+  ) => Promise<{ extra: Extra; size: number }>;
   delete: (extra: Extra) => Promise<void>;
   getUrl: (extra: Extra) => string;
-  getMeta: (extra: Extra) => Promise<StorageProviderFileMeta>;
   getContent: (extra: Extra) => Promise<Uint8Array>;
 }
 

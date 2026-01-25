@@ -27,7 +27,7 @@ function createProvider() {
 async function uploadAndCheckContent(content: FileSource) {
   const provider = createProvider();
 
-  const extra = await provider.protocol.upload({
+  const { extra } = await provider.protocol.upload({
     name: '123',
     mime: 'text/plain',
     content,
@@ -39,16 +39,17 @@ async function uploadAndCheckContent(content: FileSource) {
 describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
   describe('uploadFile', () => {
     test('string', async () => {
-      const actual = await uploadAndCheckContent('123');
+      const expected = Buffer.from('123');
+      const actual = await uploadAndCheckContent(expected);
 
-      expect(actual.toString('utf8')).toEqual('123');
+      expect(actual).toEqual(expected);
     });
 
     test('buffer', async () => {
-      const buffer = Buffer.from('123');
-      const actual = await uploadAndCheckContent(buffer);
+      const expected = Buffer.from('123');
+      const actual = await uploadAndCheckContent(expected);
 
-      expect(actual.equals(buffer)).toEqual(true);
+      expect(actual.equals(expected)).toEqual(true);
     });
 
     test('stream', async () => {
@@ -60,31 +61,18 @@ describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
     });
   });
 
-  test('getMeta', async () => {
-    const provider = createProvider();
-
-    const extra = await provider.protocol.upload({
-      name: '123',
-      mime: 'text/plain',
-      content: '123',
-    });
-
-    const meta = await provider.protocol.getMeta(extra);
-
-    expect(meta).toEqual({ size: 3 });
-  });
-
   test('getContent', async () => {
     const provider = createProvider();
 
-    const extra = await provider.protocol.upload({
+    const expected = Buffer.from('123');
+    const { extra } = await provider.protocol.upload({
       name: '123',
       mime: 'text/plain',
-      content: '123',
+      content: expected,
     });
 
-    const content = await provider.protocol.getContent(extra);
+    const actual = await provider.protocol.getContent(extra);
 
-    expect(Buffer.from(content).toString('utf8')).toEqual('123');
+    expect(expected.equals(actual)).toBe(true);
   });
 });

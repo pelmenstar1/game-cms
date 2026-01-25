@@ -1,4 +1,5 @@
 import type {
+  ApiToken,
   CreateApiTokenPayload,
   OpaqueApiToken,
   OpaqueApiTokenWithId,
@@ -19,6 +20,10 @@ declare module '@game-cms/base-core' {
       id: ObjectId;
     };
     'base::apiToken::deleted': { id: ObjectId };
+  }
+
+  interface DatabaseEntityMap {
+    'base::apiTokens': ApiToken;
   }
 }
 

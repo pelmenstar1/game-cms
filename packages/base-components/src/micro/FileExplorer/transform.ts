@@ -1,11 +1,11 @@
-import { StorageItemType, StorageItemWithMeta } from '@game-cms/base-core';
+import { StorageItemType, StorageItemWithId } from '@game-cms/base-core';
 import { ToClientType } from '@game-cms/core';
 import { matchMime } from '@game-cms/shared';
 
 import { FileItem } from '../FileGrid/index.js';
 
 export function transformItems(
-  items: ToClientType<StorageItemWithMeta>[],
+  items: ToClientType<StorageItemWithId>[],
   visibleMimeTypes: string[] | undefined
 ) {
   return items

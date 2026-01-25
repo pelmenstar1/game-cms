@@ -3,7 +3,7 @@ import type {
   DeleteStorageItemOptions,
   ListStorageItemsOptions,
   ListStorageItemsResponse,
-  StorageItemWithMeta,
+  StorageItem,
   UploadFileMeta,
   UploadFileResponse,
 } from '@game-cms/base-core';
@@ -23,7 +23,7 @@ export interface ClientUploadFilePayload {
 export const getStorageItemInfo = (
   context: RequestContext,
   id: string
-): Promise<ToClientType<StorageItemWithMeta>> =>
+): Promise<ToClientType<StorageItem>> =>
   request(context, {
     url: `/storage/byId/${id}`,
     method: 'GET',

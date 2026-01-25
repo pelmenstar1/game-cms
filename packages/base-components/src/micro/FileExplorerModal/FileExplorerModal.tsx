@@ -1,7 +1,7 @@
 import {
-  StorageFileItemWithMeta,
+  StorageFileItemWithId,
   StorageItemType,
-  StorageItemWithMeta,
+  StorageItemWithId,
 } from '@game-cms/base-core';
 import { ToClientType } from '@game-cms/core';
 import { Button, ModalDialog, ModalProps } from '@game-cms/ui';
@@ -11,7 +11,7 @@ import { FileExplorer } from '../FileExplorer/index.js';
 import styles from './FileExplorerModal.module.scss';
 
 export interface FileExplorerModalProps extends ModalProps<
-  ToClientType<StorageFileItemWithMeta> | undefined
+  ToClientType<StorageFileItemWithId> | undefined
 > {
   supportedMimeTypes?: string[];
 }
@@ -23,7 +23,7 @@ export function FileExplorerModal({
   const [folderId, setFolderId] = useState<string>();
 
   const [selectedItems, setSelectedItems] = useState<
-    ToClientType<StorageItemWithMeta>[]
+    ToClientType<StorageItemWithId>[]
   >([]);
 
   const singleItem = selectedItems[0];

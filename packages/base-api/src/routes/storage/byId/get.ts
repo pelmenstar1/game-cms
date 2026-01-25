@@ -1,5 +1,4 @@
 import { ApiError } from '@game-cms/base-core';
-import { storageItemWithMeta } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
@@ -15,7 +14,6 @@ export default apiRoute({
     params: z.object({
       id: stringObjectId,
     }),
-    response: { 200: storageItemWithMeta },
   },
   handler: async (req) => {
     const { id } = req.params;

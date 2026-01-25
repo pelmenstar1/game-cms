@@ -87,6 +87,9 @@ catalogs:
     sass-embedded:
       specifier: 1.97.2
       version: 1.97.2
+    sharp:
+      specifier: ^0.34.5
+      version: 0.34.5
     storybook:
       specifier: 10.1.11
       version: 10.1.11
@@ -219,6 +222,9 @@ importers:
       '@game-cms/game-plugin':
         specifier: workspace:*
         version: link:../packages/game-plugin
+      '@game-cms/storage-addons':
+        specifier: workspace:*
+        version: link:../packages/storage-addons
       '@game-cms/storage-provider-local':
         specifier: workspace:*
         version: link:../packages/storage-provider-local
@@ -924,12 +930,31 @@ importers:
         specifier: workspace:*
         version: link:../shared
       sharp:
-        specifier: ^0.34.5
+        specifier: 'catalog:'
         version: 0.34.5
     devDependencies:
       pixi.js:
         specifier: 'catalog:'
         version: 8.15.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/storage-addons:
+    dependencies:
+      '@game-cms/base-core':
+        specifier: workspace:*
+        version: link:../base-core
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+      sharp:
+        specifier: 'catalog:'
+        version: 0.34.5
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.0.6
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

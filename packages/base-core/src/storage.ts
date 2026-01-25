@@ -1,3 +1,10 @@
+import type {
+  ConditionalPartial,
+  MaybePromise,
+  PageData,
+  UndefinedIf,
+} from '@game-cms/shared';
+import type { ObjectId } from 'mongodb';
 import type z from 'zod';
 
 import type {
@@ -5,41 +12,113 @@ import type {
   createFolderResponse,
   deleteStorageItemOptions,
   listStorageItemsOptions,
-  listStorageItemsResponse,
-  storageFileItem,
-  storageFileItemWithMeta,
-  storageFolderItem,
-  storageItemWithMeta,
   uploadFileMeta,
   uploadFileResponse,
 } from './schema/storage.js';
+import type { StorageProvider, UploadFilePayload } from './storageProvider.js';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+export interface StorageAddonTypeMap<Extra> {}
+
+export type StorageAddonId = keyof StorageAddonTypeMap<unknown>;
+
+type StorageAddonPersistentData<
+  T extends StorageAddonId,
+  Extra = unknown,
+> = StorageAddonTypeMap<Extra>[T]['persistent'];
+
+type StorageAddonHydratedData<
+  T extends StorageAddonId,
+  Extra = unknown,
+> = StorageAddonTypeMap<Extra>[T]['hydrated'];
+
+type IsAddonDataOptional<T extends StorageAddonId> =
+  StorageAddonTypeMap<unknown>[T]['optional'] extends true ? true : false;
+
+export type StorageAddonContext = {
+  provider: StorageProvider;
+};
+
+export type StorageAddon<Id extends StorageAddonId = StorageAddonId> = {
+  id: Id;
+
+  getData: (
+    item: UploadFilePayload<Uint8Array>,
+    context: StorageAddonContext
+  ) => MaybePromise<
+    StorageAddonPersistentData<Id> | UndefinedIf<IsAddonDataOptional<Id>>
+  >;
+
+  hydrateData: (
+    data: StorageAddonPersistentData<Id>,
+    context: StorageAddonContext
+  ) => MaybePromise<StorageAddonHydratedData<Id>>;
+};
+
+export type AnyStorageAddon = {
+  [Id in StorageAddonId]: StorageAddon<Id>;
+}[StorageAddonId];
+
+type BaseAddonDataMap<K extends string, Extra> = ConditionalPartial<{
+  [K2 in keyof StorageAddonTypeMap<Extra>]: {
+    optional: StorageAddonTypeMap<Extra>[K2]['optional'];
+    value: StorageAddonTypeMap<Extra>[K2][K];
+  };
+}>;
+
+export type StorageAddonPersistentDataMap<Extra = unknown> = BaseAddonDataMap<
+  'persistent',
+  Extra
+>;
+
+export type StorageAddonHydratedDataMap<Extra = unknown> = BaseAddonDataMap<
+  'hydrated',
+  Extra
+>;
 
 export enum StorageItemType {
   FILE = 0,
   FOLDER = 1,
 }
 
-export type StorageFileItem = z.infer<typeof storageFileItem>;
-
-export interface StorageFileItemWithId<Id = string> extends StorageFileItem {
-  id: Id;
-}
-
-export type StorageFolderItem = z.infer<typeof storageFolderItem>;
-
-export type StorageItem<Extra = unknown> =
-  | ({
-      type: StorageItemType.FILE;
-      extra: Extra;
-    } & StorageFileItem)
-  | ({ type: StorageItemType.FOLDER } & StorageFolderItem);
-
-export type StorageItemWithId<Id = string> = StorageItem & {
-  id: Id;
+type BaseStorageFileItem<Addons> = {
+  name: string;
+  mime: string;
+  parent?: ObjectId;
+  hidden?: boolean;
+  size: number;
+  addons: Addons;
 };
 
-export type StorageItemWithMeta = z.infer<typeof storageItemWithMeta>;
-export type StorageFileItemWithMeta = z.infer<typeof storageFileItemWithMeta>;
+export type StorageFilePersistentItem<Extra = unknown> = BaseStorageFileItem<
+  StorageAddonPersistentDataMap<Extra>
+> & { extra: Extra };
+
+export type StorageFileItem =
+  BaseStorageFileItem<StorageAddonHydratedDataMap> & { url: string };
+
+export type StorageFileItemWithType = StorageFileItem & {
+  type: StorageItemType.FILE;
+};
+
+export interface StorageFileItemWithId extends StorageFileItem {
+  id: ObjectId;
+}
+
+export type StorageFolderItem = {
+  name: string;
+  parent?: ObjectId;
+};
+
+export type StoragePersistentItem<Extra = unknown> =
+  | ({ type: StorageItemType.FILE } & StorageFilePersistentItem<Extra>)
+  | ({ type: StorageItemType.FOLDER } & StorageFolderItem);
+
+export type StorageItem =
+  | StorageFileItemWithType
+  | ({ type: StorageItemType.FOLDER } & StorageFolderItem);
+
+export type StorageItemWithId = StorageItem & { id: ObjectId };
 
 export type UploadFileMeta = z.infer<typeof uploadFileMeta>;
 
@@ -48,6 +127,12 @@ export type CreateFolderPayload = z.infer<typeof createFolderPayload>;
 export type CreateFolderResponse = z.infer<typeof createFolderResponse>;
 
 export type ListStorageItemsOptions = z.infer<typeof listStorageItemsOptions>;
-export type ListStorageItemsResponse = z.infer<typeof listStorageItemsResponse>;
+export type ListStorageItemsResponse = PageData<StorageItemWithId>;
 
 export type DeleteStorageItemOptions = z.infer<typeof deleteStorageItemOptions>;
+
+export function storageAddon<Id extends StorageAddonId>(
+  value: StorageAddon<Id>
+) {
+  return value;
+}

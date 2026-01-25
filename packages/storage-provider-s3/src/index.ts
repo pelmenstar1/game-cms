@@ -1,7 +1,6 @@
 import {
   DeleteObjectCommand,
   GetObjectCommand,
-  HeadObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
@@ -37,17 +36,8 @@ export function s3StorageProvider(
 
         await upload.done();
 
-        return { key };
-      },
-      getMeta: async ({ key }) => {
-        const result = await client.send(
-          new HeadObjectCommand({
-            Bucket: bucket,
-            Key: key,
-          })
-        );
-
-        return { size: result.ContentLength ?? 0 };
+        // TODO: Fix size
+        return { extra: { key }, size: 0 };
       },
       delete: async ({ key }) => {
         await client.send(

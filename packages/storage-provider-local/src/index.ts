@@ -2,7 +2,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import send from '@fastify/send';
-import type { StorageFileItem, StorageProvider } from '@game-cms/base-core';
+import type { StorageProvider } from '@game-cms/base-core';
 import { ApiError } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
@@ -64,7 +64,7 @@ function getFileRoute(storagePath: string) {
 
       res.raw.writeHead(statusCode, {
         ...headers,
-        'content-type': (storageInfo as StorageFileItem).mime,
+        'content-type': (storageInfo as { mime: string }).mime,
       });
       stream.pipe(res.raw);
     },
@@ -89,7 +89,9 @@ export function localStorageProvider(
 
         await fsp.writeFile(outputPath, content);
 
-        return { fileName };
+        const { size } = await fsp.lstat(outputPath);
+
+        return { extra: { fileName }, size };
       },
       delete: async ({ fileName }) => {
         const filePath = path.join(storagePath, fileName);
@@ -101,12 +103,6 @@ export function localStorageProvider(
             throw error;
           }
         }
-      },
-      getMeta: async ({ fileName }) => {
-        const filePath = path.join(storagePath, fileName);
-        const stats = await fsp.stat(filePath);
-
-        return { size: stats.size };
       },
       getContent: ({ fileName }) => {
         return fsp.readFile(path.join(storagePath, fileName));

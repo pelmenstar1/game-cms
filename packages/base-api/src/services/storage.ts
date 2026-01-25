@@ -1,26 +1,37 @@
+import { Readable } from 'node:stream';
+import { buffer } from 'node:stream/consumers';
+
+import type { StorageAddon, StorageAddonContext } from '@game-cms/base-core';
 import {
   type CreateFolderPayload,
   type DeleteStorageItemOptions,
   type ListStorageItemsOptions,
-  type StorageFileItem,
-  type StorageFileItemWithId,
+  type StorageAddonHydratedDataMap,
+  type StorageAddonPersistentDataMap,
+  type StorageFilePersistentItem,
   type StorageFolderItem,
-  type StorageItem,
   StorageItemType,
-  type StorageItemWithMeta,
+  type StorageItemWithId,
+  type StoragePersistentItem,
   type UploadFilePayload,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
+import { filterOutNullable } from '@game-cms/shared/collections';
+import { asyncMapObject } from '@game-cms/shared/object';
 import type { ClientSession, Document, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
 declare module '@game-cms/base-core' {
   interface AppEventsRegistry {
-    'base::storage::fileUploaded': StorageFileItemWithId<ObjectId>;
+    'base::storage::fileUploaded': StorageFilePersistentItem & { id: ObjectId };
     'base::storage::folderCreated': CreateFolderPayload & { id: ObjectId };
     'base::storage::itemDeleted': { id: ObjectId };
+  }
+
+  interface DatabaseEntityMap {
+    'base::storage': StoragePersistentItem;
   }
 }
 
@@ -32,6 +43,14 @@ function storageProvider() {
   return env().config.storage.provider;
 }
 
+function storageAddonContext(): StorageAddonContext {
+  return { provider: storageProvider() };
+}
+
+function getAddons() {
+  return (env().config.storage.addons ?? []) as StorageAddon[];
+}
+
 async function moveItemsToRoot(folderId: ObjectId, session?: ClientSession) {
   await collection().updateMany(
     { folderId },
@@ -40,9 +59,25 @@ async function moveItemsToRoot(folderId: ObjectId, session?: ClientSession) {
   );
 }
 
+async function hydrateAddonData(
+  persistent: StorageAddonPersistentDataMap
+): Promise<StorageAddonHydratedDataMap> {
+  const addons = getAddons();
+  const context = storageAddonContext();
+
+  return asyncMapObject(persistent, (data, key) => {
+    const addon = addons.find(({ id }) => id === key);
+    if (addon === undefined) {
+      throw new Error(`Unknown addon: ${key}`);
+    }
+
+    return addon.hydrateData(data, context);
+  });
+}
+
 async function hydrateItem(
-  item: WithId<StorageItem>
-): Promise<StorageItemWithMeta> {
+  item: WithId<StoragePersistentItem>
+): Promise<StorageItemWithId> {
   if (item.type === StorageItemType.FOLDER) {
     return {
       id: item._id,
@@ -54,9 +89,10 @@ async function hydrateItem(
 
   const { protocol } = storageProvider();
 
-  const { _id, mime, name, extra, parent, hidden } = item;
-  const { size } = await protocol.getMeta(extra);
+  const { _id, mime, name, extra, parent, hidden, size, addons } = item;
   const url = protocol.getUrl(extra);
+
+  const hydratedAddons = await hydrateAddonData(addons);
 
   return {
     type: StorageItemType.FILE,
@@ -64,8 +100,9 @@ async function hydrateItem(
     mime,
     name,
     url,
-    size,
     parent,
+    size,
+    addons: hydratedAddons,
     hidden: hidden ?? false,
   };
 }
@@ -79,27 +116,61 @@ export default service({
   uploadFile: async (payload: UploadFilePayload) => {
     const { protocol } = storageProvider();
 
-    const { mime, name, parent, hidden } = payload;
-    const extra = await protocol.upload(payload);
+    const { mime, name, parent, hidden, content } = payload;
+    const addons = getAddons();
 
-    const item: StorageFileItem = {
+    const item: StorageFilePersistentItem = {
       mime,
       name,
       parent,
       hidden,
+      size: 0,
+      extra: null,
+      addons: {},
     };
+
+    if (addons.length > 0) {
+      const staticPayload = {
+        ...payload,
+        content: content instanceof Readable ? await buffer(content) : content,
+      };
+
+      const uploadResult = await protocol.upload(staticPayload);
+
+      const context = storageAddonContext();
+      const addonEntries = await Promise.all(
+        addons.map(async (addon) => {
+          // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+          const data = await addon.getData(staticPayload, context);
+
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          if (data !== undefined) {
+            return [addon.id, data] as const;
+          }
+        })
+      );
+
+      Object.assign(item, uploadResult);
+      item.addons = Object.fromEntries(filterOutNullable(addonEntries));
+    } else {
+      const uploadResult = await protocol.upload(payload);
+
+      Object.assign(item, uploadResult);
+    }
 
     const { insertedId } = await collection().insertOne({
       ...item,
-      extra,
       type: StorageItemType.FILE,
     });
 
-    const url = protocol.getUrl(extra);
+    const url = protocol.getUrl(item.extra);
 
     cms()
       .service('base::appEvents')
-      .emit('base::storage::fileUploaded', { ...item, id: insertedId });
+      .emit('base::storage::fileUploaded', {
+        ...item,
+        id: insertedId,
+      });
 
     return { id: insertedId, url };
   },
@@ -122,7 +193,7 @@ export default service({
 
     return insertedId;
   },
-  getInfo: async (id: ObjectId): Promise<StorageItemWithMeta | null> => {
+  getInfo: async (id: ObjectId): Promise<StorageItemWithId | null> => {
     const result = await collection().findOne({ _id: id });
 
     return result && hydrateItem(result);

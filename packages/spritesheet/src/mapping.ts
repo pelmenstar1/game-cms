@@ -1,12 +1,9 @@
+import type { Size } from '@game-cms/shared';
 import { asyncMapObject } from '@game-cms/shared/object';
 import sharp from 'sharp';
 
 import { inferRectsBounds } from './internal/rect.js';
-import type {
-  Size,
-  SpritesheetMap,
-  SpritesheetMappingAlgorithm,
-} from './types.js';
+import type { SpritesheetMap, SpritesheetMappingAlgorithm } from './types.js';
 
 export type CreateSpritesheetMapOptions = {
   algorithm: SpritesheetMappingAlgorithm;

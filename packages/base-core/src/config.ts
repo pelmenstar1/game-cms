@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RelativeTime } from '@game-cms/shared/chrono';
 import type { MongoClientOptions } from 'mongodb';
 
+import type { AnyStorageAddon } from './storage.js';
 import type { StorageProvider } from './storageProvider.js';
 
 export type DatabaseConfig = {
@@ -8,8 +10,8 @@ export type DatabaseConfig = {
 };
 
 export type StorageConfig = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   provider: StorageProvider<any>;
+  addons?: AnyStorageAddon[];
 };
 
 export type ExpirationTimeType = 'userSession' | 'userRefresh' | 'apiToken';

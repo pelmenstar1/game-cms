@@ -1,5 +1,4 @@
-export type Point = { x: number; y: number };
-export type Size = { width: number; height: number };
+import type { Point, Size } from '@game-cms/shared';
 
 export type Rect = Point & Size;
 
