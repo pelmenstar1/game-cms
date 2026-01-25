@@ -1,3 +1,5 @@
+import { PassThrough, Readable } from 'node:stream';
+
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -23,21 +25,41 @@ export function s3StorageProvider(
     protocol: {
       getUrl: ({ key }) => getFileUrl(config, key),
       upload: async (info) => {
-        const key = createFileKey(info.mime);
+        const { mime, content } = info;
+
+        const key = createFileKey(mime);
+
+        let size = 0;
+        let body: Readable | Uint8Array;
+
+        if (content instanceof Readable) {
+          const pass = new PassThrough();
+
+          pass.on('data', (chunk: { length: number }) => {
+            size += chunk.length;
+          });
+
+          content.pipe(pass);
+
+          body = pass;
+        } else {
+          body = content;
+          size = content.length;
+        }
+
         const upload = new Upload({
           client,
           params: {
             Bucket: bucket,
             Key: key,
-            ContentType: info.mime,
-            Body: info.content,
+            ContentType: mime,
+            Body: body,
           },
         });
 
         await upload.done();
 
-        // TODO: Fix size
-        return { extra: { key }, size: 0 };
+        return { extra: { key }, size };
       },
       delete: async ({ key }) => {
         await client.send(

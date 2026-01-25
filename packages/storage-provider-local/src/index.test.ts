@@ -19,40 +19,34 @@ async function createProvider() {
   };
 }
 
-async function uploadAndCheckContent(content: FileSource) {
+async function uploadAndCheckContent(content: FileSource, expected: Buffer) {
   await using provider = await createProvider();
 
-  const { extra } = await provider.value.protocol.upload({
+  const { extra, size } = await provider.value.protocol.upload({
     name: '123',
     mime: 'text/plain',
     content,
   });
 
-  return await fsp.readFile(path.join(provider.path, extra.fileName));
+  const actual = await fsp.readFile(path.join(provider.path, extra.fileName));
+
+  expect(actual.equals(expected)).toEqual(true);
+  expect(size).toEqual(expected.length);
 }
 
 describe('localStorageProvider', () => {
   describe('uploadFile', () => {
-    test('string', async () => {
-      const expected = Buffer.from('123');
-      const actual = await uploadAndCheckContent(expected);
-
-      expect(actual).toEqual(expected);
-    });
-
     test('buffer', async () => {
       const buffer = Buffer.from('123');
-      const actual = await uploadAndCheckContent(buffer);
 
-      expect(actual.equals(buffer)).toEqual(true);
+      await uploadAndCheckContent(buffer, buffer);
     });
 
     test('stream', async () => {
       const buffer = Buffer.from('123');
       const stream = Readable.from([buffer]);
-      const actual = await uploadAndCheckContent(stream);
 
-      expect(actual.equals(buffer)).toEqual(true);
+      await uploadAndCheckContent(stream, buffer);
     });
   });
 

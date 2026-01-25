@@ -24,40 +24,34 @@ function createProvider() {
   });
 }
 
-async function uploadAndCheckContent(content: FileSource) {
+async function uploadAndCheckContent(content: FileSource, expected: Buffer) {
   const provider = createProvider();
 
-  const { extra } = await provider.protocol.upload({
+  const { extra, size } = await provider.protocol.upload({
     name: '123',
     mime: 'text/plain',
     content,
   });
 
-  return Buffer.from(await provider.protocol.getContent(extra));
+  const actual = await provider.protocol.getContent(extra);
+
+  expect(expected.equals(actual)).toBe(true);
+  expect(size).toEqual(expected.length);
 }
 
 describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
   describe('uploadFile', () => {
-    test('string', async () => {
-      const expected = Buffer.from('123');
-      const actual = await uploadAndCheckContent(expected);
-
-      expect(actual).toEqual(expected);
-    });
-
     test('buffer', async () => {
       const expected = Buffer.from('123');
-      const actual = await uploadAndCheckContent(expected);
 
-      expect(actual.equals(expected)).toEqual(true);
+      await uploadAndCheckContent(expected, expected);
     });
 
     test('stream', async () => {
       const buffer = Buffer.from('123');
       const stream = Readable.from([buffer]);
-      const actual = await uploadAndCheckContent(stream);
 
-      expect(actual.equals(buffer)).toEqual(true);
+      await uploadAndCheckContent(stream, buffer);
     });
   });
 

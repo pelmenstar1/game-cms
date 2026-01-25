@@ -24,35 +24,38 @@ export type StorageAddonId = keyof StorageAddonTypeMap<unknown>;
 
 type StorageAddonPersistentData<
   T extends StorageAddonId,
-  Extra = unknown,
+  Extra,
 > = StorageAddonTypeMap<Extra>[T]['persistent'];
 
 type StorageAddonHydratedData<
   T extends StorageAddonId,
-  Extra = unknown,
+  Extra,
 > = StorageAddonTypeMap<Extra>[T]['hydrated'];
 
-type IsAddonDataOptional<T extends StorageAddonId> =
-  StorageAddonTypeMap<unknown>[T]['optional'] extends true ? true : false;
+type IsAddonDataOptional<
+  T extends StorageAddonId,
+  Extra,
+> = StorageAddonTypeMap<Extra>[T]['optional'] extends true ? true : false;
 
-export type StorageAddonContext = {
-  provider: StorageProvider;
+export type StorageAddonContext<Extra = unknown> = {
+  provider: StorageProvider<Extra>;
 };
 
 export type StorageAddon<Id extends StorageAddonId = StorageAddonId> = {
   id: Id;
 
-  getData: (
+  getData: <Extra>(
     item: UploadFilePayload<Uint8Array>,
-    context: StorageAddonContext
+    context: StorageAddonContext<Extra>
   ) => MaybePromise<
-    StorageAddonPersistentData<Id> | UndefinedIf<IsAddonDataOptional<Id>>
+    | StorageAddonPersistentData<Id, Extra>
+    | UndefinedIf<IsAddonDataOptional<Id, Extra>>
   >;
 
-  hydrateData: (
-    data: StorageAddonPersistentData<Id>,
-    context: StorageAddonContext
-  ) => MaybePromise<StorageAddonHydratedData<Id>>;
+  hydrateData: <Extra>(
+    data: StorageAddonPersistentData<Id, Extra>,
+    context: StorageAddonContext<Extra>
+  ) => MaybePromise<StorageAddonHydratedData<Id, Extra>>;
 };
 
 export type AnyStorageAddon = {
