@@ -1,3 +1,4 @@
+import { StorageAddonHydratedDataMap } from '@game-cms/base-core';
 import { classNames, SelectionGrid } from '@game-cms/ui';
 import { useCallback } from 'react';
 
@@ -14,6 +15,7 @@ interface PlainFileItem extends BaseFileItem {
   mime: string;
   size: number;
   url: string;
+  addons: StorageAddonHydratedDataMap;
 }
 
 interface FolderItem extends BaseFileItem {

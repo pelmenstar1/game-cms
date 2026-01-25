@@ -1,6 +1,6 @@
 import { formatFileSize } from '@game-cms/shared/string';
 import { classNames, Typography } from '@game-cms/ui';
-import { type MouseEvent, useCallback } from 'react';
+import { type MouseEvent, SyntheticEvent, useCallback } from 'react';
 
 import type { FileItem } from '../FileGrid/index.js';
 import { FileGridEntryThumbnail } from '../FileGridEntryThumbnail/index.js';
@@ -14,6 +14,10 @@ export interface FileGridEntryProps {
 
   onSelectionChanged?: (state: boolean) => void;
   onDoubleClick?: () => void;
+}
+
+function stopPropagationHandler(event: SyntheticEvent) {
+  event.stopPropagation();
 }
 
 export function FileGridEntry({
@@ -41,6 +45,7 @@ export function FileGridEntry({
       )}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
+      onPointerDown={stopPropagationHandler}
     >
       <FileGridEntryThumbnail className={styles.thumbnail} source={item} />
 

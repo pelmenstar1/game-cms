@@ -42,7 +42,7 @@ export function SelectionGrid({
           y: event.clientY - containerBounds.top,
         };
 
-        // event.currentTarget.setPointerCapture(event.pointerId);
+        event.currentTarget.setPointerCapture(event.pointerId);
 
         const container = ref.current;
         if (container) {
@@ -129,7 +129,7 @@ export function SelectionGrid({
         style.setProperty('--width', null);
         style.setProperty('--height', null);
 
-        // event.currentTarget.releasePointerCapture(event.pointerId);
+        event.currentTarget.releasePointerCapture(event.pointerId);
       }
 
       initialTouch.current = null;

@@ -1,4 +1,4 @@
-import { StorageItemType, StorageItemWithId } from '@game-cms/base-core';
+import { StorageItemWithId } from '@game-cms/base-core';
 import {
   createFolder,
   deleteStorageItemById,
@@ -19,7 +19,7 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { FileControlHeader } from '../FileControlHeader/index.js';
-import { FileGrid } from '../FileGrid/index.js';
+import { FileGrid, FileItem } from '../FileGrid/index.js';
 import { FolderNameModal } from '../FolderNameModal/index.js';
 import { UploadFileDialog } from '../UploadFileDialog/index.js';
 import styles from './FileExplorer.module.scss';
@@ -142,23 +142,18 @@ export function FileExplorer({
     }
   }, [showModal, doCreateFolder, folderId, notification, refreshItems]);
 
-  const onItemDoubleClick = useCallback(() => {
-    if (itemsResult.status === 'success' && selectedItemIds.length === 1) {
-      const [id] = selectedItemIds;
-
-      const item = itemsResult.value.items.find((item) => item.id === id);
-
-      if (item) {
-        if (item.type === StorageItemType.FOLDER) {
-          onFolderChanged(id);
-        } else {
-          void showModal(FileInfoModal, {
-            item,
-          });
-        }
+  const onItemDoubleClick = useCallback(
+    (item: FileItem) => {
+      if (item.type === 'folder') {
+        onFolderChanged(item.id);
+      } else {
+        void showModal(FileInfoModal, {
+          item,
+        });
       }
-    }
-  }, [onFolderChanged, showModal, selectedItemIds, itemsResult]);
+    },
+    [onFolderChanged, showModal]
+  );
 
   const onGoToParent = useCallback(() => {
     if (itemInfo.status === 'success' && itemInfo.value) {
