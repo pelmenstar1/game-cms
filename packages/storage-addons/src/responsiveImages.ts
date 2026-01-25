@@ -41,7 +41,7 @@ export function responsiveImages(options: ResponsiveImagesOptions) {
 
       const variants = await Promise.all(
         targetWidths.map(async (targetWidth) => {
-          const targetHeight = targetWidth * aspectRatio;
+          const targetHeight = Math.round(targetWidth * aspectRatio);
 
           const stream = sharp(item.content)
             .resize({
