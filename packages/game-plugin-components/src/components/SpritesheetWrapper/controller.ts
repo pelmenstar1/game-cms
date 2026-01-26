@@ -119,7 +119,7 @@ async function generateSpritesheet(
   const { id: atlasId } = await storageService.uploadFile({
     name: 'spritesheet.json',
     mime: 'application/json',
-    content: JSON.stringify(atlas),
+    content: Buffer.from(JSON.stringify(atlas), 'utf8'),
     hidden: true,
   });
 
@@ -152,6 +152,20 @@ export default componentController({
     const { componentId, baseOptions } = options;
 
     return context.resolveRawData(componentId, data, baseOptions, args);
+  },
+  mergeData: async (target, source, options, context) => {
+    const mergedBase = await context.merge(
+      options.componentId,
+      target.base,
+      source,
+      options.baseOptions
+    );
+
+    // TODO: Fix spritesheets
+    return {
+      base: mergedBase,
+      spritesheets: target.spritesheets,
+    };
   },
   storageTransformer: {
     getDefaultData: (options, context) => {

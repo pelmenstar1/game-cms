@@ -13,7 +13,11 @@ import {
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './constants';
+import {
+  ATLAS_OPTIONS,
+  IMAGES_OPTIONS,
+  SKELETON_OPTIONS,
+} from './internal/constants';
 import styles from './renderer.module.scss';
 
 type FileData = ComponentClientDataById<'base::file'>[number];

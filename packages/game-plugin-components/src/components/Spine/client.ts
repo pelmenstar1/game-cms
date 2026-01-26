@@ -1,6 +1,13 @@
 import type { ComponentClientDataTransformer } from '@game-cms/core';
 
-import { ATLAS_OPTIONS, IMAGES_OPTIONS, SKELETON_OPTIONS } from './constants';
+import {
+  ATLAS_OPTIONS,
+  type ComposeArgs,
+  type ComposeId,
+  composeOptions,
+  IMAGES_OPTIONS,
+  SKELETON_OPTIONS,
+} from './internal/constants';
 
 export const clientTransformer: ComponentClientDataTransformer<'game::spine'> =
   {
@@ -23,7 +30,7 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spine'> =
       const skeleton = context.fromClient(
         'base::file',
         clientData.skeleton,
-        IMAGES_OPTIONS
+        SKELETON_OPTIONS
       );
 
       if (
@@ -49,14 +56,10 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spine'> =
       };
     },
     toClient: (data, _, context) => {
-      return {
-        images: context.toClient('base::file', data.images, IMAGES_OPTIONS),
-        atlas: context.toClient('base::file', data.atlas, ATLAS_OPTIONS),
-        skeleton: context.toClient(
-          'base::file',
-          data.skeleton,
-          SKELETON_OPTIONS
-        ),
-      };
+      return context.toClient<ComposeId, ComposeArgs>(
+        'base::compose',
+        data,
+        composeOptions
+      );
     },
   };

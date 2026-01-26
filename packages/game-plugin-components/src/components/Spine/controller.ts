@@ -1,28 +1,33 @@
-import {
-  componentController,
-  type ComponentStorageDataById,
-} from '@game-cms/core';
+import { componentController } from '@game-cms/core';
 
-import {
-  ATLAS_OPTIONS,
-  IMAGES_OPTIONS,
-  SKELETON_OPTIONS,
-} from './constants.js';
 import core from './core.js';
+import {
+  type ComposeArgs,
+  type ComposeId,
+  composeOptions,
+} from './internal/constants.js';
 
 export default componentController({
   core,
-  structure: (_, context) => ({
-    atlas: context.getStructure('base::file', ATLAS_OPTIONS),
-    images: context.getStructure('base::file', IMAGES_OPTIONS),
-    skeleton: context.getStructure('base::file', SKELETON_OPTIONS),
-  }),
+  structure: (_, context) =>
+    context.getStructure<ComposeId, ComposeArgs>(
+      'base::compose',
+      composeOptions
+    ),
   migrate: (data, _, context) => {
-    return context.migrate('base::compose', data, {
-      atlas: { componentId: 'base::file', options: ATLAS_OPTIONS },
-      images: { componentId: 'base::file', options: IMAGES_OPTIONS },
-      skeleton: { componentId: 'base::file', options: SKELETON_OPTIONS },
-    }) as ComponentStorageDataById<'game::spine'>;
+    return context.migrate<ComposeId, ComposeArgs>(
+      'base::compose',
+      data,
+      composeOptions
+    );
+  },
+  mergeData: (target, source, _, context) => {
+    return context.merge<ComposeId, ComposeArgs>(
+      'base::compose',
+      target,
+      source,
+      composeOptions
+    );
   },
   storageTransformer: {
     getDefaultData: () => ({
@@ -30,31 +35,19 @@ export default componentController({
       images: [],
       skeleton: [],
     }),
-    toStorage: async (data, _, context) => {
-      const [atlas, images, skeleton] = await Promise.all(
-        [
-          { value: data.atlas, options: ATLAS_OPTIONS },
-          { value: data.images, options: IMAGES_OPTIONS },
-          { value: data.skeleton, options: SKELETON_OPTIONS },
-        ].map(({ value, options }) =>
-          context.toStorage('base::file', value, options)
-        )
+    toStorage: (data, _, context) => {
+      return context.toStorage<ComposeId, ComposeArgs>(
+        'base::compose',
+        data,
+        composeOptions
       );
-
-      return { atlas, images, skeleton };
     },
     fromStorage: async (data, _, context) => {
-      const [atlas, images, skeleton] = await Promise.all(
-        [
-          { value: data.atlas, options: ATLAS_OPTIONS },
-          { value: data.images, options: IMAGES_OPTIONS },
-          { value: data.skeleton, options: SKELETON_OPTIONS },
-        ].map(({ value, options }) =>
-          context.fromStorage('base::file', value, options)
-        )
+      return context.fromStorage<ComposeId, ComposeArgs>(
+        'base::compose',
+        data,
+        composeOptions
       );
-
-      return { atlas, images, skeleton };
     },
   },
 });

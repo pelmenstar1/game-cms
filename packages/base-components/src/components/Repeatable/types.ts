@@ -1,14 +1,9 @@
 import {
-  ComponentClientDataById,
   ComponentEntry,
-  ComponentErrorById,
   ComponentId,
   ComponentNestedPath,
-  ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
-  ComponentResolvedDataById,
-  ComponentStorageDataById,
+  ComponentSchema,
+  GetComponentSchemaTypes,
 } from '@game-cms/core';
 import { Key } from 'react';
 
@@ -21,25 +16,29 @@ export type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
 
 type ResolveArgs<Args> = Args extends RepeatableArgs ? Args : RepeatableArgs;
 
-type RepeatableEntry<Args extends RepeatableArgs> = {
+type BaseRepeatableEntry<Types extends GetComponentSchemaTypes> = {
   options: {
-    componentId: Args['id'];
-    title?: TitleSpecById<Args['id'], Args['baseArgs']>;
-    baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
+    componentId: Types['componentId'];
+    title?: TitleSpecById<Types['componentId'], Types['args']>;
+    baseOptions: Types['options'];
   };
   error: {
     ownError?: 'INVALID_TYPE';
-    items?: (ComponentErrorById<Args['id'], Args['baseArgs']> | undefined)[];
+    items?: (Types['error'] | undefined)[];
   };
-  resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>[];
-  rawData: ComponentRawDataById<Args['id'], Args['baseArgs']>[];
-  rawInData: ComponentRawInDataById<Args['id'], Args['baseArgs']>[];
+  resolvedData: Types['resolvedData'][];
+  rawData: Types['rawData'][];
+  rawInData: Types['rawInData'][];
   clientData: {
     clientKey: Key;
-    data: ComponentClientDataById<Args['id'], Args['baseArgs']>;
+    data: Types['clientData'];
   }[];
-  storageData: ComponentStorageDataById<Args['id'], Args['baseArgs']>[];
+  storageData: Types['storageData'][];
 };
+
+type RepeatableEntry<Args extends RepeatableArgs> = BaseRepeatableEntry<
+  GetComponentSchemaTypes<ComponentSchema<Args['id'], Args['baseArgs']>>
+>;
 
 type BaseNestedPath<T, Args extends RepeatableArgs> = {
   path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;

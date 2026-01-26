@@ -44,6 +44,20 @@ export default componentController({
       apply(data[path]);
     }
   },
+  mergeData: async (target, source, options, context) => {
+    const sourceMerged = await asyncMapObject(source, (item, key) => {
+      const { componentId, options: baseOptions } = options[key];
+
+      return context.merge(
+        componentId,
+        target[key] as never,
+        item as never,
+        baseOptions
+      );
+    });
+
+    return { ...target, ...sourceMerged };
+  },
   storageTransformer: {
     getDefaultData: (options, context) => {
       return mapObject(options, (item) =>

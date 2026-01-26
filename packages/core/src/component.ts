@@ -1,5 +1,6 @@
 import type {
   AnyKeyInObject,
+  GetPropertyOr,
   IdSource,
   IsAllOptional,
   MaybePromise,
@@ -42,17 +43,33 @@ export interface ComponentNestedPathMap<T, Args = unknown> extends Record<
 export type ComponentId = keyof ComponentTypeMap;
 
 type GetOrRawData<Types extends ComponentTypes, K extends string> = {
-  [U in K]: Types extends Record<U, unknown> ? Types[U] : Types['rawData'];
+  [U in K]: GetPropertyOr<Types, U, Types['rawData']>;
 };
 
-type GetComponentTypes<Types extends ComponentTypes> = Pick<
-  Types,
-  keyof ComponentTypes
-> &
+type GetPartialName<T extends string> = `partial${Capitalize<T>}`;
+
+type GetComponentExtendedTypes<Types extends ComponentTypes = ComponentTypes> =
   GetOrRawData<
     Types,
     'rawInData' | 'resolvedData' | 'clientData' | 'storageData'
   >;
+
+type ComponentComponentPartialTypes<Types extends ComponentTypes> = {
+  [K in
+    | 'rawData'
+    | keyof GetComponentExtendedTypes as GetPartialName<K>]: GetPropertyOr<
+    Types,
+    GetPartialName<K>,
+    GetOrRawData<Types, K>[K]
+  >;
+};
+
+type GetComponentTypes<Types extends ComponentTypes = ComponentTypes> = Pick<
+  Types,
+  keyof ComponentTypes
+> &
+  GetComponentExtendedTypes<Types> &
+  ComponentComponentPartialTypes<Types>;
 
 type GetComponentTypesById<
   Id extends ComponentId,
@@ -64,6 +81,11 @@ export type ComponentStorageDataById<
   Args = unknown,
 > = GetComponentTypesById<T, Args>['storageData'];
 
+export type ComponentStoragePartialDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['partialStorageData'];
+
 export type ComponentRawDataById<
   T extends ComponentId,
   Args = unknown,
@@ -73,6 +95,11 @@ export type ComponentRawInDataById<
   T extends ComponentId,
   Args = unknown,
 > = GetComponentTypesById<T, Args>['rawInData'];
+
+export type ComponentRawInPartialDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['partialRawInData'];
 
 export type ComponentResolvedDataById<
   T extends ComponentId,
@@ -124,16 +151,20 @@ export type GetComponentSchemaTypes<Schema = unknown> =
   Schema extends ComponentSchema<infer Id, infer Args>
     ? GetComponentTypesById<Id, Args> & {
         componentId: Id;
+        args: Args;
       }
     : {
         rawData: ComponentData;
         rawInData: ComponentData;
+        partialRawInData: ComponentData;
         resolvedData: ComponentData;
         storageData: ComponentData;
+        partialStorageData: ComponentData;
         clientData: ComponentData;
         options: ComponentOptions;
         error: unknown;
         componentId: ComponentId;
+        args: unknown;
       };
 
 export type ComponentProps<Id extends ComponentId, Args> = {
@@ -150,20 +181,28 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = <
   props: ComponentProps<Id, Args>
 ) => ReactNode;
 
+export type ComponentDataValidatorParams = {
+  partial?: boolean;
+};
+
 export type ForeignComponentValidationContext = {
   validate: <Id extends ComponentId, Args>(
     id: Id,
     data: unknown,
-    options: ComponentOptionsById<Id, Args>
+    options: ComponentOptionsById<Id, Args>,
+    params?: ComponentDataValidatorParams
   ) => ComponentErrorById<Id, Args> | undefined;
 };
 
-export type ForeignComponentDefaultRawDataContext = {
-  getDefaultData: <Id extends ComponentId, Args>(
-    id: Id,
-    options: ComponentOptionsById<Id, Args>
-  ) => ComponentRawDataById<Id, Args>;
-};
+export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
+  data: unknown,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentValidationContext,
+  params?: ComponentDataValidatorParams
+) => ComponentErrorById<Id, Args> | undefined;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface ComponentDataResolverArgs {}
 
 export type ForeignComponentDataResolverContext = {
   resolveRawData: <Id extends ComponentId, Args>(
@@ -173,6 +212,21 @@ export type ForeignComponentDataResolverContext = {
     args: ComponentDataResolverArgs
   ) => ComponentResolvedDataById<Id>;
 };
+
+export type ComponentDataResolver<Id extends ComponentId> = <Args>(
+  raw: ComponentRawDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentDataResolverContext,
+  args: ComponentDataResolverArgs
+) => ComponentResolvedDataById<Id, Args>;
+
+export type ComponentRawInDataOrError<
+  Id extends ComponentId,
+  Args = unknown,
+> = ResultOrError<
+  ComponentRawInDataById<Id, Args>,
+  ComponentErrorById<Id, Args>
+>;
 
 export type ForeignComponentClientDataResolverContext = {
   idSource: IdSource<Key>;
@@ -201,49 +255,6 @@ export type ForeignComponentClientDefaultDataContext = Pick<
   'getDefaultData'
 >;
 
-export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
-  getDefaultData: <Id extends ComponentId, Args>(
-    id: Id,
-    options: ComponentOptionsById<Id, Args>
-  ) => ComponentStorageDataById<Id, Args>;
-
-  toStorage: <Id extends ComponentId, Args>(
-    id: Id,
-    data: ComponentRawInDataById<Id, Args>,
-    options: ComponentOptionsById<Id, Args>
-  ) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
-
-  fromStorage: <Id extends ComponentId, Args>(
-    id: Id,
-    data: ComponentStorageDataById<Id, Args>,
-    options: ComponentOptionsById<Id, Args>
-  ) => MaybePromiseWithMarker<ComponentRawDataById<Id, Args>>;
-}
-
-export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
-  data: unknown,
-  options: ComponentOptionsById<Id, Args>,
-  context: ForeignComponentValidationContext
-) => ComponentErrorById<Id, Args> | undefined;
-
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface ComponentDataResolverArgs {}
-
-export type ComponentDataResolver<Id extends ComponentId> = <Args>(
-  raw: ComponentRawDataById<Id, Args>,
-  options: ComponentOptionsById<Id, Args>,
-  context: ForeignComponentDataResolverContext,
-  args: ComponentDataResolverArgs
-) => ComponentResolvedDataById<Id, Args>;
-
-export type ComponentRawInDataOrError<
-  Id extends ComponentId,
-  Args = unknown,
-> = ResultOrError<
-  ComponentRawInDataById<Id, Args>,
-  ComponentErrorById<Id, Args>
->;
-
 export type ComponentClientDataTransformer<
   Id extends ComponentId = ComponentId,
 > = {
@@ -270,6 +281,25 @@ export type ComponentClientDataTransformer<
   ) => ComponentRawInDataOrError<Id, Args>;
 };
 
+export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
+  getDefaultData: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentStorageDataById<Id, Args>;
+
+  toStorage: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentRawInDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
+
+  fromStorage: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => MaybePromiseWithMarker<ComponentRawDataById<Id, Args>>;
+}
+
 export type ComponentStorageDataTransformer<Id extends ComponentId> = {
   getDefaultData: <Args>(
     options: ComponentOptionsById<Id, Args>,
@@ -287,6 +317,13 @@ export type ComponentStorageDataTransformer<Id extends ComponentId> = {
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentStorageDataResolverContext
   ) => MaybePromiseWithMarker<ComponentRawDataById<Id, Args>>;
+};
+
+export type ForeignComponentDefaultRawDataContext = {
+  getDefaultData: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentRawDataById<Id, Args>;
 };
 
 export type ComponentDefaultDataHandler<Id extends ComponentId> = <Args>(
@@ -327,6 +364,22 @@ export type ComponentDataMigration<Id extends ComponentId> = <Args>(
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentDataMigrationContext
 ) => ComponentStorageDataById<Id, Args> | undefined;
+
+export interface ForeignComponentDataMergeContext {
+  merge: <Id extends ComponentId, Args>(
+    id: Id,
+    target: ComponentStorageDataById<Id, Args>,
+    source: ComponentRawInPartialDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
+}
+
+export type ComponentDataMergeHandler<Id extends ComponentId> = <Args>(
+  target: ComponentStorageDataById<Id, Args>,
+  source: ComponentRawInPartialDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentDataMergeContext
+) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
 
 export type ComponentMeta = {
   ui?: {
@@ -388,6 +441,11 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
     RequiredIf<
       { pathWalker?: ComponentPathWalker<Id> },
       AnyKeyInObject<ComponentNestedPathMap<unknown>, Id>
+    > &
+    RequiredIfExists<
+      { mergeData?: ComponentDataMergeHandler<Id> },
+      Id,
+      'partialRawInData'
     >;
 
 export type ComponentControllerMap = {

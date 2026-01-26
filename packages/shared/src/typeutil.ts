@@ -48,3 +48,6 @@ type SelectValue<T extends ConditionalPartialArgs> = {
 export type ConditionalPartial<T extends ConditionalPartialArgs> = SelectValue<
   BaseConditionalPartial<T>
 >;
+
+export type GetPropertyOr<T, K extends PropertyKey, F> =
+  T extends Record<K, unknown> ? T[K] : F;

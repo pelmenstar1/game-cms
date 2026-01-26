@@ -1,11 +1,12 @@
 import {
   componentCore,
+  ComponentDataValidatorParams,
   ComponentErrorById,
   ComponentOptionsById,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
-import { mapObject } from '@game-cms/shared/object';
+import { mapObject, UnknownObject } from '@game-cms/shared/object';
 
 export default componentCore({
   id: 'base::compose',
@@ -17,22 +18,24 @@ export default componentCore({
   validator: <Args>(
     data: unknown,
     options: ComponentOptionsById<'base::compose', Args>,
-    context: ForeignComponentValidationContext
+    context: ForeignComponentValidationContext,
+    params?: ComponentDataValidatorParams
   ) => {
     if (!isNonNullObject(data)) {
       return { ownError: 'INVALID_TYPE' as const };
     }
 
     const entries = Object.entries(options).map(
-      ([key, { componentId, options }]) =>
-        [
-          key,
-          context.validate(
-            componentId,
-            (data as Record<string, unknown>)[key],
-            options
-          ),
-        ] as const
+      ([key, { componentId, options }]) => {
+        const propValue = (data as UnknownObject)[key];
+        if (propValue === undefined && params?.partial) {
+          return [key, undefined] as const;
+        }
+
+        const error = context.validate(componentId, propValue, options, params);
+
+        return [key, error] as const;
+      }
     );
 
     if (entries.some(([, value]) => value !== undefined)) {

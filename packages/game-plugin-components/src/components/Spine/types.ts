@@ -32,6 +32,7 @@ declare module '@game-cms/core' {
       };
       rawData: BaseData<FileData>;
       rawInData: BaseData<FileDataIn>;
+      partialRawInData: Partial<BaseData<FileDataIn>>;
       clientData: BaseData<FileClientData>;
       storageData: BaseData<FileStorageData>;
     }>;

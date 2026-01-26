@@ -7,7 +7,12 @@ export default componentCore({
       base: context.getDefaultData(options.componentId, options.baseOptions),
     };
   },
-  validator: (data, options, context) => {
-    return context.validate(options.componentId, data, options.baseOptions);
+  validator: (data, options, context, params) => {
+    return context.validate(
+      options.componentId,
+      data,
+      options.baseOptions,
+      params
+    );
   },
 });

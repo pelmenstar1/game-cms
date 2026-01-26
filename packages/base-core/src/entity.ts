@@ -39,6 +39,11 @@ export type EntityRawInDataById<Id extends EntityId> = ComponentsToData<
   'rawInData'
 >;
 
+export type EntityRawInPartialDataById<Id extends EntityId> = ComponentsToData<
+  EntityMap[Id],
+  'partialRawInData'
+>;
+
 export type EntityResolvedDataById<Id extends EntityId> = ComponentsToData<
   EntityMap[Id],
   'resolvedData'

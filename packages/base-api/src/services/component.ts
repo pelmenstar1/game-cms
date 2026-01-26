@@ -5,8 +5,10 @@ import type {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
+  ComponentRawInPartialDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
+  ForeignComponentDataMergeContext,
   ForeignComponentDataMigrationContext,
   ForeignComponentDataResolverContext,
   ForeignComponentDataStructureContext,
@@ -139,6 +141,34 @@ const foreignDataStructureContext: ForeignComponentDataStructureContext = {
   },
 };
 
+function toStoragePartial<Id extends ComponentId, Args>(
+  id: Id,
+  data: ComponentRawInPartialDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>
+) {
+  if (foreignValidationContext.validate(id, data, options) === undefined) {
+    return foreignStorageResolverContext.toStorage(
+      id,
+      data as ComponentRawInDataById<Id, Args>,
+      options
+    );
+  }
+
+  throw new Error('Expected partial data to be full');
+}
+
+const foreignDataMergeContext: ForeignComponentDataMergeContext = {
+  merge: (id, target, source, options) => {
+    const { mergeData } = getController(id);
+
+    if (mergeData !== undefined) {
+      return mergeData(target, source, options, foreignDataMergeContext);
+    }
+
+    return toStoragePartial(id, source, options);
+  },
+};
+
 export default service({
   id: 'base::component',
   foreignDefaultContext,
@@ -147,5 +177,6 @@ export default service({
   foreignStorageResolverContext,
   foreignDataMigrationContext,
   foreignDataStructureContext,
+  foreignDataMergeContext,
   getController,
 });

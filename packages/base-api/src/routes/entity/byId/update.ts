@@ -5,7 +5,7 @@ import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
-import { getEntityValidationType } from '../../../utils/entity.js';
+import { getEntityValidationPartialType } from '../../../utils/entity.js';
 import { entityRouteId } from '../../../utils/routeId.js';
 
 export default apiRoute({
@@ -27,10 +27,14 @@ export default apiRoute({
     const { entityId, id } = req.params;
     const { variant } = req.query;
 
-    const schema = getEntityValidationType(req.params.entityId);
+    const schema = getEntityValidationPartialType(req.params.entityId);
     const body = schema.safeParse(req.body);
     if (!body.success) {
-      throw new ApiError(body.error.message, 'base::schema/validation');
+      throw new ApiError(
+        'Entity validation failed',
+        'base::schema/validation',
+        body.error.issues
+      );
     }
 
     await cms()

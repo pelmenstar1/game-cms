@@ -7,6 +7,7 @@ import type {
   ComponentRawDataById,
   ComponentRawInDataById,
   ComponentRawInDataByIdPath,
+  ComponentRawInPartialDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
@@ -47,6 +48,7 @@ type SpritesheetEntry<Args extends SpritesheetArgs> = {
     spritesheets?: Record<string, SpritesheetUrlEntry>;
   };
   rawInData: ComponentRawInDataById<Args['id'], Args['baseArgs']>;
+  partialRawInData: ComponentRawInPartialDataById<Args['id'], Args['baseArgs']>;
   options: {
     componentId: Args['id'];
     namePath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;

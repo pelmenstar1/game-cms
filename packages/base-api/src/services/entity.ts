@@ -4,6 +4,7 @@ import {
   type EntityId,
   type EntityRawDataById,
   type EntityRawInDataById,
+  type EntityRawInPartialDataById,
   type EntityResolvedDataById,
   type EntitySchema,
   type EntitySchemaById,
@@ -124,6 +125,28 @@ async function toStorageData<T extends EntityId>(
 
     return foreignStorageResolverContext.toStorage(componentId, item, options);
   });
+}
+
+async function toStoragePartialData<Id extends EntityId>(
+  entityId: Id,
+  target: EntityStorageDataById<Id>,
+  source: EntityRawInPartialDataById<Id>
+): Promise<EntityStorageDataById<Id>> {
+  const entitySchema = getEntitySchema(entityId);
+  const { foreignDataMergeContext } = cms().service('base::component');
+
+  const sourceMerged = await asyncMapObject(source, (item, key) => {
+    const { componentId, options } = entitySchema.components[key];
+
+    return foreignDataMergeContext.merge(
+      componentId,
+      target[key],
+      item,
+      options
+    );
+  });
+
+  return { ...target, ...sourceMerged };
 }
 
 function createEntityVariants<Id extends EntityId>(
@@ -276,27 +299,32 @@ export default service({
   update: async <Id extends EntityId>(
     entityId: Id,
     id: ObjectId,
-    data: EntityRawInDataById<Id>,
+    data: EntityRawInPartialDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
-    const storageData = await toStorageData(entityId, data);
+    const target = await collection(entityId).findOne({ _id: id });
+    if (target === null) {
+      return false;
+    }
 
-    const result = await collection(entityId).updateOne(idFilter(id), {
+    const storageData = await toStoragePartialData(
+      entityId,
+      target.draft,
+      data
+    );
+
+    await collection(entityId).updateOne(idFilter(id), {
       $set: createEntityVariants(storageData, variant),
     });
 
-    const isUpdated = result.matchedCount > 0;
+    cms().service('base::appEvents').emit('base::entity::updated', {
+      entityId,
+      id,
+      variant,
+      newData: storageData,
+    });
 
-    if (isUpdated) {
-      cms().service('base::appEvents').emit('base::entity::updated', {
-        entityId,
-        id,
-        variant,
-        newData: storageData,
-      });
-    }
-
-    return isUpdated;
+    return true;
   },
   deleteById: async (entityId: string, id: ObjectId) => {
     const { deletedCount } = await collection(entityId).deleteOne(idFilter(id));
