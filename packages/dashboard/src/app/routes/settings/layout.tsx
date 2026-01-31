@@ -2,13 +2,13 @@ import { NavTabs } from '@game-cms/ui';
 import { useMemo } from 'react';
 import { Outlet } from 'react-router';
 
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 
 import { items } from './items';
 import styles from './layout.module.scss';
 
 export default function Layout() {
-  const { permissions } = useSelfPermissions();
+  const { permissions } = useSelfSession();
 
   const allowedItems = useMemo(
     () => items.filter((item) => permissions.has(item.permission)),

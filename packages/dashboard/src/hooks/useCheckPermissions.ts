@@ -2,10 +2,10 @@ import type { ApiRouteId } from '@game-cms/core/api';
 import { useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
 
-import { useSelfPermissions } from './useSelfPermissions';
+import { useSelfSession } from './useSession';
 
 export function useCheckPermissions(id: ApiRouteId) {
-  const { permissions } = useSelfPermissions();
+  const { permissions } = useSelfSession();
   const redirect = useTypedNavigate();
 
   useEffect(() => {

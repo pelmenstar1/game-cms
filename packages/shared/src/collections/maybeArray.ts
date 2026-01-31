@@ -14,3 +14,14 @@ export function maybeArrayMap<T, R>(
 ): MaybeArray<R> {
   return Array.isArray(target) ? target.map(mapping) : mapping(target);
 }
+
+export function maybeArrayFlatMap<T, R>(
+  target: MaybeArray<T>,
+  mapping: (value: T) => MaybeArray<R>
+): MaybeArray<R> {
+  return Array.isArray(target) ? target.flatMap(mapping) : mapping(target);
+}
+
+export function normalizeMaybeArray<T>(target: MaybeArray<T>): T[] {
+  return Array.isArray(target) ? target : [target];
+}

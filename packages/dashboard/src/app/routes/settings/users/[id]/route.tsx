@@ -15,7 +15,7 @@ import {
 
 import { AccessUserView } from '@/components/AccessUserView';
 import { useCheckPermissions } from '@/hooks/useCheckPermissions';
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';
@@ -31,7 +31,7 @@ export default function Page({ params }: Route.ComponentProps) {
   const doUpdateUser = useApiAction(updateUserById);
   const doDeleteUser = useApiAction(deleteUserById);
 
-  const { permissions } = useSelfPermissions();
+  const { permissions } = useSelfSession();
 
   useCheckPermissions('user$update');
 

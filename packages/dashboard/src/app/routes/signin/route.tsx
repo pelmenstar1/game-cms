@@ -14,7 +14,7 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
 
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 
 import styles from './route.module.scss';
 
@@ -27,7 +27,7 @@ export default function Page() {
 
   const doSignIn = useApiAction(signUserIn, { redirectOnUnauthorized: false });
 
-  const { refresh: refreshPermissions } = useSelfPermissions();
+  const { refresh: refreshPermissions } = useSelfSession();
 
   const redirect = useTypedNavigate();
   const notification = useNotification();

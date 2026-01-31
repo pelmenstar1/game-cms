@@ -31,6 +31,9 @@
       "entry": ["src/index.ts", "src/types.ts", "src/routes/**/*.ts"],
       "project": "**/*.{ts,tsx}"
     },
+    "packages/entity-checks": {
+      "entry": ["src/index.ts", "src/types.ts", "src/client.ts"]
+    },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]
     }

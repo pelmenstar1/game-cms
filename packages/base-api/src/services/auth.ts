@@ -14,11 +14,12 @@ import {
 import { service } from '@game-cms/core';
 import type { ApiRouteId } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
+import { resolveMaybeFactory } from '@game-cms/shared';
 import {
   parseRelativeTimeToTotalSeconds,
   type RelativeTime,
 } from '@game-cms/shared/chrono';
-import { setAddMany } from '@game-cms/shared/collections';
+import { maybeArrayFlatMap, setAddMany } from '@game-cms/shared/collections';
 import { type JWTPayload, jwtVerify, SignJWT } from 'jose';
 import { JWTExpired } from 'jose/errors';
 import { ObjectId } from 'mongodb';
@@ -129,10 +130,14 @@ function getAllPermissions() {
   const result = new Set<ApiRouteId>();
 
   for (const route of routes) {
-    const id = route.config?.id;
+    const idFactory = route.config?.id;
 
-    if (id !== undefined) {
-      const hydrated = hydratePermission(id, entities);
+    if (idFactory !== undefined) {
+      const id = resolveMaybeFactory(idFactory);
+
+      const hydrated = maybeArrayFlatMap(id, (item) =>
+        hydratePermission(item, entities)
+      );
 
       if (Array.isArray(hydrated)) {
         setAddMany(result, hydrated);
@@ -211,14 +216,14 @@ export default service({
     }
 
     return createSessionToken('apiToken', {
-      id: 'API token',
+      id: tokenInfo._id,
       displayName: tokenInfo.name,
       permissions: tokenInfo.permissions,
     });
   },
   verifySessionJwt: async (token: string, routeId: ApiRouteId | undefined) => {
     try {
-      const { prms: permissions } = await parseJwtWithSchema(
+      const { id, prms: permissions } = await parseJwtWithSchema(
         token,
         sessionJwtPayloadSchema
       );
@@ -233,6 +238,8 @@ export default service({
           'base::access/unauthorized'
         );
       }
+
+      return { actorId: id };
     } catch (error: unknown) {
       if (error instanceof JWTExpired) {
         throw new ApiError('Expired token', 'base::access/expired');
@@ -241,16 +248,16 @@ export default service({
       throw error;
     }
   },
-  getSessionPermissions: async (token: string) => {
-    const { prms: permissions } = await parseJwtWithSchema(
+  getSessionInfo: async (token: string) => {
+    const { id, prms: permissions } = await parseJwtWithSchema(
       token,
       sessionJwtPayloadSchema
     );
 
-    if (permissions.includes('*')) {
-      return [...getAllPermissions()];
-    }
+    const resolvedPermissions = permissions.includes('*')
+      ? [...getAllPermissions()]
+      : (permissions as ApiRouteId[]);
 
-    return permissions as ApiRouteId[];
+    return { actorId: id, permissions: resolvedPermissions };
   },
 });

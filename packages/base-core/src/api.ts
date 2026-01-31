@@ -1,3 +1,9 @@
+declare module 'fastify' {
+  interface FastifyRequest {
+    actorId?: string;
+  }
+}
+
 export type ApiErrorCodePath<T> = T extends string
   ? T
   : T extends string[]

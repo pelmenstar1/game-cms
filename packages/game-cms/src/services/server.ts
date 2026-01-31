@@ -1,11 +1,14 @@
 import multipart from '@fastify/multipart';
+import { ApiRoute } from '@game-cms/core/api';
 import { env, setLogger } from '@game-cms/global';
 import { initServices } from '@game-cms/ignition';
-import fastify from 'fastify';
+import fastify, { FastifyPluginAsync, RawServerDefault } from 'fastify';
 import {
   serializerCompiler,
   validatorCompiler,
+  ZodTypeProvider,
 } from 'fastify-type-provider-zod';
+import { Logger } from 'pino';
 
 import {
   dashboardPlugin,
@@ -13,6 +16,22 @@ import {
 } from './dashboard/index.js';
 import { createLogger } from './logger.js';
 import { initPlugins } from './plugin.js';
+
+const apiPlugin: FastifyPluginAsync<
+  { routes: ApiRoute[] },
+  RawServerDefault,
+  ZodTypeProvider,
+  Logger
+> = async (app, { routes }) => {
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+
+  for (const route of routes) {
+    app.route(route);
+  }
+
+  await initPlugins(app);
+};
 
 export async function startServer(options: DashboardPluginOptions = {}) {
   const {
@@ -24,19 +43,10 @@ export async function startServer(options: DashboardPluginOptions = {}) {
 
   setLogger(app.log);
 
-  app.register(dashboardPlugin, options);
+  await app.register(apiPlugin, { routes, prefix: '/api' });
+  await app.register(dashboardPlugin, options);
   app.register(multipart);
 
-  app.setValidatorCompiler(validatorCompiler);
-  app.setSerializerCompiler(serializerCompiler);
-
-  for (const route of routes) {
-    const url = route.config?.exact ? route.url : `/api${route.url}`;
-
-    app.route({ ...route, url });
-  }
-
-  await initPlugins(app);
   await initServices();
 
   await app.listen({ port: server.port });

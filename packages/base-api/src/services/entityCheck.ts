@@ -1,6 +1,7 @@
 import type {
   EntityCheck,
   EntityCheckActionDescriptor,
+  EntityCheckClientDataMap,
   EntityCheckStorageData,
 } from '@game-cms/base-core';
 import {
@@ -15,6 +16,7 @@ import {
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
+import { filterOutNullable } from '@game-cms/shared/collections';
 import type { ObjectId } from 'mongodb';
 
 type RunEntityChecksParams<Id extends EntityId> = {
@@ -22,7 +24,7 @@ type RunEntityChecksParams<Id extends EntityId> = {
   id?: ObjectId;
   entityMeta: EntityMeta;
   entityData: BaseEntityStorageDataById<Id> & {
-    $checks?: EntityCheckStorageDataMap;
+    '#checks'?: EntityCheckStorageDataMap;
   };
 };
 
@@ -66,10 +68,10 @@ async function runEntityChecks<Id extends EntityId>({
 
   await Promise.all(
     checks.map(async (check) => {
-      const { $checks, ...restEntityData } = entityData;
+      const { '#checks': checks, ...restEntityData } = entityData;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const storageData = $checks?.[check.id];
+      const storageData = checks?.[check.id];
 
       const condition =
         (await check.when?.({
@@ -117,7 +119,7 @@ async function invokeAction<
       { _id: params.entityObjectId },
       {
         projection: {
-          draft: { $meta: 1, $checks: 1 },
+          draft: { '#meta': 1, '#checks': 1 },
         },
       }
     );
@@ -128,11 +130,11 @@ async function invokeAction<
 
   const entityVariantData = entityData.draft;
 
-  await action.execute({
+  const newStorageData = await action.execute({
     entityId: params.entityId,
     payload: params.actionPayload,
-    entityMeta: entityVariantData.$meta,
-    storageData: entityVariantData.$checks?.[
+    entityMeta: entityVariantData['#meta'],
+    storageData: entityVariantData['#checks']?.[
       params.actionId
     ] as EntityCheckStorageData<Id>,
     id: params.entityObjectId,
@@ -144,7 +146,10 @@ async function invokeAction<
   await cms()
     .service('base::database')
     .entityCollection(params.entityId)
-    .updateOne({ _id: params.entityObjectId }, { $set: {} });
+    .updateOne(
+      { _id: params.entityObjectId },
+      { $set: { [`draft.#checks.${params.id}`]: newStorageData } }
+    );
 }
 
 function validateActionPayload<
@@ -180,4 +185,38 @@ export default service({
   run: runEntityChecks,
   invokeAction,
   validateActionPayload,
+  getClientData: async (
+    entityId: EntityId,
+    entityMeta: EntityMeta,
+    entityObjectId: ObjectId,
+    data: EntityCheckStorageDataMap
+  ): Promise<EntityCheckClientDataMap> => {
+    const entries = await Promise.all(
+      getAll().map(async (check) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const { id, when, getClientData } = check;
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const storageData = data[id];
+
+        const params = {
+          entityId,
+          entityMeta,
+          id: entityObjectId,
+          storageData,
+        };
+
+        if (when === undefined || (await when(params))) {
+          const value = getClientData
+            ? await getClientData(params)
+            : storageData;
+
+          return [id, value] as const;
+        }
+      })
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return Object.fromEntries(filterOutNullable(entries));
+  },
 });

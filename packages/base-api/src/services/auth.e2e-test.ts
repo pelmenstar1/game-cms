@@ -255,9 +255,7 @@ describe('getSessionPermissions', () => {
 
     const { session } = await authService.signUserIn({ email, password });
 
-    const sessionPermissions = await authService.getSessionPermissions(
-      session.token
-    );
+    const sessionPermissions = await authService.getSessionInfo(session.token);
 
     expect(sessionPermissions).toEqual(permissions);
 
@@ -271,9 +269,8 @@ describe('getSessionPermissions', () => {
 
     const { session } = await authService.signUserIn({ email, password });
 
-    const sessionPermissions = await authService.getSessionPermissions(
-      session.token
-    );
+    const { permissions: sessionPermissions } =
+      await authService.getSessionInfo(session.token);
 
     expect(new Set(sessionPermissions)).toEqual(
       authService.getAllPermissions()

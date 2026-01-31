@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+}
+
+.header {
+  padding-bottom: 0.5em;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid var(--color-background-dark-variant);
+}
+
+.item {
+  display: flex;
+
+  &-icon {
+    fill: #d61717;
+    margin-left: auto;
+  }
+
+  &-approved &-icon {
+    fill: #3dd118;
+  }
+}
+
+.approve-button {
+  align-self: center;
+  margin-top: 1em;
+}

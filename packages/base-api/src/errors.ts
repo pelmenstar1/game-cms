@@ -7,6 +7,7 @@ declare module '@game-cms/base-core' {
       schema: ['validation'];
       access: ['unauthorized', 'expired'];
       server: ['internalError'];
+      route: ['notFound'];
     };
   }
 }

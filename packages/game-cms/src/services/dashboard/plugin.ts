@@ -1,7 +1,7 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import httProxy from '@fastify/http-proxy';
+import httpProxy from '@fastify/http-proxy';
 import staticPlugin from '@fastify/static';
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 
@@ -25,7 +25,7 @@ async function initLocalDashboard(app: FastifyInstance) {
 }
 
 function initProxyDashboard(app: FastifyInstance, url: string) {
-  app.register(httProxy, {
+  app.register(httpProxy, {
     upstream: url,
     websocket: true,
   });

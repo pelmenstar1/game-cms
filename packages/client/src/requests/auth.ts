@@ -1,11 +1,12 @@
 import type {
-  GetPermissionsResponse,
+  GetAllPermissionsResponse,
+  GetSessionInfoResponse,
   SignInPayload,
 } from '@game-cms/base-core';
 import { json, type RequestContext } from '@game-cms/core/api';
 
-import { request } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
+import { request } from '../utils.js';
 
 export const signUserIn = (context: RequestContext, payload: SignInPayload) =>
   request(context, {
@@ -20,8 +21,14 @@ export const refreshUserSession = (context: RequestContext) =>
     method: 'POST',
   });
 
-export const getSelfPermissions = (context: RequestContext) =>
+export const getSelfSessionInfo = (context: RequestContext) =>
   request(context, {
-    url: '/auth/permissions/self',
-    response: json<GetPermissionsResponse>(),
+    url: '/auth/session/self',
+    response: json<GetSessionInfoResponse>(),
+  });
+
+export const getPermissions = (context: RequestContext) =>
+  request(context, {
+    url: '/auth/permissions',
+    response: json<GetAllPermissionsResponse>(),
   });

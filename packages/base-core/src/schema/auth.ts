@@ -53,6 +53,11 @@ export const signTokenInPayload = z.object({
   token: z.string(),
 });
 
-export const getPermissionsResponse = z.object({
+export const getAllPermissionsResponse = z.object({
+  permissions: z.array(apiRouteId),
+});
+
+export const getSessionInfoResponse = z.object({
+  actorId: z.string(),
   permissions: z.array(apiRouteId),
 });

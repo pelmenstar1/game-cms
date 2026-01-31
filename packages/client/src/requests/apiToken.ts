@@ -2,7 +2,6 @@ import type {
   CreateApiTokenPayload,
   CreateApiTokenResponse,
   GetApiTokenJwtResponse,
-  GetPermissionsResponse,
   OpaqueApiToken,
   OpaqueApiTokenWithId,
   SignTokenInPayload,
@@ -11,8 +10,9 @@ import type { ToClientType } from '@game-cms/core';
 import { json, type RequestContext } from '@game-cms/core/api';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 
-import { request, url } from '../internal/utils.js';
+import { url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
+import { request } from '../utils.js';
 
 export const getApiTokenJwt = (
   context: RequestContext,
@@ -58,10 +58,4 @@ export const deleteApiToken = (context: RequestContext, id: string) =>
   request(context, {
     url: `/auth/token/byId/${id}`,
     method: 'DELETE',
-  });
-
-export const getPermissions = (context: RequestContext) =>
-  request(context, {
-    url: '/auth/permissions',
-    response: json<GetPermissionsResponse>(),
   });

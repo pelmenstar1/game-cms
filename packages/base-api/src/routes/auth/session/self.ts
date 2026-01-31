@@ -1,5 +1,5 @@
 import { ApiError } from '@game-cms/base-core';
-import { getPermissionsResponse } from '@game-cms/base-core/schema';
+import { getSessionInfoResponse } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
@@ -7,11 +7,11 @@ import { SESSION_JWT_COOKIE_NAME } from '../../../utils/authCookie.js';
 import { getRequestJwt } from '../../../utils/jwtSource.js';
 
 export default apiRoute({
-  url: '/auth/permissions/self',
+  url: '/auth/session/self',
   method: 'GET',
   schema: {
     response: {
-      200: getPermissionsResponse,
+      200: getSessionInfoResponse,
     },
   },
   handler: async (req) => {
@@ -21,8 +21,6 @@ export default apiRoute({
       throw new ApiError('No JWT', 'base::access/unauthorized');
     }
 
-    const permissions = await authService.getSessionPermissions(jwt);
-
-    return { permissions };
+    return authService.getSessionInfo(jwt);
   },
 });

@@ -1,4 +1,4 @@
-import { getPermissionsResponse } from '@game-cms/base-core/schema';
+import { getAllPermissionsResponse } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
@@ -7,7 +7,7 @@ export default apiRoute({
   method: 'GET',
   schema: {
     response: {
-      200: getPermissionsResponse,
+      200: getAllPermissionsResponse,
     },
   },
   handler: () => {

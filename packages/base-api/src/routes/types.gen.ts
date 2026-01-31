@@ -5,7 +5,7 @@ declare module '@game-cms/core/api' {
     'GET /auth/permissions': typeof import('./auth/permissions/get.js');
     'GET /auth/permissions/public': typeof import('./auth/permissions/public/get.js');
     'PUT /auth/permissions/public': typeof import('./auth/permissions/public/update.js');
-    'GET /auth/permissions/self': typeof import('./auth/permissions/self.js');
+    'GET /auth/session/self': typeof import('./auth/session/self.js');
     'DELETE /auth/token/byId/:id': typeof import('./auth/token/byId/delete.js');
     'GET /auth/token/byId/:id': typeof import('./auth/token/byId/get.js');
     'POST /auth/token': typeof import('./auth/token/create.js');
@@ -19,6 +19,7 @@ declare module '@game-cms/core/api' {
     'GET /entity/:entityId/byId/:id': typeof import('./entity/byId/get.js');
     'POST /entity/:entityId/byId/:id/unpublish': typeof import('./entity/byId/unpublish.js');
     'PUT /entity/:entityId/byId/:id': typeof import('./entity/byId/update.js');
+    'POST /entity/:entityId/:entityObjectId/check/:checkId/:actionId': typeof import('./entity/check/action.js');
     'POST /entity/:entityId': typeof import('./entity/create.js');
     'GET /entity/:entityId/list': typeof import('./entity/list.js');
     'GET /entity/:entityId/raw/byId/:id': typeof import('./entity/raw/byId/get.js');

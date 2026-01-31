@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react';
 
 import { ApiClientProvider } from '@/context/apiClient';
 import { useComponentHub } from '@/hooks/useComponentHub';
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 
 export function Providers({ children }: PropsWithChildren) {
   return (
@@ -11,9 +11,7 @@ export function Providers({ children }: PropsWithChildren) {
       <ApiClientProvider>
         <useComponentHub.Provider>
           <useModal.Provider>
-            <useSelfPermissions.Provider>
-              {children}
-            </useSelfPermissions.Provider>
+            <useSelfSession.Provider>{children}</useSelfSession.Provider>
           </useModal.Provider>
         </useComponentHub.Provider>
       </ApiClientProvider>

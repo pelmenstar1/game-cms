@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
+    "fastify": "catalog:",
     "@game-cms/core": "workspace:*"
   },
   "dependencies": {

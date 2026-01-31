@@ -10,8 +10,9 @@ import type {
 import type { ToClientType } from '@game-cms/core';
 import { json, type RequestContext } from '@game-cms/core/api';
 
-import { request, url } from '../internal/utils.js';
+import { url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
+import { request } from '../utils.js';
 
 export interface ClientUploadFilePayload {
   content: Blob;

@@ -5,6 +5,7 @@ import {
   type EntityId,
   type EntityMeta,
   type EntityRawDataById,
+  EntityRawDataWithChecksById,
   type EntityRawInDataById,
   type EntityRawInPartialDataById,
   type EntityResolvedDataById,
@@ -96,13 +97,16 @@ async function getRawById<T extends EntityId>(
   }
 
   const { _id, [variant]: data } = result;
+
   if (data === undefined) {
     return null;
   }
 
+  const { '#meta': meta, '#checks': checks, ...componentsData } = data;
+
   const { foreignStorageResolverContext } = cms().service('base::component');
 
-  const rawResult = await asyncMapObject(data, (item, key) => {
+  const rawComponents = await asyncMapObject(componentsData, (item, key) => {
     const { componentId, options } = entitySchema.components[key];
 
     return foreignStorageResolverContext.fromStorage(
@@ -112,7 +116,15 @@ async function getRawById<T extends EntityId>(
     );
   });
 
-  return { _id, ...rawResult } as WithId<EntityRawDataById<T>>;
+  const clientChecksData = await cms()
+    .service('base::entityCheck')
+    .getClientData(entityId, meta, id, checks ?? {});
+
+  return {
+    _id,
+    '#checks': clientChecksData,
+    ...rawComponents,
+  } as unknown as WithId<EntityRawDataWithChecksById<T>>;
 }
 
 async function toStorageData<Id extends EntityId>(
@@ -141,8 +153,8 @@ async function toStorageData<Id extends EntityId>(
 
   return {
     ...components,
-    $meta: entityMeta,
-    $checks: {},
+    '#meta': entityMeta,
+    '#checks': {},
   };
 }
 
@@ -168,7 +180,7 @@ async function toStoragePartialData<Id extends EntityId>(
   return {
     ...target,
     ...sourceMerged,
-    $meta: { lastUpdatedTime: Date.now() },
+    '#meta': { lastUpdatedTime: Date.now() },
   };
 }
 
@@ -200,8 +212,8 @@ function migrateEntity<Id extends EntityId>(
 
   return {
     ...newValue,
-    $meta: oldValue.$meta,
-    $checks: oldValue.$checks,
+    '#meta': oldValue['#meta'],
+    '#checks': oldValue['#checks'],
   };
 }
 

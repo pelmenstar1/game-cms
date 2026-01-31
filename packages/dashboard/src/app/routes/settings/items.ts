@@ -12,4 +12,9 @@ export const items: NavTabInfoWithPermission[] = [
     href: '/settings/public-routes',
     permission: 'auth/permissions/public$get',
   },
+  {
+    text: 'Reviewers',
+    href: '/settings/review',
+    permission: 'entityCheck/base::review/reviewers$get',
+  },
 ];

@@ -42,6 +42,10 @@ export type EntityCheckStorageDataMap = {
   [Id in EntityCheckId]: EntityCheckStorageData<Id>;
 };
 
+export type EntityCheckClientDataMap = {
+  [Id in EntityCheckId]: EntityCheckClientData<Id>;
+};
+
 export type EntityCheckActionTypes<Id extends EntityCheckId> = GetPropertyOr<
   EntityCheckTypes<Id>,
   'actions',

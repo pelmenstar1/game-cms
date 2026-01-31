@@ -7,7 +7,7 @@ import { UserItem } from '@/components/UserItem';
 import { useCheckPermissions } from '@/hooks/useCheckPermissions';
 import { usePagingOptions } from '@/hooks/usePagingOptions';
 import { useQueryPage } from '@/hooks/useQueryPage';
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 
 import styles from './route.module.scss';
 
@@ -16,7 +16,7 @@ const PAGE_SIZE = 10;
 export default function Page() {
   const page = useQueryPage();
   const pagingOptions = usePagingOptions(page, PAGE_SIZE);
-  const { permissions } = useSelfPermissions();
+  const { permissions } = useSelfSession();
   const [listResult] = useApiQuery(listUsers, [pagingOptions]);
 
   useCheckPermissions('user$get');

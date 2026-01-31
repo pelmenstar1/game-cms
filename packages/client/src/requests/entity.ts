@@ -1,6 +1,6 @@
 import type {
   EntityId,
-  EntityRawDataById,
+  EntityRawDataWithChecksById,
   EntityRawInDataById,
   EntityResolvedDataById,
   EntitySchema,
@@ -12,12 +12,14 @@ import { json, type RequestContext } from '@game-cms/core/api';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import qs from 'qs';
 
-import { request, url } from '../internal/utils.js';
+import { url } from '../internal/utils.js';
 import { jsonInit } from '../requestInitializer.js';
+import { request } from '../utils.js';
 
-export type EntityDataByIdWithId<T extends EntityId> = EntityRawDataById<T> & {
-  _id: string;
-};
+export type EntityDataByIdWithId<T extends EntityId> =
+  EntityRawDataWithChecksById<T> & {
+    _id: string;
+  };
 
 export type EntityDataInByIdWithId<T extends EntityId> =
   EntityRawInDataById<T> & {

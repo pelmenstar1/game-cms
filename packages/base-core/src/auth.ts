@@ -4,8 +4,9 @@ import type {
   apiToken,
   createApiTokenPayload,
   createApiTokenResponse,
+  getAllPermissionsResponse,
   getApiTokenJwtResponse,
-  getPermissionsResponse,
+  getSessionInfoResponse,
   opaqueApiToken,
   opaqueApiTokenWithId,
   permissions,
@@ -29,4 +30,7 @@ export type GetApiTokenJwtResponse = z.infer<typeof getApiTokenJwtResponse>;
 export type CreateApiTokenPayload = z.infer<typeof createApiTokenPayload>;
 export type CreateApiTokenResponse = z.infer<typeof createApiTokenResponse>;
 export type SignTokenInPayload = z.infer<typeof signTokenInPayload>;
-export type GetPermissionsResponse = z.infer<typeof getPermissionsResponse>;
+export type GetAllPermissionsResponse = z.infer<
+  typeof getAllPermissionsResponse
+>;
+export type GetSessionInfoResponse = z.infer<typeof getSessionInfoResponse>;

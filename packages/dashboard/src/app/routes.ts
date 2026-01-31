@@ -18,6 +18,7 @@ export default [
       ...prefix('/settings', [
         index('routes/settings/route.tsx'),
         route('public-routes', 'routes/settings/public-routes/route.tsx'),
+        route('review', 'routes/settings/review/route.tsx'),
         ...prefix('api-tokens', [
           index('routes/settings/api-tokens/route.tsx'),
           route('+', 'routes/settings/api-tokens/+/route.tsx'),

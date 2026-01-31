@@ -15,7 +15,7 @@ import { useLayoutEffect, useState } from 'react';
 
 import { PermissionsEditor } from '@/components/PermissionsEditor';
 import { useCheckPermissions } from '@/hooks/useCheckPermissions';
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 
 import styles from './route.module.scss';
 
@@ -28,7 +28,7 @@ export default function Page() {
 
   const notification = useNotification();
   const doUpdatePermissions = useApiAction(updatePublicPermissions);
-  const { permissions: selfPermissions } = useSelfPermissions();
+  const { permissions: selfPermissions } = useSelfSession();
 
   const canUpdate = selfPermissions.has('auth/permissions/public$update');
 

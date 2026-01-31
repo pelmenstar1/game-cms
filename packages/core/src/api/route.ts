@@ -1,3 +1,5 @@
+import { MaybeFactory } from '@game-cms/shared';
+import { MaybeArray } from '@game-cms/shared/collections';
 import type {
   FastifySchema,
   RawReplyDefaultExpression,
@@ -13,19 +15,16 @@ import type z from 'zod';
 
 import type { apiRouteId } from '../schema/api.js';
 
-export const httpMethods = [
-  'OPTIONS',
-  'GET',
-  'HEAD',
-  'POST',
-  'PUT',
-  'DELETE',
-  'TRACE',
-  'CONNECT',
-  'PATCH',
-] as const;
-
-export type HttpMethod = (typeof httpMethods)[number];
+export type HttpMethod =
+  | 'OPTIONS'
+  | 'GET'
+  | 'HEAD'
+  | 'POST'
+  | 'PUT'
+  | 'DELETE'
+  | 'TRACE'
+  | 'CONNECT'
+  | 'PATCH';
 
 export type HttpMethodWithBody = 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export type HttpMethodWithNoBody = Exclude<HttpMethod, HttpMethodWithBody>;
@@ -33,8 +32,7 @@ export type HttpMethodWithNoBody = Exclude<HttpMethod, HttpMethodWithBody>;
 export type ApiRouteId = z.infer<typeof apiRouteId>;
 
 export type ApiRouteContextConfig = {
-  exact?: boolean;
-  id?: ApiRouteId;
+  id?: MaybeFactory<MaybeArray<ApiRouteId>>;
 };
 
 export type ApiRoute<

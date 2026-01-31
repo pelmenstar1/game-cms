@@ -1,0 +1,27 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  flex-grow: 1;
+  padding-bottom: 1em;
+}
+
+.item {
+  display: flex;
+  padding: 1em;
+
+  &-delete {
+    margin-left: auto;
+  }
+
+  border-bottom: 1px solid var(--color-background-dark-variant);
+}
+
+.add {
+  align-self: center;
+}
+
+.save {
+  align-self: center;
+  margin-top: auto;
+}

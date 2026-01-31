@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import { EntityList } from '@/components/EntityList';
 import { getEntityMetaMap } from '@/connector/entity';
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';
@@ -21,7 +21,7 @@ export default function Page({ params }: Route.ComponentProps) {
 
   const selectedSchema = selectedEntity ? schemas[selectedEntity] : null;
 
-  const { permissions } = useSelfPermissions();
+  const { permissions } = useSelfSession();
   const navigate = useTypedNavigate();
 
   useEffect(() => {

@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 import type {
+  EntityCheckClientData,
   EntityId,
   EntityMap,
-  EntityRawDataById,
+  EntityRawDataWithChecksById,
   EntityRawInDataById,
   EntitySchemaById,
   EntityVariant,
@@ -11,12 +14,13 @@ import type { ComponentClientDataById } from '@game-cms/core';
 import { classNames, DeleteIcon, IconButton, Typography } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
-import { useSelfPermissions } from '@/hooks/useSelfPermissions';
+import { useSelfSession } from '@/hooks/useSession';
 import {
   type EntityComposeOptions,
   transformDataToClientData,
 } from '@/services/entity/transform';
 
+import { EntityReviewBlock } from '../EntityReviewBlock';
 import { EntityVariantTabs } from '../EntityVariantTabs';
 import styles from './AccessEntityView.module.scss';
 import { ActionBlock } from './ActionBlock';
@@ -30,7 +34,7 @@ export interface AccessEntityViewProps<Id extends EntityId> {
   entityId: Id;
   schema: EntitySchemaById<Id>;
   initialId?: string;
-  initialValue?: EntityRawDataById<Id>;
+  initialValue?: EntityRawDataWithChecksById<Id>;
   onSave?: (value: EntityRawInDataById<Id>, variant: EntityVariant) => void;
   onDelete?: () => void;
   onUnpublish?: () => void;
@@ -50,7 +54,7 @@ export function AccessEntityView<Id extends EntityId>({
   type ClientData = ComponentClientDataById<ComposeId, Args>;
 
   const api = useComponentApi();
-  const { permissions } = useSelfPermissions();
+  const { permissions } = useSelfSession();
 
   const Compose = api.getComponent(composeId);
   const composeOptions = schema.components as EntityComposeOptions<Id>;
@@ -85,6 +89,10 @@ export function AccessEntityView<Id extends EntityId>({
       onSave?.(rawData, 'draft');
     }
   }, [data, onSave]);
+
+  const reviewData = initialValue?.['#checks']?.['base::review'] as
+    | EntityCheckClientData<'base::review'>
+    | undefined;
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -128,19 +136,28 @@ export function AccessEntityView<Id extends EntityId>({
           )}
         </div>
 
-        <ActionBlock
-          className={styles['action-block']}
-          disabled={data.error !== undefined}
-          onPublish={
-            selectedVariant !== 'published' ? onPublishTransformed : undefined
-          }
-          onSave={
-            selectedVariant !== 'published' ? onSaveTransformed : undefined
-          }
-          onUnpublish={
-            selectedVariant === 'published' ? onUnpublish : undefined
-          }
-        />
+        <div className={styles['side-panel']}>
+          <ActionBlock
+            disabled={data.error !== undefined}
+            onPublish={
+              selectedVariant !== 'published' ? onPublishTransformed : undefined
+            }
+            onSave={
+              selectedVariant !== 'published' ? onSaveTransformed : undefined
+            }
+            onUnpublish={
+              selectedVariant === 'published' ? onUnpublish : undefined
+            }
+          />
+
+          {reviewData && initialId && (
+            <EntityReviewBlock
+              entityId={entityId}
+              entityObjectId={initialId}
+              data={reviewData}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

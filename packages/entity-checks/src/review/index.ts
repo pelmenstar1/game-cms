@@ -1,25 +1,16 @@
-import { defineEntityCheck, type EntityMeta } from '@game-cms/base-core';
+import {
+  defineEntityCheck,
+  type EntityMeta,
+  NoPasswordUser,
+} from '@game-cms/base-core';
 import { type ApiRoute, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
-import { updateReviewersPayload } from './schema/review.js';
+import { updateReviewersPayload } from './schema.js';
+import { GetReviewersResponse } from './types.js';
 
 declare module '@game-cms/base-core' {
-  interface EntityCheckTypeMap {
-    'base::review': {
-      clientData: {
-        reviewers: Record<string, { approved: boolean }>;
-      };
-      storageData: {
-        reviewers: Record<string, { lastApproveTime?: number } | undefined>;
-      };
-      actions: {
-        approve: null;
-      };
-    };
-  }
-
   interface DatabaseEntityMap {
     'base::entityCheck::review::config': {
       requiredReviewers: ObjectId[];
@@ -39,6 +30,28 @@ async function getRequiredReviewers() {
   return result?.requiredReviewers ?? [];
 }
 
+async function getRequiredReviewersWithUserData() {
+  const result = await configCollection()
+    .aggregate<{ user: [WithId<Omit<NoPasswordUser, 'id'>>] }>([
+      { $unwind: { path: '$requiredReviewers' } },
+      {
+        $lookup: {
+          from: 'base::users',
+          localField: 'requiredReviewers',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      { $project: { 'user.passwordHash': 0 } },
+    ])
+    .toArray();
+
+  return result.map(({ user: [{ _id, ...rest }] }) => ({
+    id: _id.toString(),
+    ...rest,
+  }));
+}
+
 function isApproved(
   meta: EntityMeta | undefined,
   lastApproveTime: number | undefined
@@ -48,7 +61,7 @@ function isApproved(
   return (
     lastUpdatedTime !== undefined &&
     lastApproveTime !== undefined &&
-    lastUpdatedTime < lastUpdatedTime
+    lastUpdatedTime < lastApproveTime
   );
 }
 
@@ -57,17 +70,17 @@ export function review() {
     id: 'base::review',
     routes: [
       apiRoute({
-        url: '/entityCheck/base::review/reviewers',
+        url: '/entityCheck/base$review/reviewers',
         method: 'GET',
         config: {
           id: 'entityCheck/base::review/reviewers$get',
         },
-        handler: () => {
-          return [];
+        handler: async (): Promise<GetReviewersResponse> => {
+          return { users: await getRequiredReviewersWithUserData() };
         },
       }),
       apiRoute({
-        url: '/entityCheck/base::review/reviewers',
+        url: '/entityCheck/base$review/reviewers',
         method: 'PUT',
         config: {
           id: 'entityCheck/base::review/reviewers$update',
@@ -94,7 +107,7 @@ export function review() {
           return {
             reviewers: {
               ...storageData?.reviewers,
-              [actorId]: { approved: true, lastApproveTime: utcNow },
+              [actorId]: { lastApproveTime: utcNow },
             },
           };
         },
@@ -118,24 +131,18 @@ export function review() {
       }
     },
     getClientData: async ({ entityMeta, storageData }) => {
-      const requiredReviewers = await getRequiredReviewers();
+      const requiredReviewers = await getRequiredReviewersWithUserData();
 
       return {
-        reviewers: Object.fromEntries(
-          requiredReviewers.map((userId) => {
-            const userIdString = userId.toString();
-
-            return [
-              userIdString,
-              {
-                approved: isApproved(
-                  entityMeta,
-                  storageData?.reviewers[userIdString]?.lastApproveTime
-                ),
-              },
-            ] as const;
-          })
-        ),
+        reviewers: requiredReviewers.map((user) => {
+          return {
+            user,
+            approved: isApproved(
+              entityMeta,
+              storageData?.reviewers[user.id]?.lastApproveTime
+            ),
+          };
+        }),
       };
     },
   });
