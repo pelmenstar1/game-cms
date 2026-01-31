@@ -1,3 +1,4 @@
+import { review } from '@game-cms/entity-checks';
 import { gamePlugin } from '@game-cms/game-plugin';
 import { imageSize, responsiveImages } from '@game-cms/storage-addons';
 import { localStorageProvider } from '@game-cms/storage-provider-local';
@@ -27,5 +28,8 @@ export default config((env) => ({
   storage: {
     provider: localStorageProvider(),
     addons: [imageSize(), responsiveImages({ breakpoints: [320, 420] })],
+  },
+  entity: {
+    checks: [review()],
   },
 }));

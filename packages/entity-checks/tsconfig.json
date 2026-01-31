@@ -1,0 +1,16 @@
+{
+  "extends": "../../configs/tsconfig.lib.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "types": ["@game-cms/base-api/types"]
+  },
+  "include": ["./src"],
+  "references": [
+    { "path": "../base-api" },
+    { "path": "../base-core" },
+    { "path": "../core" },
+    { "path": "../global" },
+    { "path": "../shared" }
+  ]
+}

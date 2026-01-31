@@ -7,6 +7,7 @@ import type {
 } from '@game-cms/core';
 import type z from 'zod';
 
+import type { EntityCheckStorageDataMap } from './entityCheck.js';
 import type { entityVariant } from './schema/entity.js';
 
 export type EntitySchemaComponents = Record<string, ComponentSchema>;
@@ -16,8 +17,18 @@ export interface EntityMap extends Record<string, EntitySchemaComponents> {}
 
 export type EntityId = keyof EntityMap;
 
+export type EntityMeta = {
+  lastUpdatedTime: number;
+};
+
 export type EntityVariant = z.infer<typeof entityVariant>;
-export type EntityVariantData = Record<string, ComponentData>;
+
+export type EntityClientVariantData = Record<string, ComponentData>;
+export type EntityVariantData<T = EntityClientVariantData> = T & {
+  $meta: EntityMeta;
+  $checks?: Partial<EntityCheckStorageDataMap>;
+};
+
 export type EntityData = Record<EntityVariant, EntityVariantData>;
 
 export type EntityDataVariantsById<Id extends EntityId> = {
@@ -49,9 +60,13 @@ export type EntityResolvedDataById<Id extends EntityId> = ComponentsToData<
   'resolvedData'
 >;
 
-export type EntityStorageDataById<Id extends EntityId> = ComponentsToData<
+export type BaseEntityStorageDataById<Id extends EntityId> = ComponentsToData<
   EntityMap[Id],
   'storageData'
+>;
+
+export type EntityStorageDataById<Id extends EntityId> = EntityVariantData<
+  BaseEntityStorageDataById<Id>
 >;
 
 export type EntityErrorById<Id extends EntityId> = {

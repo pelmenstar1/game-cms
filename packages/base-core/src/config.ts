@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { RelativeTime } from '@game-cms/shared/chrono';
 import type { MongoClientOptions } from 'mongodb';
 
+import type { AnyEntityCheck } from './entityCheck.js';
 import type { AnyStorageAddon } from './storage.js';
-import type { StorageProvider } from './storageProvider.js';
+import type { AnyStorageProvider } from './storageProvider.js';
 
 export type DatabaseConfig = {
   mongo: { url: string } & MongoClientOptions;
 };
 
 export type StorageConfig = {
-  provider: StorageProvider<any>;
+  provider: AnyStorageProvider;
   addons?: AnyStorageAddon[];
 };
 
@@ -28,10 +28,15 @@ export type AuthConfig = {
   };
 };
 
+export type EntityConfig = {
+  checks?: AnyEntityCheck[];
+};
+
 declare module '@game-cms/core' {
   interface UnresolvedCmsConfig {
     auth: AuthConfig;
     storage: StorageConfig;
     database: DatabaseConfig;
+    entity?: EntityConfig;
   }
 }

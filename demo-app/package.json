@@ -11,6 +11,7 @@
     "@game-cms/game-plugin": "workspace:*",
     "@game-cms/storage-provider-local": "workspace:*",
     "@game-cms/storage-addons": "workspace:*",
+    "@game-cms/entity-checks": "workspace:*",
     "game-cms": "workspace:*",
     "zod": "catalog:"
   },

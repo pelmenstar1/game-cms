@@ -1,0 +1,28 @@
+{
+  "name": "@game-cms/entity-checks",
+  "packageManager": "pnpm@10.28.1",
+  "type": "module",
+  "dependencies": {
+    "@game-cms/core": "workspace:*",
+    "@game-cms/base-core": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/global": "workspace:*",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@game-cms/base-api": "workspace:*",
+    "@types/node": "catalog:",
+    "mongodb": "catalog:",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  }
+}

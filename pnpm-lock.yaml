@@ -219,6 +219,9 @@ importers:
 
   demo-app:
     dependencies:
+      '@game-cms/entity-checks':
+        specifier: workspace:*
+        version: link:../packages/entity-checks
       '@game-cms/game-plugin':
         specifier: workspace:*
         version: link:../packages/game-plugin
@@ -696,6 +699,37 @@ importers:
       game-cms:
         specifier: workspace:*
         version: link:../game-cms
+
+  packages/entity-checks:
+    dependencies:
+      '@game-cms/base-core':
+        specifier: workspace:*
+        version: link:../base-core
+      '@game-cms/core':
+        specifier: workspace:*
+        version: link:../core
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
+    devDependencies:
+      '@game-cms/base-api':
+        specifier: workspace:*
+        version: link:../base-api
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.0.6
+      mongodb:
+        specifier: 'catalog:'
+        version: 7.0.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
   packages/game-cms:
     dependencies:

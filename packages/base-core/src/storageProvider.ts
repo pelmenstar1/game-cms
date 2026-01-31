@@ -32,3 +32,6 @@ export interface StorageProvider<Extra = unknown> {
   routes?: UnknownApiRoute[];
   protocol: StorageProviderProtocol<Extra>;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyStorageProvider = StorageProvider<any>;

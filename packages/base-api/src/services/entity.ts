@@ -1,7 +1,9 @@
 import {
   ApiError,
+  type EntityDataVariantsById,
   type EntityErrorById,
   type EntityId,
+  type EntityMeta,
   type EntityRawDataById,
   type EntityRawInDataById,
   type EntityRawInPartialDataById,
@@ -113,18 +115,35 @@ async function getRawById<T extends EntityId>(
   return { _id, ...rawResult } as WithId<EntityRawDataById<T>>;
 }
 
-async function toStorageData<T extends EntityId>(
-  entityId: T,
-  rawData: EntityRawInDataById<T>
-): Promise<EntityStorageDataById<T>> {
+async function toStorageData<Id extends EntityId>(
+  entityId: Id,
+  rawData: EntityRawInDataById<Id>
+): Promise<EntityStorageDataById<Id>> {
   const entitySchema = getEntitySchema(entityId);
   const { foreignStorageResolverContext } = cms().service('base::component');
+  const { run: runEntityChecks } = cms().service('base::entityCheck');
 
-  return asyncMapObject(rawData, (item, key) => {
+  const components = await asyncMapObject(rawData, (item, key) => {
     const { componentId, options } = entitySchema.components[key];
 
     return foreignStorageResolverContext.toStorage(componentId, item, options);
   });
+
+  const entityMeta: EntityMeta = {
+    lastUpdatedTime: Date.now(),
+  };
+
+  await runEntityChecks({
+    entityId,
+    entityData: components,
+    entityMeta,
+  });
+
+  return {
+    ...components,
+    $meta: entityMeta,
+    $checks: {},
+  };
 }
 
 async function toStoragePartialData<Id extends EntityId>(
@@ -146,13 +165,17 @@ async function toStoragePartialData<Id extends EntityId>(
     );
   });
 
-  return { ...target, ...sourceMerged };
+  return {
+    ...target,
+    ...sourceMerged,
+    $meta: { lastUpdatedTime: Date.now() },
+  };
 }
 
 function createEntityVariants<Id extends EntityId>(
   value: EntityStorageDataById<Id>,
   variant: EntityVariant
-) {
+): EntityDataVariantsById<Id> {
   return variant == 'published'
     ? {
         published: value,
@@ -163,8 +186,8 @@ function createEntityVariants<Id extends EntityId>(
 
 function migrateEntity<Id extends EntityId>(
   schema: EntitySchemaById<Id>,
-  oldValue: unknown
-) {
+  oldValue: EntityVariantData
+): EntityStorageDataById<Id> {
   const { foreignDataMigrationContext } = cms().service('base::component');
 
   const newValue = mapObject(schema.components, (prop, key) => {
@@ -175,7 +198,11 @@ function migrateEntity<Id extends EntityId>(
     );
   });
 
-  return newValue as EntityStorageDataById<Id>;
+  return {
+    ...newValue,
+    $meta: oldValue.$meta,
+    $checks: oldValue.$checks,
+  };
 }
 
 function validate<Id extends ComponentId>(
@@ -277,12 +304,13 @@ export default service({
       }
     },
   },
-  create: async <T extends EntityId>(
-    id: T,
-    data: EntityRawInDataById<T>,
+  create: async <Id extends EntityId>(
+    id: Id,
+    data: EntityRawInDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
     const storageData = await toStorageData(id, data);
+
     const { insertedId } = await collection(id).insertOne(
       createEntityVariants(storageData, variant)
     );

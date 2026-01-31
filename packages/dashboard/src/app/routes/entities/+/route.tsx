@@ -1,4 +1,7 @@
-import type { EntityVariant, EntityVariantData } from '@game-cms/base-core';
+import type {
+  EntityClientVariantData,
+  EntityVariant,
+} from '@game-cms/base-core';
 import { createEntity } from '@game-cms/client';
 import { useApiAction } from '@game-cms/component-api';
 import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
@@ -22,7 +25,7 @@ export default function Page({ params }: Route.ComponentProps) {
   useCheckPermissions(`entity/${params.name}$create`);
 
   const onSave = useCallback(
-    (data: EntityVariantData, variant: EntityVariant) => {
+    (data: EntityClientVariantData, variant: EntityVariant) => {
       doCreateEntity(params.name, data, variant)
         .then(() => {
           void redirect('/entities');

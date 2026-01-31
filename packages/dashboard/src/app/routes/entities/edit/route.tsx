@@ -1,4 +1,7 @@
-import type { EntityVariant, EntityVariantData } from '@game-cms/base-core';
+import type {
+  EntityClientVariantData,
+  EntityVariant,
+} from '@game-cms/base-core';
 import {
   deleteEntityById,
   getRawEntityById,
@@ -39,7 +42,7 @@ export default function Page({ params }: Route.ComponentProps) {
   useCheckPermissions(`entity/${name}$update`);
 
   const onSave = useCallback(
-    (data: EntityVariantData, variant: EntityVariant) => {
+    (data: EntityClientVariantData, variant: EntityVariant) => {
       doUpdateEntity(name, id, data, variant)
         .then(() => {
           void redirect('/entities');

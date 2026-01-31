@@ -23,7 +23,8 @@
     { "path": "./packages/storybook-config" },
     { "path": "./packages/ignition" },
     { "path": "./packages/component-testing-lib" },
-    { "path": "./packages/storage-addons" }
+    { "path": "./packages/storage-addons" },
+    { "path": "./packages/entity-checks" }
   ],
   "include": []
 }
