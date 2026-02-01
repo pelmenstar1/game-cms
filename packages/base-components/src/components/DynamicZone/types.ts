@@ -1,11 +1,13 @@
 import {
   ComponentEntry,
   ComponentId,
+  ComponentNestedPathShape,
   ComponentOptions,
   ComponentOptionsById,
   ComponentSchema,
   ComponentSchemaNestedPath,
   GetComponentSchemaTypes,
+  ParseComponentNestedPath,
 } from '@game-cms/core';
 import { Key } from 'react';
 
@@ -115,6 +117,42 @@ type NestedPath<T, Input extends DynamicZoneInputComponents> = {
   }[keyof Input & string];
 };
 
+type NestedPathShape<Input extends DynamicZoneInputComponents> = {
+  [K in keyof Input & string]: Input[K] extends ComponentSchema<
+    infer Id,
+    infer Args
+  >
+    ? DataEntry<ComponentNestedPathShape<Id, Args>, K>
+    : DataEntry<unknown, K>;
+}[keyof Input & string][];
+
+type BaseParseNestedPathTransitionNext<
+  T,
+  Zone extends string,
+  Suffix extends string,
+  Input extends DynamicZoneInputComponents,
+> =
+  Input extends Record<Zone, ComponentSchema<infer Id, infer Args>>
+    ? T extends DataEntry<infer Data, Zone>[]
+      ? ParseComponentNestedPath<Data, Suffix, Id, Args>
+      : unknown
+    : unknown;
+
+type BaseParseNestedPathTransitionCurrent<
+  T,
+  Zone extends string,
+> = T extends DataEntry<infer Data, Zone>[] ? Data : unknown;
+
+type BaseParseNestedPath<
+  T,
+  Path extends string,
+  Input extends DynamicZoneInputComponents,
+> = Path extends `[${infer Zone}].${infer Suffix}`
+  ? BaseParseNestedPathTransitionNext<T, Zone, Suffix, Input>
+  : Path extends `[${infer Zone}]`
+    ? BaseParseNestedPathTransitionCurrent<T, Zone>
+    : unknown;
+
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::dynamic-zone': ComponentEntry<
@@ -124,5 +162,17 @@ declare module '@game-cms/core' {
 
   interface ComponentNestedPathMap<T, Args> {
     'base::dynamic-zone': NestedPath<T, ResolveInputComponents<Args>>;
+  }
+
+  interface ComponentNestedPathShapeMap<Args> {
+    'base::dynamic-zone': NestedPathShape<ResolveInputComponents<Args>>;
+  }
+
+  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
+    'base::dynamic-zone': BaseParseNestedPath<
+      T,
+      Path,
+      ResolveInputComponents<Args>
+    >;
   }
 }

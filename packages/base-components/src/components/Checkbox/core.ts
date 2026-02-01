@@ -1,6 +1,6 @@
-import { componentCore } from '@game-cms/core';
+import { defineComponentCore } from '@game-cms/core';
 
-export default componentCore({
+export default defineComponentCore({
   id: 'base::checkbox',
   meta: {
     ui: {

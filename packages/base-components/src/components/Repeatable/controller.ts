@@ -1,8 +1,8 @@
-import { componentController } from '@game-cms/core';
+import { defineComponentController } from '@game-cms/core';
 
 import core from './core.js';
 
-export default componentController({
+export default defineComponentController({
   core,
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),

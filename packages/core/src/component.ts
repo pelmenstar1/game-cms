@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {
   AnyKeyInObject,
   GetPropertyOr,
@@ -8,10 +10,6 @@ import type {
   ResultOrError,
 } from '@game-cms/shared';
 import type { Key, ReactNode } from 'react';
-
-type MaybePromiseWithMarker<T> =
-  | (T & { $asyncMarker?: never })
-  | MaybePromise<T>;
 
 export type ComponentDataAtom = unknown;
 export type ComponentData =
@@ -28,17 +26,26 @@ export type ComponentTypes = {
 
 export type ComponentEntry<T extends ComponentTypes> = T;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
 export interface ComponentTypeMap<_Args = unknown> extends Record<
   string,
   ComponentTypes
 > {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
 export interface ComponentNestedPathMap<T, Args = unknown> extends Record<
   string,
-  string | null
+  { path: string | null }
 > {}
+
+export interface ComponentNestedPathShapeMap<Args = unknown> extends Record<
+  string,
+  unknown
+> {}
+
+export interface ComponentNestedPathParserMap<
+  T,
+  Path extends string,
+  Args = unknown,
+> extends Record<string, unknown> {}
 
 export type ComponentId = keyof ComponentTypeMap;
 
@@ -122,17 +129,55 @@ export type ComponentErrorById<
 > = GetComponentTypesById<T, Args>['error'];
 
 export type ComponentNestedPath<T, Id extends ComponentId, Args = unknown> =
-  ComponentNestedPathMap<T, Args> extends Record<
-    Id,
-    infer R extends { path: string }
-  >
-    ? R['path']
+  ComponentNestedPathMap<T, Args> extends Record<Id, { path: string }>
+    ? ComponentNestedPathMap<T, Args>[Id]['path']
     : string;
+
+export type ComponentNestedPathShape<
+  Id extends ComponentId,
+  Args = unknown,
+> = ComponentNestedPathShapeMap<Args>[Id];
+
+export type ParseComponentNestedPath<
+  T,
+  Path extends string,
+  Id extends ComponentId,
+  Args = unknown,
+> = ComponentNestedPathParserMap<T, Path, Args>[Id];
+
+type BaseComponentNestedPathExtends<
+  T,
+  U,
+  Path extends string,
+  Id extends ComponentId,
+  Args = unknown,
+> = {
+  [K in Path]: ParseComponentNestedPath<T, K, Id, Args> extends U ? K : never;
+}[Path];
+
+export type ComponentNestedPathExtends<
+  T,
+  U,
+  Id extends ComponentId,
+  Args = unknown,
+> = BaseComponentNestedPathExtends<
+  T,
+  U,
+  ComponentNestedPath<T, Id, Args>,
+  Id,
+  Args
+>;
 
 export type ComponentRawInDataByIdPath<
   Id extends ComponentId,
   Args,
 > = ComponentNestedPath<ComponentRawInDataById<Id, Args>, Id, Args>;
+
+export type ComponentRawInDataByIdPathExtends<
+  U,
+  Id extends ComponentId,
+  Args,
+> = ComponentNestedPathExtends<ComponentRawInDataById<Id, Args>, U, Id, Args>;
 
 export type ComponentSchema<
   Id extends ComponentId = ComponentId,
@@ -201,7 +246,6 @@ export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
   params?: ComponentDataValidatorParams
 ) => ComponentErrorById<Id, Args> | undefined;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentDataResolverArgs {}
 
 export type ForeignComponentDataResolverContext = {
@@ -291,13 +335,13 @@ export interface ForeignComponentStorageDataResolverContext extends ForeignCompo
     id: Id,
     data: ComponentRawInDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
+  ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
 
   fromStorage: <Id extends ComponentId, Args>(
     id: Id,
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => MaybePromiseWithMarker<ComponentRawDataById<Id, Args>>;
+  ) => MaybePromise<ComponentRawDataById<Id, Args>>;
 }
 
 export type ComponentStorageDataTransformer<Id extends ComponentId> = {
@@ -310,13 +354,13 @@ export type ComponentStorageDataTransformer<Id extends ComponentId> = {
     data: ComponentRawInDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentStorageDataResolverContext
-  ) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
+  ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
 
   fromStorage: <Args>(
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentStorageDataResolverContext
-  ) => MaybePromiseWithMarker<ComponentRawDataById<Id, Args>>;
+  ) => MaybePromise<ComponentRawDataById<Id, Args>>;
 };
 
 export type ForeignComponentDefaultRawDataContext = {
@@ -332,11 +376,15 @@ export type ComponentDefaultDataHandler<Id extends ComponentId> = <Args>(
 ) => ComponentRawDataById<Id, Args>;
 
 export type ForeignComponentPathWalkerContext = {
-  applyAtPath: <Id extends ComponentId, Args>(
+  applyAtPath: <
+    Id extends ComponentId,
+    Args,
+    T extends ComponentNestedPathShape<Id, Args>,
+  >(
     id: ComponentId,
-    data: ComponentRawInDataById<Id, Args>,
+    data: T,
     options: ComponentOptionsById<Id, Args>,
-    path: ComponentRawInDataByIdPath<Id, Args>,
+    path: ComponentNestedPath<T, Id, Args>,
     apply: ComponentPathWalkerApplyFn
   ) => void;
 };
@@ -344,9 +392,9 @@ export type ForeignComponentPathWalkerContext = {
 export type ComponentPathWalkerApplyFn = (value: unknown) => void;
 
 export type ComponentPathWalker<Id extends ComponentId> = <Args>(
-  data: ComponentRawInDataById<Id, Args>,
+  data: ComponentNestedPathShape<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
-  path: ComponentRawInDataByIdPath<Id, Args>,
+  path: ComponentNestedPath<ComponentNestedPathShape<Id, Args>, Id, Args>,
   apply: ComponentPathWalkerApplyFn,
   context: ForeignComponentPathWalkerContext
 ) => void;
@@ -371,7 +419,7 @@ export interface ForeignComponentDataMergeContext {
     target: ComponentStorageDataById<Id, Args>,
     source: ComponentRawInPartialDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
+  ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
 }
 
 export type ComponentDataMergeHandler<Id extends ComponentId> = <Args>(
@@ -379,7 +427,7 @@ export type ComponentDataMergeHandler<Id extends ComponentId> = <Args>(
   source: ComponentRawInPartialDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentDataMergeContext
-) => MaybePromiseWithMarker<ComponentStorageDataById<Id, Args>>;
+) => MaybePromise<ComponentStorageDataById<Id, Args>>;
 
 export type ComponentMeta = {
   ui?: {
@@ -466,7 +514,7 @@ type ComponentAccessor<Id extends ComponentId> =
       ) => ComponentSchema<Id, Args>;
 
 /*@__NO_SIDE_EFFECTS__*/
-export function componentController<Id extends ComponentId>(
+export function defineComponentController<Id extends ComponentId>(
   value: ComponentController<Id>
 ) {
   return value;
@@ -482,6 +530,8 @@ export function componentAccessor<Id extends string>(
 }
 
 /*@__NO_SIDE_EFFECTS__*/
-export function componentCore<Id extends string>(value: ComponentCore<Id>) {
+export function defineComponentCore<Id extends string>(
+  value: ComponentCore<Id>
+) {
   return value;
 }

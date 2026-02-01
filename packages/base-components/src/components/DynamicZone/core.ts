@@ -1,24 +1,12 @@
-import {
-  componentCore,
-  ComponentOptionsById,
-  ForeignComponentValidationContext,
-} from '@game-cms/core';
+import { defineComponentCore } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 
 import { OwnError } from './types.js';
 
-const id = 'base::dynamic-zone';
-
-type Id = typeof id;
-
-export default componentCore({
-  id,
+export default defineComponentCore({
+  id: 'base::dynamic-zone',
   defaultRawData: () => [],
-  validator: <Args>(
-    data: unknown,
-    { minItems, maxItems, options }: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentValidationContext
-  ) => {
+  validator: (data, { minItems, maxItems, options }, context) => {
     if (
       !Array.isArray(data) ||
       !data.every(

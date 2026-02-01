@@ -1,8 +1,8 @@
-import { componentCore } from '@game-cms/core';
+import { defineComponentCore } from '@game-cms/core';
 
 import { composeOptions } from './internal/constants.js';
 
-export default componentCore({
+export default defineComponentCore({
   id: 'game::spine',
   meta: {
     ui: {

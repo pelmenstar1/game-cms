@@ -2,8 +2,10 @@ import {
   ComponentEntry,
   ComponentId,
   ComponentNestedPath,
+  ComponentNestedPathShape,
   ComponentSchema,
   GetComponentSchemaTypes,
+  ParseComponentNestedPath,
 } from '@game-cms/core';
 import { Key } from 'react';
 
@@ -44,6 +46,17 @@ type BaseNestedPath<T, Args extends RepeatableArgs> = {
   path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;
 };
 
+type BaseNestedPathShape<Args extends RepeatableArgs> =
+  ComponentNestedPathShape<Args['id'], Args['baseArgs']>[];
+
+type BaseParseComponentNestedPath<
+  T,
+  Path extends string,
+  Args extends RepeatableArgs,
+> = T extends unknown[]
+  ? ParseComponentNestedPath<T[number], Path, Args['id'], Args['baseArgs']>
+  : unknown;
+
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::repeatable': ComponentEntry<RepeatableEntry<ResolveArgs<_Args>>>;
@@ -51,5 +64,17 @@ declare module '@game-cms/core' {
 
   interface ComponentNestedPathMap<T, Args> {
     'base::repeatable': BaseNestedPath<T, ResolveArgs<Args>>;
+  }
+
+  interface ComponentNestedPathShapeMap<Args> {
+    'base::repeatable': BaseNestedPathShape<ResolveArgs<Args>>;
+  }
+
+  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
+    'base::repeatable': BaseParseComponentNestedPath<
+      T,
+      Path,
+      ResolveArgs<Args>
+    >;
   }
 }

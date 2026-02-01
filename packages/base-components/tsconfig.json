@@ -2,7 +2,6 @@
   "extends": "../../configs/tsconfig.lib.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "verbatimModuleSyntax": false,
     "resolveJsonModule": true,
     "types": ["node", "vite/client", "@game-cms/base-api/types"],
     "paths": { "#storybook/*": ["./.storybook/*"] }

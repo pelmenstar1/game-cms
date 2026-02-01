@@ -1,6 +1,6 @@
-import { componentCore, ComponentRawDataById } from '@game-cms/core';
+import { ComponentRawDataById, defineComponentCore } from '@game-cms/core';
 
-export default componentCore({
+export default defineComponentCore({
   id: 'base::json',
   defaultRawData: <Args>() => ({}) as ComponentRawDataById<'base::json', Args>,
   validator: (data, options) => {

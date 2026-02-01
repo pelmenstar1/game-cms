@@ -1,9 +1,9 @@
-import { componentController } from '@game-cms/core';
+import { defineComponentController } from '@game-cms/core';
 
 import core from './core.js';
 import { getDefaultData } from './internal/defaultData.js';
 
-export default componentController({
+export default defineComponentController({
   core,
   storageTransformer: {
     getDefaultData,

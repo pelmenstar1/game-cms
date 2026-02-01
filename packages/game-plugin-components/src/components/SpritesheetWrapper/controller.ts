@@ -1,7 +1,7 @@
 import {
-  componentController,
   type ComponentOptionsById,
   type ComponentRawInDataById,
+  defineComponentController,
   type ForeignComponentStorageDataResolverContext,
 } from '@game-cms/core';
 import { cms } from '@game-cms/global';
@@ -136,7 +136,7 @@ async function generateSpritesheets<Args>(
   return asyncMapObject(bundles, (images) => generateSpritesheet(images));
 }
 
-export default componentController({
+export default defineComponentController({
   core,
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
@@ -152,6 +152,15 @@ export default componentController({
     const { componentId, baseOptions } = options;
 
     return context.resolveRawData(componentId, data, baseOptions, args);
+  },
+  pathWalker: (data, options, path, apply, context) => {
+    context.applyAtPath(
+      options.componentId,
+      data,
+      options.baseOptions,
+      path,
+      apply
+    );
   },
   mergeData: async (target, source, options, context) => {
     const mergedBase = await context.merge(

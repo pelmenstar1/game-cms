@@ -1,8 +1,8 @@
-import { componentCore } from '@game-cms/core';
+import { defineComponentCore } from '@game-cms/core';
 
 import { dataShape } from './internal/schema.js';
 
-export default componentCore({
+export default defineComponentCore({
   id: 'base::graph',
   defaultRawData: () => ({
     nodes: {},

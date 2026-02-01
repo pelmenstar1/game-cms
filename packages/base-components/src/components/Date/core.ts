@@ -1,9 +1,9 @@
-import { componentCore } from '@game-cms/core';
+import { defineComponentCore } from '@game-cms/core';
 import { resolveDateLike } from '@game-cms/shared/chrono';
 
 import { getDefaultData } from './internal/defaultData.js';
 
-export default componentCore({
+export default defineComponentCore({
   id: 'base::date',
   meta: {
     ui: {

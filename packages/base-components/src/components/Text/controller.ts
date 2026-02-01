@@ -1,8 +1,8 @@
-import { componentController } from '@game-cms/core';
+import { defineComponentController } from '@game-cms/core';
 
 import core from './core.js';
 
-export default componentController({
+export default defineComponentController({
   core,
   migrate: (data) => {
     if (typeof data === 'string' || typeof data === 'number') {

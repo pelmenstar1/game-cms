@@ -1,11 +1,11 @@
 import { StorageItemType } from '@game-cms/base-core';
-import { componentController } from '@game-cms/core';
+import { defineComponentController } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
 import core from './core.js';
 
-export default componentController({
+export default defineComponentController({
   core,
   migrate: (data) => {
     if (

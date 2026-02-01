@@ -1,7 +1,7 @@
 import {
-  componentCore,
   ComponentErrorById,
   ComponentRawInDataById,
+  defineComponentCore,
 } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 
@@ -15,7 +15,7 @@ function isRawInData(
   );
 }
 
-export default componentCore({
+export default defineComponentCore({
   id: 'base::alternative',
   defaultRawData: (options, context) => ({
     default: context.getDefaultData(options.componentId, options.baseOptions),

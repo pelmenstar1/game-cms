@@ -1,14 +1,14 @@
 import {
-  componentCore,
   ComponentDataValidatorParams,
   ComponentErrorById,
   ComponentOptionsById,
+  defineComponentCore,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
-import { mapObject, UnknownObject } from '@game-cms/shared/object';
+import { mapObject } from '@game-cms/shared/object';
 
-export default componentCore({
+export default defineComponentCore({
   id: 'base::compose',
   defaultRawData: (options, context) => {
     return mapObject(options, (item) =>
@@ -27,7 +27,7 @@ export default componentCore({
 
     const entries = Object.entries(options).map(
       ([key, { componentId, options }]) => {
-        const propValue = (data as UnknownObject)[key];
+        const propValue = data[key];
         if (propValue === undefined && params?.partial) {
           return [key, undefined] as const;
         }

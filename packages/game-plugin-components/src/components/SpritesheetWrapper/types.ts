@@ -3,14 +3,18 @@ import type {
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
+  ComponentNestedPath,
+  ComponentNestedPathShape,
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
-  ComponentRawInDataByIdPath,
+  ComponentRawInDataByIdPathExtends,
   ComponentRawInPartialDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
+  ParseComponentNestedPath,
 } from '@game-cms/core';
+import { IfExtends } from '@game-cms/shared';
 import type { ObjectId } from 'mongodb';
 
 export type SpritesheetArgs<
@@ -21,11 +25,7 @@ export type SpritesheetArgs<
   baseArgs: Args;
 };
 
-export type ResolveSpritesheetArgs<Args> =
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Args extends SpritesheetArgs<infer _Id extends ComponentId, infer _BaseArgs>
-    ? Args
-    : SpritesheetArgs;
+export type ResolveSpritesheetArgs<Args> = IfExtends<Args, SpritesheetArgs>;
 
 export type SpritesheetStorageEntry = {
   imageId: ObjectId;
@@ -51,9 +51,21 @@ type SpritesheetEntry<Args extends SpritesheetArgs> = {
   partialRawInData: ComponentRawInPartialDataById<Args['id'], Args['baseArgs']>;
   options: {
     componentId: Args['id'];
-    namePath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
-    bundlePath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
-    imagePath: ComponentRawInDataByIdPath<Args['id'], Args['baseArgs']>;
+    namePath: ComponentRawInDataByIdPathExtends<
+      string,
+      Args['id'],
+      Args['baseArgs']
+    >;
+    bundlePath: ComponentRawInDataByIdPathExtends<
+      string,
+      Args['id'],
+      Args['baseArgs']
+    >;
+    imagePath: ComponentRawInDataByIdPathExtends<
+      ComponentRawInDataById<'base::file'>,
+      Args['id'],
+      Args['baseArgs']
+    >;
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: ComponentErrorById<Args['id'], Args['baseArgs']>;
@@ -68,10 +80,44 @@ type SpritesheetEntry<Args extends SpritesheetArgs> = {
   };
 };
 
+type BaseNestedPath<T, Args extends SpritesheetArgs> = {
+  path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;
+};
+
+type BaseNestedPathShape<Args extends SpritesheetArgs> =
+  ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
+
+type BaseParseComponentNestedPath<
+  T,
+  Path extends string,
+  Args extends SpritesheetArgs,
+> = ParseComponentNestedPath<T, Path, Args['id'], Args['baseArgs']>;
+
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'game::spritesheet-wrapper': ComponentEntry<
       SpritesheetEntry<ResolveSpritesheetArgs<_Args>>
+    >;
+  }
+
+  interface ComponentNestedPathMap<T, Args> {
+    'game::spritesheet-wrapper': BaseNestedPath<
+      T,
+      ResolveSpritesheetArgs<Args>
+    >;
+  }
+
+  interface ComponentNestedPathShapeMap<Args> {
+    'game::spritesheet-wrapper': BaseNestedPathShape<
+      ResolveSpritesheetArgs<Args>
+    >;
+  }
+
+  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
+    'base::repeatable': BaseParseComponentNestedPath<
+      T,
+      Path,
+      ResolveSpritesheetArgs<Args>
     >;
   }
 }

@@ -6,7 +6,7 @@ import {
   ComponentResolvedDataById,
   ForeignComponentDataResolverContext,
 } from '@game-cms/core';
-import { componentController } from '@game-cms/core';
+import { defineComponentController } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
 
@@ -19,7 +19,7 @@ function invalidPath(message: string): never {
   throw new Error(`Invalid path: ${message}`);
 }
 
-export default componentController({
+export default defineComponentController({
   core,
   structure: ({ options }, context) => {
     return mapObject(options, (prop) =>
@@ -77,20 +77,18 @@ export default componentController({
       const suffix = path.slice(endBracketIndex + 2);
 
       for (const item of data) {
-        if (item.key === zoneName) {
-          context.applyAtPath(
-            componentId,
-            item.data,
-            baseOptions,
-            suffix,
-            apply
-          );
+        const { key, data } = item;
+
+        if (key === zoneName) {
+          context.applyAtPath(componentId, data, baseOptions, suffix, apply);
         }
       }
     } else {
       for (const item of data) {
-        if (item.key === zoneName) {
-          apply(item.data);
+        const { key, data } = item;
+
+        if (key === zoneName) {
+          apply(data);
         }
       }
     }

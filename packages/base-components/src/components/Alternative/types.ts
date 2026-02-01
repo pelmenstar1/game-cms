@@ -5,11 +5,13 @@ import {
   ComponentErrorById,
   ComponentId,
   ComponentNestedPath,
+  ComponentNestedPathShape,
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
   ComponentResolvedDataById,
   ComponentStorageDataById,
+  ParseComponentNestedPath,
 } from '@game-cms/core';
 
 type AlternativeArgs<Id = ComponentId, BaseArgs = unknown> = {
@@ -60,6 +62,18 @@ type BaseNestedPath<T, Args extends AlternativeArgs> = {
   path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;
 };
 
+type BaseNestedPathShape<Args extends AlternativeArgs> = {
+  default: ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
+  alternative: {
+    value: ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
+  }[];
+};
+
+type BaseParseNestedPath<T, Path extends string, Args extends AlternativeArgs> =
+  T extends BaseNestedPathShape<Args>
+    ? ParseComponentNestedPath<T['default'], Path, Args['id'], Args['baseArgs']>
+    : unknown;
+
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
     'base::alternative': ComponentEntry<AlternativeEntry<ResolveArgs<_Args>>>;
@@ -67,5 +81,13 @@ declare module '@game-cms/core' {
 
   interface ComponentNestedPathMap<T, Args> {
     'base::alternative': BaseNestedPath<T, ResolveArgs<Args>>;
+  }
+
+  interface ComponentNestedPathShapeMap<Args> {
+    'base::alternative': BaseNestedPathShape<ResolveArgs<Args>>;
+  }
+
+  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
+    'base::alternative': BaseParseNestedPath<T, Path, ResolveArgs<Args>>;
   }
 }

@@ -1,14 +1,10 @@
-import { componentController } from '@game-cms/core';
+import { defineComponentController } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
-import {
-  asyncMapObject,
-  mapObject,
-  UnknownObject,
-} from '@game-cms/shared/object';
+import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 
-export default componentController({
+export default defineComponentController({
   core,
   structure: (options, context) => {
     return mapObject(options, (prop) =>
@@ -18,7 +14,7 @@ export default componentController({
   migrate: (data, options, context) => {
     if (isNonNullObject(data)) {
       return mapObject(options, ({ componentId, options }, key) =>
-        context.migrate(componentId, (data as UnknownObject)[key], options)
+        context.migrate(componentId, data[key], options)
       );
     }
   },

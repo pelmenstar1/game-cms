@@ -1,6 +1,6 @@
-import { componentCore } from '@game-cms/core';
+import { defineComponentCore } from '@game-cms/core';
 
-export default componentCore({
+export default defineComponentCore({
   id: 'base::repeatable',
   defaultRawData: () => [],
   validator: (data, options, context) => {
