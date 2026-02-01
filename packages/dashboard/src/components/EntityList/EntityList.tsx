@@ -1,14 +1,17 @@
 import type { EntityId } from '@game-cms/base-core';
 import { listEntities } from '@game-cms/client';
 import { useApiQuery } from '@game-cms/component-api';
-import { classNames, DataLoader, List } from '@game-cms/ui';
+import { classNames, List, MultipleDataLoader } from '@game-cms/ui';
 
+import { useEntitySchema } from '@/hooks/useEntitySchema';
 import { usePagingOptions } from '@/hooks/usePagingOptions';
 import { useQueryPage } from '@/hooks/useQueryPage';
 
-import { EntityListItem } from '../EntityListItem';
 import { PageView } from '../PageView';
 import styles from './EntityList.module.scss';
+import { Header } from './Header';
+import { Item } from './Item';
+
 export interface EntityListProps {
   className?: string;
   entityId: EntityId;
@@ -21,12 +24,14 @@ export function EntityList({ className, entityId }: EntityListProps) {
   const options = usePagingOptions(page, PAGE_SIZE);
   const [itemsResult] = useApiQuery(listEntities, [entityId, options]);
 
+  const entitySchemaResult = useEntitySchema(entityId);
+
   return (
-    <DataLoader
-      result={itemsResult}
+    <MultipleDataLoader
+      result={[itemsResult, entitySchemaResult] as const}
       className={classNames(styles.root, className)}
     >
-      {({ items, meta }) => (
+      {([{ items, meta }, schema]) => (
         <PageView
           page={page}
           pageSize={PAGE_SIZE}
@@ -35,12 +40,19 @@ export function EntityList({ className, entityId }: EntityListProps) {
           getLink={(page) => `/entities/${entityId}?page=${page}`}
         >
           <List className={styles['list']}>
+            <Header schema={schema} />
+
             {items.map((item) => (
-              <EntityListItem key={item._id} entityId={entityId} value={item} />
+              <Item
+                key={item._id}
+                entityId={entityId}
+                value={item}
+                schema={schema}
+              />
             ))}
           </List>
         </PageView>
       )}
-    </DataLoader>
+    </MultipleDataLoader>
   );
 }

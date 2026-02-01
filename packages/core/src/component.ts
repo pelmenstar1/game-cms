@@ -173,11 +173,31 @@ export type ComponentRawInDataByIdPath<
   Args,
 > = ComponentNestedPath<ComponentRawInDataById<Id, Args>, Id, Args>;
 
+export type ComponentClientDataByIdPath<
+  Id extends ComponentId,
+  Args,
+> = ComponentNestedPath<ComponentClientDataById<Id, Args>, Id, Args>;
+
 export type ComponentRawInDataByIdPathExtends<
   U,
   Id extends ComponentId,
   Args,
 > = ComponentNestedPathExtends<ComponentRawInDataById<Id, Args>, U, Id, Args>;
+
+export type ComponentClientDataByIdPathExtends<
+  U,
+  Id extends ComponentId,
+  Args,
+> = ComponentNestedPathExtends<ComponentClientDataById<Id, Args>, U, Id, Args>;
+
+export type ComponentNestedPathDot<
+  T extends string,
+  Suffix,
+> = string extends Suffix
+  ? T
+  : Suffix extends string
+    ? T | `${T}.${Suffix}`
+    : T;
 
 export type ComponentSchema<
   Id extends ComponentId = ComponentId,
@@ -435,12 +455,19 @@ export type ComponentMeta = {
   };
 };
 
-export type ComponentCore<Id extends ComponentId = ComponentId> = {
+type BaseComponentCore<Id extends ComponentId = ComponentId> = {
   id: Id;
   meta?: ComponentMeta;
   defaultRawData: ComponentDefaultDataHandler<Id>;
   validator: ComponentDataValidator<Id>;
 };
+
+export type ComponentCore<Id extends ComponentId = ComponentId> =
+  BaseComponentCore<Id> &
+    RequiredIf<
+      { pathWalker?: ComponentPathWalker<Id> },
+      AnyKeyInObject<ComponentNestedPathMap<unknown>, Id>
+    >;
 
 export type ComponentDataStructure =
   | string
@@ -485,10 +512,6 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
       { storageTransformer?: ComponentStorageDataTransformer<Id> },
       Id,
       'storageData' | 'rawInData'
-    > &
-    RequiredIf<
-      { pathWalker?: ComponentPathWalker<Id> },
-      AnyKeyInObject<ComponentNestedPathMap<unknown>, Id>
     > &
     RequiredIfExists<
       { mergeData?: ComponentDataMergeHandler<Id> },

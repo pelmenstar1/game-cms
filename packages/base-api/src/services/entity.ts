@@ -1,35 +1,35 @@
 import {
   ApiError,
-  type EntityDataVariantsById,
-  type EntityErrorById,
-  type EntityId,
-  type EntityMeta,
-  type EntityRawDataById,
+  EntityDataVariantsById,
+  EntityErrorById,
+  EntityId,
+  EntityMeta,
+  EntityRawDataById,
   EntityRawDataWithChecksById,
-  type EntityRawInDataById,
-  type EntityRawInPartialDataById,
-  type EntityResolvedDataById,
-  type EntitySchema,
-  type EntitySchemaById,
-  type EntityStorageDataById,
-  type EntityVariant,
-  type EntityVariantData,
+  EntityRawInDataById,
+  EntityRawInPartialDataById,
+  EntityResolvedDataById,
+  EntitySchema,
+  EntitySchemaById,
+  EntityStorageDataById,
+  EntityVariant,
+  EntityVariantData,
 } from '@game-cms/base-core';
-import type {
+import {
   ComponentDataResolverArgs,
   ComponentDataStructure,
   ComponentId,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { cms, log } from '@game-cms/global';
-import { isNonNullObject, type PagingOptions } from '@game-cms/shared';
+import { isNonNullObject, PagingOptions } from '@game-cms/shared';
 import {
   asyncMapObject,
   deepEquals,
   mapObject,
-  type UnknownObject,
+  UnknownObject,
 } from '@game-cms/shared/object';
-import type { Filter, ObjectId, WithId } from 'mongodb';
+import { Filter, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
@@ -87,7 +87,6 @@ async function getRawById<T extends EntityId>(
   id: ObjectId,
   variant: EntityVariant = 'published'
 ) {
-  const entitySchema = getEntitySchema(entityId);
   const result = await collection(entityId).findOne(idFilter(id), {
     projection: { [variant]: 1 },
   });
@@ -102,7 +101,16 @@ async function getRawById<T extends EntityId>(
     return null;
   }
 
-  const { '#meta': meta, '#checks': checks, ...componentsData } = data;
+  return fromStorageData(entityId, _id, data);
+}
+
+async function fromStorageData<Id extends EntityId>(
+  entityId: Id,
+  objectId: ObjectId,
+  storageData: EntityStorageDataById<Id>
+) {
+  const { '#meta': meta, '#checks': checks, ...componentsData } = storageData;
+  const entitySchema = getEntitySchema(entityId);
 
   const { foreignStorageResolverContext } = cms().service('base::component');
 
@@ -118,13 +126,13 @@ async function getRawById<T extends EntityId>(
 
   const clientChecksData = await cms()
     .service('base::entityCheck')
-    .getClientData(entityId, meta, id, checks ?? {});
+    .getClientData(entityId, meta, objectId, checks ?? {});
 
   return {
-    _id,
+    _id: objectId,
     '#checks': clientChecksData,
     ...rawComponents,
-  } as unknown as WithId<EntityRawDataWithChecksById<T>>;
+  } as unknown as WithId<EntityRawDataWithChecksById<Id>>;
 }
 
 async function toStorageData<Id extends EntityId>(
@@ -230,7 +238,7 @@ function validate<Id extends ComponentId>(
   const entries = Object.entries(schema.components).map(([key, prop]) => {
     const error = foreignValidationContext.validate(
       prop.componentId,
-      (value as UnknownObject)[key],
+      value[key],
       prop.options
     );
 
@@ -378,20 +386,19 @@ export default service({
 
     return isDeleted;
   },
-  list: async <T extends EntityId>(entityId: T, options: PagingOptions) => {
+  list: async <Id extends EntityId>(entityId: Id, options: PagingOptions) => {
     const result = await getPage(collection(entityId), options);
 
-    return result;
+    return {
+      items: await Promise.all(
+        result.items.map((item) =>
+          fromStorageData(entityId, item._id, item.draft)
+        )
+      ),
+      meta: result.meta,
+    };
   },
   getRawById,
-  getRawVariantsById: async <Id extends EntityId>(
-    entityId: Id,
-    id: ObjectId
-  ) => {
-    const result = await collection(entityId).findOne({ _id: id });
-
-    return result;
-  },
   getResolvedById: async <Id extends EntityId>(
     entityId: Id,
     id: ObjectId,

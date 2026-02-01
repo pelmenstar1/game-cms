@@ -1,6 +1,7 @@
 import {
   ComponentEntry,
   ComponentId,
+  ComponentNestedPathDot,
   ComponentNestedPathShape,
   ComponentOptions,
   ComponentOptionsById,
@@ -12,7 +13,6 @@ import {
 import { Key } from 'react';
 
 import { TitleSpec, TitleSpecById } from '../../internal/title.js';
-import { NestedPathDot } from '../Compose/types.js';
 import { DataEntry } from './internal/types.js';
 
 type BaseDynamicZoneInputEntry<Id extends ComponentId, Args, Title> = {
@@ -110,7 +110,7 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
 
 type NestedPath<T, Input extends DynamicZoneInputComponents> = {
   path: {
-    [K in keyof Input & string]: NestedPathDot<
+    [K in keyof Input & string]: ComponentNestedPathDot<
       `[${K}]`,
       ComponentSchemaNestedPath<T, Input[K]>
     >;

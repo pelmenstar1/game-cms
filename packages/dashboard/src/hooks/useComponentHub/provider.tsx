@@ -11,6 +11,7 @@ import type {
   ComponentRenderer,
   ForeignComponentClientDataResolverContext,
   ForeignComponentDefaultRawDataContext,
+  ForeignComponentPathWalkerContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
@@ -21,6 +22,7 @@ import {
   getComponentClientTransformer,
   getComponentDefaultData,
   getComponentMeta,
+  getComponentPathWalker,
   getComponentValidator,
   importComponent,
 } from '@/connector/component';
@@ -113,16 +115,32 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
     [defaultDataContext, validationContext]
   );
 
+  const pathWalkerContext = useMemo(
+    (): ForeignComponentPathWalkerContext => ({
+      applyAtPath(id, data, options, path, apply) {
+        const pathWalker = getComponentPathWalker(id);
+
+        if (pathWalker !== undefined) {
+          pathWalker(data, options, path, apply, pathWalkerContext);
+        } else {
+          apply(data);
+        }
+      },
+    }),
+    []
+  );
+
   const api = useMemo(
     (): ComponentApi => ({
       generateId: incrementingIdSource,
-      getDefaultData: clientTransformerContext.getDefaultData,
       getComponent: <Id extends ComponentId>(id: Id) =>
-        componentCache.get(id, null) as unknown as ComponentRenderer<Id>,
+        componentCache.get(id) as unknown as ComponentRenderer<Id>,
+      getDefaultData: clientTransformerContext.getDefaultData,
       getMeta: getComponentMeta,
+      applyAtPath: pathWalkerContext.applyAtPath,
       clientTransformerContext,
     }),
-    [clientTransformerContext]
+    [clientTransformerContext, pathWalkerContext]
   );
 
   const hub = useMemo(

@@ -15,10 +15,6 @@ import { DataEntry } from './internal/types.js';
 
 type Id = (typeof core)['id'];
 
-function invalidPath(message: string): never {
-  throw new Error(`Invalid path: ${message}`);
-}
-
 export default defineComponentController({
   core,
   structure: ({ options }, context) => {
@@ -58,40 +54,6 @@ export default defineComponentController({
 
       return context.resolveRawData(componentId, item.data, baseOptions, args);
     }) as ComponentResolvedDataById<Id, Args>;
-  },
-  pathWalker: (data, { options }, path, apply, context) => {
-    if (!path.startsWith('[')) {
-      invalidPath('expected [');
-    }
-
-    const endBracketIndex = path.indexOf(']', 1);
-    if (endBracketIndex === -1) {
-      invalidPath('expected ]');
-    }
-
-    const zoneName = path.slice(1, endBracketIndex);
-
-    const { componentId, options: baseOptions } = options[zoneName];
-
-    if (path[endBracketIndex + 1] === '.') {
-      const suffix = path.slice(endBracketIndex + 2);
-
-      for (const item of data) {
-        const { key, data } = item;
-
-        if (key === zoneName) {
-          context.applyAtPath(componentId, data, baseOptions, suffix, apply);
-        }
-      }
-    } else {
-      for (const item of data) {
-        const { key, data } = item;
-
-        if (key === zoneName) {
-          apply(data);
-        }
-      }
-    }
   },
   storageTransformer: {
     getDefaultData: () => [],

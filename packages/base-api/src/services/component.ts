@@ -105,7 +105,7 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
         : (data as ComponentStorageDataById<Id, Args>);
     },
     applyAtPath: (id, data, options, path, apply) => {
-      const { pathWalker } = getController(id);
+      const { pathWalker } = getController(id).core;
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (pathWalker) {

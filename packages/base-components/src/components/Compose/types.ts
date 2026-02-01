@@ -1,5 +1,6 @@
 import {
   ComponentEntry,
+  ComponentNestedPathDot,
   ComponentNestedPathShape,
   ComponentSchema,
   ComponentSchemaNestedPath,
@@ -44,15 +45,9 @@ type BaseComposeEntry<Input extends ComposeInput> = {
   storageData: ComposeMap<Input, 'storageData'>;
 };
 
-export type NestedPathDot<T extends string, Suffix> = string extends Suffix
-  ? T
-  : Suffix extends string
-    ? T | `${T}.${Suffix}`
-    : T;
-
 type NestedPath<T, Input extends ComposeInput> = {
   path: {
-    [K in keyof Input]: NestedPathDot<
+    [K in keyof Input]: ComponentNestedPathDot<
       K & string,
       ComponentSchemaNestedPath<T, Input[K]>
     >;

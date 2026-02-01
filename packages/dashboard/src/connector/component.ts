@@ -28,12 +28,16 @@ export function getComponentValidator<Id extends ComponentId>(id: Id) {
   return getComponent(id).core.validator;
 }
 
-export function getComponentClientTransformer<Id extends ComponentId>(id: Id) {
-  return getComponent(id).client?.clientTransformer;
-}
-
 export function getComponentMeta(id: ComponentId) {
   return getComponent(id).core.meta;
+}
+
+export function getComponentPathWalker<Id extends ComponentId>(id: Id) {
+  return getComponent(id).core.pathWalker;
+}
+
+export function getComponentClientTransformer<Id extends ComponentId>(id: Id) {
+  return getComponent(id).client?.clientTransformer;
 }
 
 export function importComponent<Id extends ComponentId>(id: Id) {

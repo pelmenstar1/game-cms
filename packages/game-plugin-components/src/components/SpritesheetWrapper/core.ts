@@ -15,4 +15,13 @@ export default defineComponentCore({
       params
     );
   },
+  pathWalker: (data, options, path, apply, context) => {
+    context.applyAtPath(
+      options.componentId,
+      data,
+      options.baseOptions,
+      path,
+      apply
+    );
+  },
 });

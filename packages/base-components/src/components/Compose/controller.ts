@@ -25,21 +25,6 @@ export default defineComponentController({
       return context.resolveRawData(componentId, value, baseOptions, args);
     });
   },
-  pathWalker: (data, options, path, apply, context) => {
-    const dotIndex = path.indexOf('.');
-
-    if (dotIndex !== -1) {
-      const prefix = path.slice(0, dotIndex);
-      const suffix = path.slice(dotIndex + 1);
-
-      const value = data[prefix];
-      const { componentId, options: baseOptions } = options[prefix];
-
-      context.applyAtPath(componentId, value, baseOptions, suffix, apply);
-    } else {
-      apply(data[path]);
-    }
-  },
   mergeData: async (target, source, options, context) => {
     const sourceMerged = await asyncMapObject(source, (item, key) => {
       const { componentId, options: baseOptions } = options[key];

@@ -153,15 +153,6 @@ export default defineComponentController({
 
     return context.resolveRawData(componentId, data, baseOptions, args);
   },
-  pathWalker: (data, options, path, apply, context) => {
-    context.applyAtPath(
-      options.componentId,
-      data,
-      options.baseOptions,
-      path,
-      apply
-    );
-  },
   mergeData: async (target, source, options, context) => {
     const mergedBase = await context.merge(
       options.componentId,

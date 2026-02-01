@@ -1,4 +1,6 @@
 import type {
+  ComponentClientDataById,
+  ComponentClientDataByIdPathExtends,
   ComponentData,
   ComponentSchema,
   DefaultExport,
@@ -68,6 +70,11 @@ export type EntityResolvedDataById<Id extends EntityId> = ComponentsToData<
   'resolvedData'
 >;
 
+export type EntityClientDataById<Id extends EntityId> = ComponentsToData<
+  EntityMap[Id],
+  'clientData'
+>;
+
 export type BaseEntityStorageDataById<Id extends EntityId> = ComponentsToData<
   EntityMap[Id],
   'storageData'
@@ -82,15 +89,38 @@ export type EntityErrorById<Id extends EntityId> = {
   properties?: ComponentsToData<EntityMap[Id], 'error'>;
 };
 
-export interface EntitySchemaMeta<Id extends EntityId = EntityId> {
+type BaseEntityDisplayKey<Components extends EntitySchemaComponents, U> = {
+  [K in keyof Components & string]: Components[K] extends ComponentSchema<
+    infer CId,
+    infer Args
+  >
+    ?
+        | (ComponentClientDataById<CId, Args> extends U ? K : never)
+        | `${K}.${ComponentClientDataByIdPathExtends<U, CId, Args>}`
+    : never;
+}[keyof Components & string];
+
+type EntityDisplayKey<Components extends EntitySchemaComponents> =
+  | '_id'
+  | BaseEntityDisplayKey<Components, string | number>;
+
+export type EntityDisplayKeyById<Id extends EntityId> = EntityDisplayKey<
+  EntityMap[Id]
+>;
+
+export interface EntitySchemaMeta<
+  Id extends EntityId = EntityId,
+  Components extends EntitySchemaComponents = EntitySchemaComponents,
+> {
   id: Id;
   title: string;
+  displayKeys?: EntityDisplayKey<Components>[];
 }
 
 export interface EntitySchema<
   Id extends EntityId = EntityId,
   Components extends EntitySchemaComponents = EntitySchemaComponents,
-> extends EntitySchemaMeta<Id> {
+> extends EntitySchemaMeta<Id, Components> {
   components: Components;
 }
 

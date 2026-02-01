@@ -1,5 +1,4 @@
 import { defineComponentController } from '@game-cms/core';
-import { isNonNullObject } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
@@ -9,20 +8,6 @@ export default defineComponentController({
   core,
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
-  pathWalker: (data, options, path, apply, context) => {
-    const { componentId, baseOptions } = options;
-    const { nodes } = data;
-
-    for (const key in nodes) {
-      const nodeValue = nodes[key];
-
-      if (isNonNullObject(nodeValue)) {
-        const { value } = nodeValue;
-
-        context.applyAtPath(componentId, value, baseOptions, path, apply);
-      }
-    }
-  },
   migrate: (data, options, context) => {
     const result = dataShape.safeParse(data);
 
