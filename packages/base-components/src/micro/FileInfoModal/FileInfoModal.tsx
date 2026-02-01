@@ -1,5 +1,4 @@
 import { isNonNullObject } from '@game-cms/shared';
-import { UnknownObject } from '@game-cms/shared/object';
 import { ModalDialog, ModalProps, Prefixed } from '@game-cms/ui';
 
 import { FileBigPreview } from '../FileBigPreview/FileBigPreview.js';
@@ -19,7 +18,7 @@ function getImageSize(addons: Record<string, unknown>) {
   const { imageSize } = addons;
 
   if (isNonNullObject(imageSize)) {
-    const { width, height } = imageSize as UnknownObject;
+    const { width, height } = imageSize;
 
     if (typeof width === 'number' && typeof height === 'number') {
       return { width, height };
