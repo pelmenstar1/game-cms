@@ -33,7 +33,7 @@ export type EntityResolvedDataByIdWithId<T extends EntityId> =
 
 export const getEntitySchemas = (context: RequestContext) =>
   request(context, {
-    url: `/entitySchema/list`,
+    url: '/entitySchema/list',
     response: json<EntitySchema[]>(),
   });
 

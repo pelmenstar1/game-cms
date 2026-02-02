@@ -5,7 +5,7 @@ import { parseJsonOptional } from '@game-cms/shared/json';
 export async function handleResponseError(response: Response) {
   const bodyString = await response.text().catch(() => null);
   if (bodyString === null) {
-    throw new Error(`API error: cannot retrieve message`);
+    throw new Error('API error: cannot retrieve message');
   }
 
   const body = parseJsonOptional(bodyString);

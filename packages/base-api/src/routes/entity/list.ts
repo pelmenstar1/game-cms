@@ -6,7 +6,7 @@ import z from 'zod';
 import { entityRouteId } from '../../utils/routeId.js';
 
 export default apiRoute({
-  url: `/entity/:entityId/list`,
+  url: '/entity/:entityId/list',
   method: 'GET',
   config: {
     id: entityRouteId('get'),

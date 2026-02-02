@@ -116,7 +116,7 @@ export function componentDataFlowTests<Id extends ComponentId>(
   input: MaybeFactory<TestInput<Id>>
 ) {
   describe(`${id} data flow`, () => {
-    test(`raw -> client -> raw in -> storage -> raw`, async () => {
+    test('raw -> client -> raw in -> storage -> raw', async () => {
       const clientContext = await clientResolverContext();
       const { foreignStorageResolverContext } =
         cms().service('base::component');

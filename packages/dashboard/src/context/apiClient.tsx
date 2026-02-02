@@ -45,7 +45,7 @@ async function handleRedirects(
 }
 
 export function ApiClientProvider({ children }: PropsWithChildren) {
-  const client = useMemo(() => createStandardClient({ baseUrl: `/api` }), []);
+  const client = useMemo(() => createStandardClient({ baseUrl: '/api' }), []);
   const navigate = useNavigate();
 
   const baseMakeApiRequest = <

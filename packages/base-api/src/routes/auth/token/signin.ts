@@ -6,7 +6,7 @@ import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
 export default apiRoute({
-  url: `/auth/token/jwt`,
+  url: '/auth/token/jwt',
   method: 'POST',
   schema: {
     body: signTokenInPayload,

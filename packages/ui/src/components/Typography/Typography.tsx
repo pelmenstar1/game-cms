@@ -43,7 +43,7 @@ export const Typography = /*@__PURE__*/ impersonatedComponent<
           styles.root,
           styles[`root-variant-${variant}`],
           weight === 'bold' && styles['root-weight-bold'],
-          hasIcon && styles[`root-has-icon`],
+          hasIcon && styles['root-has-icon'],
           className
         ),
         ...rest,

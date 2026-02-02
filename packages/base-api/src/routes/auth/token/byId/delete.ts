@@ -4,7 +4,7 @@ import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
-  url: `/auth/token/byId/:id`,
+  url: '/auth/token/byId/:id',
   method: 'DELETE',
   config: {
     id: 'auth/token$delete',

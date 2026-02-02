@@ -38,7 +38,8 @@ export default function Page({ params }: Route.ComponentProps) {
   const onDelete = useAsyncCallback(async () => {
     try {
       const status = await showModal(ConfirmationDialog, {
-        prompt: `Are you sure you want to delete this user? The action is irreversible`,
+        prompt:
+          'Are you sure you want to delete this user? The action is irreversible',
       });
 
       if (status) {

@@ -30,7 +30,7 @@ function getInfo(data: MultipartFile) {
 }
 
 export default apiRoute({
-  url: `/storage/file`,
+  url: '/storage/file',
   method: 'POST',
   config: {
     id: 'storage/file$upload',

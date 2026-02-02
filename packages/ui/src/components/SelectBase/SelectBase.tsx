@@ -73,7 +73,7 @@ export function SelectBase<K extends SelectItemKey>({
       aria-disabled={disabled}
       className={classNames(
         styles.root,
-        isOpen && styles[`root-open`],
+        isOpen && styles['root-open'],
         className
       )}
       onBlur={onBlur}

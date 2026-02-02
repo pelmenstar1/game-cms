@@ -50,7 +50,7 @@ export const listStorageItems = (
 ) =>
   request(context, {
     url: url({
-      path: `/storage/list`,
+      path: '/storage/list',
       search: options,
     }),
     response: json<ToClientType<ListStorageItemsResponse>>(),

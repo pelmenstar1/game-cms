@@ -17,7 +17,7 @@ export type LocalStorageProviderConfig = {
 
 type Extra = { fileName: string };
 
-const GET_ROUTE = `/storage/provider/get`;
+const GET_ROUTE = '/storage/provider/get';
 
 function createFileUrl(fileName: string) {
   return encodeURI(`/api${GET_ROUTE}/${fileName}`);
@@ -31,6 +31,9 @@ function getFileRoute(storagePath: string) {
   return apiRoute({
     url: `${GET_ROUTE}/:fileName`,
     method: 'GET',
+    config: {
+      id: 'storage/file$get',
+    },
     schema: {
       params: z.object({
         fileName: z.string(),

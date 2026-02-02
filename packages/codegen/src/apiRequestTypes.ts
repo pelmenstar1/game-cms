@@ -42,9 +42,9 @@ function createMetaFileContent(routes: RouteInfo[]) {
 
   let result = `import '@game-cms/core/api';\n\n`;
   result += `declare module '@game-cms/core/api' {\n`;
-  result += `  interface ApiRouteMap {\n`;
+  result += '  interface ApiRouteMap {\n';
   result += routesArray.join('\n');
-  result += `\n  }\n`;
+  result += '\n  }\n';
   result += '}\n';
 
   return result;

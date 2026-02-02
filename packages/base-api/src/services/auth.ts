@@ -212,7 +212,7 @@ export default service({
     const now = Date.now();
 
     if (now > tokenInfo.expirationDate.getTime()) {
-      throw new ApiError(`Token expired`, 'base::access/expired');
+      throw new ApiError('Token expired', 'base::access/expired');
     }
 
     return createSessionToken('apiToken', {

@@ -40,7 +40,7 @@ TEST_BOOL=true`;
   it('should load from custom filename', async () => {
     await using tempDir = await temporalDirectory();
 
-    const envContent = `CUSTOM_VAR=custom_value`;
+    const envContent = 'CUSTOM_VAR=custom_value';
 
     await fsp.writeFile(path.join(tempDir.path, '.env.custom'), envContent);
 
