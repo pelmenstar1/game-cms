@@ -11,7 +11,6 @@
     { "path": "./packages/ui" },
     { "path": "./packages/vite-plugins" },
     { "path": "./packages/conditional" },
-    { "path": "./packages/client" },
     { "path": "./packages/codegen" },
     { "path": "./packages/testing-lib" },
     { "path": "./packages/base-plugin" },

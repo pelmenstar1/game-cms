@@ -1,8 +1,8 @@
+import { createEntity } from '@game-cms/base-api/client';
 import type {
   EntityClientVariantData,
   EntityVariant,
 } from '@game-cms/base-core';
-import { createEntity } from '@game-cms/client';
 import { useApiAction } from '@game-cms/component-api';
 import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
 import { useCallback } from 'react';

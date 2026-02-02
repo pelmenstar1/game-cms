@@ -1,13 +1,11 @@
-import type {
-  ApiClient,
-  InitBodyRequestOptions,
-  RequestOptions,
-  ResponseParser,
-} from '@game-cms/core/api';
-
 import { handleResponseError } from './internal/errors.js';
 import { createFullUrl } from './internal/utils.js';
-import type { GameCmsClientOptions } from './types.js';
+import { ResponseParser } from './responseParser.js';
+import { ApiClient, InitBodyRequestOptions, RequestOptions } from './types.js';
+
+export type StandardClientOptions = {
+  baseUrl: string | URL;
+};
 
 function isBodyOptions(
   options: RequestOptions
@@ -15,9 +13,7 @@ function isBodyOptions(
   return 'body' in options && typeof options.body === 'function';
 }
 
-export function createStandardRequestInit(
-  options: RequestOptions
-): RequestInit {
+function createStandardRequestInit(options: RequestOptions): RequestInit {
   if (isBodyOptions(options)) {
     const { body, headers, ...rest } = options;
 
@@ -32,7 +28,7 @@ export function createStandardRequestInit(
 
 export function createStandardClient({
   baseUrl,
-}: GameCmsClientOptions): ApiClient {
+}: StandardClientOptions): ApiClient {
   async function makeRequest<T>(
     options: RequestOptions & { response?: ResponseParser<T> }
   ) {

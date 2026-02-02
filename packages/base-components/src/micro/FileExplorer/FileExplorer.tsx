@@ -1,11 +1,11 @@
-import { StorageItemWithId } from '@game-cms/base-core';
 import {
   createFolder,
   deleteStorageItemById,
   getStorageItemInfo,
   listStorageItems,
   uploadFile,
-} from '@game-cms/client';
+} from '@game-cms/base-api/client';
+import { StorageItemWithId } from '@game-cms/base-core';
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import type { ToClientType } from '@game-cms/core';
 import {

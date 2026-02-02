@@ -1,7 +1,7 @@
 import {
   getPublicPermissions,
   updatePublicPermissions,
-} from '@game-cms/client';
+} from '@game-cms/base-api/client';
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import type { ApiRouteId } from '@game-cms/core/api';
 import {

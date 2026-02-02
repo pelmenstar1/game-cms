@@ -1,16 +1,10 @@
-import type { Replace } from '@game-cms/shared';
+import { Replace } from '@game-cms/shared';
 
-import type { ApiRouteMap, HttpMethod, HttpMethodWithBody } from './route.js';
+import { ApiRouteMap, HttpMethod, HttpMethodWithBody } from '../route.js';
+import { RequestInitializer } from './requestInitializer.js';
+import { ResponseParser } from './responseParser.js';
 
-type MaybeSearch<T extends string> = T | `${T}?${string}`;
-
-export interface RequestInitWithHeaders extends RequestInit {
-  headers: Headers;
-}
-
-export type RequestInitializer = (init: RequestInitWithHeaders) => void;
-
-export type ResponseParser<T = unknown> = (response: Response) => Promise<T>;
+export type MaybeSearch<T extends string> = T | `${T}?${string}`;
 
 export type RequestContext = {
   client: ApiClient;

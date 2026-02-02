@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@game-cms/base-core": "workspace:*",
-    "@game-cms/client": "workspace:*",
     "@game-cms/codegen": "workspace:*",
     "@game-cms/component-api": "workspace:*",
     "@game-cms/conditional": "workspace:*",

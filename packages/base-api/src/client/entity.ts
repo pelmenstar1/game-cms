@@ -8,13 +8,15 @@ import type {
   EntityVariant,
 } from '@game-cms/base-core';
 import type { ComponentDataResolverArgs } from '@game-cms/core';
-import { json, type RequestContext } from '@game-cms/core/api';
+import {
+  json,
+  jsonInit,
+  request,
+  RequestContext,
+  url,
+} from '@game-cms/core/api/client';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import qs from 'qs';
-
-import { url } from '../internal/utils.js';
-import { jsonInit } from '../requestInitializer.js';
-import { request } from '../utils.js';
 
 export type EntityDataByIdWithId<T extends EntityId> =
   EntityRawDataWithChecksById<T> & {

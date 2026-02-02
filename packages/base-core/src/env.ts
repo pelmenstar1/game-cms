@@ -1,6 +1,7 @@
 import '@game-cms/global';
 
-import type { ApiErrorStatusMap } from './api.js';
+import { ApiErrorStatusMap } from '@game-cms/core/api';
+
 import type { EntitySchema } from './entity.js';
 
 export interface EntityDescriptor extends EntitySchema {

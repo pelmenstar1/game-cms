@@ -2,10 +2,12 @@ import type {
   GetPublicPermissionsResponse,
   UpdatePublicPermissionsPayload,
 } from '@game-cms/base-core';
-import { json, type RequestContext } from '@game-cms/core/api';
-
-import { jsonInit } from '../requestInitializer.js';
-import { request } from '../utils.js';
+import {
+  json,
+  jsonInit,
+  request,
+  RequestContext,
+} from '@game-cms/core/api/client';
 
 export const getPublicPermissions = (context: RequestContext) =>
   request(context, {

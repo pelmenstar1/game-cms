@@ -1,8 +1,8 @@
-import { ApiError } from '@game-cms/base-core';
 import type {
   ApiRouteContextConfig,
   CmsFastifyInstance,
 } from '@game-cms/core/api';
+import { ApiError } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
 import type { RouteGenericInterface } from 'fastify';

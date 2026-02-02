@@ -32,6 +32,10 @@
       "import": "./dist/api/index.js",
       "types": "./dist/api/index.d.ts"
     },
+    "./api/client": {
+      "import": "./dist/api/client/index.js",
+      "types": "./dist/api/client/index.d.ts"
+    },
     "./schema": {
       "import": "./dist/schema/index.js",
       "types": "./dist/schema/index.d.ts"

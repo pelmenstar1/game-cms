@@ -4,17 +4,17 @@ import type {
   EntityCheckClientDataMap,
   EntityCheckStorageData,
 } from '@game-cms/base-core';
-import {
-  ApiError,
-  type BaseEntityStorageDataById,
-  type EntityCheckActionIds,
-  type EntityCheckActionPayload,
-  type EntityCheckId,
-  type EntityCheckStorageDataMap,
-  type EntityId,
-  type EntityMeta,
+import type {
+  BaseEntityStorageDataById,
+  EntityCheckActionIds,
+  EntityCheckActionPayload,
+  EntityCheckId,
+  EntityCheckStorageDataMap,
+  EntityId,
+  EntityMeta,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
+import { ApiError } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import type { ObjectId } from 'mongodb';

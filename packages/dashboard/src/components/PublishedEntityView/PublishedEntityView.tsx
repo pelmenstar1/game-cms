@@ -1,5 +1,5 @@
+import { getRawEntityById } from '@game-cms/base-api/client';
 import type { EntityId } from '@game-cms/base-core';
-import { getRawEntityById } from '@game-cms/client';
 import { useApiQuery, useComponentApi } from '@game-cms/component-api';
 import { DataLoader, Typography } from '@game-cms/ui';
 import { useEffect } from 'react';

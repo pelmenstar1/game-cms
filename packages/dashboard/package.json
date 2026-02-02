@@ -31,7 +31,6 @@
   "dependencies": {
     "@game-cms/base-components": "workspace:*",
     "@game-cms/base-core": "workspace:*",
-    "@game-cms/client": "workspace:*",
     "@game-cms/component-api": "workspace:*",
     "@game-cms/core": "workspace:*",
     "@game-cms/global": "workspace:*",

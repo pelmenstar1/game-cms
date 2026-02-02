@@ -40,7 +40,11 @@
       "import": "./dist/types.js",
       "types": "./dist/types.d.ts"
     },
-    "./clientTypes": {
+    "./client": {
+      "import": "./dist/client/index.js",
+      "types": "./dist/client/index.d.ts"
+    },
+    "./client/types": {
       "import": "./dist/clientTypes.js",
       "types": "./dist/clientTypes.d.ts"
     }

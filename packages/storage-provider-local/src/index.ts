@@ -6,7 +6,7 @@ import type {
   StorageFilePersistentItem,
   StorageProvider,
 } from '@game-cms/base-core';
-import { ApiError } from '@game-cms/base-core';
+import { ApiError } from '@game-cms/core/api';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { isFileNotFoundError } from '@game-cms/shared/errors';

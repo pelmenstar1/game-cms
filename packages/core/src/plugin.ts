@@ -3,6 +3,7 @@ import type { ObjectResolver } from '@game-cms/shared/object';
 import type { FastifyPluginAsync, FastifyPluginCallback } from 'fastify';
 import type { Plugin as VitePlugin } from 'vite';
 
+import { ApiErrorStatusMap } from './api/error.js';
 import type { CmsFastifyInstance } from './api/fastify.js';
 import type { ApiRoute } from './api/route.js';
 import type { ResolvedCmsConfig } from './config.js';
@@ -38,6 +39,9 @@ export type PluginApiFastifyConfig = {
 export interface PluginApiConfig {
   fastify?: PluginApiFastifyConfig;
   routes?: MaybeWithUrlPrefix<ApiRouteSource>;
+  error?: {
+    statuses?: ApiErrorStatusMap;
+  };
 }
 
 export type PluginDashboardConfig = {

@@ -1,4 +1,4 @@
-import { getSelfSessionInfo } from '@game-cms/client';
+import { getSelfSessionInfo } from '@game-cms/base-api/client';
 import { useApiQuery } from '@game-cms/component-api';
 import { ApiRouteId } from '@game-cms/core/api';
 import { type PropsWithChildren, useMemo } from 'react';

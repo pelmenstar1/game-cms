@@ -1,5 +1,5 @@
+import { listEntities } from '@game-cms/base-api/client';
 import type { EntityId } from '@game-cms/base-core';
-import { listEntities } from '@game-cms/client';
 import { useApiQuery } from '@game-cms/component-api';
 import { classNames, List, MultipleDataLoader } from '@game-cms/ui';
 

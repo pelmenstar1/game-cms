@@ -1,9 +1,8 @@
 import path from 'node:path';
 
 import multipart from '@fastify/multipart';
-import { ApiErrorCode } from '@game-cms/base-core';
 import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
-import { UnknownApiRoute } from '@game-cms/core/api';
+import { ApiErrorCode, UnknownApiRoute } from '@game-cms/core/api';
 import { combineAsyncFactories } from '@game-cms/shared';
 
 import { errorStatuses } from './errors.js';

@@ -1,4 +1,4 @@
-import type { ResponseParser } from './client.js';
+export type ResponseParser<T = unknown> = (response: Response) => Promise<T>;
 
 const _json = (response: Response) => response.json();
 

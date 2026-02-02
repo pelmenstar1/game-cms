@@ -1,8 +1,12 @@
-import '@game-cms/core';
+import '@game-cms/core/api';
 
-import { jsonInit, request } from '@game-cms/client';
 import { ToClientType } from '@game-cms/core';
-import { json, RequestContext } from '@game-cms/core/api';
+import {
+  json,
+  jsonInit,
+  request,
+  RequestContext,
+} from '@game-cms/core/api/client';
 
 import { GetReviewersResponse, UpdateReviewersPayload } from './types.js';
 

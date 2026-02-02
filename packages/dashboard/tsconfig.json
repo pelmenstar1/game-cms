@@ -11,7 +11,7 @@
     "types": [
       "node",
       "vite/client",
-      "@game-cms/base-api/clientTypes",
+      "@game-cms/base-api/client/types",
       "@game-cms/base-components"
     ],
     "target": "ES2022",
@@ -33,7 +33,6 @@
     { "path": "../base-api" },
     { "path": "../base-components" },
     { "path": "../base-core" },
-    { "path": "../client" },
     { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../core" },

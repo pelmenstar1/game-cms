@@ -1,4 +1,4 @@
-import type { ApiErrorStatusMap } from '@game-cms/base-core';
+import { ApiErrorStatusMap } from '@game-cms/core/api';
 
 declare module '@game-cms/base-core' {
   interface ApiErrorCodeMap {

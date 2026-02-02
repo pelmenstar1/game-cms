@@ -7,12 +7,14 @@ import type {
   SignTokenInPayload,
 } from '@game-cms/base-core';
 import type { ToClientType } from '@game-cms/core';
-import { json, type RequestContext } from '@game-cms/core/api';
+import {
+  json,
+  jsonInit,
+  request,
+  RequestContext,
+  url,
+} from '@game-cms/core/api/client';
 import type { PageData, PagingOptions } from '@game-cms/shared';
-
-import { url } from '../internal/utils.js';
-import { jsonInit } from '../requestInitializer.js';
-import { request } from '../utils.js';
 
 export const getApiTokenJwt = (
   context: RequestContext,

@@ -1,4 +1,4 @@
-import { signUserIn } from '@game-cms/client';
+import { signUserIn } from '@game-cms/base-api/client';
 import { useApiAction } from '@game-cms/component-api';
 import { emailRegex } from '@game-cms/shared/string';
 import {

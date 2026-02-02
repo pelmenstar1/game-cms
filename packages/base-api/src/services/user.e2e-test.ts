@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ApiError, type CreateUserPayload } from '@game-cms/base-core';
-import type { ApiRouteId } from '@game-cms/core/api';
+import { type CreateUserPayload } from '@game-cms/base-core';
+import { ApiError, type ApiRouteId } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 import { describe, expect, it } from 'vitest';

@@ -1,13 +1,13 @@
-import type {
-  EntityClientVariantData,
-  EntityVariant,
-} from '@game-cms/base-core';
 import {
   deleteEntityById,
   getRawEntityById,
   unpublishEntity,
   updateEntityById,
-} from '@game-cms/client';
+} from '@game-cms/base-api/client';
+import type {
+  EntityClientVariantData,
+  EntityVariant,
+} from '@game-cms/base-core';
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import {
   MultipleDataLoader,

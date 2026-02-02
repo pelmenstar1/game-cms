@@ -1,13 +1,20 @@
-import type { ApiErrorCode, ApiErrorCodeTypeMap } from '@game-cms/base-core';
-import { ApiError } from '@game-cms/base-core';
-import { createStandardClient, refreshUserSession } from '@game-cms/client';
+import { refreshUserSession } from '@game-cms/base-api/client';
 import {
   ApiClientContext,
   type ApiClientContextType,
   type ApiRequestOptions,
   type ResolveApiRequestResult,
 } from '@game-cms/component-api';
-import type { RequestContext, RequestFn } from '@game-cms/core/api';
+import {
+  ApiError,
+  ApiErrorCode,
+  ApiErrorCodeTypeMap,
+} from '@game-cms/core/api';
+import {
+  createStandardClient,
+  RequestContext,
+  RequestFn,
+} from '@game-cms/core/api/client';
 import { createAbortController } from '@game-cms/shared';
 import type { PageUrl, TypedNavigateFunction } from '@game-cms/ui';
 import { type PropsWithChildren, useMemo } from 'react';

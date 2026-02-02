@@ -1,4 +1,4 @@
-import { listApiTokens } from '@game-cms/client';
+import { listApiTokens } from '@game-cms/base-api/client';
 import { useApiQuery } from '@game-cms/component-api';
 import { DataLoader, LinkButton, List, PlusIcon } from '@game-cms/ui';
 

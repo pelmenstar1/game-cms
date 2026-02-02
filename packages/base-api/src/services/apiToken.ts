@@ -4,8 +4,8 @@ import type {
   OpaqueApiToken,
   OpaqueApiTokenWithId,
 } from '@game-cms/base-core';
-import { ApiError } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
+import { ApiError } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import { randomBytes } from '@game-cms/shared/crypto';

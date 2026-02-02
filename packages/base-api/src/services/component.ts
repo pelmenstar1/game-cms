@@ -1,4 +1,3 @@
-import { ApiError } from '@game-cms/base-core';
 import type {
   ComponentDataResolverArgs,
   ComponentId,
@@ -17,6 +16,7 @@ import type {
   ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
+import { ApiError } from '@game-cms/core/api';
 import { env } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
 

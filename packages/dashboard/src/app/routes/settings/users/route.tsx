@@ -1,4 +1,4 @@
-import { listUsers } from '@game-cms/client';
+import { listUsers } from '@game-cms/base-api/client';
 import { useApiQuery } from '@game-cms/component-api';
 import { DataLoader, LinkButton, List, PlusIcon, Toolbar } from '@game-cms/ui';
 

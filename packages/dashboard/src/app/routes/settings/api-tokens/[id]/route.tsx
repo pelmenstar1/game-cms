@@ -1,4 +1,4 @@
-import { deleteApiToken, getApiTokenInfo } from '@game-cms/client';
+import { deleteApiToken, getApiTokenInfo } from '@game-cms/base-api/client';
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import {
   Button,

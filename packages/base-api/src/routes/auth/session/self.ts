@@ -1,5 +1,5 @@
-import { ApiError } from '@game-cms/base-core';
 import { getSessionInfoResponse } from '@game-cms/base-core/schema';
+import { ApiError } from '@game-cms/core/api';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 

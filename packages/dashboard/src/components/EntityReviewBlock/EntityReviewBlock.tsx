@@ -1,5 +1,5 @@
+import { invokeEntityCheckAction } from '@game-cms/base-api/client';
 import { EntityCheckClientData, EntityId } from '@game-cms/base-core';
-import { invokeEntityCheckAction } from '@game-cms/client';
 import { useApiAction } from '@game-cms/component-api';
 import {
   Button,

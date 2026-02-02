@@ -4,10 +4,7 @@ import {
   EntityCheckId,
   EntityId,
 } from '@game-cms/base-core';
-import { RequestContext } from '@game-cms/core/api';
-
-import { jsonInit } from '../requestInitializer.js';
-import { request } from '../utils.js';
+import { jsonInit, request, RequestContext } from '@game-cms/core/api/client';
 
 export const invokeEntityCheckAction = <
   Id extends EntityCheckId,

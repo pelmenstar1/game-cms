@@ -1,4 +1,4 @@
-import { ApiError } from '@game-cms/base-core';
+import { ApiError } from '@game-cms/core/api';
 import { ZodType } from 'zod';
 
 export function apiValidateValue<T>(value: unknown, schema: ZodType<T>) {

@@ -1,4 +1,4 @@
-import { ApiError, type ApiErrorCode } from '@game-cms/base-core';
+import { ApiError, ApiErrorCode } from '@game-cms/core/api';
 import { env } from '@game-cms/global';
 import { isErrorWithCode } from '@game-cms/shared/errors';
 import type { FastifyReply, FastifyRequest } from 'fastify';
@@ -18,7 +18,7 @@ function getApiStatusCode(error: ApiError) {
   const { code } = error;
   const { statusCodes } = env().api;
 
-  const status = code && statusCodes[code];
+  const status = code !== undefined ? statusCodes[code] : undefined;
 
   return status ?? 400;
 }

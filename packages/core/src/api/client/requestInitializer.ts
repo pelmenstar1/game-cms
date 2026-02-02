@@ -1,4 +1,8 @@
-import { type RequestInitializer } from '@game-cms/core/api';
+export interface RequestInitWithHeaders extends RequestInit {
+  headers: Headers;
+}
+
+export type RequestInitializer = (init: RequestInitWithHeaders) => void;
 
 export function jsonInit(body: unknown): RequestInitializer {
   return (init) => {

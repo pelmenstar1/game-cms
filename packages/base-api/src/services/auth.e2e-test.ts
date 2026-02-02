@@ -1,5 +1,5 @@
-import { ApiError } from '@game-cms/base-core';
 import type { ApiRouteId } from '@game-cms/core/api';
+import { ApiError } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import { describe, expect, it } from 'vitest';
 
