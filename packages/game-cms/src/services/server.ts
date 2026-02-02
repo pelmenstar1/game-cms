@@ -1,4 +1,3 @@
-import multipart from '@fastify/multipart';
 import { ApiRoute } from '@game-cms/core/api';
 import { env, setLogger } from '@game-cms/global';
 import { initServices } from '@game-cms/ignition';
@@ -45,7 +44,6 @@ export async function startServer(options: DashboardPluginOptions = {}) {
 
   await app.register(apiPlugin, { routes, prefix: '/api' });
   await app.register(dashboardPlugin, options);
-  app.register(multipart);
 
   await initServices();
 

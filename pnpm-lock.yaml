@@ -231,6 +231,9 @@ importers:
       '@game-cms/storage-provider-local':
         specifier: workspace:*
         version: link:../packages/storage-provider-local
+      '@game-cms/storage-provider-s3':
+        specifier: workspace:*
+        version: link:../packages/storage-provider-s3
       game-cms:
         specifier: workspace:*
         version: link:../packages/game-cms
@@ -745,9 +748,6 @@ importers:
       '@fastify/http-proxy':
         specifier: ^11.4.1
         version: 11.4.1
-      '@fastify/multipart':
-        specifier: 'catalog:'
-        version: 9.3.0
       '@fastify/static':
         specifier: 9.0.0
         version: 9.0.0
@@ -1041,13 +1041,25 @@ importers:
       '@aws-sdk/lib-storage':
         specifier: ^3.966.0
         version: 3.966.0(@aws-sdk/client-s3@3.966.0)
+      '@game-cms/core':
+        specifier: workspace:*
+        version: link:../core
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
       mime-types:
         specifier: ^3.0.2
         version: 3.0.2
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
     devDependencies:
+      '@game-cms/base-api':
+        specifier: workspace:*
+        version: link:../base-api
       '@game-cms/base-core':
         specifier: workspace:*
         version: link:../base-core

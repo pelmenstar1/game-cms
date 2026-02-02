@@ -6,5 +6,5 @@ build
 *.tsbuildinfo
 .eslintcache
 .stylelintcache
-.env.test
+.env*
 .game-cms-storage

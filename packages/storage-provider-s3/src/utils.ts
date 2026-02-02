@@ -4,8 +4,16 @@ import { extension } from 'mime-types';
 
 import type { S3StorageProviderConfig } from './types.js';
 
+export const GET_ROUTE = '/storage/file/get';
+
 export function getFileUrl(config: S3StorageProviderConfig, key: string) {
-  return new URL(key, config.publicUrl).toString();
+  const { publicUrl } = config;
+
+  if (publicUrl !== undefined) {
+    return new URL(key, publicUrl).toString();
+  }
+
+  return `/api${GET_ROUTE}/${key}`;
 }
 
 export function createFileKey(mime: string) {

@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@fastify/http-proxy": "^11.4.1",
-    "@fastify/multipart": "catalog:",
     "@fastify/static": "9.0.0",
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-components": "workspace:*",

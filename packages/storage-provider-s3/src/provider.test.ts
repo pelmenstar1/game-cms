@@ -5,7 +5,7 @@ import type { FileSource } from '@game-cms/base-core';
 import { loadEnvFileIfExists } from '@game-cms/shared/io';
 import { describe, expect, test } from 'vitest';
 
-import { s3StorageProvider } from './index.js';
+import { s3StorageProvider } from './provider.js';
 
 await loadEnvFileIfExists(path.join(import.meta.dirname, '../'), '.env.test');
 

@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import multipart from '@fastify/multipart';
 import { ApiErrorCode } from '@game-cms/base-core';
 import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
 import { UnknownApiRoute } from '@game-cms/core/api';
@@ -32,6 +33,7 @@ export const apiConfig: PluginApiConfig = {
     setup: (app) => {
       initAuth(app);
 
+      app.register(multipart);
       app.setErrorHandler(errorHandler());
 
       app.route({

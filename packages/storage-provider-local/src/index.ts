@@ -2,7 +2,10 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import send from '@fastify/send';
-import type { StorageProvider } from '@game-cms/base-core';
+import type {
+  StorageFilePersistentItem,
+  StorageProvider,
+} from '@game-cms/base-core';
 import { ApiError } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
@@ -17,14 +20,14 @@ export type LocalStorageProviderConfig = {
 
 type Extra = { fileName: string };
 
-const GET_ROUTE = '/storage/provider/get';
-
-function createFileUrl(fileName: string) {
-  return encodeURI(`/api${GET_ROUTE}/${fileName}`);
-}
+const GET_ROUTE = '/storage/file/get';
 
 function throwFileNotFound(): never {
   throw new ApiError('File not found', 'base::entity/notFound');
+}
+
+function collection() {
+  return cms().service('base::storage').collection();
 }
 
 function getFileRoute(storagePath: string) {
@@ -42,15 +45,12 @@ function getFileRoute(storagePath: string) {
     handler: async (req, res) => {
       const { fileName } = req.params;
 
-      const storageInfo = await cms()
-        .service('base::storage')
-        .collection()
-        .findOne(
-          {
-            extra: { fileName },
-          },
-          { projection: { mime: 1 } }
-        );
+      const storageInfo = await collection().findOne(
+        {
+          extra: { fileName },
+        },
+        { projection: { mime: 1 } }
+      );
 
       if (storageInfo === null) {
         throwFileNotFound();
@@ -67,7 +67,7 @@ function getFileRoute(storagePath: string) {
 
       res.raw.writeHead(statusCode, {
         ...headers,
-        'content-type': (storageInfo as { mime: string }).mime,
+        'content-type': (storageInfo as StorageFilePersistentItem).mime,
       });
       stream.pipe(res.raw);
     },
@@ -82,10 +82,12 @@ export function localStorageProvider(
   return {
     init: async () => {
       await fsp.mkdir(storagePath, { recursive: true });
+
+      await collection().createIndex({ 'extra.fileName': 1 }, { unique: true });
     },
     routes: [getFileRoute(storagePath)],
     protocol: {
-      getUrl: ({ fileName }) => createFileUrl(fileName),
+      getUrl: ({ fileName }) => encodeURI(`/api${GET_ROUTE}/${fileName}`),
       upload: async ({ name, content }) => {
         const fileName = createNewFileName(storagePath, name);
         const outputPath = path.join(storagePath, fileName);

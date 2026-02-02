@@ -3,8 +3,14 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": ["node"]
+    "types": ["node", "@game-cms/base-api/types"]
   },
   "include": ["./src"],
-  "references": [{ "path": "../base-core" }, { "path": "../shared" }]
+  "references": [
+    { "path": "../base-api" },
+    { "path": "../base-core" },
+    { "path": "../core" },
+    { "path": "../global" },
+    { "path": "../shared" }
+  ]
 }

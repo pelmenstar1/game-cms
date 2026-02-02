@@ -19,7 +19,13 @@ import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { asyncMapObject } from '@game-cms/shared/object';
-import type { ClientSession, Document, ObjectId, WithId } from 'mongodb';
+import type {
+  ClientSession,
+  Collection,
+  Document,
+  ObjectId,
+  WithId,
+} from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
@@ -35,8 +41,10 @@ declare module '@game-cms/base-core' {
   }
 }
 
-function collection() {
-  return cms().service('base::database').collection('base::storage');
+function collection<Extra>() {
+  return cms()
+    .service('base::database')
+    .collection('base::storage') as Collection<StoragePersistentItem<Extra>>;
 }
 
 function storageProvider() {
