@@ -1,19 +1,17 @@
 .root {
+  display: flex;
+  flex-direction: column;
   padding: 0.5rem 1rem;
   flex-grow: 1;
 }
 
 .header {
-  display: flex;
   margin-bottom: 1em;
-}
-
-.delete {
-  margin-left: auto;
 }
 
 .content {
   display: flex;
+  flex-grow: 1;
   gap: 0.5em;
 }
 
@@ -24,4 +22,9 @@
 .side-panel {
   min-width: 15%;
   height: fit-content;
+}
+
+.preview-panel {
+  max-width: 30%;
+  min-width: 30%;
 }

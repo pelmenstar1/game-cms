@@ -8,13 +8,12 @@ import type {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentRawInDataById,
-  ComponentRenderer,
   ForeignComponentClientDataResolverContext,
   ForeignComponentDefaultRawDataContext,
   ForeignComponentPathWalkerContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
-import { createInMemoryCache, incrementingIdSource } from '@game-cms/shared';
+import { createCachedFactory, incrementingIdSource } from '@game-cms/shared';
 import { type PropsWithChildren, useMemo } from 'react';
 import React from 'react';
 
@@ -29,13 +28,15 @@ import {
 
 import { type ComponentHub, ComponentHubContext } from './context';
 
-const componentCache = createInMemoryCache((id: ComponentId) => {
-  return React.lazy(async () => {
-    const module = await importComponent(id);
+const getCachedComponent = createCachedFactory(
+  <Id extends ComponentId>(id: Id) => {
+    return React.lazy(async () => {
+      const module = await importComponent(id);
 
-    return { default: module.renderer };
-  });
-});
+      return { default: module.renderer };
+    });
+  }
+);
 
 export function ComponentHubProvider({ children }: PropsWithChildren) {
   const validationContext = useMemo(
@@ -133,8 +134,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   const api = useMemo(
     (): ComponentApi => ({
       generateId: incrementingIdSource,
-      getComponent: <Id extends ComponentId>(id: Id) =>
-        componentCache.get(id) as unknown as ComponentRenderer<Id>,
+      getComponent: getCachedComponent,
       getDefaultData: clientTransformerContext.getDefaultData,
       getMeta: getComponentMeta,
       applyAtPath: pathWalkerContext.applyAtPath,

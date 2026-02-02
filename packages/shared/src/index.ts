@@ -1,6 +1,7 @@
 export * from './abortController.js';
 export * from './clipboard.js';
 export * from './delay.js';
+export * from './fetch.js';
 export * from './idSource.js';
 export * from './isFloat.js';
 export * from './math.js';

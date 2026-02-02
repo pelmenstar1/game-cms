@@ -15,6 +15,7 @@ export * from './FileDropArea';
 export * from './IconButton';
 export * from './IconComponentBase';
 export * from './IconLinkButton';
+export * from './IconSwitchButton';
 export * from './IndeterminateCircularProgress';
 export * from './InfiniteScroll';
 export * from './JsonEditor';

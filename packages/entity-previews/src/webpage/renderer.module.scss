@@ -1,0 +1,32 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.page-view {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  max-width: 100%;
+
+  &-url {
+    width: 100px;
+    flex-grow: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-wrap: nowrap;
+  }
+}
+
+.frame {
+  flex-grow: 1;
+  outline: none;
+  border: none;
+}

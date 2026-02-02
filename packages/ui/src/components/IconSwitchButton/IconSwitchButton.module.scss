@@ -1,0 +1,9 @@
+.root {
+  &-checked {
+    background: var(--color-background-dark) !important;
+  }
+}
+
+.input {
+  appearance: none;
+}

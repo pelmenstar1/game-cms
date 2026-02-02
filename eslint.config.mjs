@@ -25,6 +25,7 @@ export default defineConfig(
       'packages/ui/.storybook',
       'packages/ui/vite.storybook.config.ts',
       'packages/base-api/scripts/*',
+      'packages/entity-previews/scripts/*',
       'packages/base-components/scripts/*',
       'packages/game-plugin-components/scripts/*',
       'packages/game-plugin-components/.storybook',

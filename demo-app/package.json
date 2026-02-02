@@ -13,6 +13,7 @@
     "@game-cms/storage-provider-s3": "workspace:*",
     "@game-cms/storage-addons": "workspace:*",
     "@game-cms/entity-checks": "workspace:*",
+    "@game-cms/entity-previews": "workspace:*",
     "game-cms": "workspace:*",
     "zod": "catalog:"
   },

@@ -222,6 +222,9 @@ importers:
       '@game-cms/entity-checks':
         specifier: workspace:*
         version: link:../packages/entity-checks
+      '@game-cms/entity-previews':
+        specifier: workspace:*
+        version: link:../packages/entity-previews
       '@game-cms/game-plugin':
         specifier: workspace:*
         version: link:../packages/game-plugin
@@ -259,9 +262,6 @@ importers:
       '@game-cms/base-core':
         specifier: workspace:*
         version: link:../base-core
-      '@game-cms/client':
-        specifier: workspace:*
-        version: link:../client
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
@@ -323,9 +323,6 @@ importers:
       '@game-cms/base-core':
         specifier: workspace:*
         version: link:../base-core
-      '@game-cms/client':
-        specifier: workspace:*
-        version: link:../client
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
@@ -433,9 +430,6 @@ importers:
       '@game-cms/base-components':
         specifier: workspace:*
         version: link:../base-components
-      '@game-cms/client':
-        specifier: workspace:*
-        version: link:../client
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
@@ -461,28 +455,6 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
-
-  packages/client:
-    dependencies:
-      '@game-cms/base-core':
-        specifier: workspace:*
-        version: link:../base-core
-      '@game-cms/shared':
-        specifier: workspace:*
-        version: link:../shared
-      qs:
-        specifier: 'catalog:'
-        version: 6.14.1
-    devDependencies:
-      '@game-cms/core':
-        specifier: workspace:*
-        version: link:../core
-      '@types/qs':
-        specifier: ^6.14.0
-        version: 6.14.0
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.3
 
   packages/codegen:
     dependencies:
@@ -593,9 +565,6 @@ importers:
       '@game-cms/base-core':
         specifier: workspace:*
         version: link:../base-core
-      '@game-cms/client':
-        specifier: workspace:*
-        version: link:../client
       '@game-cms/component-api':
         specifier: workspace:*
         version: link:../component-api
@@ -714,9 +683,6 @@ importers:
       '@game-cms/base-core':
         specifier: workspace:*
         version: link:../base-core
-      '@game-cms/client':
-        specifier: workspace:*
-        version: link:../client
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
@@ -739,6 +705,37 @@ importers:
       mongodb:
         specifier: 'catalog:'
         version: 7.0.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
+  packages/entity-previews:
+    dependencies:
+      '@game-cms/base-core':
+        specifier: workspace:*
+        version: link:../base-core
+      '@game-cms/codegen':
+        specifier: workspace:*
+        version: link:../codegen
+      '@game-cms/core':
+        specifier: workspace:*
+        version: link:../core
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@game-cms/ui':
+        specifier: workspace:*
+        version: link:../ui
+      react:
+        specifier: 'catalog:'
+        version: 19.2.3
+    devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.8
+      tsx:
+        specifier: 'catalog:'
+        version: 4.21.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3

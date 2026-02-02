@@ -11,6 +11,7 @@ export type IsAllOptional<T> = Partial<T> extends T ? true : false;
 
 export type RequiredIf<T, C> = C extends true ? Required<T> : T;
 export type PartialIf<T, C> = C extends true ? Partial<T> : T;
+export type PartialIfUndefined<T, U> = U extends undefined ? Partial<T> : T;
 export type UndefinedIf<C> = C extends true ? undefined : never;
 
 export type AnyKeyInObject<T, K extends PropertyKey> = [true] extends {
@@ -53,3 +54,5 @@ export type GetPropertyOr<T, K extends PropertyKey, F> =
   T extends Record<K, unknown> ? T[K] : F;
 
 export type IfNever<T, F> = T extends never ? F : T;
+
+export type DefaultExport<T = unknown> = { default: T };

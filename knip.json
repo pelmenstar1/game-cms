@@ -36,6 +36,9 @@
     },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]
+    },
+    "roundtrip-server": {
+      "entry": ["src/main.ts"]
     }
   }
 }

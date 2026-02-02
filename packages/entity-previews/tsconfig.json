@@ -1,0 +1,17 @@
+{
+  "extends": "../../configs/tsconfig.lib.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "preserve",
+    "moduleResolution": "bundler"
+  },
+  "include": ["./src"],
+  "references": [
+    { "path": "../base-core" },
+    { "path": "../codegen" },
+    { "path": "../core" },
+    { "path": "../shared" },
+    { "path": "../ui" }
+  ]
+}

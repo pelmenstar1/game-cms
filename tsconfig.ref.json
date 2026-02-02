@@ -26,7 +26,8 @@
     { "path": "./packages/component-testing-lib" },
     { "path": "./packages/e2e" },
     { "path": "./packages/storage-addons" },
-    { "path": "./packages/entity-checks" }
+    { "path": "./packages/entity-checks" },
+    { "path": "./packages/entity-previews" }
   ],
   "include": []
 }

@@ -13,6 +13,7 @@ import type {
   EntityCheckClientDataMap,
   EntityCheckStorageDataMap,
 } from './entityCheck.js';
+import { AnyEntityPreviewController } from './entityPreview.js';
 import type { entityVariant } from './schema/entity.js';
 
 export type EntitySchemaComponents = Record<string, ComponentSchema>;
@@ -108,19 +109,14 @@ export type EntityDisplayKeyById<Id extends EntityId> = EntityDisplayKey<
   EntityMap[Id]
 >;
 
-export interface EntitySchemaMeta<
+export interface EntitySchema<
   Id extends EntityId = EntityId,
   Components extends EntitySchemaComponents = EntitySchemaComponents,
 > {
   id: Id;
   title: string;
   displayKeys?: EntityDisplayKey<Components>[];
-}
-
-export interface EntitySchema<
-  Id extends EntityId = EntityId,
-  Components extends EntitySchemaComponents = EntitySchemaComponents,
-> extends EntitySchemaMeta<Id, Components> {
+  preview?: AnyEntityPreviewController;
   components: Components;
 }
 

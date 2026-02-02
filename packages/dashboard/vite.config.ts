@@ -12,7 +12,8 @@ export default defineConfig(() => ({
       'ui',
       'base-components',
       'game-plugin-components',
-    ]) as Plugin,
+      'entity-previews',
+    ]),
     ignitePlugin() as PluginOption,
   ],
 }));

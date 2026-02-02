@@ -11,10 +11,9 @@ import type {
 } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
 import type { ComponentClientDataById } from '@game-cms/core';
-import { classNames, DeleteIcon, IconButton, Typography } from '@game-cms/ui';
+import { classNames } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
-import { useSelfSession } from '@/hooks/useSession';
 import {
   type EntityComposeOptions,
   transformDataToClientData,
@@ -24,6 +23,8 @@ import { EntityReviewBlock } from '../EntityReviewBlock';
 import { EntityVariantTabs } from '../EntityVariantTabs';
 import styles from './AccessEntityView.module.scss';
 import { ActionBlock } from './ActionBlock';
+import { Header } from './Header';
+import { PreviewPanel } from './PreviewPanel';
 
 const composeId = 'base::compose';
 
@@ -54,7 +55,6 @@ export function AccessEntityView<Id extends EntityId>({
   type ClientData = ComponentClientDataById<ComposeId, Args>;
 
   const api = useComponentApi();
-  const { permissions } = useSelfSession();
 
   const Compose = api.getComponent(composeId);
   const composeOptions = schema.components as EntityComposeOptions<Id>;
@@ -65,6 +65,8 @@ export function AccessEntityView<Id extends EntityId>({
 
   const [selectedVariant, setSelectedVariant] =
     useState<EntityVariant>('draft');
+
+  const [previewEnabled, setPreviewEnabled] = useState(false);
 
   const data = useMemo(() => {
     return api.clientTransformerContext.fromClient<ComposeId, Args>(
@@ -96,22 +98,14 @@ export function AccessEntityView<Id extends EntityId>({
 
   return (
     <div className={classNames(styles.root, className)}>
-      <div className={styles.header}>
-        <Typography variant="h4" className={styles.title}>
-          {schema.title}
-        </Typography>
-
-        {initialValue !== undefined &&
-          permissions.has(`entity/${schema.id}$delete`) && (
-            <IconButton
-              className={styles.delete}
-              title="Delete"
-              onClick={onDelete}
-            >
-              <DeleteIcon />
-            </IconButton>
-          )}
-      </div>
+      <Header
+        className={styles.header}
+        hasInitialValue={initialValue !== undefined}
+        schema={schema}
+        onDelete={onDelete}
+        previewEnabled={previewEnabled}
+        onPreviewEnabledChanged={setPreviewEnabled}
+      />
 
       <div className={styles.content}>
         <div className={styles['entity-data']}>
@@ -158,6 +152,16 @@ export function AccessEntityView<Id extends EntityId>({
             />
           )}
         </div>
+
+        {previewEnabled && (
+          <PreviewPanel
+            className={styles['preview-panel']}
+            entityId={entityId}
+            data={clientData}
+            schema={schema}
+            objectId={initialId}
+          />
+        )}
       </div>
     </div>
   );

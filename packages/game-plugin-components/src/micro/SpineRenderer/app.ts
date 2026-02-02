@@ -2,7 +2,7 @@ import {
   SkinsAndAnimationBoundsProvider,
   Spine,
 } from '@esotericsoftware/spine-pixi-v8';
-import { lerp } from '@game-cms/shared';
+import { lerp, safeGetText } from '@game-cms/shared';
 import {
   Application,
   Assets,
@@ -68,9 +68,11 @@ async function getAtlasPages(url: string): Promise<string[]> {
   const response = await fetch(url);
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => '');
+    const errorText = await safeGetText(response);
 
-    throw new Error(`Cannot fetch atlas file: ${response.status} ${errorText}`);
+    throw new Error(
+      `Cannot fetch atlas file: ${response.status} ${errorText ?? ''}`
+    );
   }
 
   const text = await response.text();

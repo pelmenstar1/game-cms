@@ -1,10 +1,10 @@
-import { isNonNullObject } from '@game-cms/shared';
+import { isNonNullObject, safeGetText } from '@game-cms/shared';
 import { parseJsonOptional } from '@game-cms/shared/json';
 
 import { ApiError } from '../../error.js';
 
 export async function handleResponseError(response: Response) {
-  const bodyString = await response.text().catch(() => null);
+  const bodyString = await safeGetText(response);
   if (bodyString === null) {
     throw new Error('API error: cannot retrieve message');
   }
