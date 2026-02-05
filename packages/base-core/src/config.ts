@@ -1,9 +1,10 @@
-import type { RelativeTime } from '@game-cms/shared/chrono';
+import { RelativeTime } from '@game-cms/shared/chrono';
 import type { MongoClientOptions } from 'mongodb';
 
-import type { AnyEntityCheck } from './entityCheck.js';
-import type { AnyStorageAddon } from './storage.js';
-import type { AnyStorageProvider } from './storageProvider.js';
+import { AnyEntityCheck } from './entityCheck.js';
+import { AnyEntityHook } from './entityHook.js';
+import { AnyStorageAddon } from './storage.js';
+import { AnyStorageProvider } from './storageProvider.js';
 
 export type DatabaseConfig = {
   mongo: { url: string } & MongoClientOptions;
@@ -30,6 +31,7 @@ export type AuthConfig = {
 
 export type EntityConfig = {
   checks?: AnyEntityCheck[];
+  hooks?: AnyEntityHook[];
 };
 
 declare module '@game-cms/core' {

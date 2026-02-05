@@ -56,6 +56,7 @@ export const renderer = <Id extends EntityId>({
           data,
           entityId,
           objectId,
+          abortSignal: abortController?.signal,
         });
 
         setResult({ status: 'success', value: url });

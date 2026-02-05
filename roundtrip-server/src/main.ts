@@ -28,6 +28,15 @@ app.get('/page', (req, res) => {
 </html>`);
 });
 
+app.post('/entity-webhook', (req) => {
+  // eslint-disable-next-line no-console
+  console.log(JSON.stringify(req.body, null, 2));
+
+  return {
+    body: req.body,
+  };
+});
+
 const result = await app.listen({ port: PORT });
 
 // eslint-disable-next-line no-console

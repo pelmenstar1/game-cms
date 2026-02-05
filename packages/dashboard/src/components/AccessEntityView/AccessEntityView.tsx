@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 import type {
   EntityCheckClientData,
+  EntityClientDataById,
+  EntityComponents,
   EntityId,
-  EntityMap,
   EntityRawDataWithChecksById,
   EntityRawInDataById,
   EntitySchemaById,
   EntityVariant,
 } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
-import type { ComponentClientDataById } from '@game-cms/core';
 import { classNames } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -51,15 +51,14 @@ export function AccessEntityView<Id extends EntityId>({
   onDelete,
   onUnpublish,
 }: AccessEntityViewProps<Id>) {
-  type Args = EntityMap[Id];
-  type ClientData = ComponentClientDataById<ComposeId, Args>;
+  type Args = EntityComponents<Id>;
 
   const api = useComponentApi();
 
   const Compose = api.getComponent(composeId);
   const composeOptions = schema.components as EntityComposeOptions<Id>;
 
-  const [clientData, setClientData] = useState<ClientData>(() =>
+  const [clientData, setClientData] = useState(() =>
     transformDataToClientData(api, initialValue, composeOptions)
   );
 
@@ -80,7 +79,7 @@ export function AccessEntityView<Id extends EntityId>({
     const rawData = data.result;
 
     if (rawData !== undefined) {
-      onSave?.(rawData, 'published');
+      onSave?.(rawData as EntityRawInDataById<Id>, 'published');
     }
   }, [data, onSave]);
 
@@ -88,7 +87,7 @@ export function AccessEntityView<Id extends EntityId>({
     const rawData = data.result;
 
     if (rawData !== undefined) {
-      onSave?.(rawData, 'draft');
+      onSave?.(rawData as EntityRawInDataById<Id>, 'draft');
     }
   }, [data, onSave]);
 
@@ -154,10 +153,10 @@ export function AccessEntityView<Id extends EntityId>({
         </div>
 
         {previewEnabled && (
-          <PreviewPanel
+          <PreviewPanel<Id>
             className={styles['preview-panel']}
             entityId={entityId}
-            data={clientData}
+            data={clientData as EntityClientDataById<Id>}
             schema={schema}
             objectId={initialId}
           />

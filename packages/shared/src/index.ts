@@ -6,6 +6,7 @@ export * from './idSource.js';
 export * from './isFloat.js';
 export * from './math.js';
 export * from './maybeFactory.js';
+export * from './maybePromise.js';
 export * from './memoryCache.js';
 export * from './mime.js';
 export * from './nameGenerator.js';

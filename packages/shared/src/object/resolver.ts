@@ -2,7 +2,7 @@ import {
   type MaybeAsyncFactory,
   resolveAsyncMaybeFactory,
 } from '../maybeFactory.js';
-import type { MaybePromise } from '../typeutil.js';
+import type { MaybePromise } from '../maybePromise.js';
 
 export type ObjectFunctionResolver<T, Args extends unknown[] = []> = (
   ...args: Args

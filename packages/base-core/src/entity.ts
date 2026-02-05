@@ -19,9 +19,14 @@ import type { entityVariant } from './schema/entity.js';
 export type EntitySchemaComponents = Record<string, ComponentSchema>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface EntityMap extends Record<string, EntitySchemaComponents> {}
+export interface EntityMap {}
 
-export type EntityId = keyof EntityMap;
+export type EntityId = keyof EntityMap extends never ? string : keyof EntityMap;
+
+export type EntityComponents<Id extends EntityId> =
+  EntityMap extends Record<Id, unknown>
+    ? EntityMap[Id] & EntitySchemaComponents
+    : EntitySchemaComponents;
 
 export type EntityMeta = {
   lastUpdatedTime: number;
@@ -47,7 +52,7 @@ type ComponentsToData<T, DataKey extends keyof GetComponentSchemaTypes> = {
 };
 
 export type EntityRawDataById<Id extends EntityId> = ComponentsToData<
-  EntityMap[Id],
+  EntityComponents<Id>,
   'rawData'
 >;
 
@@ -57,27 +62,27 @@ export type EntityRawDataWithChecksById<Id extends EntityId> =
   };
 
 export type EntityRawInDataById<Id extends EntityId> = ComponentsToData<
-  EntityMap[Id],
+  EntityComponents<Id>,
   'rawInData'
 >;
 
 export type EntityRawInPartialDataById<Id extends EntityId> = ComponentsToData<
-  EntityMap[Id],
+  EntityComponents<Id>,
   'partialRawInData'
 >;
 
 export type EntityResolvedDataById<Id extends EntityId> = ComponentsToData<
-  EntityMap[Id],
+  EntityComponents<Id>,
   'resolvedData'
 >;
 
 export type EntityClientDataById<Id extends EntityId> = ComponentsToData<
-  EntityMap[Id],
+  EntityComponents<Id>,
   'clientData'
 >;
 
 export type BaseEntityStorageDataById<Id extends EntityId> = ComponentsToData<
-  EntityMap[Id],
+  EntityComponents<Id>,
   'storageData'
 >;
 
@@ -87,7 +92,7 @@ export type EntityStorageDataById<Id extends EntityId> = EntityVariantData<
 
 export type EntityErrorById<Id extends EntityId> = {
   ownError?: 'INVALID_TYPE';
-  properties?: ComponentsToData<EntityMap[Id], 'error'>;
+  properties?: ComponentsToData<EntityComponents<Id>, 'error'>;
 };
 
 type BaseEntityDisplayKey<Components extends EntitySchemaComponents, U> = {
@@ -106,7 +111,7 @@ type EntityDisplayKey<Components extends EntitySchemaComponents> =
   | BaseEntityDisplayKey<Components, string | number>;
 
 export type EntityDisplayKeyById<Id extends EntityId> = EntityDisplayKey<
-  EntityMap[Id]
+  EntityComponents<Id>
 >;
 
 export interface EntitySchema<
@@ -122,7 +127,7 @@ export interface EntitySchema<
 
 export type EntitySchemaById<Id extends EntityId> = EntitySchema<
   Id,
-  EntityMap[Id]
+  EntityComponents<Id>
 >;
 
 type EntityToEntry<T extends { id: string; components: unknown }> = [

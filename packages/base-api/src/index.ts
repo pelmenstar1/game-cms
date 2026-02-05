@@ -2,14 +2,14 @@ import path from 'node:path';
 
 import multipart from '@fastify/multipart';
 import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
-import { ApiErrorCode, UnknownApiRoute } from '@game-cms/core/api';
+import { UnknownApiRoute } from '@game-cms/core/api';
 import { combineAsyncFactories } from '@game-cms/shared';
 
 import { errorStatuses } from './errors.js';
 import { initAuth } from './plugins/auth.js';
 import { scanDirectorySource } from './scan.js';
 import * as services from './services/index.js';
-import { errorHandler } from './utils/errorHandler.js';
+import { errorHandler, ErrorResponseBody } from './utils/errorHandler.js';
 
 export const serviceSource: ServiceSource = Object.values(services);
 
@@ -39,11 +39,12 @@ export const apiConfig: PluginApiConfig = {
         url: '/*',
         method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
         handler: (_req, res) => {
-          const code: ApiErrorCode = 'base::route/notFound';
+          const body: ErrorResponseBody = {
+            message: 'API route is not found',
+            code: 'base::route/notFound',
+          };
 
-          res
-            .status(404)
-            .send({ error: { message: 'API route is not found', code } });
+          res.status(404).send({ error: body });
         },
       });
     },

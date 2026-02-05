@@ -6,6 +6,7 @@ export * from './config.js';
 export * from './database.js';
 export * from './entity.js';
 export * from './entityCheck.js';
+export * from './entityHook.js';
 export * from './entityPreview.js';
 export * from './env.js';
 export * from './i18n.js';

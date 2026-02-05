@@ -3,10 +3,15 @@ import { env } from '@game-cms/global';
 import { isErrorWithCode } from '@game-cms/shared/errors';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-type ErrorResponseBody = {
+export type ErrorResponseBody = {
   message: string;
-  code: ApiErrorCode;
-  details?: string;
+  code?: ApiErrorCode;
+  details?: unknown;
+};
+
+type ErrorResponseParserResult = {
+  status: number;
+  body: ErrorResponseBody;
 };
 
 type FastifyValidationError = {
@@ -23,7 +28,7 @@ function getApiStatusCode(error: ApiError) {
   return status ?? 400;
 }
 
-function getApiErrorResponse(error: ApiError) {
+function getApiErrorResponse(error: ApiError): ErrorResponseParserResult {
   const status = getApiStatusCode(error);
 
   const { message, code, details } = error;
@@ -68,8 +73,8 @@ function resolveResponseAndStatus(error: unknown) {
 
 export function errorHandler() {
   // eslint-disable-next-line unicorn/consistent-function-scoping
-  return (error: Error, _req: FastifyRequest, res: FastifyReply) => {
-    console.error(error);
+  return (error: Error, req: FastifyRequest, res: FastifyReply) => {
+    req.log.error(error);
 
     const { status, body } = resolveResponseAndStatus(error);
 

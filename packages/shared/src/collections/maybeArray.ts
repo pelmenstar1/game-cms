@@ -22,6 +22,13 @@ export function maybeArrayFlatMap<T, R>(
   return Array.isArray(target) ? target.flatMap(mapping) : mapping(target);
 }
 
+export function maybeArrayIncludes<T>(
+  target: MaybeArray<T>,
+  value: T
+): boolean {
+  return Array.isArray(target) ? target.includes(value) : target === value;
+}
+
 export function normalizeMaybeArray<T>(target: MaybeArray<T>): T[] {
   return Array.isArray(target) ? target : [target];
 }

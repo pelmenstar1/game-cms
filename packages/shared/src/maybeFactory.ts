@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import type { MaybePromise } from './typeutil.js';
+
+import type { MaybePromise } from './maybePromise.js';
 
 export type MaybeFactory<T, Args extends unknown[] = []> =
   | T

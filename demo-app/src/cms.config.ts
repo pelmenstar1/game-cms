@@ -2,7 +2,7 @@ import { review } from '@game-cms/entity-checks';
 import { gamePlugin } from '@game-cms/game-plugin';
 import { imageSize, responsiveImages } from '@game-cms/storage-addons';
 import { s3StorageProvider } from '@game-cms/storage-provider-s3';
-import { config } from 'game-cms';
+import { config, entityHook, entityWebhookHandler } from 'game-cms';
 
 export default config((env) => ({
   plugins: [gamePlugin],
@@ -41,5 +41,14 @@ export default config((env) => ({
   },
   entity: {
     checks: [review()],
+    hooks: [
+      entityHook({
+        target: 'demo::test',
+        on: ['created', 'updated'],
+        handler: entityWebhookHandler({
+          url: 'http://localhost:3333/entity-webhook',
+        }),
+      }),
+    ],
   },
 }));

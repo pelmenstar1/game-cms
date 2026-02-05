@@ -1,6 +1,6 @@
 import type {
+  EntityComponents,
   EntityId,
-  EntityMap,
   EntityRawDataById,
 } from '@game-cms/base-core';
 import type { ComponentApi } from '@game-cms/component-api';
@@ -12,17 +12,17 @@ import type {
 
 export type EntityComposeData<Id extends EntityId> = ComponentClientDataById<
   'base::compose',
-  EntityMap[Id]
+  EntityComponents<Id>
 >;
 
 export type EntityComposeOptions<Id extends EntityId> = ComponentOptionsById<
   'base::compose',
-  EntityMap[Id]
+  EntityComponents<Id>
 >;
 
 export type EntityComposeError<Id extends EntityId> = ComponentErrorById<
   'base::compose',
-  EntityMap[Id]
+  EntityComponents<Id>
 >;
 
 export function transformDataToClientData<Id extends EntityId>(
@@ -33,7 +33,7 @@ export function transformDataToClientData<Id extends EntityId>(
   if (data) {
     return api.clientTransformerContext.toClient<
       'base::compose',
-      EntityMap[Id]
+      EntityComponents<Id>
     >('base::compose', data as never, options);
   }
 

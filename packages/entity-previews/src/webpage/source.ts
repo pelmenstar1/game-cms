@@ -1,5 +1,10 @@
 import { EntityClientDataById, EntityId } from '@game-cms/base-core';
-import { isNonNullObject, MaybePromise, safeGetText } from '@game-cms/shared';
+import {
+  fetchWithJsonBody,
+  handleResponseError,
+  isNonNullObject,
+  MaybePromise,
+} from '@game-cms/shared';
 
 export type WebpageEntityPreviewUrlSourcePayload<
   Id extends EntityId = EntityId,
@@ -7,6 +12,7 @@ export type WebpageEntityPreviewUrlSourcePayload<
   entityId: Id;
   objectId?: string;
   data: EntityClientDataById<Id>;
+  abortSignal?: AbortSignal;
 };
 
 export type WebpageEntityPreviewUrlSource = (
@@ -35,20 +41,14 @@ export function postRequestUrlSource(
   url: string
 ): WebpageEntityPreviewUrlSource {
   return async (payload) => {
-    const response = await fetch(url, {
-      body: JSON.stringify(payload),
+    const response = await fetchWithJsonBody(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      body: payload,
+      signal: payload.abortSignal,
     });
 
     if (!response.ok) {
-      const errorText = await safeGetText(response);
-
-      throw new Error(
-        `Cannot fetch ${url} (${response.status}): ${errorText ?? ''}`
-      );
+      await handleResponseError(response, 'Cannot fetch');
     }
 
     const body: unknown = await response.json();

@@ -1,5 +1,5 @@
+import type { MaybePromise } from './maybePromise.js';
 import { isPromise } from './typecheck.js';
-import type { MaybePromise } from './typeutil.js';
 
 type InMemoryCacheGetArgs<K, Context> = Context extends undefined
   ? [key: K, context?: Context]

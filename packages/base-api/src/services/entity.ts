@@ -17,7 +17,6 @@ import {
 import {
   ComponentDataResolverArgs,
   ComponentDataStructure,
-  ComponentId,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
@@ -225,7 +224,7 @@ function migrateEntity<Id extends EntityId>(
   };
 }
 
-function validate<Id extends ComponentId>(
+function validate<Id extends EntityId>(
   value: unknown,
   schema: EntitySchemaById<Id>
 ): EntityErrorById<Id> | undefined {
