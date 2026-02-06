@@ -22,6 +22,22 @@ export default defineComponentController({
       context.getStructure(prop.componentId, prop.options)
     ) as ComponentDataStructure;
   },
+  search: (query, data, options, context) => {
+    const optionsMap = options.options;
+
+    let result = 0;
+
+    for (const { key, data: itemData } of data) {
+      const { componentId, options: baseOptions } = optionsMap[key];
+
+      result = Math.max(
+        result,
+        context.search(query, componentId, itemData, baseOptions)
+      );
+    }
+
+    return result;
+  },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {
       const result: DataEntry<unknown, string>[] = [];

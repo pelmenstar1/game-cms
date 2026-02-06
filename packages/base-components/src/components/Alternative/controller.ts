@@ -26,6 +26,20 @@ export default defineComponentController({
       };
     }
   },
+  search: (query, data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    let result = context.search(query, componentId, data.default, baseOptions);
+
+    for (const { value } of data.alternative) {
+      result = Math.max(
+        result,
+        context.search(query, componentId, value, baseOptions)
+      );
+    }
+
+    return result;
+  },
   resolver: (raw, options, context, args) => {
     const result = resolveConditionalData(raw, args as ConditionalValueInput);
 

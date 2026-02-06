@@ -132,3 +132,17 @@ export const listEntities = <T extends EntityId>(
     url: url({ path: `/entity/${entityId}/list`, search: options }),
     response: json<PageData<EntityDataByIdWithId<T>>>(),
   });
+
+export const searchEntities = <T extends EntityId>(
+  context: RequestContext,
+  entityId: T,
+  query: string,
+  options?: PagingOptions
+) =>
+  request(context, {
+    url: url({
+      path: `/entity/${entityId}/search`,
+      search: { query, ...options },
+    }),
+    response: json<PageData<EntityDataByIdWithId<T>>>(),
+  });

@@ -60,12 +60,17 @@ export function useApiAction<
   );
 }
 
-type ApiQueryOptions = ApiRequestOptions;
-type QueryResultWithOptions<T, Options extends ApiQueryOptions> = QueryResult<
-  ResolveApiRequestResult<T, Options>
->;
+interface ApiQueryOptions<T> extends ApiRequestOptions {
+  isEnabled?: boolean;
+  disabledData?: NoInfer<T>;
+}
 
-type UseApiQueryResult<R, Options extends ApiQueryOptions> = [
+type QueryResultWithOptions<
+  T,
+  Options extends ApiQueryOptions<T>,
+> = QueryResult<ResolveApiRequestResult<T, Options>>;
+
+type UseApiQueryResult<R, Options extends ApiQueryOptions<R>> = [
   value: QueryResultWithOptions<R, Options>,
   retry: () => void,
 ];
@@ -73,12 +78,14 @@ type UseApiQueryResult<R, Options extends ApiQueryOptions> = [
 export function useApiQuery<
   Args extends unknown[],
   R,
-  Options extends ApiQueryOptions,
+  Options extends ApiQueryOptions<R>,
 >(
   queryFn: RequestFn<Args, R>,
   args?: Args,
   options?: Options
 ): UseApiQueryResult<R, Options> {
+  const isEnabled = options?.isEnabled ?? true;
+
   const client = useApiClient();
 
   const [result, setResult] = useState<QueryResultWithOptions<R, Options>>({
@@ -88,6 +95,16 @@ export function useApiQuery<
   const resolvedArgs = (args ?? []) as Args;
 
   const worker = useCallback(() => {
+    if (!isEnabled) {
+      const disabledData = options?.disabledData;
+
+      if (disabledData !== undefined) {
+        setResult({ status: 'success', value: disabledData });
+      }
+
+      return;
+    }
+
     const { promise, abort } = client.makeApiRequest<Args, R, Options>(
       queryFn,
       resolvedArgs,
@@ -106,7 +123,7 @@ export function useApiQuery<
 
     return abort;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...resolvedArgs, client]);
+  }, [...resolvedArgs, client, isEnabled]);
 
   useEffect(worker, [worker]);
 

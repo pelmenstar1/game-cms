@@ -10,6 +10,7 @@ import type {
   ForeignComponentDataMergeContext,
   ForeignComponentDataMigrationContext,
   ForeignComponentDataResolverContext,
+  ForeignComponentDataSearchContext,
   ForeignComponentDataStructureContext,
   ForeignComponentDefaultRawDataContext,
   ForeignComponentStorageDataResolverContext,
@@ -169,6 +170,14 @@ const foreignDataMergeContext: ForeignComponentDataMergeContext = {
   },
 };
 
+const foreignDataSearchContext: ForeignComponentDataSearchContext = {
+  search: (query, id, data, options) => {
+    const { search } = getController(id);
+
+    return search ? search(query, data, options, foreignDataSearchContext) : 0;
+  },
+};
+
 export default service({
   id: 'base::component',
   foreignDefaultContext,
@@ -178,5 +187,6 @@ export default service({
   foreignDataMigrationContext,
   foreignDataStructureContext,
   foreignDataMergeContext,
+  foreignDataSearchContext,
   getController,
 });

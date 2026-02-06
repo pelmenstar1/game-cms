@@ -484,15 +484,34 @@ export interface ForeignComponentDataStructureContext {
   ) => ComponentDataStructure;
 }
 
+export type ComponentDataStructureSource<Id extends ComponentId> =
+  | ComponentDataStructure
+  | (<Args>(
+      options: ComponentOptionsById<Id, Args>,
+      context: ForeignComponentDataStructureContext
+    ) => ComponentDataStructure);
+
+export interface ForeignComponentDataSearchContext {
+  search: <Id extends ComponentId, Args>(
+    query: string,
+    id: Id,
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => number;
+}
+
+export type ComponentDataSearchFn<Id extends ComponentId> = <Args>(
+  query: string,
+  data: ComponentStorageDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentDataSearchContext
+) => number;
+
 interface BaseComponentController<Id extends ComponentId = ComponentId> {
   core: ComponentCore<Id>;
-  structure?:
-    | ComponentDataStructure
-    | (<Args>(
-        options: ComponentOptionsById<Id, Args>,
-        context: ForeignComponentDataStructureContext
-      ) => ComponentDataStructure);
+  structure?: ComponentDataStructureSource<Id>;
   migrate?: ComponentDataMigration<Id>;
+  search?: ComponentDataSearchFn<Id>;
 }
 
 type RequiredIfExists<

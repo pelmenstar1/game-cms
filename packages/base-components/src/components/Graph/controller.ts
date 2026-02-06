@@ -34,6 +34,20 @@ export default defineComponentController({
       edges: raw.edges,
     };
   },
+  search: (query, data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    let result = 0;
+
+    for (const node of Object.values(data.nodes)) {
+      result = Math.max(
+        result,
+        context.search(query, componentId, node.value, baseOptions)
+      );
+    }
+
+    return result;
+  },
   storageTransformer: {
     getDefaultData: () => ({
       nodes: {},

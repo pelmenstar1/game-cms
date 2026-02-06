@@ -45,6 +45,7 @@ export * from './PreviewIcon';
 export * from './QuestionIcon';
 export * from './RefreshIcon';
 export * from './SaveIcon';
+export * from './SearchIcon';
 export * from './SeePasswordIcon';
 export * from './SettingsIcon';
 export * from './StrikeIcon';

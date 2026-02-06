@@ -64,6 +64,8 @@ declare module '@game-cms/base-core' {
   }
 }
 
+const SEARCH_THRESHOLD = 0.8;
+
 function collection<T extends EntityId>(id: T) {
   return cms().service('base::database').entityCollection(id);
 }
@@ -129,6 +131,7 @@ async function fromStorageData<Id extends EntityId>(
 
   return {
     _id: objectId,
+    '#meta': meta,
     '#checks': clientChecksData,
     ...rawComponents,
   } as unknown as WithId<EntityRawDataWithChecksById<Id>>;
@@ -285,6 +288,27 @@ function getEntityDataStructure(schema: EntitySchema) {
   return mapObject(schema.components, (prop) =>
     foreignDataStructureContext.getStructure(prop.componentId, prop.options)
   );
+}
+
+function getEntitySearchScore<Id extends EntityId>(
+  query: string,
+  data: EntityStorageDataById<Id>,
+  schema: EntitySchemaById<Id>
+) {
+  const { foreignDataSearchContext } = cms().service('base::component');
+
+  let result = 0;
+
+  for (const [key, { componentId, options }] of Object.entries(
+    schema.components
+  )) {
+    result = Math.max(
+      result,
+      foreignDataSearchContext.search(query, componentId, data[key], options)
+    );
+  }
+
+  return result;
 }
 
 export default service({
@@ -448,5 +472,35 @@ export default service({
     }
 
     return matchedCount > 0;
+  },
+  search: async <Id extends EntityId>(
+    entityId: Id,
+    query: string,
+    options: PagingOptions
+  ) => {
+    const schema = getEntitySchema(entityId);
+
+    const allItems: { id: ObjectId; data: EntityStorageDataById<Id> }[] = [];
+
+    for await (const item of collection(entityId).find()) {
+      const score = getEntitySearchScore(query, item.draft, schema);
+
+      if (score > SEARCH_THRESHOLD) {
+        allItems.push({ id: item._id, data: item.draft });
+      }
+    }
+
+    const offset = options.offset ?? 0;
+
+    return {
+      items: await Promise.all(
+        allItems
+          .slice(offset, offset + options.size)
+          .map((item) => fromStorageData(entityId, item.id, item.data))
+      ),
+      meta: {
+        totalCount: allItems.length,
+      },
+    };
   },
 });

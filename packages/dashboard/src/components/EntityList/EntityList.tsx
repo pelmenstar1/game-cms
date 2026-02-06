@@ -1,58 +1,33 @@
-import { listEntities } from '@game-cms/base-api/client';
-import type { EntityId } from '@game-cms/base-core';
-import { useApiQuery } from '@game-cms/component-api';
-import { classNames, List, MultipleDataLoader } from '@game-cms/ui';
+import type {
+  EntityId,
+  EntityRawDataById,
+  EntitySchemaById,
+} from '@game-cms/base-core';
+import { List } from '@game-cms/ui';
 
-import { useEntitySchema } from '@/hooks/useEntitySchema';
-import { usePagingOptions } from '@/hooks/usePagingOptions';
-import { useQueryPage } from '@/hooks/useQueryPage';
-
-import { PageView } from '../PageView';
 import styles from './EntityList.module.scss';
 import { Header } from './Header';
 import { Item } from './Item';
 
-export interface EntityListProps {
+export interface EntityListProps<Id extends EntityId> {
   className?: string;
-  entityId: EntityId;
+  entityId: Id;
+  items: (EntityRawDataById<Id> & { _id: string })[];
+  schema: EntitySchemaById<Id>;
 }
 
-const PAGE_SIZE = 10;
-
-export function EntityList({ className, entityId }: EntityListProps) {
-  const page = useQueryPage();
-  const options = usePagingOptions(page, PAGE_SIZE);
-  const [itemsResult] = useApiQuery(listEntities, [entityId, options]);
-
-  const entitySchemaResult = useEntitySchema(entityId);
-
+export function EntityList<Id extends EntityId>({
+  entityId,
+  items,
+  schema,
+}: EntityListProps<Id>) {
   return (
-    <MultipleDataLoader
-      result={[itemsResult, entitySchemaResult] as const}
-      className={classNames(styles.root, className)}
-    >
-      {([{ items, meta }, schema]) => (
-        <PageView
-          page={page}
-          pageSize={PAGE_SIZE}
-          totalItems={meta.totalCount}
-          className={styles['page-view']}
-          getLink={(page) => `/entities/${entityId}?page=${page}`}
-        >
-          <List className={styles['list']}>
-            <Header schema={schema} />
+    <List className={styles['list']}>
+      <Header schema={schema} />
 
-            {items.map((item) => (
-              <Item
-                key={item._id}
-                entityId={entityId}
-                value={item}
-                schema={schema}
-              />
-            ))}
-          </List>
-        </PageView>
-      )}
-    </MultipleDataLoader>
+      {items.map((item) => (
+        <Item key={item._id} entityId={entityId} value={item} schema={schema} />
+      ))}
+    </List>
   );
 }

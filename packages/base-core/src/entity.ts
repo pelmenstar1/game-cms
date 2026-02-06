@@ -9,10 +9,7 @@ import type {
 } from '@game-cms/core';
 import type z from 'zod';
 
-import type {
-  EntityCheckClientDataMap,
-  EntityCheckStorageDataMap,
-} from './entityCheck.js';
+import type { EntityCheckStorageDataMap } from './entityCheck.js';
 import { AnyEntityPreviewController } from './entityPreview.js';
 import type { entityVariant } from './schema/entity.js';
 
@@ -57,8 +54,9 @@ export type EntityRawDataById<Id extends EntityId> = ComponentsToData<
 >;
 
 export type EntityRawDataWithChecksById<Id extends EntityId> =
-  EntityRawDataById<Id> & {
-    '#checks': Partial<EntityCheckClientDataMap>;
+  EntityVariantData<EntityRawDataById<Id>> & {
+    '#meta': EntityMeta;
+    '#checks': Partial<EntityCheckStorageDataMap>;
   };
 
 export type EntityRawInDataById<Id extends EntityId> = ComponentsToData<

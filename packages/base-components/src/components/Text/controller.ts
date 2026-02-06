@@ -9,4 +9,7 @@ export default defineComponentController({
       return data.toString();
     }
   },
+  search: (query, value) => {
+    return value.startsWith(query) ? 1 : 0;
+  },
 });

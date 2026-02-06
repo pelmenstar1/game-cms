@@ -22,6 +22,20 @@ export default defineComponentController({
       context.resolveRawData(componentId, item, baseOptions, args)
     );
   },
+  search: (query, data, options, context) => {
+    const { baseOptions, componentId } = options;
+
+    let result = Number.NEGATIVE_INFINITY;
+
+    for (const item of data) {
+      result = Math.max(
+        result,
+        context.search(query, componentId, item, baseOptions)
+      );
+    }
+
+    return result;
+  },
   storageTransformer: {
     getDefaultData: () => [],
     fromStorage: (data, options, context) => {
