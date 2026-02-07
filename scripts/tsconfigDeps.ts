@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { format, resolveConfig } from 'prettier';
 
-import { readJson, readJson5 } from '../packages/shared/src/io/file';
+import { readJson, readJson5 } from '../packages/shared/src/node/io/file';
 
 type PackageInfo = {
   dependencies?: Record<string, string>;

@@ -1,6 +1,6 @@
 import type { EntityDescriptor, EntitySchema } from '@game-cms/base-core';
 import type { ValueSourceContext } from '@game-cms/core';
-import { scanDirectory } from '@game-cms/shared/io';
+import { scanDirectory } from '@game-cms/shared/node/io';
 import { createJiti, type Jiti } from 'jiti';
 
 async function importEntitySchema(

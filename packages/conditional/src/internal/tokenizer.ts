@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
-import { findClosingQuoteIndex } from '@game-cms/shared/parser';
+import { findClosingQuoteIndex } from '@game-cms/shared/string';
 
 import { stringReader } from './reader.js';
 import { StringTokenType, type Token, TokenType } from './token.js';

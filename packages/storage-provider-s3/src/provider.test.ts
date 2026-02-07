@@ -2,7 +2,7 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 
 import type { FileSource } from '@game-cms/base-core';
-import { loadEnvFileIfExists } from '@game-cms/shared/io';
+import { loadEnvFileIfExists } from '@game-cms/shared/node/io';
 import { describe, expect, test } from 'vitest';
 
 import { s3StorageProvider } from './provider.js';

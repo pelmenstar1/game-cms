@@ -9,7 +9,7 @@ import type {
 import { ApiError } from '@game-cms/core/api';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
+import { isFileNotFoundError } from '@game-cms/shared/node';
 import z from 'zod';
 
 import { createNewFileName } from './utils.js';

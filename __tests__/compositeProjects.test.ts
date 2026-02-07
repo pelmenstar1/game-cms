@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { expect, test } from 'vitest';
 
-import { readJson5 } from '../packages/shared/src/io/file';
+import { readJson5 } from '../packages/shared/src/node/io/file';
 import { TsConfig } from './types';
 
 async function checkTsconfig(filePath: string) {

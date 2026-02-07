@@ -10,7 +10,7 @@ import type {
 import type { ComponentDistributionInfo, ComponentEnv } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { importFile } from '@game-cms/shared/io';
+import { importFile } from '@game-cms/shared/node/io';
 
 export async function getAllComponentDistributions(
   context: ValueSourceContext

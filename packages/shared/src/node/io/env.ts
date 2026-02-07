@@ -3,7 +3,7 @@ import path from 'node:path';
 // eslint-disable-next-line unicorn/import-style
 import util from 'node:util';
 
-import { isFileNotFoundError } from '../errors/index.js';
+import { isFileNotFoundError } from '../error.js';
 
 export async function loadEnvFileIfExists(
   baseDir: string = './',

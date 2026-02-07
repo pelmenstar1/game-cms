@@ -14,10 +14,6 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./errors": {
-      "import": "./dist/errors/index.js",
-      "types": "./dist/errors/index.d.ts"
-    },
     "./chrono": {
       "import": "./dist/chrono/index.js",
       "types": "./dist/chrono/index.d.ts"
@@ -25,10 +21,6 @@
     "./string": {
       "import": "./dist/string/index.js",
       "types": "./dist/string/index.d.ts"
-    },
-    "./fetch": {
-      "import": "./dist/fetch/index.js",
-      "types": "./dist/fetch/index.d.ts"
     },
     "./object": {
       "import": "./dist/object/index.js",
@@ -38,18 +30,6 @@
       "import": "./dist/mongo/index.js",
       "types": "./dist/mongo/index.d.ts"
     },
-    "./crypto": {
-      "import": "./dist/crypto/index.js",
-      "types": "./dist/crypto/index.d.ts"
-    },
-    "./http": {
-      "import": "./dist/http/index.js",
-      "types": "./dist/http/index.d.ts"
-    },
-    "./io": {
-      "import": "./dist/io/index.js",
-      "types": "./dist/io/index.d.ts"
-    },
     "./collections": {
       "import": "./dist/collections/index.js",
       "types": "./dist/collections/index.d.ts"
@@ -58,9 +38,9 @@
       "import": "./dist/node/index.js",
       "types": "./dist/node/index.d.ts"
     },
-    "./parser": {
-      "import": "./dist/parser/index.js",
-      "types": "./dist/parser/index.d.ts"
+    "./node/io": {
+      "import": "./dist/node/io/index.js",
+      "types": "./dist/node/io/index.d.ts"
     },
     "./json": {
       "import": "./dist/json/index.js",

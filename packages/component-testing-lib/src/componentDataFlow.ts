@@ -20,7 +20,7 @@ import {
   resolveMaybeFactory,
 } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { importFile } from '@game-cms/shared/io';
+import { importFile } from '@game-cms/shared/node/io';
 import { describe, expect, test } from 'vitest';
 
 type TestInput<Id extends ComponentId> = {

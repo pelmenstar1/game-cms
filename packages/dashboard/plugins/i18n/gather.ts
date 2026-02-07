@@ -2,7 +2,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import { env } from '@game-cms/global';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
+import { isFileNotFoundError } from '@game-cms/shared/node';
 
 type DistributionI18n = {
   languages: Partial<

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { findClosingQuoteIndex } from './string.js';
+import { findClosingQuoteIndex } from './findClosingQuoteIndex.js';
 
 test.each<[string, number]>([
   [`123'`, 4],

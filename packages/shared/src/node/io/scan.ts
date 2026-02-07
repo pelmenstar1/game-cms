@@ -2,7 +2,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import { type MaybePromise } from '@game-cms/shared';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
+import { isFileNotFoundError } from '@game-cms/shared/node';
 
 export async function scanDirectory<T>(
   directoryPath: string,

@@ -1,6 +1,7 @@
 export * from './capitalizeFirstLetter.js';
 export * from './ending.js';
 export * from './fileSizeFormatter.js';
+export * from './findClosingQuoteIndex.js';
 export * from './formatter.js';
 export * from './hex.js';
 export * from './isDigit.js';

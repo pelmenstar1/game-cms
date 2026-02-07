@@ -1,4 +1,4 @@
-import { temporalDirectory } from '@game-cms/shared/io';
+import { temporalDirectory } from '@game-cms/shared/node/io';
 import { describe, expect, test } from 'vitest';
 
 import { createNewFileName } from './utils.js';

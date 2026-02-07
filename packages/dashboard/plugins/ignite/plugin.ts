@@ -2,8 +2,8 @@ import type { DashboardMeta } from '@game-cms/core';
 import { env } from '@game-cms/global';
 import { initEnvFromConfigs } from '@game-cms/ignition';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { isFileNotFoundError } from '@game-cms/shared/errors';
-import { readJson } from '@game-cms/shared/io';
+import { isFileNotFoundError } from '@game-cms/shared/node';
+import { readJson } from '@game-cms/shared/node/io';
 import type { PluginOption } from 'vite';
 
 import { dashboardComponentsPlugin } from '../components/plugin.js';

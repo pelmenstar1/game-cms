@@ -18,7 +18,7 @@
     },
     "./schema": {
       "import": "./dist/schema/index.js",
-      "types": "./dist/schema.index.d.ts"
+      "types": "./dist/schema/index.d.ts"
     }
   }
 }

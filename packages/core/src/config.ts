@@ -1,5 +1,5 @@
 import type { MaybePromise, RequiredProperty } from '@game-cms/shared';
-import type { EnvAccessor } from '@game-cms/shared/io';
+import type { EnvAccessor } from '@game-cms/shared/node/io';
 
 import type { Plugin } from './plugin.js';
 

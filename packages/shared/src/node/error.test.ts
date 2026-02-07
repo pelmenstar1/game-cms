@@ -2,8 +2,8 @@ import fsp from 'node:fs/promises';
 
 import { expect, test } from 'vitest';
 
-import { temporalDirectory } from '../io/tempDir.js';
-import { isEntityExistsError, isFileNotFoundError } from './index.js';
+import { temporalDirectory } from '../node/io/tempDir.js';
+import { isEntityExistsError, isFileNotFoundError } from './error.js';
 
 async function getError(factory: () => Promise<unknown>) {
   try {
