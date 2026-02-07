@@ -9,4 +9,9 @@ export default defineComponentController({
       return data;
     }
   },
+  search: {
+    getScore: (query, target) => {
+      return target.storage.includes(query.toLowerCase()) ? 1 : 0;
+    },
+  },
 });

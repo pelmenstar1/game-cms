@@ -167,6 +167,26 @@ export default defineComponentController({
       spritesheets: target.spritesheets,
     };
   },
+  search: {
+    getScore: (query, target, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return context.getScore(
+        query,
+        componentId,
+        {
+          storage: target.storage.base,
+          searchIndex: target.searchIndex,
+        },
+        baseOptions
+      );
+    },
+    createIndex: (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return context.createSearchIndex(componentId, data.base, baseOptions);
+    },
+  },
   storageTransformer: {
     getDefaultData: (options, context) => {
       const { componentId, baseOptions } = options;

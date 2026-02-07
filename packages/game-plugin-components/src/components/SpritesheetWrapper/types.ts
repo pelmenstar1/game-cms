@@ -11,6 +11,7 @@ import type {
   ComponentRawInDataByIdPathExtends,
   ComponentRawInPartialDataById,
   ComponentResolvedDataById,
+  ComponentSearchIndexDataById,
   ComponentStorageDataById,
   ParseComponentNestedPath,
 } from '@game-cms/core';
@@ -78,6 +79,7 @@ type SpritesheetEntry<Args extends SpritesheetArgs> = {
     base: ComponentStorageDataById<Args['id'], Args['baseArgs']>;
     spritesheets: SpritesheetBundleStorageMap;
   };
+  searchIndexData: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>;
 };
 
 type BaseNestedPath<T, Args extends SpritesheetArgs> = {
