@@ -5,6 +5,7 @@ import {
 import { unknownConditionalData } from '@game-cms/conditional/schema';
 import { defineComponentController } from '@game-cms/core';
 
+import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 
 export default defineComponentController({
@@ -29,16 +30,17 @@ export default defineComponentController({
   search: (query, data, options, context) => {
     const { componentId, baseOptions } = options;
 
-    let result = context.search(query, componentId, data.default, baseOptions);
+    const composer = searchScoreComposer();
+
+    composer.include(
+      context.search(query, componentId, data.default, baseOptions)
+    );
 
     for (const { value } of data.alternative) {
-      result = Math.max(
-        result,
-        context.search(query, componentId, value, baseOptions)
-      );
+      composer.include(context.search(query, componentId, value, baseOptions));
     }
 
-    return result;
+    return composer.result();
   },
   resolver: (raw, options, context, args) => {
     const result = resolveConditionalData(raw, args as ConditionalValueInput);

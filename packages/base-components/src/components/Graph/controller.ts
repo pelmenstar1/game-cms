@@ -1,6 +1,7 @@
 import { defineComponentController } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
+import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 import { dataShape } from './internal/schema.js';
 
@@ -37,16 +38,15 @@ export default defineComponentController({
   search: (query, data, options, context) => {
     const { componentId, baseOptions } = options;
 
-    let result = 0;
+    const composer = searchScoreComposer();
 
     for (const node of Object.values(data.nodes)) {
-      result = Math.max(
-        result,
+      composer.include(
         context.search(query, componentId, node.value, baseOptions)
       );
     }
 
-    return result;
+    return composer.result();
   },
   storageTransformer: {
     getDefaultData: () => ({

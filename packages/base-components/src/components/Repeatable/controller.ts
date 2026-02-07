@@ -1,5 +1,6 @@
 import { defineComponentController } from '@game-cms/core';
 
+import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 
 export default defineComponentController({
@@ -25,16 +26,13 @@ export default defineComponentController({
   search: (query, data, options, context) => {
     const { baseOptions, componentId } = options;
 
-    let result = Number.NEGATIVE_INFINITY;
+    const composer = searchScoreComposer();
 
     for (const item of data) {
-      result = Math.max(
-        result,
-        context.search(query, componentId, item, baseOptions)
-      );
+      composer.include(context.search(query, componentId, item, baseOptions));
     }
 
-    return result;
+    return composer.result();
   },
   storageTransformer: {
     getDefaultData: () => [],

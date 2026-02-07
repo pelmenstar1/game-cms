@@ -2,7 +2,10 @@ import { useComponentApi } from '@game-cms/component-api';
 import type { ComponentData } from '@game-cms/core';
 import { classNames, Labeled } from '@game-cms/ui';
 
-import { ComponentGroup, ComponentGroupItem } from '../../internal/types.js';
+import {
+  ComponentGroup,
+  ComponentGroupItem,
+} from '../../components/Compose/internal/types.js';
 import styles from './ComponentGridGroup.module.scss';
 
 export interface ComponentGridGroupProps<

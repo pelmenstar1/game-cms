@@ -10,6 +10,7 @@ import { defineComponentController } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
 
+import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 import { DataEntry } from './internal/types.js';
 
@@ -25,18 +26,17 @@ export default defineComponentController({
   search: (query, data, options, context) => {
     const optionsMap = options.options;
 
-    let result = 0;
+    const composer = searchScoreComposer();
 
     for (const { key, data: itemData } of data) {
       const { componentId, options: baseOptions } = optionsMap[key];
 
-      result = Math.max(
-        result,
+      composer.include(
         context.search(query, componentId, itemData, baseOptions)
       );
     }
 
-    return result;
+    return composer.result();
   },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {

@@ -2,6 +2,7 @@ import { defineComponentController } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
+import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 
 export default defineComponentController({
@@ -24,6 +25,20 @@ export default defineComponentController({
 
       return context.resolveRawData(componentId, value, baseOptions, args);
     });
+  },
+  search: (query, data, options, context) => {
+    const composer = searchScoreComposer();
+
+    for (const key in options) {
+      const { componentId, options: baseOptions } = options[key];
+      const value = data[key];
+
+      composer.include(
+        context.search(query, componentId, value as never, baseOptions)
+      );
+    }
+
+    return composer.result();
   },
   mergeData: async (target, source, options, context) => {
     const sourceMerged = await asyncMapObject(source, (item, key) => {
