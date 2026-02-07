@@ -50,6 +50,7 @@ export function EntitySearchDialog({
       title="Search"
       onClose={onClose}
       contentClassName={styles.content}
+      fastExit
     >
       <TextInput
         className={styles.query}

@@ -55,3 +55,11 @@ export type GetPropertyOr<T, K extends PropertyKey, F> =
 export type IfNever<T, F> = T extends never ? F : T;
 
 export type DefaultExport<T = unknown> = { default: T };
+
+type AllUndefined<K extends PropertyKey> = {
+  [P in K]?: undefined;
+};
+
+export type Or<T, U> =
+  | (T & AllUndefined<keyof U>)
+  | (U & AllUndefined<keyof T>);

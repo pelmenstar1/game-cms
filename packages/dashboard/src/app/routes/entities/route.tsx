@@ -5,6 +5,7 @@ import {
   PlusIcon,
   SearchIcon,
   Toolbar,
+  useHotkey,
   useModal,
   useTypedNavigate,
 } from '@game-cms/ui';
@@ -53,11 +54,17 @@ export default function Page({ params }: Route.ComponentProps) {
     }
   }, [navigate, selectedSchema]);
 
-  const onSearchClick = useCallback(() => {
+  const onShowSearch = useCallback(() => {
     if (selectedEntity) {
-      void showModal(EntitySearchDialog, { entityId: selectedEntity });
+      void showModal(
+        EntitySearchDialog,
+        { entityId: selectedEntity },
+        { singleInstance: true }
+      );
     }
   }, [selectedEntity, showModal]);
+
+  useHotkey(['Control', 'f'], onShowSearch);
 
   return (
     <div className={styles.root}>
@@ -77,7 +84,7 @@ export default function Page({ params }: Route.ComponentProps) {
             <IconButton
               className={styles['search-button']}
               title="Search"
-              onClick={onSearchClick}
+              onClick={onShowSearch}
             >
               <SearchIcon />
             </IconButton>

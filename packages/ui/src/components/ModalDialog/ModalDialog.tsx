@@ -1,7 +1,8 @@
-import { type ReactElement, type ReactNode, useId } from 'react';
+import { type ReactElement, type ReactNode, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useScrollbar } from '../../hooks';
+import { useHotkey } from '../../hooks/useHotkey';
 import type { ModalProps } from '../../hooks/useModal/context';
 import { CloseIcon } from '../../icons';
 import { classNames } from '../../utils/classNames';
@@ -18,6 +19,7 @@ interface ModalDialogProps extends ModalProps {
   footer?: ReactElement;
   effect?: ModalOverlayEffect;
   variant?: ModalDialogVariant;
+  fastExit?: boolean;
   children: ReactNode;
 }
 
@@ -28,11 +30,20 @@ export function ModalDialog({
   contentClassName,
   variant,
   effect = 'tint',
+  fastExit = false,
   onClose,
 }: ModalDialogProps) {
   const titleId = useId();
 
   useScrollbar(false);
+
+  const onFastExit = useCallback(() => {
+    if (fastExit) {
+      onClose(undefined);
+    }
+  }, [fastExit, onClose]);
+
+  useHotkey(['Escape'], onFastExit);
 
   return createPortal(
     <ModalOverlay className={styles.overlay} effect={effect}>
