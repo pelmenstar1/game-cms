@@ -1,6 +1,12 @@
 import { useComponentApi } from '@game-cms/component-api';
 import type { ComponentClientDataById, ComponentProps } from '@game-cms/core';
-import { IconButton, PreviewIcon, Toolbar, useModal } from '@game-cms/ui';
+import {
+  IconButton,
+  namedLazy,
+  PreviewIcon,
+  Toolbar,
+  useModal,
+} from '@game-cms/ui';
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,12 +14,10 @@ import { useTranslation } from 'react-i18next';
 import styles from './renderer.module.scss';
 import type { ResolveSpritesheetArgs } from './types';
 
-const SpritesheetPreviewModal = React.lazy(async () => {
-  const { SpritesheetPreviewModal } =
-    await import('../../micro/SpritesheetPreviewModal');
-
-  return { default: SpritesheetPreviewModal };
-});
+const SpritesheetPreviewModal = namedLazy(
+  () => import('../../micro/SpritesheetPreviewModal'),
+  'SpritesheetPreviewModal'
+);
 
 export const renderer = <Args,>({
   data,

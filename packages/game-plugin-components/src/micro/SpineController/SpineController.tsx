@@ -1,5 +1,9 @@
-import { classNames, IndeterminateCircularProgress } from '@game-cms/ui';
-import React, {
+import {
+  classNames,
+  IndeterminateCircularProgress,
+  namedLazy,
+} from '@game-cms/ui';
+import {
   type ComponentProps,
   Suspense,
   useCallback,
@@ -13,11 +17,10 @@ import { AnimationList } from './AnimationList/index.js';
 import { Header } from './Header/index.js';
 import styles from './SpineController.module.scss';
 
-const SpineRenderer = React.lazy(async () => {
-  const { SpineRenderer } = await import('../SpineRenderer/index.js');
-
-  return { default: SpineRenderer };
-});
+const SpineRenderer = namedLazy(
+  () => import('../SpineRenderer/index.js'),
+  'SpineRenderer'
+);
 
 export interface SpineControllerProps extends ComponentProps<'div'> {
   spine: SpineData;

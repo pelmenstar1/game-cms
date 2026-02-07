@@ -6,6 +6,7 @@ import type {
 import {
   IconButton,
   Labeled,
+  namedLazy,
   PreviewIcon,
   Toolbar,
   useModal,
@@ -22,11 +23,10 @@ import styles from './renderer.module.scss';
 
 type FileData = ComponentClientDataById<'base::file'>[number];
 
-const SpineModal = React.lazy(async () => {
-  const { SpineModal } = await import('../../micro/SpineModal');
-
-  return { default: SpineModal };
-});
+const SpineModal = namedLazy(
+  () => import('../../micro/SpineModal'),
+  'SpineModal'
+);
 
 export const renderer: ComponentRenderer<'game::spine'> = ({
   data,

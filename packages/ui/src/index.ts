@@ -6,3 +6,4 @@ export * from './utils/classNames';
 export * from './utils/contextFactory';
 export * from './utils/hookContext';
 export * from './utils/impersonation';
+export * from './utils/namedLazy';

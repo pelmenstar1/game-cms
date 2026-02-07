@@ -12,6 +12,7 @@ import {
   classNames,
   ConfirmationDialog,
   DataLoader,
+  namedLazy,
   useAsyncCallback,
   useModal,
   useNotification,
@@ -25,11 +26,10 @@ import { UploadFileDialog } from '../UploadFileDialog/index.js';
 import styles from './FileExplorer.module.scss';
 import { transformItems } from './transform.js';
 
-const FileInfoModal = React.lazy(async () => {
-  const { FileInfoModal } = await import('../FileInfoModal/index.js');
-
-  return { default: FileInfoModal };
-});
+const FileInfoModal = namedLazy(
+  () => import('../FileInfoModal/index.js'),
+  'FileInfoModal'
+);
 
 type FolderId = string | undefined;
 

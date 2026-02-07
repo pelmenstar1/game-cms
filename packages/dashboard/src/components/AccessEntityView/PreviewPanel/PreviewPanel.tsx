@@ -5,8 +5,8 @@ import {
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { createCachedFactory } from '@game-cms/shared';
-import { classNames } from '@game-cms/ui';
-import React, { Suspense } from 'react';
+import { classNames, namedLazy } from '@game-cms/ui';
+import { Suspense } from 'react';
 
 import styles from './PreviewPanel.module.scss';
 
@@ -20,11 +20,7 @@ export interface PreviewPanelProps<Id extends EntityId> {
 
 const getRenderer = createCachedFactory(
   (_id: EntityId, preview: EntityPreviewController) => {
-    return React.lazy(async () => {
-      const { renderer } = await preview.renderer();
-
-      return { default: renderer };
-    });
+    return namedLazy(preview.renderer, 'renderer');
   }
 );
 
