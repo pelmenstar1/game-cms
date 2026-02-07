@@ -18,11 +18,13 @@ export default defineComponentController({
 
     return 0;
   },
-  search: (query, data) => {
-    if (data.toString() === query) {
-      return 1;
-    }
+  search: {
+    getScore: (query, target) => {
+      if (target.storage.toString() === query) {
+        return 1;
+      }
 
-    return 0;
+      return 0;
+    },
   },
 });

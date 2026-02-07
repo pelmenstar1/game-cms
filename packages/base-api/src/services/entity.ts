@@ -1,7 +1,9 @@
 import {
+  BaseEntityStorageDataById,
   EntityDataVariantsById,
   EntityErrorById,
   EntityId,
+  EntityInstanceData,
   EntityMeta,
   EntityRawDataById,
   EntityRawDataWithChecksById,
@@ -10,13 +12,14 @@ import {
   EntityResolvedDataById,
   EntitySchema,
   EntitySchemaById,
+  EntitySearchIndexDataById,
   EntityStorageDataById,
   EntityVariant,
-  EntityVariantData,
 } from '@game-cms/base-core';
 import {
   ComponentDataResolverArgs,
   ComponentDataStructure,
+  searchScoreComposer,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
@@ -38,13 +41,13 @@ declare module '@game-cms/base-core' {
       entityId: EntityId;
       id: ObjectId;
       variant: EntityVariant;
-      data: EntityVariantData;
+      data: EntityInstanceData;
     };
     'base::entity::updated': {
       entityId: EntityId;
       id: ObjectId;
       variant: EntityVariant;
-      newData: EntityVariantData;
+      newData: EntityInstanceData;
     };
     'base::entity::deleted': {
       entityId: EntityId;
@@ -137,6 +140,23 @@ async function fromStorageData<Id extends EntityId>(
   } as unknown as WithId<EntityRawDataWithChecksById<Id>>;
 }
 
+function createSearchIndex<Id extends EntityId>(
+  storageData: BaseEntityStorageDataById<Id>,
+  schema: EntitySchemaById<Id>
+): EntitySearchIndexDataById<Id> {
+  const { foreignDataSearchContext } = cms().service('base::component');
+
+  return mapObject(schema.components, (component, key) => {
+    const { componentId, options } = component;
+
+    return foreignDataSearchContext.createSearchIndex(
+      componentId,
+      storageData[key],
+      options
+    );
+  });
+}
+
 async function toStorageData<Id extends EntityId>(
   entityId: Id,
   rawData: EntityRawInDataById<Id>
@@ -164,6 +184,7 @@ async function toStorageData<Id extends EntityId>(
   return {
     ...components,
     '#meta': entityMeta,
+    '#search': createSearchIndex(components, entitySchema),
     '#checks': {},
   };
 }
@@ -208,7 +229,7 @@ function createEntityVariants<Id extends EntityId>(
 
 function migrateEntity<Id extends EntityId>(
   schema: EntitySchemaById<Id>,
-  oldValue: EntityVariantData
+  oldValue: EntityInstanceData
 ): EntityStorageDataById<Id> {
   const { foreignDataMigrationContext } = cms().service('base::component');
 
@@ -222,6 +243,7 @@ function migrateEntity<Id extends EntityId>(
 
   return {
     ...newValue,
+    '#search': createSearchIndex(newValue, schema),
     '#meta': oldValue['#meta'],
     '#checks': oldValue['#checks'],
   };
@@ -295,20 +317,26 @@ function getEntitySearchScore<Id extends EntityId>(
   data: EntityStorageDataById<Id>,
   schema: EntitySchemaById<Id>
 ) {
+  const { '#search': searchIndex } = data;
+  const { components } = schema;
   const { foreignDataSearchContext } = cms().service('base::component');
 
-  let result = 0;
+  const composer = searchScoreComposer();
 
-  for (const [key, { componentId, options }] of Object.entries(
-    schema.components
-  )) {
-    result = Math.max(
-      result,
-      foreignDataSearchContext.search(query, componentId, data[key], options)
+  for (const key in components) {
+    const { componentId, options } = components[key];
+
+    composer.include(
+      foreignDataSearchContext.getScore(
+        query,
+        componentId,
+        { storage: data[key], searchIndex: searchIndex[key] },
+        options
+      )
     );
   }
 
-  return result;
+  return composer.result();
 }
 
 export default service({

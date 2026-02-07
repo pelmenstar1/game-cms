@@ -31,13 +31,17 @@ export type EntityMeta = {
 
 export type EntityVariant = z.infer<typeof entityVariant>;
 
-export type EntityClientVariantData = Record<string, ComponentData>;
-export type EntityVariantData<T = EntityClientVariantData> = T & {
+export type EntityClientInstanceData = Record<string, ComponentData>;
+export type EntityInstanceData<
+  T = EntityClientInstanceData,
+  Search = unknown,
+> = T & {
   '#meta': EntityMeta;
+  '#search': Search;
   '#checks'?: Partial<EntityCheckStorageDataMap>;
 };
 
-export type EntityData = Record<EntityVariant, EntityVariantData>;
+export type EntityData = Record<EntityVariant, EntityInstanceData>;
 
 export type EntityDataVariantsById<Id extends EntityId> = {
   draft: EntityStorageDataById<Id>;
@@ -54,8 +58,7 @@ export type EntityRawDataById<Id extends EntityId> = ComponentsToData<
 >;
 
 export type EntityRawDataWithChecksById<Id extends EntityId> =
-  EntityVariantData<EntityRawDataById<Id>> & {
-    '#meta': EntityMeta;
+  EntityInstanceData<EntityRawDataById<Id>, EntitySearchIndexDataById<Id>> & {
     '#checks': Partial<EntityCheckStorageDataMap>;
   };
 
@@ -84,8 +87,14 @@ export type BaseEntityStorageDataById<Id extends EntityId> = ComponentsToData<
   'storageData'
 >;
 
-export type EntityStorageDataById<Id extends EntityId> = EntityVariantData<
-  BaseEntityStorageDataById<Id>
+export type EntityStorageDataById<Id extends EntityId> = EntityInstanceData<
+  BaseEntityStorageDataById<Id>,
+  EntitySearchIndexDataById<Id>
+>;
+
+export type EntitySearchIndexDataById<Id extends EntityId> = ComponentsToData<
+  EntityComponents<Id>,
+  'searchIndexData'
 >;
 
 export type EntityErrorById<Id extends EntityId> = {

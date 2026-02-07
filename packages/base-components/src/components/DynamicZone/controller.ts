@@ -4,13 +4,13 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentResolvedDataById,
+  defineComponentController,
   ForeignComponentDataResolverContext,
+  searchScoreComposer,
 } from '@game-cms/core';
-import { defineComponentController } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
 
-import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 import { DataEntry } from './internal/types.js';
 
@@ -23,20 +23,39 @@ export default defineComponentController({
       context.getStructure(prop.componentId, prop.options)
     ) as ComponentDataStructure;
   },
-  search: (query, data, options, context) => {
-    const optionsMap = options.options;
+  search: {
+    getScore: (query, target, options, context) => {
+      const { storage, searchIndex } = target;
+      const optionsMap = options.options;
 
-    const composer = searchScoreComposer();
+      const composer = searchScoreComposer();
 
-    for (const { key, data: itemData } of data) {
-      const { componentId, options: baseOptions } = optionsMap[key];
+      for (let i = 0; i < storage.length; i++) {
+        const { key, data: itemData } = storage[i];
+        const { componentId, options: baseOptions } = optionsMap[key];
 
-      composer.include(
-        context.search(query, componentId, itemData, baseOptions)
-      );
-    }
+        composer.include(
+          context.getScore(
+            query,
+            componentId,
+            { storage: itemData, searchIndex: searchIndex[i] as never },
+            baseOptions
+          )
+        );
+      }
 
-    return composer.result();
+      return composer.result();
+    },
+    createIndex: (data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return data.map((item) => {
+        const { key, data: itemData } = item;
+        const { componentId, options: baseOptions } = optionsMap[key];
+
+        return context.createSearchIndex(componentId, itemData, baseOptions);
+      });
+    },
   },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {

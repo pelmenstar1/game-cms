@@ -1,8 +1,7 @@
-import { defineComponentController } from '@game-cms/core';
+import { defineComponentController, searchScoreComposer } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
-import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 
 export default defineComponentController({
@@ -26,19 +25,41 @@ export default defineComponentController({
       return context.resolveRawData(componentId, value, baseOptions, args);
     });
   },
-  search: (query, data, options, context) => {
-    const composer = searchScoreComposer();
+  search: {
+    getScore: (query, target, options, context) => {
+      const { searchIndex, storage } = target;
+      const composer = searchScoreComposer();
 
-    for (const key in options) {
-      const { componentId, options: baseOptions } = options[key];
-      const value = data[key];
+      for (const key in options) {
+        const { componentId, options: baseOptions } = options[key];
+        const value = storage[key];
 
-      composer.include(
-        context.search(query, componentId, value as never, baseOptions)
-      );
-    }
+        composer.include(
+          context.getScore(
+            query,
+            componentId,
+            {
+              storage: value,
+              searchIndex: searchIndex[key],
+            } as never,
+            baseOptions
+          )
+        );
+      }
 
-    return composer.result();
+      return composer.result();
+    },
+    createIndex: (data, options, context) => {
+      return mapObject(data, (value, key) => {
+        const { componentId, options: baseOptions } = options[key];
+
+        return context.createSearchIndex(
+          componentId,
+          value as never,
+          baseOptions
+        );
+      });
+    },
   },
   mergeData: async (target, source, options, context) => {
     const sourceMerged = await asyncMapObject(source, (item, key) => {

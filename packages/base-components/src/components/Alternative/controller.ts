@@ -3,9 +3,8 @@ import {
   resolveConditionalData,
 } from '@game-cms/conditional';
 import { unknownConditionalData } from '@game-cms/conditional/schema';
-import { defineComponentController } from '@game-cms/core';
+import { defineComponentController, searchScoreComposer } from '@game-cms/core';
 
-import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 
 export default defineComponentController({
@@ -27,20 +26,59 @@ export default defineComponentController({
       };
     }
   },
-  search: (query, data, options, context) => {
-    const { componentId, baseOptions } = options;
+  search: {
+    getScore: (query, target, options, context) => {
+      const {
+        storage: { alternative, default: defaultStorage },
+        searchIndex,
+      } = target;
 
-    const composer = searchScoreComposer();
+      const { componentId, baseOptions } = options;
 
-    composer.include(
-      context.search(query, componentId, data.default, baseOptions)
-    );
+      const composer = searchScoreComposer();
 
-    for (const { value } of data.alternative) {
-      composer.include(context.search(query, componentId, value, baseOptions));
-    }
+      composer.include(
+        context.getScore(
+          query,
+          componentId,
+          {
+            storage: defaultStorage,
+            searchIndex: searchIndex.default,
+          },
+          baseOptions
+        )
+      );
 
-    return composer.result();
+      for (let i = 0; i < alternative.length; i++) {
+        composer.include(
+          context.getScore(
+            query,
+            componentId,
+            {
+              storage: alternative[i].value,
+              searchIndex: searchIndex.alternative[i],
+            },
+            baseOptions
+          )
+        );
+      }
+
+      return composer.result();
+    },
+    createIndex: (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        default: context.createSearchIndex(
+          componentId,
+          data.default,
+          baseOptions
+        ),
+        alternative: data.alternative.map((choice) =>
+          context.createSearchIndex(componentId, choice.value, baseOptions)
+        ),
+      };
+    },
   },
   resolver: (raw, options, context, args) => {
     const result = resolveConditionalData(raw, args as ConditionalValueInput);

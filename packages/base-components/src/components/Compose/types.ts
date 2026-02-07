@@ -43,6 +43,7 @@ type BaseComposeEntry<Input extends ComposeInput> = {
   resolvedData: ComposeMap<Input, 'resolvedData'>;
   clientData: ComposeMap<Input, 'clientData'>;
   storageData: ComposeMap<Input, 'storageData'>;
+  searchIndexData: ComposeMap<Input, 'searchIndexData'>;
 };
 
 type NestedPath<T, Input extends ComposeInput> = {

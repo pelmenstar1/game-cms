@@ -1,8 +1,11 @@
 import {
+  ComponentDataSearchTarget,
   ComponentNestedPath,
   ComponentNestedPathExtends,
   ComponentRawInDataById,
   ComponentSchema,
+  ComponentSearchIndexDataById,
+  ComponentStorageDataById,
   ParseComponentNestedPath,
 } from '@game-cms/core';
 import { expectTypeOf, test } from 'vitest';
@@ -48,4 +51,13 @@ test('ComponentNestedPathExtends', () => {
   type Actual = ComponentNestedPathExtends<Data, string, Id, Args>;
 
   expectTypeOf<Actual>().toEqualTypeOf<'name' | 'bundle'>();
+});
+
+test('ComponentDataSearchTarget', () => {
+  type Target = ComponentDataSearchTarget<Id, Args>;
+
+  expectTypeOf<Target>().toExtend<{
+    storage: ComponentStorageDataById<Id, Args>;
+    searchIndex: ComponentSearchIndexDataById<Id, Args>;
+  }>();
 });

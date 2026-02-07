@@ -1,6 +1,5 @@
-import { defineComponentController } from '@game-cms/core';
+import { defineComponentController, searchScoreComposer } from '@game-cms/core';
 
-import { searchScoreComposer } from '../../internal/searchScoreComposer.js';
 import core from './core.js';
 
 export default defineComponentController({
@@ -23,16 +22,36 @@ export default defineComponentController({
       context.resolveRawData(componentId, item, baseOptions, args)
     );
   },
-  search: (query, data, options, context) => {
-    const { baseOptions, componentId } = options;
+  search: {
+    getScore: (query, target, options, context) => {
+      const { storage, searchIndex } = target;
+      const { componentId, baseOptions } = options;
 
-    const composer = searchScoreComposer();
+      const composer = searchScoreComposer();
 
-    for (const item of data) {
-      composer.include(context.search(query, componentId, item, baseOptions));
-    }
+      for (let i = 0; i < storage.length; i++) {
+        composer.include(
+          context.getScore(
+            query,
+            componentId,
+            {
+              storage: storage[i],
+              searchIndex: searchIndex[i],
+            } as never,
+            baseOptions
+          )
+        );
+      }
 
-    return composer.result();
+      return composer.result();
+    },
+    createIndex: (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return data.map((item) =>
+        context.createSearchIndex(componentId, item, baseOptions)
+      );
+    },
   },
   storageTransformer: {
     getDefaultData: () => [],

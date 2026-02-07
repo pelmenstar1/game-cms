@@ -6,6 +6,7 @@ import type {
   ComponentRawInDataById,
   ComponentRawInPartialDataById,
   ComponentResolvedDataById,
+  ComponentSearchIndexDataById,
   ComponentStorageDataById,
   ForeignComponentDataMergeContext,
   ForeignComponentDataMigrationContext,
@@ -171,10 +172,25 @@ const foreignDataMergeContext: ForeignComponentDataMergeContext = {
 };
 
 const foreignDataSearchContext: ForeignComponentDataSearchContext = {
-  search: (query, id, data, options) => {
+  getScore: (query, id, target, options) => {
     const { search } = getController(id);
 
-    return search ? search(query, data, options, foreignDataSearchContext) : 0;
+    return search
+      ? search.getScore(query, target, options, foreignDataSearchContext)
+      : 0;
+  },
+  createSearchIndex: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => {
+    const { search } = getController(id);
+
+    return search?.createIndex?.(
+      data,
+      options,
+      foreignDataSearchContext
+    ) as ComponentSearchIndexDataById<Id, Args>;
   },
 };
 

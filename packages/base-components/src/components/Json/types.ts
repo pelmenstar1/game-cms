@@ -15,6 +15,7 @@ type JsonEntry<Args extends JsonArgs> = {
   };
   error: 'INVALID_FORMAT';
   clientData: string;
+  searchIndexData: string[];
 };
 
 declare module '@game-cms/core' {

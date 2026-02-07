@@ -1,4 +1,5 @@
 import { defineComponentController } from '@game-cms/core';
+import { uniqueArray } from '@game-cms/shared/collections';
 
 import core from './core.js';
 
@@ -21,9 +22,11 @@ function baseSplitObjectToKeywords(value: unknown, output: string[]) {
           baseSplitObjectToKeywords(item, output);
         }
       } else {
+        type K = keyof typeof value;
+
         for (const key in value) {
           output.push(key);
-          baseSplitObjectToKeywords(value[key as never], output);
+          baseSplitObjectToKeywords(value[key as K], output);
         }
       }
     }
@@ -34,15 +37,20 @@ function splitObjectToKeywords(value: unknown) {
   const output: string[] = [];
   baseSplitObjectToKeywords(value, output);
 
-  return output;
+  return uniqueArray(output);
 }
 
 export default defineComponentController({
   core,
   migrate: (data) => data,
-  search: (query, data) => {
-    const keywords = splitObjectToKeywords(data);
-
-    return keywords.some((keyboard) => keyboard.startsWith(query)) ? 1 : 0;
+  search: {
+    getScore: (query, target) => {
+      return target.searchIndex.some((keyboard) => keyboard.startsWith(query))
+        ? 1
+        : 0;
+    },
+    createIndex: (data) => {
+      return splitObjectToKeywords(data);
+    },
   },
 });
