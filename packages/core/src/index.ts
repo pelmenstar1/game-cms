@@ -1,4 +1,4 @@
-export * from './component.js';
+export * from './component/index.js';
 export * from './componentSearch.js';
 export * from './config.js';
 export * from './controller.js';
