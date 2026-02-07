@@ -9,9 +9,14 @@ export type ModalComponent<Props extends ModalProps = ModalProps> = FC<Props>;
 export type InferModalResult<Props> =
   Props extends ModalProps<infer T> ? T : never;
 
+export type ShowModalOptions = {
+  singleInstance?: boolean;
+};
+
 export type ShowModalFn = <Props extends ModalProps>(
   component: FC<Props>,
-  props: Omit<Props, keyof ModalProps>
+  props: Omit<Props, keyof ModalProps>,
+  options?: ShowModalOptions
 ) => Promise<InferModalResult<Props>>;
 
 export type ModalContextType = {

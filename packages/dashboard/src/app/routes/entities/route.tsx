@@ -1,7 +1,18 @@
-import { LinkButton, NavTabs, PlusIcon, useTypedNavigate } from '@game-cms/ui';
-import { useEffect } from 'react';
+import {
+  IconButton,
+  LinkButton,
+  NavTabs,
+  PlusIcon,
+  SearchIcon,
+  Toolbar,
+  useHotkey,
+  useModal,
+  useTypedNavigate,
+} from '@game-cms/ui';
+import { useCallback, useEffect } from 'react';
 
-import { EntityList } from '@/components/EntityList';
+import { EntityListLoader } from '@/components/EntityListLoader';
+import { EntitySearchDialog } from '@/components/EntitySearchDialog';
 import { getEntityMetaMap } from '@/connector/entity';
 import { useSelfSession } from '@/hooks/useSession';
 
@@ -24,6 +35,8 @@ export default function Page({ params }: Route.ComponentProps) {
   const { permissions } = useSelfSession();
   const navigate = useTypedNavigate();
 
+  const showModal = useModal();
+
   useEffect(() => {
     const schemasArray = Object.entries(schemas);
 
@@ -41,6 +54,18 @@ export default function Page({ params }: Route.ComponentProps) {
     }
   }, [navigate, selectedSchema]);
 
+  const onShowSearch = useCallback(() => {
+    if (selectedEntity) {
+      void showModal(
+        EntitySearchDialog,
+        { entityId: selectedEntity },
+        { singleInstance: true }
+      );
+    }
+  }, [selectedEntity, showModal]);
+
+  useHotkey(['Control', 'f'], onShowSearch);
+
   return (
     <div className={styles.root}>
       <NavTabs
@@ -55,7 +80,15 @@ export default function Page({ params }: Route.ComponentProps) {
 
       {selectedEntity && selectedSchema && (
         <div className={styles.content}>
-          <div className={styles.header}>
+          <Toolbar>
+            <IconButton
+              className={styles['search-button']}
+              title="Search"
+              onClick={onShowSearch}
+            >
+              <SearchIcon />
+            </IconButton>
+
             {permissions.has(`entity/${selectedEntity}$create`) && (
               <LinkButton
                 className={styles['new-entity-button']}
@@ -66,9 +99,9 @@ export default function Page({ params }: Route.ComponentProps) {
                 New entity
               </LinkButton>
             )}
-          </div>
+          </Toolbar>
 
-          <EntityList
+          <EntityListLoader
             entityId={selectedEntity}
             className={styles['entity-list']}
           />

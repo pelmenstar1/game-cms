@@ -10,6 +10,7 @@ import {
   ComponentRawDataById,
   ComponentRawInDataById,
   ComponentResolvedDataById,
+  ComponentSearchIndexDataById,
   ComponentStorageDataById,
   ParseComponentNestedPath,
 } from '@game-cms/core';
@@ -56,6 +57,10 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
   storageData: ConditionalData<
     ComponentStorageDataById<Args['id'], Args['baseArgs']>
   >;
+  searchIndexData: {
+    default: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>;
+    alternative: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>[];
+  };
 };
 
 type BaseNestedPath<T, Args extends AlternativeArgs> = {

@@ -48,6 +48,7 @@ type BaseGraphEntry<Types extends GetComponentSchemaTypes> = {
   resolvedData: Data<Types['resolvedData']>;
   storageData: Data<Types['storageData']>;
   clientData: Data<Types['clientData'], ClientMeta>;
+  searchIndexData: Record<string, Types['searchIndexData']>;
   options: {
     componentId: Types['componentId'];
     baseOptions: Types['options'];

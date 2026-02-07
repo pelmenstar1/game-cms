@@ -5,7 +5,7 @@ import {
   updateEntityById,
 } from '@game-cms/base-api/client';
 import type {
-  EntityClientVariantData,
+  EntityClientInstanceData,
   EntityVariant,
 } from '@game-cms/base-core';
 import { useApiAction, useApiQuery } from '@game-cms/component-api';
@@ -42,7 +42,7 @@ export default function Page({ params }: Route.ComponentProps) {
   useCheckPermissions(`entity/${name}$update`);
 
   const onSave = useCallback(
-    (data: EntityClientVariantData, variant: EntityVariant) => {
+    (data: EntityClientInstanceData, variant: EntityVariant) => {
       doUpdateEntity(name, id, data, variant)
         .then(() => {
           void redirect('/entities');

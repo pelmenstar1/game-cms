@@ -23,6 +23,7 @@ declare module '@game-cms/core/api' {
     'POST /entity/:entityId': typeof import('./entity/create.js');
     'GET /entity/:entityId/list': typeof import('./entity/list.js');
     'GET /entity/:entityId/raw/byId/:id': typeof import('./entity/raw/byId/get.js');
+    'GET /entity/:entityId/search': typeof import('./entity/search/get.js');
     'DELETE /storage/byId/:id': typeof import('./storage/byId/delete.js');
     'GET /storage/byId/:id': typeof import('./storage/byId/get.js');
     'POST /storage/file': typeof import('./storage/file/upload.js');

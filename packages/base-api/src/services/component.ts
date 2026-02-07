@@ -6,10 +6,12 @@ import type {
   ComponentRawInDataById,
   ComponentRawInPartialDataById,
   ComponentResolvedDataById,
+  ComponentSearchIndexDataById,
   ComponentStorageDataById,
   ForeignComponentDataMergeContext,
   ForeignComponentDataMigrationContext,
   ForeignComponentDataResolverContext,
+  ForeignComponentDataSearchContext,
   ForeignComponentDataStructureContext,
   ForeignComponentDefaultRawDataContext,
   ForeignComponentStorageDataResolverContext,
@@ -169,6 +171,29 @@ const foreignDataMergeContext: ForeignComponentDataMergeContext = {
   },
 };
 
+const foreignDataSearchContext: ForeignComponentDataSearchContext = {
+  getScore: (query, id, target, options) => {
+    const { search } = getController(id);
+
+    return search
+      ? search.getScore(query, target, options, foreignDataSearchContext)
+      : 0;
+  },
+  createSearchIndex: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => {
+    const { search } = getController(id);
+
+    return search?.createIndex?.(
+      data,
+      options,
+      foreignDataSearchContext
+    ) as ComponentSearchIndexDataById<Id, Args>;
+  },
+};
+
 export default service({
   id: 'base::component',
   foreignDefaultContext,
@@ -178,5 +203,6 @@ export default service({
   foreignDataMigrationContext,
   foreignDataStructureContext,
   foreignDataMergeContext,
+  foreignDataSearchContext,
   getController,
 });

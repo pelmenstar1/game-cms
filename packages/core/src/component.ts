@@ -61,7 +61,7 @@ type GetComponentExtendedTypes<Types extends ComponentTypes = ComponentTypes> =
     'rawInData' | 'resolvedData' | 'clientData' | 'storageData'
   >;
 
-type ComponentComponentPartialTypes<Types extends ComponentTypes> = {
+type GetComponentPartialTypes<Types extends ComponentTypes> = {
   [K in
     | 'rawData'
     | keyof GetComponentExtendedTypes as GetPartialName<K>]: GetPropertyOr<
@@ -71,12 +71,17 @@ type ComponentComponentPartialTypes<Types extends ComponentTypes> = {
   >;
 };
 
+type GetComponentSearchTypes<Types extends ComponentTypes> = {
+  searchIndexData: GetPropertyOr<Types, 'searchIndexData', unknown>;
+};
+
 type GetComponentTypes<Types extends ComponentTypes = ComponentTypes> = Pick<
   Types,
   keyof ComponentTypes
 > &
   GetComponentExtendedTypes<Types> &
-  ComponentComponentPartialTypes<Types>;
+  GetComponentPartialTypes<Types> &
+  GetComponentSearchTypes<Types>;
 
 type GetComponentTypesById<
   Id extends ComponentId,
@@ -117,6 +122,11 @@ export type ComponentClientDataById<
   T extends ComponentId,
   Args = unknown,
 > = GetComponentTypesById<T, Args>['clientData'];
+
+export type ComponentSearchIndexDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetPropertyOr<ComponentTypeMap<Args>[T], 'searchIndexData', unknown>;
 
 export type ComponentOptionsById<
   T extends ComponentId,
@@ -226,6 +236,7 @@ export type GetComponentSchemaTypes<Schema = unknown> =
         storageData: ComponentData;
         partialStorageData: ComponentData;
         clientData: ComponentData;
+        searchIndexData: unknown;
         options: ComponentOptions;
         error: unknown;
         componentId: ComponentId;
@@ -484,22 +495,73 @@ export interface ForeignComponentDataStructureContext {
   ) => ComponentDataStructure;
 }
 
-interface BaseComponentController<Id extends ComponentId = ComponentId> {
-  core: ComponentCore<Id>;
-  structure?:
-    | ComponentDataStructure
-    | (<Args>(
-        options: ComponentOptionsById<Id, Args>,
-        context: ForeignComponentDataStructureContext
-      ) => ComponentDataStructure);
-  migrate?: ComponentDataMigration<Id>;
-}
+export type ComponentDataStructureSource<Id extends ComponentId> =
+  | ComponentDataStructure
+  | (<Args>(
+      options: ComponentOptionsById<Id, Args>,
+      context: ForeignComponentDataStructureContext
+    ) => ComponentDataStructure);
 
 type RequiredIfExists<
   T,
   Id extends ComponentId,
   K extends PropertyKey,
-> = RequiredIf<T, AnyKeyInObject<ComponentTypeMap[Id], K>>;
+  Args = unknown,
+> = RequiredIf<T, AnyKeyInObject<ComponentTypeMap<Args>[Id], K>>;
+
+export type ComponentDataSearchTarget<
+  Id extends ComponentId,
+  Args = unknown,
+> = {
+  storage: ComponentStorageDataById<Id, Args>;
+} & RequiredIfExists<
+  { searchIndex?: ComponentSearchIndexDataById<Id, Args> },
+  Id,
+  'searchIndexData',
+  Args
+>;
+
+export interface ForeignComponentDataSearchContext {
+  getScore: <Id extends ComponentId, Args>(
+    query: string,
+    id: Id,
+    target: ComponentDataSearchTarget<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => number;
+
+  createSearchIndex: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentSearchIndexDataById<Id, Args>;
+}
+
+export type ComponentDataSearchScoreFn<Id extends ComponentId> = <Args>(
+  query: string,
+  target: ComponentDataSearchTarget<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentDataSearchContext
+) => number;
+
+export type ComponentDataSearchIndexFn<Id extends ComponentId> = <Args>(
+  data: ComponentStorageDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  context: ForeignComponentDataSearchContext
+) => ComponentSearchIndexDataById<Id, Args>;
+
+export type ComponentSearchController<Id extends ComponentId = ComponentId> = {
+  getScore: ComponentDataSearchScoreFn<Id>;
+} & RequiredIfExists<
+  { createIndex?: ComponentDataSearchIndexFn<Id> },
+  Id,
+  'searchIndexData'
+>;
+
+interface BaseComponentController<Id extends ComponentId = ComponentId> {
+  core: ComponentCore<Id>;
+  structure?: ComponentDataStructureSource<Id>;
+  migrate?: ComponentDataMigration<Id>;
+}
 
 export type ComponentController<Id extends ComponentId = ComponentId> =
   BaseComponentController<Id> &
@@ -517,6 +579,11 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
       { mergeData?: ComponentDataMergeHandler<Id> },
       Id,
       'partialRawInData'
+    > &
+    RequiredIfExists<
+      { search?: ComponentSearchController<Id> },
+      Id,
+      'searchIndexData'
     >;
 
 export type ComponentControllerMap = {

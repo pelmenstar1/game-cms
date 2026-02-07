@@ -6,8 +6,8 @@ import {
 } from '@game-cms/core';
 import { useMemo } from 'react';
 
-import { ComponentGroup } from '../../internal/types.js';
 import { ComponentGridGroup } from '../../micro/ComponentGridGroup/index.js';
+import { ComponentGroup } from './internal/types.js';
 import styles from './renderer.module.scss';
 import { ComposeOptionsEntry } from './types.js';
 

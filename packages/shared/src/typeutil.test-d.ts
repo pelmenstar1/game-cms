@@ -4,6 +4,7 @@ import type {
   AnyKeyInObject,
   ConditionalPartial,
   IsAllOptional,
+  Or,
 } from './typeutil.js';
 
 test('IsAllOptional', () => {
@@ -25,4 +26,12 @@ test('ConditionalPartial', () => {
       b: { optional: false; value: 2 };
     }>
   >().toExtend<{ a?: 1; b: 2 }>();
+});
+
+test('Or', () => {
+  type Result = Or<{ a: string }, { b: number }>;
+
+  expectTypeOf<Result>().toExtend<
+    { a: string; b?: undefined } | { a?: undefined; b: number }
+  >();
 });

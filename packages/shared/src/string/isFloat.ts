@@ -1,4 +1,4 @@
-import { isDigit } from './string/isDigit.js';
+import { isDigit } from './isDigit.js';
 
 export function isFloatString(text: string) {
   let start = 0;

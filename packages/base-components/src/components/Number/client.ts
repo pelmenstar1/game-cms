@@ -1,12 +1,12 @@
 import { ComponentClientDataTransformer } from '@game-cms/core';
-import { isFloatString } from '@game-cms/shared';
+import { safeParseFloat } from '@game-cms/shared/string';
 
 export const clientTransformer: ComponentClientDataTransformer<'base::number'> =
   {
     getDefaultData: () => '0',
     fromClient: (data) => {
-      const result = Number.parseFloat(data);
-      if (Number.isNaN(result) || !isFloatString(data)) {
+      const result = safeParseFloat(data);
+      if (result === null) {
         return { error: 'NAN' };
       }
 

@@ -63,6 +63,7 @@ type GetDynamicZoneParams<
   resolvedData: DataEntry<Types['resolvedData'], K>;
   clientData: ClientDataEntry<Types['clientData'], K>;
   storageData: DataEntry<Types['storageData'], K>;
+  searchIndexData: Types['searchIndexData'];
 };
 
 type DynamicZoneArray<
@@ -106,6 +107,7 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
   resolvedData: DynamicZoneArray<Input, 'resolvedData'>;
   clientData: DynamicZoneArray<Input, 'clientData'>;
   storageData: DynamicZoneArray<Input, 'storageData'>;
+  searchIndexData: DynamicZoneArray<Input, 'searchIndexData'>;
 };
 
 type NestedPath<T, Input extends DynamicZoneInputComponents> = {

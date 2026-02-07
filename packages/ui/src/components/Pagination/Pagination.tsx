@@ -1,28 +1,62 @@
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { ArrowLeftIcon, ArrowRightIcon } from '../../icons';
 import type { PageUrl } from '../../types/options';
 import { classNames } from '../../utils/classNames';
+import { Button } from '../Button';
 import { Typography } from '../Typography';
 import { getViewPages } from './pages';
 import styles from './Pagination.module.scss';
 
-export type PaginationProps = {
+export type PageInteractionProps =
+  | {
+      getLink: (page: number) => PageUrl;
+    }
+  | {
+      onButtonClick: (page: number) => void;
+    };
+
+export type PaginationProps = PageInteractionProps & {
   className?: string;
   current: number;
   total: number;
-
-  getLink: (page: number) => PageUrl;
 };
+
+type InteractionButtonProps = (ComponentProps<'button'> &
+  Omit<ComponentProps<typeof Link>, 'to'>) & {
+  interaction: PageInteractionProps;
+  page: number;
+  children?: ReactNode;
+};
+
+function InteractionButton({
+  interaction,
+  page,
+  children,
+}: InteractionButtonProps) {
+  if ('getLink' in interaction) {
+    return <Link to={interaction.getLink(page)}>{children}</Link>;
+  }
+
+  return (
+    <Button
+      onClick={() => {
+        interaction.onButtonClick(page);
+      }}
+    >
+      {children}
+    </Button>
+  );
+}
 
 type PageItemProps = {
   page: number;
-  href: PageUrl;
   current: boolean;
+  interaction: PageInteractionProps;
 };
 
-function PageItem({ page, href, current }: PageItemProps) {
+function PageItem({ page, current, interaction }: PageItemProps) {
   return (
     <li className={classNames(current && styles['item-current'])}>
       {current ? (
@@ -33,9 +67,13 @@ function PageItem({ page, href, current }: PageItemProps) {
           {page}
         </Typography>
       ) : (
-        <Link to={href} aria-label={`Перейти на сторінку ${page}`}>
+        <InteractionButton
+          interaction={interaction}
+          page={page}
+          aria-label={`Перейти на сторінку ${page}`}
+        >
           <span>{page}</span>
-        </Link>
+        </InteractionButton>
       )}
     </li>
   );
@@ -50,25 +88,26 @@ function Delimiter() {
 }
 
 type BackForwardButtonProps = {
-  href: PageUrl;
   className?: string;
+  page: number;
+  interaction: PageInteractionProps;
   children: ReactNode;
 };
 
 function BackForwardButton({
-  href,
   className,
+  interaction,
+  page,
   children,
-  ...rest
 }: BackForwardButtonProps) {
   return (
-    <Link
-      to={href}
+    <InteractionButton
+      interaction={interaction}
+      page={page}
       className={classNames(styles['back-forward'], className)}
-      {...rest}
     >
       {children}
-    </Link>
+    </InteractionButton>
   );
 }
 
@@ -76,7 +115,7 @@ export function Pagination({
   className,
   current,
   total,
-  getLink,
+  ...buttonProps
 }: PaginationProps) {
   const items = getViewPages(current, total).map((page) =>
     page === null ? (
@@ -85,8 +124,8 @@ export function Pagination({
       <PageItem
         key={page}
         page={page}
-        href={getLink(page)}
         current={page === current}
+        interaction={buttonProps}
       />
     )
   );
@@ -98,15 +137,21 @@ export function Pagination({
       className={classNames(styles.root, className)}
     >
       {current > 1 && (
-        <BackForwardButton href={getLink(1)} aria-label="Попередня сторінка">
+        <BackForwardButton
+          interaction={buttonProps}
+          page={current - 1}
+          aria-label="Попередня сторінка"
+        >
           <ArrowLeftIcon />
         </BackForwardButton>
       )}
+
       <ul>{items}</ul>
 
       {current < total && (
         <BackForwardButton
-          href={getLink(total)}
+          interaction={buttonProps}
+          page={current + 1}
           className={styles.forward}
           aria-label="Наступна сторінка"
         >

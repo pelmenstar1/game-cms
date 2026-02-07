@@ -1,4 +1,4 @@
-import { defineComponentController } from '@game-cms/core';
+import { defineComponentController, searchScoreComposer } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
@@ -33,6 +33,41 @@ export default defineComponentController({
       })),
       edges: raw.edges,
     };
+  },
+  search: {
+    getScore: (query, target, options, context) => {
+      const {
+        storage: { nodes },
+        searchIndex,
+      } = target;
+
+      const { componentId, baseOptions } = options;
+
+      const composer = searchScoreComposer();
+
+      for (const key in nodes) {
+        composer.include(
+          context.getScore(
+            query,
+            componentId,
+            {
+              storage: nodes[key].value,
+              searchIndex: searchIndex[key],
+            } as never,
+            baseOptions
+          )
+        );
+      }
+
+      return composer.result();
+    },
+    createIndex: (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return mapObject(data.nodes, ({ value }) =>
+        context.createSearchIndex(componentId, value, baseOptions)
+      );
+    },
   },
   storageTransformer: {
     getDefaultData: () => ({

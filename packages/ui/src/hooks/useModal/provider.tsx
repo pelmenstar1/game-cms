@@ -1,6 +1,5 @@
 import {
   type ComponentType,
-  type FC,
   type PropsWithChildren,
   useCallback,
   useMemo,
@@ -14,12 +13,20 @@ import {
   ModalContext,
   type ModalContextType,
   type ModalProps,
+  type ShowModalOptions,
 } from './context';
 
-type ModalInvocationInfo<T = object> = {
-  component: FC<T>;
-  props: T;
+type ModalInvocationInfo<Props = object> = {
+  component: ComponentType<Props>;
+  props: Props;
 };
+
+function isModalAlreadyOnScreen<Props>(
+  queue: ModalInvocationInfo[],
+  component: ComponentType<Props>
+) {
+  return queue.some((modal) => modal.component === component);
+}
 
 export function ModalProvider({ children }: PropsWithChildren) {
   const [currentModal, setCurrentModal] = useState<ModalInvocationInfo>();
@@ -39,11 +46,19 @@ export function ModalProvider({ children }: PropsWithChildren) {
   const show = useMemo(() => {
     return <Props extends ModalProps>(
       Component: ComponentType<Props>,
-      props: Omit<Props, keyof ModalProps>
+      props: Omit<Props, keyof ModalProps>,
+      options?: ShowModalOptions
     ) => {
       type R = InferModalResult<Props>;
 
       return new Promise<R>((resolve) => {
+        if (
+          options?.singleInstance &&
+          isModalAlreadyOnScreen(queueRef.current, Component)
+        ) {
+          return;
+        }
+
         queueRef.current.unshift({
           component: Component,
           props: {

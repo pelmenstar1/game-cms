@@ -4,9 +4,10 @@ import {
   ComponentOptionsById,
   ComponentRawDataById,
   ComponentResolvedDataById,
+  defineComponentController,
   ForeignComponentDataResolverContext,
+  searchScoreComposer,
 } from '@game-cms/core';
-import { defineComponentController } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 import { mapObject } from '@game-cms/shared/object';
 
@@ -21,6 +22,40 @@ export default defineComponentController({
     return mapObject(options, (prop) =>
       context.getStructure(prop.componentId, prop.options)
     ) as ComponentDataStructure;
+  },
+  search: {
+    getScore: (query, target, options, context) => {
+      const { storage, searchIndex } = target;
+      const optionsMap = options.options;
+
+      const composer = searchScoreComposer();
+
+      for (let i = 0; i < storage.length; i++) {
+        const { key, data: itemData } = storage[i];
+        const { componentId, options: baseOptions } = optionsMap[key];
+
+        composer.include(
+          context.getScore(
+            query,
+            componentId,
+            { storage: itemData, searchIndex: searchIndex[i] as never },
+            baseOptions
+          )
+        );
+      }
+
+      return composer.result();
+    },
+    createIndex: (data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return data.map((item) => {
+        const { key, data: itemData } = item;
+        const { componentId, options: baseOptions } = optionsMap[key];
+
+        return context.createSearchIndex(componentId, itemData, baseOptions);
+      });
+    },
   },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {

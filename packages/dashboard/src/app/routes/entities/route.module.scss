@@ -1,3 +1,5 @@
+@use '../../../../../ui/src/theme/utils' as *;
+
 .root {
   display: flex;
   height: 100%;
@@ -23,7 +25,6 @@
   gap: 4px;
 
   width: fit-content;
-  margin-left: auto;
 
   svg {
     fill: var(--color-primary);
@@ -32,4 +33,10 @@
 
 .entity-list {
   flex-grow: 1;
+}
+
+.search-button {
+  fill: var(--color-primary);
+
+  @include size(3em);
 }
