@@ -6,6 +6,12 @@ export function setAddMany<T>(target: Set<T>, values: T[]) {
   }
 }
 
+export function setDeleteMany<T>(target: Set<T>, values: T[]) {
+  for (const value of values) {
+    target.delete(value);
+  }
+}
+
 export function setEquals<T>(
   current: ReadonlySet<T>,
   other: SizedIterable<T>

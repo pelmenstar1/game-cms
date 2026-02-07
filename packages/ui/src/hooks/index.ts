@@ -7,6 +7,7 @@ export * from './useInterval';
 export * from './useModal';
 export * from './usePreventLeaving';
 export * from './useScrollbar';
+export * from './useTemporaryFonts';
 export * from './useTestRegex';
 export * from './useTypedNavigate';
 export * from './useValidation';

@@ -113,7 +113,14 @@ async function fromStorageData<Id extends EntityId>(
   objectId: ObjectId,
   storageData: EntityStorageDataById<Id>
 ) {
-  const { '#meta': meta, '#checks': checks, ...componentsData } = storageData;
+  const {
+    '#meta': meta,
+    '#checks': checks,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    '#search': _search,
+    ...componentsData
+  } = storageData;
+
   const entitySchema = getEntitySchema(entityId);
 
   const { foreignStorageResolverContext } = cms().service('base::component');
