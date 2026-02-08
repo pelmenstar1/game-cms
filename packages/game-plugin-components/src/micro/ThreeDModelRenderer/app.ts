@@ -2,6 +2,8 @@ import {
   AmbientLight,
   AxesHelper,
   Color,
+  LoadingManager,
+  Object3D,
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
@@ -20,6 +22,7 @@ export type Application = ReturnType<typeof createApplication>;
 
 export function createApplication() {
   const scene = new Scene();
+  let model: Object3D | undefined;
 
   const renderer = new WebGLRenderer({ antialias: true });
 
@@ -56,16 +59,37 @@ export function createApplication() {
     canvas,
     setModelSource: (
       source: string,
-      onProgress?: (progress: number) => void
+      onProgress?: (progress: number) => void,
+      abortSignal?: AbortSignal
     ) => {
-      const loader = new GLTFLoader();
-
       return new Promise<void>((resolve, reject) => {
+        const manager = new LoadingManager();
+
+        const loaderAbort = () => {
+          manager.abort();
+        };
+
+        const detachAbortListener = () => {
+          abortSignal?.removeEventListener('abort', loaderAbort);
+        };
+
+        abortSignal?.addEventListener('abort', loaderAbort);
+
+        const loader = new GLTFLoader(manager);
+
         loader.load(
           source,
           (gltf) => {
-            scene.add(gltf.scene);
+            if (model) {
+              scene.remove(model);
+            }
+
+            model = gltf.scene;
+            scene.add(model);
+
             resolve();
+
+            detachAbortListener();
           },
           (event) => {
             if (event.lengthComputable && onProgress) {
@@ -75,21 +99,26 @@ export function createApplication() {
           (error) => {
             // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
             reject(error);
+
+            detachAbortListener();
           }
         );
       });
     },
     setSize: (width: number, height: number) => {
-      renderer.setSize(width, height, true);
+      if (width > 0 && height > 0) {
+        renderer.setSize(width, height, true);
 
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
 
-      render();
+        render();
+      }
     },
     setBackgroundTheme,
     destroy: () => {
       renderer.dispose();
+      controls.removeEventListener('change', render);
     },
   };
 }

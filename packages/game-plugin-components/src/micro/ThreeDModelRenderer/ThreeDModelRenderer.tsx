@@ -1,3 +1,4 @@
+import { createAbortController } from '@game-cms/shared';
 import { classNames, useBounds, useStableValue } from '@game-cms/ui';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 
@@ -24,7 +25,7 @@ export function ThreeDModelRenderer({
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
 
-  const stableOnModelStatusChanged = useStableValue(onModelStatusChanged);
+  const onModelStatusChangedRef = useStableValue(onModelStatusChanged);
 
   const size = useBounds(containerRef);
 
@@ -54,22 +55,35 @@ export function ThreeDModelRenderer({
   }, [backgroundTheme]);
 
   useEffect(() => {
-    const worker = async () => {
-      try {
-        await appRef.current?.setModelSource(source, (progress) => {
-          stableOnModelStatusChanged?.({ type: 'loading', progress });
-        });
+    const abortController = createAbortController();
+    const app = appRef.current;
 
-        stableOnModelStatusChanged?.({ type: 'loaded' });
-      } catch (error: unknown) {
-        console.error(error);
+    if (app) {
+      const worker = async () => {
+        const onModelStatusChanged = onModelStatusChangedRef.current;
 
-        stableOnModelStatusChanged?.({ type: 'error' });
-      }
-    };
+        try {
+          const onProgress = (progress: number) => {
+            onModelStatusChanged?.({ type: 'loading', progress });
+          };
 
-    void worker();
-  }, [stableOnModelStatusChanged, source]);
+          await app.setModelSource(source, onProgress, abortController?.signal);
+
+          onModelStatusChanged?.({ type: 'loaded' });
+        } catch (error: unknown) {
+          console.error(error);
+
+          onModelStatusChanged?.({ type: 'error' });
+        }
+      };
+
+      void worker();
+
+      return () => {
+        abortController?.abort();
+      };
+    }
+  }, [onModelStatusChangedRef, source]);
 
   return (
     <div className={classNames(styles.root, className)} ref={containerRef} />

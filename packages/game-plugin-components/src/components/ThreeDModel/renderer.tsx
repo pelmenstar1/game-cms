@@ -11,7 +11,7 @@ import { useCallback } from 'react';
 
 import { getComposeOptions } from './internal/options.js';
 
-const ThreeModelPreviewModal = namedLazy(
+const ThreeDModelPreviewModal = namedLazy(
   () => import('../../micro/ThreeDModelPreviewModal/index.js'),
   'ThreeDModelPreviewModal'
 );
@@ -22,7 +22,7 @@ export const renderer: ComponentRenderer<'game::three-d-model'> = ({
   onDataChanged,
   readonly,
 }) => {
-  const { file } = data;
+  const { file: files } = data;
 
   const api = useComponentApi();
   const Compose = api.getComponent('base::compose');
@@ -30,13 +30,23 @@ export const renderer: ComponentRenderer<'game::three-d-model'> = ({
   const showModal = useModal();
 
   const onPreview = useCallback(() => {
-    void showModal(ThreeModelPreviewModal, { source: file[0].url });
-  }, [file, showModal]);
+    const [singleFile] = files;
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (singleFile !== undefined) {
+      void showModal(ThreeDModelPreviewModal, { source: singleFile.url });
+    }
+  }, [files, showModal]);
 
   return (
     <div>
       <Toolbar>
-        <IconButton title="Preview" hover="fill" onClick={onPreview}>
+        <IconButton
+          title="Preview"
+          hover="fill"
+          onClick={onPreview}
+          disabled={error !== undefined || files.length === 0}
+        >
           <PreviewIcon />
         </IconButton>
       </Toolbar>
