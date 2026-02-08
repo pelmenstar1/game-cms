@@ -1,19 +1,32 @@
-import crypto from 'node:crypto';
 import fs from 'node:fs';
-import path from 'node:path';
+import fsp from 'node:fs/promises';
+import { PassThrough, Readable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 
-export function createNewFileName(storagePath: string, initialName: string) {
-  const extension = path.extname(initialName);
+import { FileSource } from '@game-cms/base-core';
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  while (true) {
-    const uuid = crypto.randomUUID();
-    const name = `${uuid}${extension}`;
+export async function writeFileSourceToFile(
+  stream: FileSource,
+  filePath: string,
+  flag?: string
+) {
+  if (stream instanceof Readable) {
+    const writeStream = fs.createWriteStream(filePath, { flags: flag });
 
-    const filePath = path.join(storagePath, name);
+    let size = 0;
 
-    if (!fs.existsSync(filePath)) {
-      return name;
-    }
+    const meter = new PassThrough();
+
+    meter.on('data', (chunk: { length: number }) => {
+      size += chunk.length;
+    });
+
+    await pipeline(stream, meter, writeStream);
+
+    return size;
+  } else {
+    await fsp.writeFile(filePath, stream, { flag });
+
+    return stream.length;
   }
 }

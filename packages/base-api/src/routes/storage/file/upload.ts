@@ -48,12 +48,14 @@ export default apiRoute({
 
     const info = getInfo(data);
 
-    const result = await cms().service('base::storage').uploadFile({
-      name: data.filename,
-      content: data.file,
-      mime: data.mimetype,
-      parent: info?.parent,
-    });
+    const result = await cms()
+      .service('base::storage')
+      .uploadFile({
+        name: data.filename,
+        content: data.file,
+        mime: data.mimetype,
+        ...info,
+      });
 
     return result;
   },

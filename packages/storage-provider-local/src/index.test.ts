@@ -30,7 +30,11 @@ async function uploadAndCheckContent(content: FileSource, expected: Buffer) {
 
   const actual = await fsp.readFile(path.join(provider.path, extra.fileName));
 
-  expect(actual.equals(expected)).toEqual(true);
+  expect(
+    actual.equals(expected),
+    `actual: ${actual.toString('hex')}; expected: ${expected.toString('hex')}`
+  ).toEqual(true);
+
   expect(size).toEqual(expected.length);
 }
 

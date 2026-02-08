@@ -5,13 +5,13 @@ import { createFileKey, getFileUrl } from './utils.js';
 
 describe('createFileKey', () => {
   test('known mime', () => {
-    const actual = createFileKey('image/png');
+    const actual = createFileKey('image/png', 'image.png');
 
     expect(actual.endsWith('.png'), actual).toBe(true);
   });
 
   test('unknown mime', () => {
-    const actual = createFileKey('');
+    const actual = createFileKey('', 'name');
 
     expect(actual).toMatch(
       /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/

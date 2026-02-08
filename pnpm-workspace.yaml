@@ -11,6 +11,7 @@ catalog:
   '@storybook/addon-links': 10.1.11
   '@storybook/react': 10.1.11
   '@storybook/react-vite': 10.1.11
+  '@types/mime-types': ^3.0.1
   '@types/node': 25.0.6
   '@types/react': 19.2.8
   '@types/react-dom': 19.2.3
@@ -20,6 +21,7 @@ catalog:
   glob: 13.0.0
   i18next: 25.7.4
   jiti: ^2.6.1
+  mime-types: ^3.0.2
   mongodb: 7.0.0
   pino: 10.1.1
   pixi.js: ^8.15.0

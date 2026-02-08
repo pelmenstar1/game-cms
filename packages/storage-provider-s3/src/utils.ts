@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { extension } from 'mime-types';
+import { inferFileExtensionFromMime } from '@game-cms/shared/node/io';
 
 import type { S3StorageProviderConfig } from './types.js';
 
@@ -16,9 +16,9 @@ export function getFileUrl(config: S3StorageProviderConfig, key: string) {
   return `/api${GET_ROUTE}/${key}`;
 }
 
-export function createFileKey(mime: string) {
+export function createFileKey(mime: string, name: string) {
+  const extension = inferFileExtensionFromMime(mime, name);
   const id = randomUUID();
-  const ext = extension(mime);
 
-  return ext ? `${id}.${ext}` : id;
+  return `${id}${extension}`;
 }

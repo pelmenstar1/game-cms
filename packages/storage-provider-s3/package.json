@@ -7,7 +7,6 @@
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-core": "workspace:*",
-    "@types/mime-types": "^3.0.1",
     "@types/node": "catalog:",
     "typescript": "catalog:"
   },
@@ -17,7 +16,6 @@
     "@game-cms/core": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/global": "workspace:*",
-    "mime-types": "^3.0.2",
     "zod": "catalog:"
   }
 }

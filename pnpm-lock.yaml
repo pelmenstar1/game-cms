@@ -30,6 +30,9 @@ catalogs:
     '@storybook/react-vite':
       specifier: 10.1.11
       version: 10.1.11
+    '@types/mime-types':
+      specifier: ^3.0.1
+      version: 3.0.1
     '@types/node':
       specifier: 25.0.6
       version: 25.0.6
@@ -57,6 +60,9 @@ catalogs:
     jiti:
       specifier: ^2.6.1
       version: 2.6.1
+    mime-types:
+      specifier: ^3.0.2
+      version: 3.0.2
     mongodb:
       specifier: 7.0.0
       version: 7.0.0
@@ -945,6 +951,9 @@ importers:
 
   packages/shared:
     dependencies:
+      '@types/mime-types':
+        specifier: 'catalog:'
+        version: 3.0.1
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.6
@@ -957,6 +966,9 @@ importers:
       json5:
         specifier: ^2.2.3
         version: 2.2.3
+      mime-types:
+        specifier: 'catalog:'
+        version: 3.0.2
       mongodb:
         specifier: 'catalog:'
         version: 7.0.0
@@ -1053,9 +1065,6 @@ importers:
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
-      mime-types:
-        specifier: ^3.0.2
-        version: 3.0.2
       zod:
         specifier: 'catalog:'
         version: 4.3.5
@@ -1066,9 +1075,6 @@ importers:
       '@game-cms/base-core':
         specifier: workspace:*
         version: link:../base-core
-      '@types/mime-types':
-        specifier: ^3.0.1
-        version: 3.0.1
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.6

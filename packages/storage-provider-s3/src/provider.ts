@@ -1,4 +1,4 @@
-import { PassThrough, Readable } from 'node:stream';
+import { Readable } from 'node:stream';
 
 import {
   DeleteObjectCommand,
@@ -9,6 +9,7 @@ import {
 import { Upload } from '@aws-sdk/lib-storage';
 import { type StorageProvider } from '@game-cms/base-core';
 import { ApiError, apiRoute } from '@game-cms/core/api';
+import { meteredStream } from '@game-cms/shared/node/io';
 import { stripUndefined } from '@game-cms/shared/object';
 import z from 'zod';
 
@@ -76,27 +77,10 @@ export function s3StorageProvider(
     protocol: {
       getUrl: ({ key }) => getFileUrl(config, key),
       upload: async (info) => {
-        const { mime, content } = info;
+        const { name, mime, content } = info;
+        const key = createFileKey(mime, name);
 
-        const key = createFileKey(mime);
-
-        let size = 0;
-        let body: Readable | Uint8Array;
-
-        if (content instanceof Readable) {
-          const pass = new PassThrough();
-
-          pass.on('data', (chunk: { length: number }) => {
-            size += chunk.length;
-          });
-
-          content.pipe(pass);
-
-          body = pass;
-        } else {
-          body = content;
-          size = content.length;
-        }
+        const stream = meteredStream(content);
 
         const upload = new Upload({
           client,
@@ -104,13 +88,13 @@ export function s3StorageProvider(
             Bucket: bucket,
             Key: key,
             ContentType: mime,
-            Body: body,
+            Body: stream.body,
           },
         });
 
         await upload.done();
 
-        return { extra: { key }, size };
+        return { extra: { key }, size: stream.size };
       },
       delete: async ({ key }) => {
         await client.send(

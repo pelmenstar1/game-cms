@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
@@ -6,13 +7,13 @@ import type {
   StorageFilePersistentItem,
   StorageProvider,
 } from '@game-cms/base-core';
-import { ApiError } from '@game-cms/core/api';
-import { apiRoute } from '@game-cms/core/api';
+import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { isFileNotFoundError } from '@game-cms/shared/node';
+import { inferFileExtensionFromMime } from '@game-cms/shared/node/io';
 import z from 'zod';
 
-import { createNewFileName } from './utils.js';
+import { writeFileSourceToFile } from './utils.js';
 
 export type LocalStorageProviderConfig = {
   storagePath?: string;
@@ -88,15 +89,31 @@ export function localStorageProvider(
     routes: [getFileRoute(storagePath)],
     protocol: {
       getUrl: ({ fileName }) => encodeURI(`/api${GET_ROUTE}/${fileName}`),
-      upload: async ({ name, content }) => {
-        const fileName = createNewFileName(storagePath, name);
-        const outputPath = path.join(storagePath, fileName);
+      upload: async ({ name, mime, content }) => {
+        const extension = inferFileExtensionFromMime(mime, name);
+        let outputName: string;
 
-        await fsp.writeFile(outputPath, content);
+        let size: number = 0;
 
-        const { size } = await fsp.lstat(outputPath);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        while (true) {
+          const uuid = randomUUID();
+          outputName = `${uuid}${extension}`;
 
-        return { extra: { fileName }, size };
+          const filePath = path.join(storagePath, outputName);
+
+          try {
+            size = await writeFileSourceToFile(content, filePath, 'wx');
+
+            break;
+          } catch (error: unknown) {
+            if (!isFileNotFoundError(error)) {
+              throw error;
+            }
+          }
+        }
+
+        return { extra: { fileName: outputName }, size };
       },
       delete: async ({ fileName }) => {
         const filePath = path.join(storagePath, fileName);
