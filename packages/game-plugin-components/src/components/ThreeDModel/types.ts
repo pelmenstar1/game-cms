@@ -1,0 +1,30 @@
+import {
+  ComponentClientDataById,
+  ComponentEntry,
+  ComponentErrorById,
+  ComponentRawDataById,
+  ComponentRawInDataById,
+  ComponentSearchIndexDataById,
+  ComponentStorageDataById,
+} from '@game-cms/core';
+
+import { ComposeArgs } from './internal/options';
+
+type ComposeId = 'base::compose';
+
+type ThreeDModelEntry = {
+  rawData: ComponentRawDataById<ComposeId, ComposeArgs>;
+  rawInData: ComponentRawInDataById<ComposeId, ComposeArgs>;
+  options: Record<never, never>;
+  error: ComponentErrorById<ComposeId, ComposeArgs>;
+  clientData: ComponentClientDataById<ComposeId, ComposeArgs>;
+  storageData: ComponentStorageDataById<ComposeId, ComposeArgs>;
+  searchIndexData: ComponentSearchIndexDataById<ComposeId, ComposeArgs>;
+};
+
+declare module '@game-cms/core' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface ComponentTypeMap<_Args> {
+    'game::three-d-model': ComponentEntry<ThreeDModelEntry>;
+  }
+}

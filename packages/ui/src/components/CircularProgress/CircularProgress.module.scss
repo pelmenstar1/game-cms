@@ -1,0 +1,26 @@
+.root {
+  fill: none;
+  transform: rotate(-90deg);
+
+  width: var(--size);
+  height: var(--size);
+
+  &-size-sm {
+    --size: 2em;
+  }
+
+  &-size-md {
+    --size: 4em;
+  }
+}
+
+.track {
+  stroke: var(--color-primary);
+  opacity: 0.2;
+}
+
+.indicator {
+  stroke: var(--color-primary);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.3s ease;
+}
