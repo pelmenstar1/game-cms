@@ -5,13 +5,21 @@ import { pipeline } from 'node:stream/promises';
 
 import { FileSource } from '@game-cms/base-core';
 
+type WriteOptions = {
+  flag?: string;
+  signal?: AbortSignal;
+};
+
 export async function writeFileSourceToFile(
   stream: FileSource,
   filePath: string,
-  flag?: string
+  options?: WriteOptions
 ) {
   if (stream instanceof Readable) {
-    const writeStream = fs.createWriteStream(filePath, { flags: flag });
+    const writeStream = fs.createWriteStream(filePath, {
+      flags: options?.flag,
+      signal: options?.signal,
+    });
 
     let size = 0;
 
@@ -25,7 +33,7 @@ export async function writeFileSourceToFile(
 
     return size;
   } else {
-    await fsp.writeFile(filePath, stream, { flag });
+    await fsp.writeFile(filePath, stream, options);
 
     return stream.length;
   }

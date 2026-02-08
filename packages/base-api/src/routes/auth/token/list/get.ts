@@ -14,6 +14,8 @@ export default apiRoute({
   handler: async (req) => {
     const options = req.query;
 
-    return cms().service('base::auth::apiToken').list(options);
+    return cms()
+      .service('base::auth::apiToken')
+      .list({ ...options, signal: req.abortSignal });
   },
 });

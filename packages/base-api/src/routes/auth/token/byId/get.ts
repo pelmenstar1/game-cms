@@ -20,7 +20,10 @@ export default apiRoute({
   handler: async (req) => {
     const { id } = req.params;
 
-    const result = await cms().service('base::auth::apiToken').getById(id);
+    const result = await cms()
+      .service('base::auth::apiToken')
+      .getById(id, { signal: req.abortSignal });
+
     if (result === null) {
       throw new ApiError('Unknown API token', 'base::entity/notFound');
     }

@@ -76,7 +76,7 @@ export function s3StorageProvider(
     routes: [getFileRoute(config, client)],
     protocol: {
       getUrl: ({ key }) => getFileUrl(config, key),
-      upload: async (info) => {
+      upload: async (info, options) => {
         const { name, mime, content } = info;
         const key = createFileKey(mime, name);
 
@@ -92,7 +92,15 @@ export function s3StorageProvider(
           },
         });
 
+        const abortCallback = () => {
+          void upload.abort();
+        };
+
+        options?.signal?.addEventListener('abort', abortCallback);
+
         await upload.done();
+
+        options?.signal?.removeEventListener('abort', abortCallback);
 
         return { extra: { key }, size: stream.size };
       },
@@ -104,9 +112,10 @@ export function s3StorageProvider(
           })
         );
       },
-      getContent: async ({ key }) => {
+      getContent: async ({ key }, options) => {
         const result = await client.send(
-          new GetObjectCommand({ Bucket: bucket, Key: key })
+          new GetObjectCommand({ Bucket: bucket, Key: key }),
+          { abortSignal: options?.signal }
         );
 
         if (result.Body) {

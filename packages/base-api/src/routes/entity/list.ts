@@ -21,7 +21,9 @@ export default apiRoute({
     const { entityId } = req.params;
     const options = req.query;
 
-    const result = await cms().service('base::entity').list(entityId, options);
+    const result = await cms()
+      .service('base::entity')
+      .list(entityId, { ...options, signal: req.abortSignal });
 
     return result;
   },

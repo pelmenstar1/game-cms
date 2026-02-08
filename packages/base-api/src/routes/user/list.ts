@@ -14,7 +14,9 @@ export default apiRoute({
   handler: async (req) => {
     const options = req.query;
 
-    const users = await cms().service('base::user').list(options);
+    const users = await cms()
+      .service('base::user')
+      .list({ ...options, signal: req.abortSignal });
 
     return users;
   },

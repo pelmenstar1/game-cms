@@ -6,6 +6,7 @@ import { UnknownApiRoute } from '@game-cms/core/api';
 import { combineAsyncFactories } from '@game-cms/shared';
 
 import { errorStatuses } from './errors.js';
+import { abortablePlugin } from './plugins/abortable.js';
 import { initAuth } from './plugins/auth.js';
 import { scanDirectorySource } from './scan.js';
 import * as services from './services/index.js';
@@ -33,6 +34,7 @@ export const apiConfig: PluginApiConfig = {
       initAuth(app);
 
       app.register(multipart);
+      app.register(abortablePlugin);
       app.setErrorHandler(errorHandler());
 
       app.route({

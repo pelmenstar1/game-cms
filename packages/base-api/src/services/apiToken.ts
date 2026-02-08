@@ -1,4 +1,5 @@
 import type {
+  AbortOptions,
   ApiToken,
   CreateApiTokenPayload,
   OpaqueApiToken,
@@ -49,14 +50,20 @@ export default service({
       await collection().createIndex({ token: 1 }, { unique: true });
     },
   },
-  getByToken: (token: string) => {
-    return collection().findOne({ token });
+  getByToken: (token: string, options?: AbortOptions) => {
+    return collection().findOne({ token }, { signal: options?.signal });
   },
-  getById: (id: ObjectId): Promise<OpaqueApiToken | null> => {
-    return collection().findOne({ _id: id }, { projection: opaqueProjection });
+  getById: (
+    id: ObjectId,
+    options?: AbortOptions
+  ): Promise<OpaqueApiToken | null> => {
+    return collection().findOne(
+      { _id: id },
+      { projection: opaqueProjection, signal: options?.signal }
+    );
   },
   list: async (
-    options: PagingOptions
+    options: PagingOptions & AbortOptions
   ): Promise<PageData<OpaqueApiTokenWithId>> => {
     const { items, meta } = await getPage(collection(), options, {
       post: [

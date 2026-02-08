@@ -29,7 +29,9 @@ export default apiRoute({
 
     const result = await cms()
       .service('base::entity')
-      .getResolvedById(entityId, id, rest, variant);
+      .getResolvedById(entityId, id, rest, variant, {
+        signal: req.abortSignal,
+      });
 
     if (result === null) {
       throw new ApiError('Entity not found', 'base::entity/notFound');

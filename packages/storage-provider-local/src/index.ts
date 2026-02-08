@@ -89,7 +89,7 @@ export function localStorageProvider(
     routes: [getFileRoute(storagePath)],
     protocol: {
       getUrl: ({ fileName }) => encodeURI(`/api${GET_ROUTE}/${fileName}`),
-      upload: async ({ name, mime, content }) => {
+      upload: async ({ name, mime, content }, options) => {
         const extension = inferFileExtensionFromMime(mime, name);
         let outputName: string;
 
@@ -103,7 +103,10 @@ export function localStorageProvider(
           const filePath = path.join(storagePath, outputName);
 
           try {
-            size = await writeFileSourceToFile(content, filePath, 'wx');
+            size = await writeFileSourceToFile(content, filePath, {
+              flag: 'wx',
+              signal: options?.signal,
+            });
 
             break;
           } catch (error: unknown) {
@@ -126,8 +129,10 @@ export function localStorageProvider(
           }
         }
       },
-      getContent: ({ fileName }) => {
-        return fsp.readFile(path.join(storagePath, fileName));
+      getContent: ({ fileName }, options) => {
+        return fsp.readFile(path.join(storagePath, fileName), {
+          signal: options?.signal,
+        });
       },
     },
   };

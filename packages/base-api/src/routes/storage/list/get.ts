@@ -14,6 +14,8 @@ export default apiRoute({
   handler: (req) => {
     const options = req.query;
 
-    return cms().service('base::storage').list(options);
+    return cms()
+      .service('base::storage')
+      .list({ ...options, signal: req.abortSignal });
   },
 });

@@ -12,4 +12,5 @@ export * from './env.js';
 export * from './i18n.js';
 export * from './storage.js';
 export * from './storageProvider.js';
+export * from './types.js';
 export * from './user.js';

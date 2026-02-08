@@ -17,7 +17,9 @@ export default apiRoute({
   handler: async (req) => {
     const { token } = req.body;
 
-    const result = await cms().service('base::auth').signApiTokenIn(token);
+    const result = await cms()
+      .service('base::auth')
+      .signApiTokenIn(token, { signal: req.abortSignal });
 
     return { jwt: result.token };
   },

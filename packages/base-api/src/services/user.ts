@@ -1,4 +1,5 @@
 import type {
+  AbortOptions,
   CreateUserPayload,
   UpdateUserPayload,
   User,
@@ -9,9 +10,10 @@ import { cms, env } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { isDuplicateKeyError } from '@game-cms/shared/mongo';
 import type {
+  Abortable,
   ClientSession,
-  Document,
   Filter,
+  FindOneOptions,
   ObjectId,
   WithId,
 } from 'mongodb';
@@ -75,11 +77,9 @@ function hydrateUser<T extends { isAdmin?: true; permissions: ApiRouteId[] }>(
 
 async function getByFilter<T>(
   filter: Filter<User>,
-  projection?: Document
+  options?: Omit<FindOneOptions, 'timeoutMode'> & Abortable
 ): Promise<T | null> {
-  const result = await collection().findOne(filter, {
-    projection,
-  });
+  const result = await collection().findOne<WithId<User>>(filter, options);
 
   if (result !== null) {
     const { _id, ...rest } = result;
@@ -152,18 +152,24 @@ export default service({
     },
   },
   getBy: getByFilter,
-  getById: (id: ObjectId) => {
-    return getByFilter<NoPasswordServerUser>({ _id: id }, { passwordHash: 0 });
+  getById: (id: ObjectId, options?: AbortOptions) => {
+    return getByFilter<NoPasswordServerUser>(
+      { _id: id },
+      { projection: { passwordHash: 0 }, signal: options?.signal }
+    );
   },
-  getByEmail: (email: string) => {
-    return getByFilter<NoPasswordServerUser>({ email }, { passwordHash: 0 });
+  getByEmail: (email: string, options?: AbortOptions) => {
+    return getByFilter<NoPasswordServerUser>(
+      { email },
+      { projection: { passwordHash: 0 }, signal: options?.signal }
+    );
   },
-  fullGetBy: async (filter: Filter<User>) => {
-    const result = await getByFilter<User & { id: ObjectId }>(filter);
+  fullGetBy: async (filter: Filter<User>, options?: AbortOptions) => {
+    const result = await getByFilter<User & { id: ObjectId }>(filter, options);
 
     return result && hydrateUser(result);
   },
-  list: async (options: PagingOptions) => {
+  list: async (options: PagingOptions & AbortOptions) => {
     const result = await getPage<User, WithId<Omit<User, 'passwordHash'>>>(
       collection(),
       options,

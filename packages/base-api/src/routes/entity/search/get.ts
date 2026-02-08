@@ -24,6 +24,8 @@ export default apiRoute({
     const { entityId } = req.params;
     const { query, ...pagingOptions } = req.query;
 
-    return cms().service('base::entity').search(entityId, query, pagingOptions);
+    return cms()
+      .service('base::entity')
+      .search(entityId, query, { ...pagingOptions, signal: req.abortSignal });
   },
 });

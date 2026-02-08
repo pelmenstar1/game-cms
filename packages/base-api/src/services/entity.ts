@@ -1,4 +1,5 @@
 import {
+  AbortOptions,
   BaseEntityStorageDataById,
   EntityDataVariantsById,
   EntityErrorById,
@@ -89,10 +90,12 @@ function getEntitySchema<T extends EntityId>(entityId: T) {
 async function getRawById<T extends EntityId>(
   entityId: T,
   id: ObjectId,
-  variant: EntityVariant = 'published'
+  variant: EntityVariant = 'published',
+  options?: AbortOptions
 ) {
   const result = await collection(entityId).findOne(idFilter(id), {
     projection: { [variant]: 1 },
+    signal: options?.signal,
   });
 
   if (result === null) {
@@ -444,7 +447,10 @@ export default service({
 
     return isDeleted;
   },
-  list: async <Id extends EntityId>(entityId: Id, options: PagingOptions) => {
+  list: async <Id extends EntityId>(
+    entityId: Id,
+    options: PagingOptions & AbortOptions
+  ) => {
     const result = await getPage(collection(entityId), options);
 
     return {
@@ -461,12 +467,13 @@ export default service({
     entityId: Id,
     id: ObjectId,
     args: ComponentDataResolverArgs,
-    variant: EntityVariant = 'published'
+    variant: EntityVariant = 'published',
+    options?: AbortOptions
   ): Promise<EntityResolvedDataById<Id> | null> => {
     const entitySchema = getEntitySchema(entityId);
     const { foreignResolverContext } = cms().service('base::component');
 
-    const result = await getRawById(entityId, id, variant);
+    const result = await getRawById(entityId, id, variant, options);
 
     if (result === null) {
       return null;
@@ -511,13 +518,15 @@ export default service({
   search: async <Id extends EntityId>(
     entityId: Id,
     query: string,
-    options: PagingOptions
+    options: PagingOptions & AbortOptions
   ) => {
     const schema = getEntitySchema(entityId);
 
     const allItems: { id: ObjectId; data: EntityStorageDataById<Id> }[] = [];
 
-    for await (const item of collection(entityId).find()) {
+    const cursor = collection(entityId).find({}, { signal: options.signal });
+
+    for await (const item of cursor) {
       const score = getEntitySearchScore(query, item.draft, schema);
 
       if (score > SEARCH_THRESHOLD) {

@@ -18,7 +18,10 @@ export default apiRoute({
   handler: async (req) => {
     const { id } = req.params;
 
-    const user = await cms().service('base::user').getById(id);
+    const user = await cms()
+      .service('base::user')
+      .getById(id, { signal: req.abortSignal });
+
     if (user === null) {
       throw new ApiError('User not found', 'base::entity/notFound');
     }

@@ -1,4 +1,5 @@
 import {
+  AbortOptions,
   EntityId,
   ExpirationTimeType,
   Permissions,
@@ -158,10 +159,10 @@ export default service({
   id: 'base::auth',
   getAllPermissions,
   isValidPermissions,
-  signUserIn: async (payload: SignInPayload) => {
+  signUserIn: async (payload: SignInPayload, options?: AbortOptions) => {
     const user = await cms()
       .service('base::user')
-      .fullGetBy({ email: payload.email });
+      .fullGetBy({ email: payload.email }, options);
 
     const isValid = user
       ? await verifyPassword(user.passwordHash, payload.password)
@@ -185,12 +186,12 @@ export default service({
 
     return { session, refresh };
   },
-  refreshUserSession: async (token: string) => {
+  refreshUserSession: async (token: string, options?: AbortOptions) => {
     const { userId } = await parseJwtWithSchema(token, refreshJwtPayloadSchema);
 
     const user = await cms()
       .service('base::user')
-      .getById(new ObjectId(userId));
+      .getById(new ObjectId(userId), options);
 
     if (user === null) {
       throw new ApiError('Unknown user', 'base::entity/notFound');
@@ -198,10 +199,10 @@ export default service({
 
     return createSessionToken('userSession', user);
   },
-  signApiTokenIn: async (token: string) => {
+  signApiTokenIn: async (token: string, options?: AbortOptions) => {
     const tokenInfo = await cms()
       .service('base::auth::apiToken')
-      .getByToken(token);
+      .getByToken(token, options);
 
     if (tokenInfo === null) {
       throw new ApiError('Unknown token', 'base::access/unauthorized');

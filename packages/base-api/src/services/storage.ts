@@ -1,7 +1,11 @@
 import { Readable } from 'node:stream';
 import { buffer } from 'node:stream/consumers';
 
-import type { StorageAddon, StorageAddonContext } from '@game-cms/base-core';
+import type {
+  AbortOptions,
+  StorageAddon,
+  StorageAddonContext,
+} from '@game-cms/base-core';
 import {
   type CreateFolderPayload,
   type DeleteStorageItemOptions,
@@ -201,15 +205,24 @@ export default service({
 
     return insertedId;
   },
-  getInfo: async (id: ObjectId): Promise<StorageItemWithId | null> => {
-    const result = await collection().findOne({ _id: id });
+  getInfo: async (
+    id: ObjectId,
+    options?: AbortOptions
+  ): Promise<StorageItemWithId | null> => {
+    const result = await collection().findOne(
+      { _id: id },
+      { signal: options?.signal }
+    );
 
     return result && hydrateItem(result);
   },
-  getContent: async (id: ObjectId): Promise<Uint8Array> => {
+  getContent: async (
+    id: ObjectId,
+    options?: AbortOptions
+  ): Promise<Uint8Array> => {
     const result = await collection().findOne(
       { _id: id },
-      { projection: { type: 1, extra: 1 } }
+      { projection: { type: 1, extra: 1 }, signal: options?.signal }
     );
 
     const { protocol } = storageProvider();
@@ -220,7 +233,7 @@ export default service({
 
     return protocol.getContent(result.extra);
   },
-  list: async (options: ListStorageItemsOptions) => {
+  list: async (options: ListStorageItemsOptions & AbortOptions) => {
     const { parent } = options;
     let matchOperator: Document | undefined;
 
