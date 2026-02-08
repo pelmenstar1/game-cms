@@ -37,6 +37,9 @@ export type GetComponentSchemaTypes<Schema = unknown> =
         args: unknown;
       };
 
+export type GetComponentSchemaArgs<Schema = unknown> =
+  Schema extends ComponentSchema<string, infer Args> ? Args : never;
+
 type ComponentAccessor<Id extends ComponentId> =
   IsAllOptional<ComponentOptionsById<Id>> extends true
     ? <Args>(

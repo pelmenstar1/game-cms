@@ -1,4 +1,4 @@
-import { ComponentOptionsById, ComponentSchema } from '@game-cms/core';
+import { ComponentOptionsById, GetComponentSchemaArgs } from '@game-cms/core';
 
 import { compose } from '../../Compose/index.js';
 import { dropdown } from '../../Dropdown/index.js';
@@ -41,6 +41,5 @@ export function getRepeatableOptions(
   return createRepeatableSchema(options).options;
 }
 
-export type RepeatableSchema = ReturnType<typeof createRepeatableSchema>;
-export type RepeatableArgs =
-  RepeatableSchema extends ComponentSchema<string, infer Args> ? Args : never;
+type RepeatableSchema = ReturnType<typeof createRepeatableSchema>;
+export type RepeatableArgs = GetComponentSchemaArgs<RepeatableSchema>;
