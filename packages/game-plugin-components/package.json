@@ -21,6 +21,7 @@
     "mongodb": "catalog:",
     "pixi.js": "catalog:",
     "react-i18next": "catalog:",
+    "three": "^0.182.0",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -31,6 +32,7 @@
     "@game-cms/storybook-config": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
     "@storybook/react-vite": "catalog:",
+    "@types/three": "^0.182.0",
     "mongodb": "catalog:",
     "react-router": "catalog:",
     "storybook": "catalog:",

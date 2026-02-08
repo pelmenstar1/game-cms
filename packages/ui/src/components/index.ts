@@ -2,6 +2,7 @@ export * from './Accordion';
 export * from './BaseFileDropArea';
 export * from './Button';
 export * from './Checkbox';
+export * from './CircularProgress';
 export * from './ConfirmationDialog';
 export * from './DataLoader';
 export * from './DatePicker';
