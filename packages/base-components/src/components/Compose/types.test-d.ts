@@ -1,11 +1,12 @@
 import {
+  ComponentNestedPath,
   ComponentNestedPathShape,
   ComponentRawDataById,
   ComponentRawInDataByIdPath,
   ComponentSchema,
   ParseComponentNestedPath,
 } from '@game-cms/core';
-import { expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, test } from 'vitest';
 
 test('raw data', () => {
   type RawData = ComponentRawDataById<
@@ -18,21 +19,29 @@ test('raw data', () => {
   expectTypeOf<RawData>().toExtend<{ abc: string }>();
 });
 
-test('nested path', () => {
-  type Path = ComponentRawInDataByIdPath<
-    'base::compose',
-    {
-      abc: ComponentSchema<'base::text'>;
-      abc2: ComponentSchema<
-        'base::compose',
-        {
-          nested1: ComponentSchema<'base::text'>;
-        }
-      >;
-    }
-  >;
+describe('nested path', () => {
+  test('with args', () => {
+    type Path = ComponentRawInDataByIdPath<
+      'base::compose',
+      {
+        abc: ComponentSchema<'base::text'>;
+        abc2: ComponentSchema<
+          'base::compose',
+          {
+            nested1: ComponentSchema<'base::text'>;
+          }
+        >;
+      }
+    >;
 
-  expectTypeOf<'abc'>().toExtend<Path>();
+    expectTypeOf<Path>().toEqualTypeOf<'abc' | 'abc2' | 'abc2.nested1'>();
+  });
+
+  test('no args', () => {
+    type Path = ComponentNestedPath<unknown, 'base::compose'>;
+
+    expectTypeOf<Path>().toEqualTypeOf<string>();
+  });
 });
 
 test('nested path shape', () => {

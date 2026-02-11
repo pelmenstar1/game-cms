@@ -1,4 +1,8 @@
-import { ComponentNestedPath } from './pathWalker.js';
+import {
+  ComponentNestedPath,
+  ComponentNestedPathDetails,
+  ComponentPathDetails,
+} from './pathWalker.js';
 import { ComponentSchema } from './schema.js';
 import {
   ComponentId,
@@ -23,6 +27,11 @@ export type ComponentSchemaNestedPath<T, Schema> =
   Schema extends ComponentSchema<infer Id, infer Args>
     ? ComponentNestedPath<T, Id, Args>
     : string;
+
+export type ComponentSchemaNestedPathDetails<T, Schema> =
+  Schema extends ComponentSchema<infer Id, infer Args>
+    ? ComponentNestedPathDetails<T, Id, Args>
+    : ComponentPathDetails;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentDataResolverArgs {}

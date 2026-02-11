@@ -1,6 +1,7 @@
 import {
   ComponentRawInDataById,
-  ComponentSchema,
+  ComponentRawInDataByIdPath,
+  GetComponentSchemaArgs,
   ParseComponentNestedPath,
 } from '@game-cms/core';
 import { describe, expectTypeOf, test } from 'vitest';
@@ -10,6 +11,33 @@ import { text } from '../Text/index.js';
 import { dynamicZone, dynamicZoneEntry } from './index.js';
 
 type Id = 'base::dynamic-zone';
+
+describe('DynamicZone', () => {
+  test('nested path type', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const schema = dynamicZone({
+      options: {
+        option1: dynamicZoneEntry({
+          option: { title: 'Option 1' },
+          component: text(),
+        }),
+        option2: dynamicZoneEntry({
+          option: { title: 'Option 2' },
+          component: compose({
+            field: text(),
+          }),
+        }),
+      },
+    });
+
+    type Args = GetComponentSchemaArgs<typeof schema>;
+    type Result = ComponentRawInDataByIdPath<Id, Args>;
+
+    expectTypeOf<Result>().toEqualTypeOf<
+      '[option1]' | '[option2]' | '[option2].field'
+    >();
+  });
+});
 
 describe('ParseComponentNestedPath', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,9 +51,7 @@ describe('ParseComponentNestedPath', () => {
       }),
     },
   });
-
-  type Schema = typeof schema;
-  type Args = Schema extends ComponentSchema<string, infer R> ? R : never;
+  type Args = GetComponentSchemaArgs<typeof schema>;
   type Data = ComponentRawInDataById<Id, Args>;
 
   test('transition current', () => {

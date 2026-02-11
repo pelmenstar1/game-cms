@@ -37,6 +37,9 @@ export type GetComponentSchemaTypes<Schema = unknown> =
         args: unknown;
       };
 
+export type GetComponentSchemaId<Schema = unknown> =
+  Schema extends ComponentSchema<infer Id> ? Id : never;
+
 export type GetComponentSchemaArgs<Schema = unknown> =
   Schema extends ComponentSchema<string, infer Args> ? Args : never;
 

@@ -4,7 +4,7 @@ import {
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
-  ComponentNestedPath,
+  ComponentNestedPathDetails,
   ComponentNestedPathShape,
   ComponentOptionsById,
   ComponentRawDataById,
@@ -12,20 +12,15 @@ import {
   ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
-  ParseComponentNestedPath,
 } from '@game-cms/core';
+import { IfExtends } from '@game-cms/shared';
 
 type AlternativeArgs<Id = ComponentId, BaseArgs = unknown> = {
   id: Id;
   baseArgs: BaseArgs;
 };
 
-type ResolveArgs<Args> = Args extends {
-  id: infer Id extends ComponentId;
-  baseArgs: infer BaseArgs;
-}
-  ? AlternativeArgs<Id, BaseArgs>
-  : AlternativeArgs;
+type ResolveArgs<Args> = IfExtends<Args, AlternativeArgs>;
 
 type Error<Args extends AlternativeArgs> = ComponentErrorById<
   Args['id'],
@@ -63,21 +58,19 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
   };
 };
 
-type BaseNestedPath<T, Args extends AlternativeArgs> = {
-  path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;
-};
+type UnpackShape<T> = T extends BaseNestedPathShape ? T['default'] : never;
 
-type BaseNestedPathShape<Args extends AlternativeArgs> = {
+type BaseNestedPath<
+  T,
+  Args extends AlternativeArgs,
+> = ComponentNestedPathDetails<UnpackShape<T>, Args['id'], Args['baseArgs']>;
+
+type BaseNestedPathShape<Args extends AlternativeArgs = AlternativeArgs> = {
   default: ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
   alternative: {
     value: ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
   }[];
 };
-
-type BaseParseNestedPath<T, Path extends string, Args extends AlternativeArgs> =
-  T extends BaseNestedPathShape<Args>
-    ? ParseComponentNestedPath<T['default'], Path, Args['id'], Args['baseArgs']>
-    : unknown;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
@@ -90,9 +83,5 @@ declare module '@game-cms/core' {
 
   interface ComponentNestedPathShapeMap<Args> {
     'base::alternative': BaseNestedPathShape<ResolveArgs<Args>>;
-  }
-
-  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
-    'base::alternative': BaseParseNestedPath<T, Path, ResolveArgs<Args>>;
   }
 }

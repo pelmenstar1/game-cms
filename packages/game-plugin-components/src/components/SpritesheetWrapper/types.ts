@@ -3,7 +3,7 @@ import type {
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
-  ComponentNestedPath,
+  ComponentNestedPathDetails,
   ComponentNestedPathShape,
   ComponentOptionsById,
   ComponentRawDataById,
@@ -13,7 +13,6 @@ import type {
   ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
-  ParseComponentNestedPath,
 } from '@game-cms/core';
 import { IfExtends } from '@game-cms/shared';
 import type { ObjectId } from 'mongodb';
@@ -82,18 +81,13 @@ type SpritesheetEntry<Args extends SpritesheetArgs> = {
   searchIndexData: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>;
 };
 
-type BaseNestedPath<T, Args extends SpritesheetArgs> = {
-  path: ComponentNestedPath<T, Args['id'], Args['baseArgs']>;
-};
+type BaseNestedPath<
+  T,
+  Args extends SpritesheetArgs,
+> = ComponentNestedPathDetails<T, Args['id'], Args['baseArgs']>;
 
 type BaseNestedPathShape<Args extends SpritesheetArgs> =
   ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
-
-type BaseParseComponentNestedPath<
-  T,
-  Path extends string,
-  Args extends SpritesheetArgs,
-> = ParseComponentNestedPath<T, Path, Args['id'], Args['baseArgs']>;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
@@ -111,14 +105,6 @@ declare module '@game-cms/core' {
 
   interface ComponentNestedPathShapeMap<Args> {
     'game::spritesheet-wrapper': BaseNestedPathShape<
-      ResolveSpritesheetArgs<Args>
-    >;
-  }
-
-  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
-    'base::repeatable': BaseParseComponentNestedPath<
-      T,
-      Path,
       ResolveSpritesheetArgs<Args>
     >;
   }

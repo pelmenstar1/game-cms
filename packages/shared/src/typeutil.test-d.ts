@@ -5,6 +5,7 @@ import type {
   ConditionalPartial,
   IsAllOptional,
   Or,
+  UnpackArray,
 } from './typeutil.js';
 
 test('IsAllOptional', () => {
@@ -34,4 +35,9 @@ test('Or', () => {
   expectTypeOf<Result>().toExtend<
     { a: string; b?: undefined } | { a?: undefined; b: number }
   >();
+});
+
+test('UnpackArray', () => {
+  expectTypeOf<UnpackArray<string[]>>().toEqualTypeOf<string>();
+  expectTypeOf<UnpackArray<string | number>>().toEqualTypeOf<string | number>();
 });

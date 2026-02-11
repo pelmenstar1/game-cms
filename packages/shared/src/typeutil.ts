@@ -63,3 +63,5 @@ type AllUndefined<K extends PropertyKey> = {
 export type Or<T, U> =
   | (T & AllUndefined<keyof U>)
   | (U & AllUndefined<keyof T>);
+
+export type UnpackArray<T> = T extends unknown[] ? T[number] : T;

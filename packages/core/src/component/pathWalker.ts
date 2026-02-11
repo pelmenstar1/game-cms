@@ -8,9 +8,14 @@ import {
   ComponentRawInDataById,
 } from './types.js';
 
+export type ComponentPathDetails = {
+  path: string | null;
+  value: unknown;
+};
+
 export interface ComponentNestedPathMap<T, Args = unknown> extends Record<
   string,
-  { path: string | null }
+  ComponentPathDetails
 > {}
 
 export interface ComponentNestedPathShapeMap<Args = unknown> extends Record<
@@ -18,16 +23,17 @@ export interface ComponentNestedPathShapeMap<Args = unknown> extends Record<
   unknown
 > {}
 
-export interface ComponentNestedPathParserMap<
+export type ComponentNestedPathDetails<
   T,
-  Path extends string,
+  Id extends ComponentId,
   Args = unknown,
-> extends Record<string, unknown> {}
+> = ComponentNestedPathMap<T, Args>[Id];
 
-export type ComponentNestedPath<T, Id extends ComponentId, Args = unknown> =
-  ComponentNestedPathMap<T, Args> extends Record<Id, { path: string }>
-    ? ComponentNestedPathMap<T, Args>[Id]['path']
-    : string;
+export type ComponentNestedPath<
+  T,
+  Id extends ComponentId,
+  Args = unknown,
+> = ComponentNestedPathDetails<T, Id, Args>['path'];
 
 export type ComponentNestedPathShape<
   Id extends ComponentId,
@@ -39,51 +45,42 @@ export type ParseComponentNestedPath<
   Path extends string,
   Id extends ComponentId,
   Args = unknown,
-> = ComponentNestedPathParserMap<T, Path, Args>[Id];
+> = Extract<ComponentNestedPathMap<T, Args>[Id], { path: Path }>['value'];
 
-type BaseComponentNestedPathExtends<
-  T,
-  U,
-  Path extends string,
-  Id extends ComponentId,
-  Args = unknown,
-> = {
-  [K in Path]: ParseComponentNestedPath<T, K, Id, Args> extends U ? K : never;
-}[Path];
+type BaseComponentNestedPathExtends<Details, U> =
+  Details extends ComponentPathDetails
+    ? Details['value'] extends U
+      ? Details['path']
+      : never
+    : never;
 
 export type ComponentNestedPathExtends<
   T,
   U,
   Id extends ComponentId,
   Args = unknown,
-> = BaseComponentNestedPathExtends<
-  T,
-  U,
-  ComponentNestedPath<T, Id, Args>,
-  Id,
-  Args
->;
+> = BaseComponentNestedPathExtends<ComponentNestedPathMap<T, Args>[Id], U>;
 
 export type ComponentRawInDataByIdPath<
   Id extends ComponentId,
-  Args,
+  Args = unknown,
 > = ComponentNestedPath<ComponentRawInDataById<Id, Args>, Id, Args>;
 
 export type ComponentClientDataByIdPath<
   Id extends ComponentId,
-  Args,
+  Args = unknown,
 > = ComponentNestedPath<ComponentClientDataById<Id, Args>, Id, Args>;
 
 export type ComponentRawInDataByIdPathExtends<
   U,
   Id extends ComponentId,
-  Args,
+  Args = unknown,
 > = ComponentNestedPathExtends<ComponentRawInDataById<Id, Args>, U, Id, Args>;
 
 export type ComponentClientDataByIdPathExtends<
   U,
   Id extends ComponentId,
-  Args,
+  Args = unknown,
 > = ComponentNestedPathExtends<ComponentClientDataById<Id, Args>, U, Id, Args>;
 
 export type ComponentNestedPathDot<

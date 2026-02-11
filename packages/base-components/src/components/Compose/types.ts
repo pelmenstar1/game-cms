@@ -1,13 +1,12 @@
 import {
   ComponentEntry,
-  ComponentNestedPathDot,
   ComponentNestedPathShape,
   ComponentSchema,
-  ComponentSchemaNestedPath,
+  ComponentSchemaNestedPathDetails,
   GetComponentSchemaTypes,
-  ParseComponentNestedPath,
 } from '@game-cms/core';
-import { GetPropertyOr } from '@game-cms/shared';
+
+import { NestedPathDot } from '../../internal/nestedPath.js';
 
 export type ComposeInput = Record<string, ComponentSchema>;
 
@@ -46,40 +45,27 @@ type BaseComposeEntry<Input extends ComposeInput> = {
   searchIndexData: ComposeMap<Input, 'searchIndexData'>;
 };
 
-type NestedPath<T, Input extends ComposeInput> = {
-  path: {
-    [K in keyof Input]: ComponentNestedPathDot<
-      K & string,
-      ComponentSchemaNestedPath<T, Input[K]>
-    >;
-  }[keyof Input];
-};
+type NestedPathKey<T, Input> = keyof T & keyof Input & string;
+
+type BaseNestedPath<T, Input extends ComposeInput> = {
+  [K in NestedPathKey<T, Input>]:
+    | {
+        path: K;
+        value: T[K];
+      }
+    | NestedPathDot<ComponentSchemaNestedPathDetails<T[K], Input[K]>, K>;
+}[NestedPathKey<T, Input>];
+
+type NestedPath<T, Input extends ComposeInput> =
+  BaseNestedPath<T, Input> extends never
+    ? { path: string; value: Record<string, unknown> }
+    : BaseNestedPath<T, Input>;
 
 type NestedPathShape<Input extends ComposeInput> = {
   [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
     ? ComponentNestedPathShape<Id, Args>
     : unknown;
 };
-
-type BaseParseNestedPathTransition<
-  T,
-  Prefix extends string,
-  Suffix extends string,
-  Input extends ComposeInput,
-> =
-  Input extends Record<Prefix, ComponentSchema<infer Id, infer Args>>
-    ? T extends Record<Prefix, unknown>
-      ? ParseComponentNestedPath<T[Prefix], Suffix, Id, Args>
-      : unknown
-    : unknown;
-
-type BaseParseNestedPath<
-  T,
-  Path extends string,
-  Input extends ComposeInput,
-> = Path extends `${infer Prefix}.${infer Suffix}`
-  ? BaseParseNestedPathTransition<T, Prefix, Suffix, Input>
-  : GetPropertyOr<T, Path, unknown>;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
@@ -92,9 +78,5 @@ declare module '@game-cms/core' {
 
   interface ComponentNestedPathShapeMap<Args> {
     'base::compose': NestedPathShape<ResolveComposeInput<Args>>;
-  }
-
-  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
-    'base::compose': BaseParseNestedPath<T, Path, ResolveComposeInput<Args>>;
   }
 }

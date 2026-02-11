@@ -1,19 +1,18 @@
 import {
   ComponentEntry,
   ComponentId,
-  ComponentNestedPathDot,
   ComponentNestedPathShape,
   ComponentOptions,
   ComponentOptionsById,
   ComponentSchema,
-  ComponentSchemaNestedPath,
+  ComponentSchemaNestedPathDetails,
   GetComponentSchemaTypes,
-  ParseComponentNestedPath,
 } from '@game-cms/core';
 import { Key } from 'react';
 
+import { NestedPathDot } from '../../internal/nestedPath.js';
 import { TitleSpec, TitleSpecById } from '../../internal/title.js';
-import { DataEntry } from './internal/types.js';
+import { DataEntry, GetDataFromEntryArray } from './internal/types.js';
 
 type BaseDynamicZoneInputEntry<Id extends ComponentId, Args, Title> = {
   title?: Title;
@@ -110,14 +109,19 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
   searchIndexData: DynamicZoneArray<Input, 'searchIndexData'>;
 };
 
-type NestedPath<T, Input extends DynamicZoneInputComponents> = {
-  path: {
-    [K in keyof Input & string]: ComponentNestedPathDot<
-      `[${K}]`,
-      ComponentSchemaNestedPath<T, Input[K]>
+type NestedPathZone<T, Name extends string, Schema extends ComponentSchema> =
+  | {
+      path: `[${Name}]`;
+      value: GetDataFromEntryArray<T, Name>;
+    }
+  | NestedPathDot<
+      ComponentSchemaNestedPathDetails<GetDataFromEntryArray<T, Name>, Schema>,
+      `[${Name}]`
     >;
-  }[keyof Input & string];
-};
+
+type NestedPath<T, Input extends DynamicZoneInputComponents> = {
+  [K in keyof Input & string]: NestedPathZone<T, K, Input[K]>;
+}[keyof Input & string];
 
 type NestedPathShape<Input extends DynamicZoneInputComponents> = {
   [K in keyof Input & string]: Input[K] extends ComponentSchema<
@@ -127,33 +131,6 @@ type NestedPathShape<Input extends DynamicZoneInputComponents> = {
     ? DataEntry<ComponentNestedPathShape<Id, Args>, K>
     : DataEntry<unknown, K>;
 }[keyof Input & string][];
-
-type BaseParseNestedPathTransitionNext<
-  T,
-  Zone extends string,
-  Suffix extends string,
-  Input extends DynamicZoneInputComponents,
-> =
-  Input extends Record<Zone, ComponentSchema<infer Id, infer Args>>
-    ? T extends DataEntry<infer Data, Zone>[]
-      ? ParseComponentNestedPath<Data, Suffix, Id, Args>
-      : unknown
-    : unknown;
-
-type BaseParseNestedPathTransitionCurrent<
-  T,
-  Zone extends string,
-> = T extends DataEntry<infer Data, Zone>[] ? Data : unknown;
-
-type BaseParseNestedPath<
-  T,
-  Path extends string,
-  Input extends DynamicZoneInputComponents,
-> = Path extends `[${infer Zone}].${infer Suffix}`
-  ? BaseParseNestedPathTransitionNext<T, Zone, Suffix, Input>
-  : Path extends `[${infer Zone}]`
-    ? BaseParseNestedPathTransitionCurrent<T, Zone>
-    : unknown;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
@@ -168,13 +145,5 @@ declare module '@game-cms/core' {
 
   interface ComponentNestedPathShapeMap<Args> {
     'base::dynamic-zone': NestedPathShape<ResolveInputComponents<Args>>;
-  }
-
-  interface ComponentNestedPathParserMap<T, Path extends string, Args> {
-    'base::dynamic-zone': BaseParseNestedPath<
-      T,
-      Path,
-      ResolveInputComponents<Args>
-    >;
   }
 }
