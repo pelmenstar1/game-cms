@@ -8,6 +8,7 @@ import {
   useModal,
 } from '@game-cms/ui';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { getComposeOptions } from './internal/options.js';
 
@@ -23,6 +24,8 @@ export const renderer: ComponentRenderer<'game::three-d-model'> = ({
   readonly,
 }) => {
   const { file: files } = data;
+
+  const { t } = useTranslation('game');
 
   const api = useComponentApi();
   const Compose = api.getComponent('base::compose');
@@ -42,10 +45,10 @@ export const renderer: ComponentRenderer<'game::three-d-model'> = ({
     <div>
       <Toolbar>
         <IconButton
-          title="Preview"
+          title={t('common.preview')}
           hover="fill"
           onClick={onPreview}
-          disabled={error !== undefined || files.length === 0}
+          disabled={error !== undefined}
         >
           <PreviewIcon />
         </IconButton>

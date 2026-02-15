@@ -11,7 +11,6 @@
   },
   "micro": {
     "SpineRenderer": {
-      "sceneFailed": "Failed to create a game scene",
       "spineFailed": "Failed to load a spine animation"
     },
     "SpineController": {
@@ -24,6 +23,16 @@
       "ImagePreview": {
         "toggleMap": "Toggle map"
       }
+    },
+    "ThreeDModelPreviewModal": {
+      "title": "3D preview"
+    },
+    "ThreeDModelController": {
+      "switchTheme": "Switch theme",
+      "failedToLoadModel": "Failed to load the model"
+    },
+    "PixiScene": {
+      "sceneFailed": "Failed to create a game scene"
     }
   }
 }
