@@ -9,6 +9,7 @@ import {
   TextureSourceOptions,
 } from 'pixi.js';
 import { useState } from 'react';
+import { v4 } from 'uuid';
 
 import { BitmapFontPreviewGrid } from '../BitmapFontPreviewGrid';
 import { BitmapFontPreviewInput } from '../BitmapFontPreviewInput';
@@ -31,6 +32,8 @@ export function BitmapFontPreviewController({
   const result = useAbstractQueryResult(() => {
     const abortController = createAbortController();
 
+    let cacheKey: string | undefined;
+
     const worker = async () => {
       const atlasResponse = await fetch(atlasUrl, {
         signal: abortController?.signal,
@@ -42,6 +45,7 @@ export function BitmapFontPreviewController({
 
       const atlasText = await atlasResponse.text();
       const fontData = bitmapFontXMLStringParser.parse(atlasText);
+      fontData.fontFamily = `${v4()}-bitmap`;
 
       const textureOptions: TextureSourceOptions = fontData.distanceField
         ? {
@@ -66,17 +70,23 @@ export function BitmapFontPreviewController({
         atlasUrl
       );
 
+      cacheKey = `${fontData.fontFamily}-bitmap`;
+
       // Pixi internally relies on this cache key to find bitmap font.
       // We must do it otherwise Pixi will use dynamic bitmap fonts.
-      Assets.cache.set(`${fontData.fontFamily}-bitmap`, font);
+      Assets.cache.set(cacheKey, font);
 
       return font;
     };
 
     return {
       promise: worker(),
-      abort: () => {
+      cleanup: () => {
         abortController?.abort();
+
+        if (cacheKey) {
+          Assets.cache.remove(cacheKey);
+        }
       },
     };
   }, [texturesUrls, atlasUrl]);

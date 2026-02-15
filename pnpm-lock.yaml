@@ -870,6 +870,9 @@ importers:
       three:
         specifier: ^0.182.0
         version: 0.182.0
+      uuid:
+        specifier: ^13.0.0
+        version: 13.0.0
       zod:
         specifier: 'catalog:'
         version: 4.3.5

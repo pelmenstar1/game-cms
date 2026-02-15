@@ -18,6 +18,9 @@ export async function createBitmapFontGridApp() {
   const app = new Application();
   const gridGuides = new Graphics();
 
+  let charSizes: Size[] = [];
+  let rowHeights: number[] = [];
+
   await app.init({
     autoDensity: true,
     backgroundAlpha: 0,
@@ -29,42 +32,52 @@ export async function createBitmapFontGridApp() {
     return app.stage.children.length - 1;
   }
 
-  function getRowHeight(rowIndex: number) {
-    const { stage } = app;
-    const startIndex = rowIndex * COLUMN_COUNT;
+  function updateRowHeights() {
+    rowHeights = [];
 
     let maxHeight = 0;
-    for (let i = startIndex; i < startIndex + COLUMN_COUNT; i++) {
-      const child = stage.children[i];
+    let columnIndex = 0;
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (child) {
-        maxHeight = Math.max(maxHeight, child.height);
+    for (let i = 0; i < getCharCount(); i++) {
+      const charSize = charSizes[i];
+
+      maxHeight = Math.max(maxHeight, charSize.height);
+
+      if (columnIndex == COLUMN_COUNT - 1) {
+        rowHeights.push(maxHeight * 1.5);
+
+        columnIndex = 0;
+        maxHeight = 0;
+      } else {
+        columnIndex++;
       }
     }
-
-    return maxHeight;
   }
 
   function updateComponentPositions() {
     const { stage, screen } = app;
 
     const columnWidth = screen.width / COLUMN_COUNT;
-    let y = 0;
 
+    let y = 0;
     let row = 0;
     let column = 0;
 
     for (let i = 0; i < getCharCount(); i++) {
       const child = stage.children[i];
+      const baseX = column * columnWidth;
 
-      child.x = column * columnWidth;
-      child.y = y;
+      const { width: charWidth } = charSizes[i];
+      const rowHeight = rowHeights[row];
+
+      child.x = baseX + columnWidth * 0.5;
+      child.y = y + rowHeight * 0.5;
+      child.scale = Math.min(charWidth, columnWidth) / charWidth;
 
       column++;
       if (column >= COLUMN_COUNT) {
         column = 0;
-        y += getRowHeight(row);
+        y += rowHeight;
         row++;
       }
     }
@@ -90,10 +103,10 @@ export async function createBitmapFontGridApp() {
       gridGuides.moveTo(x, 0).lineTo(x, screen.height).stroke(strokeOptions);
     }
 
-    let accumulatedRowY = getRowHeight(0);
+    let accumulatedRowY = rowHeights[0] ?? 0;
 
     for (let row = 1; row < rowCount; row++) {
-      const rowHeight = getRowHeight(row);
+      const rowHeight = rowHeights[row] ?? 0;
 
       gridGuides
         .moveTo(0, accumulatedRowY)
@@ -115,26 +128,43 @@ export async function createBitmapFontGridApp() {
     invalidate();
   }
 
-  function setFont(font: BitmapFont) {
+  function setFont(value: BitmapFont) {
     const { stage } = app;
 
     stage.removeChildren();
 
-    for (const [char] of Object.entries(font.chars)) {
+    charSizes = [];
+
+    const fontSize = 30;
+    const scale = fontSize / value.baseMeasurementFontSize;
+
+    for (const [char, data] of Object.entries(value.chars)) {
+      const { texture } = data;
       const charComponent = new BitmapText({
         text: char,
         style: {
-          fontFamily: font.fontFamily,
+          fontFamily: value.fontFamily,
           fill: 0xff_ff_ff,
-          fontSize: 30,
+          fontSize,
         },
+      });
+
+      charComponent.anchor.set(0.5);
+
+      const width = texture?.width ?? 0;
+      const height = texture?.height ?? 0;
+
+      charSizes.push({
+        width: (width + data.xOffset) * scale,
+        height: (height + data.yOffset) * scale,
       });
 
       stage.addChild(charComponent);
     }
 
-    app.stage.addChild(gridGuides);
+    stage.addChild(gridGuides);
 
+    updateRowHeights();
     invalidate();
   }
 

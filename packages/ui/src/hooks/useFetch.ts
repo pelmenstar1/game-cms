@@ -19,7 +19,7 @@ export function useFetch<T>(
 
     return {
       promise,
-      abort: () => {
+      cleanup: () => {
         abortController?.abort();
       },
     };

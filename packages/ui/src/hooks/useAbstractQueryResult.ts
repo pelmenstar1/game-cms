@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 type AbstractQueryResultDescriptor<T> = {
   promise: Promise<T>;
-  abort?: () => void;
+  cleanup?: () => void;
 };
 
 type AbstractQueryResultFactory<T> = () =>
@@ -25,7 +25,15 @@ export function useAbstractQueryResult<T>(
 
     const descriptor = factory();
 
-    const promise = isPromise(descriptor) ? descriptor : descriptor.promise;
+    let cleanup: (() => void) | undefined;
+    let promise: Promise<T>;
+
+    if (isPromise(descriptor)) {
+      promise = descriptor;
+    } else {
+      promise = descriptor.promise;
+      cleanup = descriptor.cleanup;
+    }
 
     promise
       .then((value) => {
@@ -37,9 +45,8 @@ export function useAbstractQueryResult<T>(
         setResult({ status: 'error', error });
       });
 
-    if (!isPromise(descriptor)) {
-      return descriptor.abort;
-    }
+    return cleanup;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
