@@ -1,15 +1,17 @@
 import { createAbortController, handleResponseError } from '@game-cms/shared';
-import { DataLoader, useAbstractQueryResult } from '@game-cms/ui';
+import { DataLoader, Tab, Tabs, useAbstractQueryResult } from '@game-cms/ui';
 import {
   Assets,
   BitmapFont,
   bitmapFontXMLStringParser,
+  ResolvedAsset,
   Texture,
   TextureSourceOptions,
-  UnresolvedAsset,
 } from 'pixi.js';
+import { useState } from 'react';
 
-import { BitmapFontPreviewRenderer } from '../BitmapFontPreviewRenderer';
+import { BitmapFontPreviewGrid } from '../BitmapFontPreviewGrid';
+import { BitmapFontPreviewInput } from '../BitmapFontPreviewInput';
 
 export interface BitmapFontPreviewControllerProps {
   className?: string;
@@ -17,11 +19,15 @@ export interface BitmapFontPreviewControllerProps {
   atlasUrl: string;
 }
 
+type TabName = 'grid' | 'input';
+
 export function BitmapFontPreviewController({
   className,
   texturesUrls,
   atlasUrl,
 }: BitmapFontPreviewControllerProps) {
+  const [selectedTab, setSelectedTab] = useState<TabName>('grid');
+
   const result = useAbstractQueryResult(() => {
     const abortController = createAbortController();
 
@@ -46,16 +52,25 @@ export function BitmapFontPreviewController({
           }
         : {};
 
-      const textures = await Assets.load<Texture>(
+      const textures = await Assets.loader.load<Texture>(
         texturesUrls.map(
-          (url): UnresolvedAsset => ({ src: url, options: textureOptions })
+          (url): ResolvedAsset => ({ src: url, data: textureOptions })
         )
       );
 
-      return new BitmapFont({
-        data: fontData,
-        textures: Object.values(textures),
-      });
+      const font = new BitmapFont(
+        {
+          data: fontData,
+          textures: Object.values(textures),
+        },
+        atlasUrl
+      );
+
+      // Pixi internally relies on this cache key to find bitmap font.
+      // We must do it otherwise Pixi will use dynamic bitmap fonts.
+      Assets.cache.set(`${fontData.fontFamily}-bitmap`, font);
+
+      return font;
     };
 
     return {
@@ -68,7 +83,17 @@ export function BitmapFontPreviewController({
 
   return (
     <DataLoader className={className} result={result}>
-      {(font) => <BitmapFontPreviewRenderer font={font} />}
+      {(font) => (
+        <Tabs selectedTab={selectedTab} onSelectedTabChanged={setSelectedTab}>
+          <Tab tabId="grid" title="Grid">
+            <BitmapFontPreviewGrid font={font} />
+          </Tab>
+
+          <Tab tabId="input" title="Input">
+            <BitmapFontPreviewInput font={font} />
+          </Tab>
+        </Tabs>
+      )}
     </DataLoader>
   );
 }

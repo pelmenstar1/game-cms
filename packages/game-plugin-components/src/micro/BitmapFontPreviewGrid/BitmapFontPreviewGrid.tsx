@@ -2,18 +2,18 @@ import { BitmapFont } from 'pixi.js';
 import { useEffect, useState } from 'react';
 
 import { PixiScene } from '../PixiScene';
-import { BitmapFontPreviewApp, createBitmapFontPreviewApp } from './app';
+import { BitmapFontGridApp, createBitmapFontGridApp } from './app';
 
-export interface BitmapFontPreviewRendererProps {
+export interface BitmapFontPreviewGridProps {
   className?: string;
   font: BitmapFont;
 }
 
-export function BitmapFontPreviewRenderer({
+export function BitmapFontPreviewGrid({
   className,
   font,
-}: BitmapFontPreviewRendererProps) {
-  const [app, setApp] = useState<BitmapFontPreviewApp | null>(null);
+}: BitmapFontPreviewGridProps) {
+  const [app, setApp] = useState<BitmapFontGridApp | null>(null);
 
   useEffect(() => {
     if (app) {
@@ -24,7 +24,7 @@ export function BitmapFontPreviewRenderer({
   return (
     <PixiScene
       className={className}
-      sceneLoader={createBitmapFontPreviewApp}
+      sceneLoader={createBitmapFontGridApp}
       onSceneLoaded={setApp}
     />
   );

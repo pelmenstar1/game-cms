@@ -24,7 +24,7 @@ catalog:
   mime-types: ^3.0.2
   mongodb: 7.0.0
   pino: 10.1.1
-  pixi.js: ^8.15.0
+  pixi.js: ^8.16.0
   qs: 6.14.1
   react: 19.2.3
   react-dom: 19.2.3

@@ -2,7 +2,6 @@
   "name": "@game-cms/dashboard",
   "packageManager": "pnpm@10.28.1",
   "type": "module",
-  "main": "./build/client/index.html",
   "scripts": {
     "build": "react-router build",
     "storybook:start": "storybook dev --port 6006",

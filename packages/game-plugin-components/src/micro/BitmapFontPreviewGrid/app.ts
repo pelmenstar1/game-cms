@@ -7,14 +7,14 @@ import {
   StrokeInput,
 } from 'pixi.js';
 
-export type BitmapFontPreviewApp = Awaited<
-  ReturnType<typeof createBitmapFontPreviewApp>
+export type BitmapFontGridApp = Awaited<
+  ReturnType<typeof createBitmapFontGridApp>
 >;
 
 const COLUMN_COUNT = 6;
 const GUIDES_COLOR = 0x44_44_44;
 
-export async function createBitmapFontPreviewApp() {
+export async function createBitmapFontGridApp() {
   const app = new Application();
   const gridGuides = new Graphics();
 

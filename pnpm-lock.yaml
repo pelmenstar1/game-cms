@@ -70,8 +70,8 @@ catalogs:
       specifier: 10.1.1
       version: 10.1.1
     pixi.js:
-      specifier: ^8.15.0
-      version: 8.15.0
+      specifier: ^8.16.0
+      version: 8.16.0
     qs:
       specifier: 6.14.1
       version: 6.14.1
@@ -836,7 +836,7 @@ importers:
     dependencies:
       '@esotericsoftware/spine-pixi-v8':
         specifier: ^4.2.96
-        version: 4.2.96(pixi.js@8.15.0)
+        version: 4.2.96(pixi.js@8.16.0)
       '@game-cms/base-components':
         specifier: workspace:*
         version: link:../base-components
@@ -863,7 +863,7 @@ importers:
         version: 7.0.0
       pixi.js:
         specifier: 'catalog:'
-        version: 8.15.0
+        version: 8.16.0
       react-i18next:
         specifier: 'catalog:'
         version: 16.5.2(i18next@25.7.4(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
@@ -990,7 +990,7 @@ importers:
     devDependencies:
       pixi.js:
         specifier: 'catalog:'
-        version: 8.15.0
+        version: 8.16.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2970,9 +2970,6 @@ packages:
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
 
-  '@types/css-font-loading-module@0.0.12':
-    resolution: {integrity: sha512-x2tZZYkSxXqWvTDgveSynfjq/T2HyiZHXb00j/+gy19yp70PHCizM48XFdjBCWH7eHBD0R5i/pw9yMBP/BH5uA==}
-
   '@types/d3-color@3.1.3':
     resolution: {integrity: sha512-iO90scth9WAbmgv7ogoq57O9YpKmFBbmoEoCHDB2xMBY0+/KVrqAaCDyCE16dUspeOvIxFFRI+0sEtqDqy2b4A==}
 
@@ -3204,6 +3201,9 @@ packages:
 
   '@webgpu/types@0.1.68':
     resolution: {integrity: sha512-3ab1B59Ojb6RwjOspYLsTpCzbNB3ZaamIAxBMmvnNkiDoLTZUOBXZ9p5nAYVEkQlDdf6qAZWi1pqj9+ypiqznA==}
+
+  '@webgpu/types@0.1.69':
+    resolution: {integrity: sha512-RPmm6kgRbI8e98zSD3RVACvnuktIja5+yLgDAkTmxLr90BEwdTXRQWNLF3ETTTyH/8mKhznZuN5AveXYFEsMGQ==}
 
   '@xmldom/xmldom@0.8.11':
     resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
@@ -4781,8 +4781,8 @@ packages:
     resolution: {integrity: sha512-1wrVzJ2STrpmONHKBy228LM1b84msXDUoAzVEl0R8Mz4Ce6EPr+IVtxm8+yvrqLYMHswREkjYFaMxnyGnaY3Ng==}
     hasBin: true
 
-  pixi.js@8.15.0:
-    resolution: {integrity: sha512-J/Ghze/K9fjHRlfwC2EMZ7vnMIhGo4ByKCsKMcS0AB12iT79nf9zzWKUTzMJ8QAQFqQfDOl5ULwmHMUdeih2zQ==}
+  pixi.js@8.16.0:
+    resolution: {integrity: sha512-gu2xw3sZGAn3cWBtk0HqTQT+v19YAfiaYXwUGgWoJl5NKz4cEZJUgWrwkmdfDszGyYBAGqOvJNbd2M9+vzLLMg==}
 
   pkg-types@2.3.0:
     resolution: {integrity: sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig==}
@@ -5526,8 +5526,8 @@ packages:
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
-  tiny-lru@11.4.5:
-    resolution: {integrity: sha512-hkcz3FjNJfKXjV4mjQ1OrXSLAehg8Hw+cEZclOVT+5c/cWQWImQ9wolzTjth+dmmDe++p3bme3fTxz6Q4Etsqw==}
+  tiny-lru@11.4.7:
+    resolution: {integrity: sha512-w/Te7uMUVeH0CR8vZIjr+XiN41V+30lkDdK+NRIDCUYKKuL9VcmaUEmaPISuwGhLlrTGh5yu18lENtR9axSxYw==}
     engines: {node: '>=12'}
 
   tinybench@2.9.0:
@@ -6803,10 +6803,10 @@ snapshots:
 
   '@esotericsoftware/spine-core@4.2.96': {}
 
-  '@esotericsoftware/spine-pixi-v8@4.2.96(pixi.js@8.15.0)':
+  '@esotericsoftware/spine-pixi-v8@4.2.96(pixi.js@8.16.0)':
     dependencies:
       '@esotericsoftware/spine-core': 4.2.96
-      pixi.js: 8.15.0
+      pixi.js: 8.16.0
 
   '@fastify/accept-negotiator@2.0.1': {}
 
@@ -8004,8 +8004,6 @@ snapshots:
       '@types/deep-eql': 4.0.2
       assertion-error: 2.0.1
 
-  '@types/css-font-loading-module@0.0.12': {}
-
   '@types/d3-color@3.1.3': {}
 
   '@types/d3-drag@3.0.7':
@@ -8317,6 +8315,8 @@ snapshots:
       tinyrainbow: 3.0.3
 
   '@webgpu/types@0.1.68': {}
+
+  '@webgpu/types@0.1.69': {}
 
   '@xmldom/xmldom@0.8.11': {}
 
@@ -9997,19 +9997,18 @@ snapshots:
     dependencies:
       pngjs: 7.0.0
 
-  pixi.js@8.15.0:
+  pixi.js@8.16.0:
     dependencies:
       '@pixi/colord': 2.9.6
-      '@types/css-font-loading-module': 0.0.12
       '@types/earcut': 3.0.0
-      '@webgpu/types': 0.1.68
+      '@webgpu/types': 0.1.69
       '@xmldom/xmldom': 0.8.11
       earcut: 3.0.2
       eventemitter3: 5.0.1
       gifuct-js: 2.1.2
       ismobilejs: 1.1.1
       parse-svg-path: 0.1.2
-      tiny-lru: 11.4.5
+      tiny-lru: 11.4.7
 
   pkg-types@2.3.0:
     dependencies:
@@ -10897,7 +10896,7 @@ snapshots:
 
   tiny-invariant@1.3.3: {}
 
-  tiny-lru@11.4.5: {}
+  tiny-lru@11.4.7: {}
 
   tinybench@2.9.0: {}
 
