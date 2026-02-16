@@ -1,4 +1,5 @@
 export * from './nativeEventListener';
+export * from './useAbstractQueryResult';
 export * from './useAsyncCallback';
 export * from './useBounds';
 export * from './useFetch';

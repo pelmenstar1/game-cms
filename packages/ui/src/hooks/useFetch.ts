@@ -1,39 +1,29 @@
 import {
   createAbortController,
   type MaybePromise,
-  pendingQueryResult,
   type QueryResult,
 } from '@game-cms/shared';
-import { useEffect, useState } from 'react';
+
+import { useAbstractQueryResult } from './useAbstractQueryResult';
 
 export function useFetch<T>(
   url: string,
   resolver: (response: Response) => MaybePromise<T>
 ): QueryResult<T> {
-  const [result, setResult] = useState(pendingQueryResult<T>());
-
-  useEffect(() => {
+  return useAbstractQueryResult(() => {
     const abortController = createAbortController();
 
-    fetch(url, {
+    const promise = fetch(url, {
       signal: abortController?.signal,
-    })
-      .then(resolver)
-      .then((value) => {
-        setResult({ status: 'success', value });
-      })
-      .catch((error: unknown) => {
-        console.error(error);
+    }).then(resolver);
 
-        setResult({ status: 'error', error });
-      });
-
-    return () => {
-      abortController?.abort();
+    return {
+      promise,
+      cleanup: () => {
+        abortController?.abort();
+      },
     };
   }, [resolver, url]);
-
-  return result;
 }
 
 const textResolver = (response: Response) => response.text();

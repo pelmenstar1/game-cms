@@ -17,11 +17,13 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/spritesheet": "workspace:*",
     "@game-cms/ui": "workspace:*",
+    "fast-xml-parser": "^5.3.6",
     "i18next": "catalog:",
     "mongodb": "catalog:",
     "pixi.js": "catalog:",
     "react-i18next": "catalog:",
     "three": "^0.182.0",
+    "uuid": "^13.0.0",
     "zod": "catalog:"
   },
   "devDependencies": {

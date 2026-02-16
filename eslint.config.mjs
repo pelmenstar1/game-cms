@@ -93,7 +93,7 @@ export default defineConfig(
       'react-hooks/exhaustive-deps': [
         'warn',
         {
-          additionalHooks: '(useAsyncCallback)',
+          additionalHooks: '(useAsyncCallback|useAbstractQueryResult)',
         },
       ],
 

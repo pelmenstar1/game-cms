@@ -7,6 +7,7 @@ import {
   LightModeIcon,
 } from '@game-cms/ui';
 import { ComponentProps, useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   BackgroundTheme,
@@ -36,12 +37,16 @@ export function ThreeDModelController({
     setBackgroundTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
+  const { t } = useTranslation('game', {
+    keyPrefix: 'micro.ThreeDModelController',
+  });
+
   return (
     <div className={classNames(styles.root, className)} {...rest}>
       {modelStatus.type === 'loaded' && (
         <IconButton
           className={styles['switch-theme']}
-          title="Switch theme"
+          title={t('switchTheme')}
           hover="fill"
           onClick={switchBackgroundTheme}
         >
@@ -64,7 +69,7 @@ export function ThreeDModelController({
           {modelStatus.type === 'loading' ? (
             <CircularProgress progress={modelStatus.progress} />
           ) : (
-            <ErrorMessage>Failed to load the model</ErrorMessage>
+            <ErrorMessage>{t('failedToLoadModel')}</ErrorMessage>
           )}
         </div>
       ) : null}

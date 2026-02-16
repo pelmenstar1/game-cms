@@ -7,7 +7,7 @@ import {
   S3Client,
 } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
-import { type StorageProvider } from '@game-cms/base-core';
+import { FileSource, type StorageProvider } from '@game-cms/base-core';
 import { ApiError, apiRoute } from '@game-cms/core/api';
 import { meteredStream } from '@game-cms/shared/node/io';
 import { stripUndefined } from '@game-cms/shared/object';
@@ -66,6 +66,39 @@ function getFileRoute(config: S3StorageProviderConfig, client: S3Client) {
   });
 }
 
+async function baseUpload(
+  client: S3Client,
+  bucket: string,
+  key: string,
+  content: FileSource,
+  mime: string,
+  signal?: AbortSignal
+) {
+  const stream = meteredStream(content);
+
+  const upload = new Upload({
+    client,
+    params: {
+      Bucket: bucket,
+      Key: key,
+      ContentType: mime,
+      Body: stream.body,
+    },
+  });
+
+  const abortCallback = () => {
+    void upload.abort();
+  };
+
+  signal?.addEventListener('abort', abortCallback);
+
+  await upload.done();
+
+  signal?.removeEventListener('abort', abortCallback);
+
+  return stream.size;
+}
+
 export function s3StorageProvider(
   config: S3StorageProviderConfig
 ): StorageProvider<Extra> {
@@ -80,29 +113,30 @@ export function s3StorageProvider(
         const { name, mime, content } = info;
         const key = createFileKey(mime, name);
 
-        const stream = meteredStream(content);
-
-        const upload = new Upload({
+        const size = await baseUpload(
           client,
-          params: {
-            Bucket: bucket,
-            Key: key,
-            ContentType: mime,
-            Body: stream.body,
-          },
-        });
+          bucket,
+          key,
+          content,
+          mime,
+          options?.signal
+        );
 
-        const abortCallback = () => {
-          void upload.abort();
-        };
+        return { extra: { key }, size };
+      },
+      patchContent: async (info, options) => {
+        const { extra, content, mime } = info;
 
-        options?.signal?.addEventListener('abort', abortCallback);
+        const size = await baseUpload(
+          client,
+          bucket,
+          extra.key,
+          content,
+          mime,
+          options?.signal
+        );
 
-        await upload.done();
-
-        options?.signal?.removeEventListener('abort', abortCallback);
-
-        return { extra: { key }, size: stream.size };
+        return { size };
       },
       delete: async ({ key }) => {
         await client.send(

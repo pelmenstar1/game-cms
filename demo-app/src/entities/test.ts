@@ -2,7 +2,7 @@ import {
   postRequestUrlSource,
   webpageEntityPreview,
 } from '@game-cms/entity-previews';
-import { threeDModel } from '@game-cms/game-plugin/components';
+import { bitmapFont } from '@game-cms/game-plugin/components';
 import { entity } from 'game-cms';
 
 export default entity({
@@ -12,6 +12,6 @@ export default entity({
     urlSource: postRequestUrlSource('http://localhost:3333'),
   }),
   components: {
-    abc: threeDModel(),
+    abc: bitmapFont(),
   },
 });
