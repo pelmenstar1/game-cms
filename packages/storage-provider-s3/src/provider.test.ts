@@ -69,4 +69,27 @@ describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
 
     expect(expected.equals(actual)).toBe(true);
   });
+
+  test('patchContent', async () => {
+    const provider = createProvider();
+
+    const initial = Buffer.from('initial');
+    const { extra } = await provider.protocol.upload({
+      name: 'patch-test',
+      mime: 'text/plain',
+      content: initial,
+    });
+
+    const patched = Buffer.from('patched');
+    const { size } = await provider.protocol.patchContent({
+      extra,
+      mime: 'text/plain',
+      content: patched,
+    });
+
+    const actual = await provider.protocol.getContent(extra);
+
+    expect(patched.equals(actual)).toBe(true);
+    expect(size).toEqual(patched.length);
+  });
 });

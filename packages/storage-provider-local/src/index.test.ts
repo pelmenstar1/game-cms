@@ -87,4 +87,27 @@ describe('localStorageProvider', () => {
 
     expect(actual).toEqual(expected);
   });
+
+  test('patchContent', async () => {
+    await using provider = await createProvider();
+
+    const initial = Buffer.from('initial');
+    const { extra } = await provider.value.protocol.upload({
+      name: 'patch-test',
+      mime: 'text/plain',
+      content: initial,
+    });
+
+    const patched = Buffer.from('patched');
+    const { size } = await provider.value.protocol.patchContent({
+      extra,
+      mime: 'text/plain',
+      content: patched,
+    });
+
+    const actual = await provider.value.protocol.getContent(extra);
+
+    expect(actual).toEqual(patched);
+    expect(size).toEqual(patched.length);
+  });
 });

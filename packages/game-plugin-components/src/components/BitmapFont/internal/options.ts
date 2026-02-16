@@ -1,6 +1,8 @@
 import { compose, file } from '@game-cms/base-components';
 import { ComponentOptionsById, GetComponentSchemaArgs } from '@game-cms/core';
 
+import { ATLAS_MIME_TYPE } from './constants.js';
+
 function createComposeSchema() {
   return compose({
     pages: file({
@@ -8,7 +10,7 @@ function createComposeSchema() {
       minItems: 1,
     }),
     atlas: file({
-      supportedMimeTypes: ['application/x-font-sdf'],
+      supportedMimeTypes: [ATLAS_MIME_TYPE],
       minItems: 1,
       maxItems: 1,
     }),

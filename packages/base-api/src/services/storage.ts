@@ -3,6 +3,7 @@ import { buffer } from 'node:stream/consumers';
 
 import type {
   AbortOptions,
+  FileSource,
   StorageAddon,
   StorageAddonContext,
 } from '@game-cms/base-core';
@@ -119,6 +120,51 @@ async function hydrateItem(
   };
 }
 
+function ensureFileItem(
+  item: StoragePersistentItem | null
+): asserts item is StoragePersistentItem & { type: StorageItemType.FILE } {
+  if (item?.type !== StorageItemType.FILE) {
+    throw new Error('Expected file item');
+  }
+}
+
+async function getFileExtraById(id: ObjectId, options?: AbortOptions) {
+  const item = await collection().findOne(
+    { _id: id },
+    { projection: { type: 1, extra: 1 }, signal: options?.signal }
+  );
+
+  ensureFileItem(item);
+
+  return item.extra;
+}
+
+async function getContent(
+  id: ObjectId,
+  options?: AbortOptions
+): Promise<Uint8Array>;
+
+async function getContent(
+  id: ObjectId,
+  options: AbortOptions & { encoding: BufferEncoding }
+): Promise<string>;
+
+async function getContent(
+  id: ObjectId,
+  options?: AbortOptions & { encoding?: BufferEncoding }
+): Promise<Uint8Array | string> {
+  const extra = await getFileExtraById(id, options);
+
+  const { protocol } = storageProvider();
+
+  const content = await protocol.getContent(extra, options);
+  if (options?.encoding) {
+    return Buffer.from(content).toString(options.encoding);
+  }
+
+  return content;
+}
+
 export default service({
   id: 'base::storage',
   init: async () => {
@@ -186,6 +232,25 @@ export default service({
 
     return { id: insertedId, url };
   },
+  patchContent: async (
+    id: ObjectId,
+    content: FileSource,
+    options?: AbortOptions
+  ) => {
+    const item = await collection().findOne(
+      { _id: id },
+      { signal: options?.signal }
+    );
+
+    ensureFileItem(item);
+
+    const size = await storageProvider().protocol.patchContent(
+      { content, extra: item.extra, mime: item.mime },
+      options
+    );
+
+    await collection().updateOne({ _id: id }, { $set: { size } });
+  },
   createFolder: async (payload: CreateFolderPayload) => {
     const { name, parent } = payload;
 
@@ -216,22 +281,11 @@ export default service({
 
     return result && hydrateItem(result);
   },
-  getContent: async (
-    id: ObjectId,
-    options?: AbortOptions
-  ): Promise<Uint8Array> => {
-    const result = await collection().findOne(
-      { _id: id },
-      { projection: { type: 1, extra: 1 }, signal: options?.signal }
-    );
+  getContent,
+  getUrl: async (id: ObjectId, options?: AbortOptions) => {
+    const extra = await getFileExtraById(id, options);
 
-    const { protocol } = storageProvider();
-
-    if (result?.type !== StorageItemType.FILE) {
-      throw new Error('Expected the item to be file');
-    }
-
-    return protocol.getContent(result.extra);
+    return storageProvider().protocol.getUrl(extra);
   },
   list: async (options: ListStorageItemsOptions & AbortOptions) => {
     const { parent } = options;

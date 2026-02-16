@@ -75,6 +75,10 @@ function getFileRoute(storagePath: string) {
   });
 }
 
+function getFilePath(storagePath: string, extra: Extra) {
+  return path.join(storagePath, extra.fileName);
+}
+
 export function localStorageProvider(
   config?: LocalStorageProviderConfig
 ): StorageProvider<Extra> {
@@ -118,8 +122,17 @@ export function localStorageProvider(
 
         return { extra: { fileName: outputName }, size };
       },
-      delete: async ({ fileName }) => {
-        const filePath = path.join(storagePath, fileName);
+      patchContent: async (info, options) => {
+        const filePath = getFilePath(storagePath, info.extra);
+
+        const size = await writeFileSourceToFile(info.content, filePath, {
+          signal: options?.signal,
+        });
+
+        return { size };
+      },
+      delete: async (extra) => {
+        const filePath = getFilePath(storagePath, extra);
 
         try {
           await fsp.rm(filePath, { maxRetries: 3 });
@@ -129,8 +142,10 @@ export function localStorageProvider(
           }
         }
       },
-      getContent: ({ fileName }, options) => {
-        return fsp.readFile(path.join(storagePath, fileName), {
+      getContent: (extra, options) => {
+        const filePath = getFilePath(storagePath, extra);
+
+        return fsp.readFile(filePath, {
           signal: options?.signal,
         });
       },

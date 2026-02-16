@@ -18,7 +18,11 @@ type BitmapFontEntry = {
   options: Record<never, never>;
   error: ComponentErrorById<ComposeId, ComposeArgs>;
   clientData: ComponentClientDataById<ComposeId, ComposeArgs>;
-  storageData: ComponentStorageDataById<ComposeId, ComposeArgs>;
+  storageData: {
+    pages: ComponentStorageDataById<'base::file'>;
+    atlas: ComponentStorageDataById<'base::file'>;
+    shadowAtlas: ComponentStorageDataById<'base::file'>[number];
+  };
   searchIndexData: ComponentSearchIndexDataById<ComposeId, ComposeArgs>;
 };
 

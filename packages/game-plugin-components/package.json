@@ -17,6 +17,7 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/spritesheet": "workspace:*",
     "@game-cms/ui": "workspace:*",
+    "fast-xml-parser": "^5.3.6",
     "i18next": "catalog:",
     "mongodb": "catalog:",
     "pixi.js": "catalog:",
