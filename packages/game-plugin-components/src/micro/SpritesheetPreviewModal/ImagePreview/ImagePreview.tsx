@@ -8,8 +8,8 @@ import {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { spritesheetDataWithSize } from '../../../utils/spritesheet/schema.js';
 import { SpritesheetMap } from '../../SpritesheetMap';
-import { spritesheetDataWithSize } from '../../SpritesheetMap/schema';
 import styles from './ImagePreview.module.scss';
 
 export interface ImagePreviewProps {

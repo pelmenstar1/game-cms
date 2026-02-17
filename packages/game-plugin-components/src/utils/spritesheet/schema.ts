@@ -22,6 +22,7 @@ export const spritesheetDataWithSize = object({
     })
   ),
   meta: object({
+    image: string(),
     scale: union([number(), string()]),
     size: object({
       w: number(),

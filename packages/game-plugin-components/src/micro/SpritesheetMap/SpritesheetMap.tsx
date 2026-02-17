@@ -1,7 +1,7 @@
 import { classNames } from '@game-cms/ui';
 
+import { SpritesheetDataWithSize } from '../../utils/spritesheet/types';
 import styles from './SpritesheetMap.module.scss';
-import type { SpritesheetDataWithSize } from './types';
 
 export interface SpritesheetMapProps {
   className?: string;
