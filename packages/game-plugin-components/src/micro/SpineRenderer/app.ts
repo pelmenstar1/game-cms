@@ -15,6 +15,7 @@ import {
   Ticker,
 } from 'pixi.js';
 
+import { initPixiAssets } from '../../utils/pixi.js';
 import type { OnAnimationTimeChanged, SpineData } from './types.js';
 
 type ResolvedSpineContext = {
@@ -83,6 +84,8 @@ export async function createSpineApplication() {
     backgroundAlpha: 0,
     antialias: true,
   });
+
+  await initPixiAssets();
 
   let initialBoundsMap: InitialBoundsMap | undefined;
   let currentAnimation: string | undefined;

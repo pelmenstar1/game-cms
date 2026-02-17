@@ -13,7 +13,9 @@ import { ComposeArgs } from './internal/options';
 type ComposeId = 'base::compose';
 
 type BitmapFontEntry = {
-  rawData: ComponentRawDataById<ComposeId, ComposeArgs>;
+  rawData: ComponentRawDataById<ComposeId, ComposeArgs> & {
+    originalAtlas?: ComponentRawDataById<'base::file'>[number];
+  };
   rawInData: ComponentRawInDataById<ComposeId, ComposeArgs>;
   options: Record<never, never>;
   error: ComponentErrorById<ComposeId, ComposeArgs>;
@@ -21,7 +23,7 @@ type BitmapFontEntry = {
   storageData: {
     pages: ComponentStorageDataById<'base::file'>;
     atlas: ComponentStorageDataById<'base::file'>;
-    shadowAtlas: ComponentStorageDataById<'base::file'>[number];
+    shadowAtlas?: ComponentStorageDataById<'base::file'>[number];
   };
   searchIndexData: ComponentSearchIndexDataById<ComposeId, ComposeArgs>;
 };

@@ -11,3 +11,4 @@ export * from './repeatJoin.js';
 export * from './safeParseFloat.js';
 export * from './shortenByWord.js';
 export * from './trimTrailingZeros.js';
+export * from './urlName.js';

@@ -30,11 +30,15 @@ declare module '@game-cms/core' {
         atlas?: FileError;
         images?: FileError;
       };
-      rawData: BaseData<FileData>;
+      rawData: BaseData<FileData> & {
+        originalAtlas?: FileData[number];
+      };
       rawInData: BaseData<FileDataIn>;
       partialRawInData: Partial<BaseData<FileDataIn>>;
       clientData: BaseData<FileClientData>;
-      storageData: BaseData<FileStorageData>;
+      storageData: BaseData<FileStorageData> & {
+        shadowAtlas?: FileStorageData[number];
+      };
     }>;
   }
 }

@@ -12,12 +12,15 @@ export function removeExtension(filePath: string) {
 }
 
 export function inferFileExtensionFromMime(mime: string, originalName: string) {
-  if (mime !== 'application/octet-stream') {
+  const ext = path.extname(originalName);
+
+  if (ext.length === 0) {
     const mimeExtension = extension(mime);
+
     if (mimeExtension) {
       return `.${mimeExtension}`;
     }
   }
 
-  return path.extname(originalName);
+  return ext;
 }

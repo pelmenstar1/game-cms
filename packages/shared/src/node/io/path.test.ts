@@ -18,7 +18,7 @@ describe('inferFileExtensionFromMime', () => {
   test('returns extension from mime type', () => {
     const result = inferFileExtensionFromMime('image/png', 'photo.jpg');
 
-    expect(result).toBe('.png');
+    expect(result).toBe('.jpg');
   });
 
   test('falls back to original name extension when mime is unknown', () => {

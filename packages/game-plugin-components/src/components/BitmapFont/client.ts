@@ -21,7 +21,10 @@ export const clientTransformer: ComponentClientDataTransformer<'game::bitmap-fon
     toClient: (data, _, context) => {
       return context.toClient<'base::compose', ComposeArgs>(
         'base::compose',
-        data,
+        {
+          atlas: data.originalAtlas ? [data.originalAtlas] : data.atlas,
+          pages: data.pages,
+        },
         getComposeOptions()
       );
     },

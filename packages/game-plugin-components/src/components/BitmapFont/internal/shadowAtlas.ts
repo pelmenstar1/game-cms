@@ -1,4 +1,5 @@
 import { MaybeArray } from '@game-cms/shared/collections';
+import { getUrlFileName } from '@game-cms/shared/string';
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 
 type PageContent = { '@_file': string };
@@ -10,8 +11,8 @@ type AtlasContent = {
 };
 
 export function createShadowAtlasContent(
-  atlasContent: string | Uint8Array,
-  textureNames: string[]
+  atlasContent: string,
+  textureUrls: string[]
 ): string {
   const parser = new XMLParser({
     ignoreAttributes: false,
@@ -21,16 +22,16 @@ export function createShadowAtlasContent(
   const { page } = doc.font.pages;
 
   if (Array.isArray(page)) {
-    for (let i = 0; i < textureNames.length; i++) {
+    for (let i = 0; i < textureUrls.length; i++) {
       const pageEntry = page[i];
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (pageEntry) {
-        pageEntry['@_file'] = textureNames[i];
+        pageEntry['@_file'] = getUrlFileName(textureUrls[i]);
       }
     }
   } else {
-    page['@_file'] = textureNames[0];
+    page['@_file'] = getUrlFileName(textureUrls[0]);
   }
 
   const builder = new XMLBuilder({

@@ -2,63 +2,23 @@ import { defineComponentController } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
+import { createShadowFileOrchestration } from '../../utils/shadowFile.js';
 import core from './core.js';
 import { ATLAS_MIME_TYPE } from './internal/constants.js';
 import { ComposeArgs, getComposeOptions } from './internal/options.js';
 import { createShadowAtlasContent } from './internal/shadowAtlas.js';
 
-async function loadShadowAtlasContent(
-  atlasId: ObjectId,
-  textureIds: ObjectId[]
-): Promise<string> {
-  const atlasContent = await cms()
-    .service('base::storage')
-    .getContent(atlasId, { encoding: 'utf8' });
+const shadowAtlasOrchestration = createShadowFileOrchestration({
+  shadowName: 'shadow-atlas.fnt',
+  mime: ATLAS_MIME_TYPE,
+  getContent: async (atlasContent, args: { textureIds: ObjectId[] }) => {
+    const textureUrls = await Promise.all(
+      args.textureIds.map((id) => cms().service('base::storage').getUrl(id))
+    );
 
-  const textureUrls = await Promise.all(
-    textureIds.map((id) => cms().service('base::storage').getUrl(id))
-  );
-
-  return createShadowAtlasContent(atlasContent, textureUrls);
-}
-
-async function uploadShadowAtlas(
-  originalAtlasId: ObjectId,
-  textureIds: ObjectId[]
-): Promise<ObjectId> {
-  const shadowContent = await loadShadowAtlasContent(
-    originalAtlasId,
-    textureIds
-  );
-
-  const { id: shadowAtlasId } = await cms()
-    .service('base::storage')
-    .uploadFile({
-      name: 'shadow-atlas.fnt',
-      mime: ATLAS_MIME_TYPE,
-      content: Buffer.from(shadowContent, 'utf8'),
-      hidden: true,
-    });
-
-  return shadowAtlasId;
-}
-
-async function patchShadowAtlas(
-  originalAtlasId: ObjectId,
-  shadowAtlasId: ObjectId,
-  textureIds: ObjectId[]
-) {
-  const shadowContent = await loadShadowAtlasContent(
-    originalAtlasId,
-    textureIds
-  );
-
-  await cms()
-    .service('base::storage')
-    .patchContent(shadowAtlasId, Buffer.from(shadowContent, 'utf8'));
-
-  return shadowAtlasId;
-}
+    return createShadowAtlasContent(atlasContent, textureUrls);
+  },
+});
 
 export default defineComponentController({
   core,
@@ -80,13 +40,18 @@ export default defineComponentController({
 
     let resultShadowAtlas: ObjectId;
 
+    const args = { textureIds: result.pages };
+
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (atlasFile && shadowAtlasFile) {
-      await patchShadowAtlas(atlasFile, shadowAtlasFile, result.pages);
+      await shadowAtlasOrchestration.patch(atlasFile, shadowAtlasFile, args);
 
       resultShadowAtlas = shadowAtlasFile;
     } else {
-      resultShadowAtlas = await uploadShadowAtlas(atlasFile, result.pages);
+      resultShadowAtlas = await shadowAtlasOrchestration.upload(
+        atlasFile,
+        args
+      );
     }
 
     return {
@@ -142,7 +107,9 @@ export default defineComponentController({
       return {
         atlas: [atlasIds[0]],
         pages: pageIds,
-        shadowAtlas: await uploadShadowAtlas(atlasIds[0], pageIds),
+        shadowAtlas: await shadowAtlasOrchestration.upload(atlasIds[0], {
+          textureIds: pageIds,
+        }),
       };
     },
     fromStorage: async (data, _, context) => {
@@ -155,11 +122,17 @@ export default defineComponentController({
       );
       const atlas = await context.fromStorage(
         'base::file',
-        [data.shadowAtlas],
+        data.shadowAtlas ? [data.shadowAtlas] : data.atlas,
         options.atlas.options
       );
 
-      return { pages, atlas };
+      const originalAtlas = await context.fromStorage(
+        'base::file',
+        data.atlas,
+        options.atlas.options
+      );
+
+      return { pages, atlas, originalAtlas: originalAtlas[0] };
     },
   },
 });
