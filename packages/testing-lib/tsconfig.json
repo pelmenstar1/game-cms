@@ -2,6 +2,7 @@
   "extends": "../../configs/tsconfig.lib.json",
   "include": ["./src"],
   "references": [
+    { "path": "../base-core" },
     { "path": "../core" },
     { "path": "../global" },
     { "path": "../shared" }

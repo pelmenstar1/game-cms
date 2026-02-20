@@ -1,113 +1,33 @@
-import fs from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-import { Readable } from 'node:stream';
 
-import type { FileSource } from '@game-cms/base-core';
 import { temporalDirectory } from '@game-cms/shared/node/io';
-import { describe, expect, test } from 'vitest';
+import { setupStorageProviderTests } from '@game-cms/testing-lib';
+import { describe } from 'vitest';
 
 import { localStorageProvider } from './index.js';
 
-async function createProvider() {
-  const result = await temporalDirectory();
-
-  return {
-    value: localStorageProvider({ storagePath: result.path }),
-    path: result.path,
-    [Symbol.asyncDispose]: result[Symbol.asyncDispose],
-  };
-}
-
-async function uploadAndCheckContent(content: FileSource, expected: Buffer) {
-  await using provider = await createProvider();
-
-  const { extra, size } = await provider.value.protocol.upload({
-    name: '123',
-    mime: 'text/plain',
-    content,
-  });
-
-  const actual = await fsp.readFile(path.join(provider.path, extra.fileName));
-
-  expect(
-    actual.equals(expected),
-    `actual: ${actual.toString('hex')}; expected: ${expected.toString('hex')}`
-  ).toEqual(true);
-
-  expect(size).toEqual(expected.length);
-}
-
 describe('localStorageProvider', () => {
-  describe('uploadFile', () => {
-    test('buffer', async () => {
-      const buffer = Buffer.from('123');
+  setupStorageProviderTests({
+    disallowNonExistingPatch: true,
+    createProvider: async () => {
+      const result = await temporalDirectory();
 
-      await uploadAndCheckContent(buffer, buffer);
-    });
-
-    test('stream', async () => {
-      const buffer = Buffer.from('123');
-      const stream = Readable.from([buffer]);
-
-      await uploadAndCheckContent(stream, buffer);
-    });
-  });
-
-  test('delete', async () => {
-    await using provider = await createProvider();
-
-    const { extra } = await provider.value.protocol.upload({
-      name: '123',
-      mime: 'text/plain',
-      content: Buffer.from('123'),
-    });
-
-    const filePath = path.join(provider.path, extra.fileName);
-
-    expect(fs.existsSync(filePath)).toEqual(true);
-
-    await provider.value.protocol.delete(extra);
-
-    expect(fs.existsSync(filePath)).toEqual(false);
-  });
-
-  test('getContent', async () => {
-    await using provider = await createProvider();
-
-    const expected = Buffer.from('123');
-
-    const { extra } = await provider.value.protocol.upload({
-      name: '123',
-      mime: 'text/plain',
-      content: expected,
-    });
-
-    const actual = await provider.value.protocol.getContent(extra);
-
-    expect(actual).toEqual(expected);
-  });
-
-  test('patchContent', async () => {
-    await using provider = await createProvider();
-
-    const initial = Buffer.from('initial');
-    const { extra } = await provider.value.protocol.upload({
-      name: 'patch-test',
-      mime: 'text/plain',
-      content: initial,
-    });
-
-    const patched = Buffer.from('patched');
-    const { size } = await provider.value.protocol.patchContent({
-      extra,
-      mime: 'text/plain',
-      content: patched,
-    });
-
-    const actual = await provider.value.protocol.getContent(extra);
-
-    expect(actual).toEqual(patched);
-    expect(size).toEqual(patched.length);
+      return {
+        value: localStorageProvider({ storagePath: result.path }),
+        path: result.path,
+        [Symbol.asyncDispose]: result[Symbol.asyncDispose],
+      };
+    },
+    exists: async (provider, extra) => {
+      try {
+        await fsp.access(path.join(provider.path, extra.fileName));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    nonExistingExtra: () => ({ fileName: randomUUID() }),
   });
 });

@@ -1,18 +1,26 @@
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
-import { Readable } from 'node:stream';
 
-import type { FileSource } from '@game-cms/base-core';
+import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { ApiError } from '@game-cms/core/api';
 import { loadEnvFileIfExists } from '@game-cms/shared/node/io';
+import { setupStorageProviderTests } from '@game-cms/testing-lib';
+import { fastify, RouteOptions } from 'fastify';
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from 'fastify-type-provider-zod';
 import { describe, expect, test } from 'vitest';
 
 import { s3StorageProvider } from './provider.js';
+import type { S3StorageProviderConfig } from './types.js';
+import { GET_ROUTE } from './utils.js';
 
 await loadEnvFileIfExists(path.join(import.meta.dirname, '../'), '.env.test');
 
-function createProvider() {
-  return s3StorageProvider({
+function getTestConfig(): S3StorageProviderConfig {
+  return {
     bucket: process.env.TEST_S3_BUCKET as string,
-    publicUrl: 'http://localhost',
     client: {
       endpoint: process.env.TEST_S3_API_URL as string,
       region: 'auto',
@@ -21,75 +29,95 @@ function createProvider() {
         secretAccessKey: process.env.TEST_S3_SECRET_ACCESS_KEY as string,
       },
     },
-  });
+  };
 }
 
-async function uploadAndCheckContent(content: FileSource, expected: Buffer) {
-  const provider = createProvider();
+function createAppWithRoutes(config: S3StorageProviderConfig) {
+  const provider = s3StorageProvider(config);
+  const app = fastify({ logger: false });
 
-  const { extra, size } = await provider.protocol.upload({
-    name: '123',
-    mime: 'text/plain',
-    content,
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+
+  for (const route of provider.routes ?? []) {
+    app.route(route as unknown as RouteOptions);
+  }
+
+  return { app, provider };
+}
+
+describe.runIf('TEST_S3_API_URL' in process.env)('getFileRoute', () => {
+  test('should return file content with correct headers', async () => {
+    const config = getTestConfig();
+    const { app, provider } = createAppWithRoutes(config);
+
+    const content = Buffer.from('hello world');
+
+    const { extra } = await provider.protocol.upload({
+      name: 'test.txt',
+      mime: 'text/plain',
+      content,
+    });
+
+    const res = await app.inject({
+      method: 'GET',
+      url: `${GET_ROUTE}/${extra.key}`,
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['content-type']).toBe('text/plain');
+    expect(res.body).toBe('hello world');
   });
 
-  const actual = await provider.protocol.getContent(extra);
+  test('should return 404 for non-existent file', async () => {
+    const config = getTestConfig();
+    const { app } = createAppWithRoutes(config);
 
-  expect(expected.equals(actual)).toBe(true);
-  expect(size).toEqual(expected.length);
-}
+    let caughtError: unknown;
+
+    app.setErrorHandler(async (error, _req, reply) => {
+      caughtError = error;
+      await reply.status(404).send({ error: 'not found' });
+    });
+
+    const res = await app.inject({
+      method: 'GET',
+      url: `${GET_ROUTE}/non-existent-key.txt`,
+    });
+
+    expect(res.statusCode).toBe(404);
+    expect(caughtError).toBeInstanceOf(ApiError);
+    expect((caughtError as ApiError).code).toBe('base::entity/notFound');
+  });
+});
 
 describe.runIf('TEST_S3_API_URL' in process.env)('s3StorageProvider', () => {
-  describe('uploadFile', () => {
-    test('buffer', async () => {
-      const expected = Buffer.from('123');
+  setupStorageProviderTests({
+    createProvider: () => {
+      const config = getTestConfig();
+      const s3Client = new S3Client(config.client);
 
-      await uploadAndCheckContent(expected, expected);
-    });
+      return {
+        value: s3StorageProvider({ ...config, publicUrl: 'http://localhost' }),
+        bucket: config.bucket,
+        s3Client,
+        [Symbol.asyncDispose]: async () => {},
+      };
+    },
+    exists: async (provider, extra) => {
+      try {
+        await provider.s3Client.send(
+          new HeadObjectCommand({
+            Bucket: provider.bucket,
+            Key: extra.key,
+          })
+        );
 
-    test('stream', async () => {
-      const buffer = Buffer.from('123');
-      const stream = Readable.from([buffer]);
-
-      await uploadAndCheckContent(stream, buffer);
-    });
-  });
-
-  test('getContent', async () => {
-    const provider = createProvider();
-
-    const expected = Buffer.from('123');
-    const { extra } = await provider.protocol.upload({
-      name: '123',
-      mime: 'text/plain',
-      content: expected,
-    });
-
-    const actual = await provider.protocol.getContent(extra);
-
-    expect(expected.equals(actual)).toBe(true);
-  });
-
-  test('patchContent', async () => {
-    const provider = createProvider();
-
-    const initial = Buffer.from('initial');
-    const { extra } = await provider.protocol.upload({
-      name: 'patch-test',
-      mime: 'text/plain',
-      content: initial,
-    });
-
-    const patched = Buffer.from('patched');
-    const { size } = await provider.protocol.patchContent({
-      extra,
-      mime: 'text/plain',
-      content: patched,
-    });
-
-    const actual = await provider.protocol.getContent(extra);
-
-    expect(patched.equals(actual)).toBe(true);
-    expect(size).toEqual(patched.length);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    nonExistingExtra: () => ({ key: randomUUID() }),
   });
 });

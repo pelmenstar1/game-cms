@@ -11,6 +11,7 @@
     { "path": "../base-core" },
     { "path": "../core" },
     { "path": "../global" },
-    { "path": "../shared" }
+    { "path": "../shared" },
+    { "path": "../testing-lib" }
   ]
 }

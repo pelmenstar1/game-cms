@@ -126,6 +126,7 @@ export function localStorageProvider(
         const filePath = getFilePath(storagePath, info.extra);
 
         const size = await writeFileSourceToFile(info.content, filePath, {
+          flag: 'r+',
           signal: options?.signal,
         });
 
