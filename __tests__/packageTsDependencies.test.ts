@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { expect, test } from 'vitest';
 
-import { readJson, readJson5 } from '../packages/shared/src/node/io/file';
+import { readJson, readJson5 } from '../packages/shared/src/node/file';
 import { PackageInfo, TsConfig } from './types';
 
 type PackageRegistry = Awaited<ReturnType<typeof createPackageRegistry>>;

@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ApiError } from '@game-cms/core/api';
-import { loadEnvFileIfExists } from '@game-cms/shared/node/io';
+import { loadEnvFileIfExists } from '@game-cms/shared/node';
 import { setupStorageProviderTests } from '@game-cms/testing-lib';
 import { fastify, RouteOptions } from 'fastify';
 import {

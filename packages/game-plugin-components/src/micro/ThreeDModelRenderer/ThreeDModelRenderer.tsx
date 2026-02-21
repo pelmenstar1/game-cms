@@ -1,5 +1,5 @@
 import { createAbortController } from '@game-cms/shared';
-import { classNames, useBounds, useStableValue } from '@game-cms/ui';
+import { classNames, useBounds } from '@game-cms/ui';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import { Application, createApplication } from './app';
@@ -25,7 +25,10 @@ export function ThreeDModelRenderer({
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
 
-  const onModelStatusChangedRef = useStableValue(onModelStatusChanged);
+  const onModelStatusChangedRef = useRef(onModelStatusChanged);
+
+  // eslint-disable-next-line react-hooks/refs
+  onModelStatusChangedRef.current = onModelStatusChanged;
 
   const size = useBounds(containerRef);
 

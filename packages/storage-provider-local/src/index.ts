@@ -10,7 +10,7 @@ import type {
 import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { isFileNotFoundError } from '@game-cms/shared/node';
-import { inferFileExtensionFromMime } from '@game-cms/shared/node/io';
+import { inferFileExtensionFromMime } from '@game-cms/shared/node';
 import z from 'zod';
 
 import { writeFileSourceToFile } from './utils.js';

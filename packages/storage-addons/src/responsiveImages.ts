@@ -5,12 +5,14 @@ import sharp, { type ResizeOptions } from 'sharp';
 import type { AnyFormatOptions } from './types.js';
 import { filePathWithWidth, tryGetImageMeta } from './utils.js';
 
+type Data<Variant> = { variants: Variant[] };
+
 declare module '@game-cms/base-core' {
   interface StorageAddonTypeMap<Extra> {
     responsive: {
       optional: true;
-      hydrated: { variants: { size: Size; url: string }[] };
-      persistent: { variants: { size: Size; extra: Extra }[] };
+      hydrated: Data<{ size: Size; url: string }>;
+      persistent: Data<{ size: Size; extra: Extra }>;
     };
   }
 }

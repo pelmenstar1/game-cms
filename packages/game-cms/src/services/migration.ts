@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { cms } from '@game-cms/global';
 import type { MaybePromise } from '@game-cms/shared';
-import { removeExtension } from '@game-cms/shared/node/io';
+import { removeExtension } from '@game-cms/shared/node';
 import { createJiti, type Jiti } from 'jiti';
 
 type MigrationEntry = { name: string };

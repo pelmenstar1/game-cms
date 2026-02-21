@@ -9,7 +9,7 @@ import {
 import { Upload } from '@aws-sdk/lib-storage';
 import { FileSource, type StorageProvider } from '@game-cms/base-core';
 import { ApiError, apiRoute } from '@game-cms/core/api';
-import { meteredStream } from '@game-cms/shared/node/io';
+import { meteredStream } from '@game-cms/shared/node';
 import { stripUndefined } from '@game-cms/shared/object';
 import z from 'zod';
 

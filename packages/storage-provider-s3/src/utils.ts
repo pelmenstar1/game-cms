@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { inferFileExtensionFromMime } from '@game-cms/shared/node/io';
+import { inferFileExtensionFromMime } from '@game-cms/shared/node';
 
 import type { S3StorageProviderConfig } from './types.js';
 

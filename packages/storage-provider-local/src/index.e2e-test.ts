@@ -1,7 +1,7 @@
 import { StorageItemType } from '@game-cms/base-core';
 import { ApiError } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
-import { temporalDirectory } from '@game-cms/shared/node/io';
+import { temporalDirectory } from '@game-cms/shared/node';
 import { fastify, type RouteOptions } from 'fastify';
 import {
   serializerCompiler,

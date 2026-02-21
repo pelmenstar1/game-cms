@@ -10,7 +10,7 @@ import {
   type CmsEnvironment,
   setEnvironment,
 } from '@game-cms/global';
-import { loadEnvFileIfExists } from '@game-cms/shared/node/io';
+import { loadEnvFileIfExists } from '@game-cms/shared/node';
 import { mergeObjects, resolveObject } from '@game-cms/shared/object';
 
 import { getAllServices, getApiConfig } from './api.js';

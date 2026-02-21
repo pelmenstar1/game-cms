@@ -9,7 +9,7 @@ import {
   httpGetAsync,
   httpListenAsync,
 } from '@game-cms/shared/node';
-import { temporalDirectory } from '@game-cms/shared/node/io';
+import { temporalDirectory } from '@game-cms/shared/node';
 import { describe, expect, test } from 'vitest';
 
 import { writeFileSourceToFile } from './utils.js';

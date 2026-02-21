@@ -1,7 +1,13 @@
 import { EntityId, EntityPreviewRendererProps } from '@game-cms/base-core';
-import { createAbortController, pendingQueryResult } from '@game-cms/shared';
-import { DataLoader, IconButton, RefreshIcon, Typography } from '@game-cms/ui';
-import { useEffect, useRef, useState } from 'react';
+import { createAbortController } from '@game-cms/shared';
+import {
+  DataLoader,
+  IconButton,
+  RefreshIcon,
+  Typography,
+  useAbstractQueryResult,
+} from '@game-cms/ui';
+import { useRef } from 'react';
 
 import styles from './renderer.module.scss';
 import { WebpageEntityPreviewOptions } from './types.js';
@@ -46,31 +52,25 @@ export const renderer = <Id extends EntityId>({
   objectId,
   previewOptions: { urlSource },
 }: EntityPreviewRendererProps<Id, WebpageEntityPreviewOptions>) => {
-  const [result, setResult] = useState(pendingQueryResult<string>());
-
-  useEffect(() => {
+  const result = useAbstractQueryResult(() => {
     const abortController = createAbortController();
+
     const worker = async () => {
-      try {
-        const url = await urlSource({
-          data,
-          entityId,
-          objectId,
-          abortSignal: abortController?.signal,
-        });
-
-        setResult({ status: 'success', value: url });
-      } catch (error: unknown) {
-        setResult({ status: 'error', error });
-      }
+      return urlSource({
+        data,
+        entityId,
+        objectId,
+        abortSignal: abortController?.signal,
+      });
     };
 
-    void worker();
-
-    return () => {
-      abortController?.abort();
+    return {
+      promise: worker(),
+      cleanup: () => {
+        abortController?.abort();
+      },
     };
-  }, [data, entityId, objectId, urlSource]);
+  });
 
   return (
     <DataLoader result={result} className={styles['root']}>

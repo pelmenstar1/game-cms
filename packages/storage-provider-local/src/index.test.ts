@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import { temporalDirectory } from '@game-cms/shared/node/io';
+import { temporalDirectory } from '@game-cms/shared/node';
 import { setupStorageProviderTests } from '@game-cms/testing-lib';
 import { describe } from 'vitest';
 

@@ -4,7 +4,7 @@ import path from 'node:path';
 import { glob } from 'glob';
 import { expect, test } from 'vitest';
 
-import { readJson } from '../packages/shared/src/node/io/file';
+import { readJson } from '../packages/shared/src/node/file';
 import { PackageInfo } from './types';
 
 function getPackageInfoReferencedExports(

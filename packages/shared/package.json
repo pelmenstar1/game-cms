@@ -40,10 +40,6 @@
       "import": "./dist/node/index.js",
       "types": "./dist/node/index.d.ts"
     },
-    "./node/io": {
-      "import": "./dist/node/io/index.js",
-      "types": "./dist/node/io/index.d.ts"
-    },
     "./json": {
       "import": "./dist/json/index.js",
       "types": "./dist/json/index.d.ts"
