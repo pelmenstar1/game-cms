@@ -21,9 +21,7 @@ export function ItemControlHeader({
   readonly,
   onDelete,
 }: ItemControlHeaderProps) {
-  const { t } = useTranslation('base', {
-    keyPrefix: 'micro.ItemControlHeader',
-  });
+  const { t } = useTranslation('base');
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -31,7 +29,7 @@ export function ItemControlHeader({
 
       {onDelete && !readonly && (
         <IconButton
-          title={t('delete')}
+          title={t('common.delete')}
           className={styles['delete-button']}
           onClick={onDelete}
         >

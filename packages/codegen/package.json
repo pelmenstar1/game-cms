@@ -10,7 +10,8 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "glob": "catalog:"
+    "glob": "catalog:",
+    "json5": "^2.2.3"
   },
   "exports": {
     "./apiRequestTypes": {

@@ -1,0 +1,21 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-background-dark-variant);
+  fill: var(--color-text-on-background);
+}
+
+.entity-preview {
+  display: flex;
+  gap: 0.5em;
+
+  &-id {
+    margin-right: auto;
+  }
+}

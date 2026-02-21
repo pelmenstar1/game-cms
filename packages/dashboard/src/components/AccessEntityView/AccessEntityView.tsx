@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
+import {
+  EntityComposeOptions,
+  transformDataToClientData,
+} from '@game-cms/base-components/micro';
 import type {
   EntityCheckClientData,
   EntityClientDataById,
@@ -12,11 +16,6 @@ import type {
 import { useComponentApi } from '@game-cms/component-api';
 import { classNames } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
-
-import {
-  type EntityComposeOptions,
-  transformDataToClientData,
-} from '@/services/entity/transform';
 
 import { EntityReviewBlock } from '../EntityReviewBlock';
 import { EntityVariantTabs } from '../EntityVariantTabs';

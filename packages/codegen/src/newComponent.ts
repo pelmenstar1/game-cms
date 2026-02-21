@@ -1,6 +1,8 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
+import json5 from 'json5';
+
 type CreateNewComponentOptions = {
   storybook?: boolean;
   reExport?: boolean;
@@ -9,6 +11,7 @@ type CreateNewComponentOptions = {
 
 type StepContext = {
   componentName: string;
+  jsImportSuffix: string;
   options?: CreateNewComponentOptions;
 };
 
@@ -17,6 +20,39 @@ type Step = {
   content: (context: StepContext) => string;
   condition?: (context: StepContext) => boolean | undefined;
 };
+
+type TsConfig = {
+  extends?: string;
+  compilerOptions?: {
+    moduleResolution?: string;
+  };
+};
+
+async function readTsConfig(filePath: string): Promise<TsConfig> {
+  const content = await fsp.readFile(filePath, 'utf8');
+
+  return json5.parse<TsConfig>(content);
+}
+
+async function getPackageModuleResolution(filePath: string) {
+  const originTsConfig = await readTsConfig(filePath);
+  const moduleResolution = originTsConfig.compilerOptions?.moduleResolution;
+
+  if (moduleResolution) {
+    return moduleResolution.toLowerCase();
+  }
+
+  if (originTsConfig.extends) {
+    const extendedConfigPath = path.join(
+      path.dirname(filePath),
+      originTsConfig.extends
+    );
+
+    return getPackageModuleResolution(extendedConfigPath);
+  }
+
+  return 'nodenext';
+}
 
 const steps: Step[] = [
   {
@@ -40,10 +76,10 @@ export function ${componentName}({ className }: ${componentName}Props) {
   {
     name: ({ componentName }) => `${componentName}.stories.tsx`,
     condition: ({ options }) => options?.storybook,
-    content: ({ componentName }) =>
+    content: ({ componentName, jsImportSuffix }) =>
       `import preview from '#storybook/preview';
 
-import { ${componentName} } from './${componentName}';
+import { ${componentName} } from './${componentName}${jsImportSuffix}';
 
 const meta = preview.meta({ component: ${componentName} });
 
@@ -55,7 +91,8 @@ export const Primary = meta.story({
   },
   {
     name: () => 'index.ts',
-    content: ({ componentName }) => `export * from './${componentName}';\n`,
+    content: ({ componentName, jsImportSuffix }) =>
+      `export * from './${componentName}${jsImportSuffix}';\n`,
   },
 ];
 
@@ -65,15 +102,21 @@ export async function createNewComponent(
 ) {
   const componentPath = process.argv[2];
 
+  const projectDir = path.join(baseDir, '../');
   const fullComponentPath = path.join(
-    baseDir,
-    '../',
+    projectDir,
     options?.rootDir ?? 'src/components',
     componentPath
   );
 
   const componentName = path.basename(componentPath);
-  const context: StepContext = { componentName, options };
+
+  const moduleResolution = await getPackageModuleResolution(
+    path.join(projectDir, 'tsconfig.json')
+  );
+  const jsImportSuffix = moduleResolution === 'nodenext' ? '.js' : '';
+
+  const context: StepContext = { componentName, jsImportSuffix, options };
 
   await fsp.mkdir(fullComponentPath);
 
@@ -91,9 +134,10 @@ export async function createNewComponent(
   );
 
   if (options?.reExport) {
-    const indexFilePath = path.join(baseDir, '../src/components/index.ts');
+    const indexFilePath = path.join(projectDir, 'src/components/index.ts');
+
     let indexContent = await fsp.readFile(indexFilePath, 'utf8');
-    indexContent += `export * from './${componentName}';\n`;
+    indexContent += `export * from './${componentName}${jsImportSuffix}';\n`;
 
     await fsp.writeFile(indexFilePath, indexContent);
   }

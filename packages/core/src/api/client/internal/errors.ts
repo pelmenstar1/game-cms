@@ -14,7 +14,7 @@ export async function handleResponseError(response: Response) {
     const { error } = body as { error?: unknown };
 
     if (isNonNullObject(error)) {
-      const { message, code } = error as { message?: unknown; code?: unknown };
+      const { message, code } = error;
 
       if (typeof message === 'string') {
         if (typeof code === 'string') {

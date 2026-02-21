@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@game-cms/base-core": "workspace:*",
-    "@game-cms/codegen": "workspace:*",
     "@game-cms/component-api": "workspace:*",
     "@game-cms/conditional": "workspace:*",
     "@game-cms/core": "workspace:*",
@@ -48,8 +47,8 @@
       "require": "./dist/src/index.js"
     },
     "./micro": {
-      "import": "./dist/src/micro/index.js",
-      "types": "./dist/src/micro/index.d.ts"
+      "import": "./dist/src/shared.js",
+      "types": "./dist/src/shared.d.ts"
     }
   },
   "browserslist": [

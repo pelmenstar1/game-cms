@@ -1,0 +1,6 @@
+.root {
+  &:hover,
+  &-selected {
+    background: var(--color-background-dark);
+  }
+}

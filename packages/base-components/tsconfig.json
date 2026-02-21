@@ -10,7 +10,6 @@
     { "path": "../base-api" },
     { "path": "../base-core" },
     { "path": "../codegen" },
-    { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../component-testing-lib" },
     { "path": "../conditional" },

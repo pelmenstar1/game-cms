@@ -1,15 +1,16 @@
 import { listEntities } from '@game-cms/base-api/client';
+import { EntityList, useEntitySchema } from '@game-cms/base-components/micro';
 import { EntityId } from '@game-cms/base-core';
 import { useApiQuery } from '@game-cms/component-api';
-import { MultipleDataLoader } from '@game-cms/ui';
-import { classNames } from 'node_modules/@game-cms/ui/src/utils/classNames';
+import {
+  classNames,
+  MultipleDataLoader,
+  PagePresenter,
+  usePagingOptions,
+} from '@game-cms/ui';
 
-import { useEntitySchema } from '@/hooks/useEntitySchema';
-import { usePagingOptions } from '@/hooks/usePagingOptions';
 import { useQueryPage } from '@/hooks/useQueryPage';
 
-import { EntityList } from '../EntityList/EntityList';
-import { PageView } from '../PageView';
 import styles from './EntityListLoader.module.scss';
 
 export interface EntityListLoaderProps {
@@ -35,7 +36,7 @@ export function EntityListLoader({
       className={classNames(styles.root, className)}
     >
       {([{ items, meta }, schema]) => (
-        <PageView
+        <PagePresenter
           page={page}
           pageSize={PAGE_SIZE}
           totalItems={meta.totalCount}
@@ -43,7 +44,7 @@ export function EntityListLoader({
           getLink={(page) => `/entities/${entityId}?page=${page}`}
         >
           <EntityList items={items} entityId={entityId} schema={schema} />
-        </PageView>
+        </PagePresenter>
       )}
     </MultipleDataLoader>
   );

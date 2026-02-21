@@ -1,13 +1,12 @@
 import { getRawEntityById } from '@game-cms/base-api/client';
+import {
+  EntityComposeOptions,
+  transformDataToClientData,
+} from '@game-cms/base-components/micro';
 import type { EntityId } from '@game-cms/base-core';
 import { useApiQuery, useComponentApi } from '@game-cms/component-api';
 import { DataLoader, Typography } from '@game-cms/ui';
 import { useEffect } from 'react';
-
-import {
-  type EntityComposeOptions,
-  transformDataToClientData,
-} from '@/services/entity/transform';
 
 export interface PublishedEntityViewProps<T extends EntityId> {
   className?: string;

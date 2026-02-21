@@ -1,11 +1,17 @@
 import { listUsers } from '@game-cms/base-api/client';
 import { useApiQuery } from '@game-cms/component-api';
-import { DataLoader, LinkButton, List, PlusIcon, Toolbar } from '@game-cms/ui';
+import {
+  DataLoader,
+  LinkButton,
+  List,
+  PagePresenter,
+  PlusIcon,
+  Toolbar,
+  usePagingOptions,
+} from '@game-cms/ui';
 
-import { PageView } from '@/components/PageView';
 import { UserItem } from '@/components/UserItem';
 import { useCheckPermissions } from '@/hooks/useCheckPermissions';
-import { usePagingOptions } from '@/hooks/usePagingOptions';
 import { useQueryPage } from '@/hooks/useQueryPage';
 import { useSelfSession } from '@/hooks/useSession';
 
@@ -39,7 +45,7 @@ export default function Page() {
 
       <DataLoader result={listResult} className={styles['page-view-loader']}>
         {({ items, meta }) => (
-          <PageView
+          <PagePresenter
             page={page}
             pageSize={PAGE_SIZE}
             totalItems={meta.totalCount}
@@ -51,7 +57,7 @@ export default function Page() {
                 <UserItem key={tokenInfo.id} info={tokenInfo} />
               ))}
             </List>
-          </PageView>
+          </PagePresenter>
         )}
       </DataLoader>
     </div>

@@ -1,19 +1,22 @@
-import { NotificationWrapper, useModal } from '@game-cms/ui';
+import { ModalProvider, NotificationWrapper } from '@game-cms/ui';
 import type { PropsWithChildren } from 'react';
 
-import { ApiClientProvider } from '@/context/apiClient';
-import { useComponentHub } from '@/hooks/useComponentHub';
-import { useSelfSession } from '@/hooks/useSession';
+import { ApiClientProvider } from '@/context/ApiClientProvider';
+import { EntitySchemaProvider } from '@/context/EntitySchemaProvider';
+import { ComponentHubProvider } from '@/hooks/useComponentHub';
+import { SessionProvider } from '@/hooks/useSession';
 
 export function Providers({ children }: PropsWithChildren) {
   return (
     <NotificationWrapper>
       <ApiClientProvider>
-        <useComponentHub.Provider>
-          <useModal.Provider>
-            <useSelfSession.Provider>{children}</useSelfSession.Provider>
-          </useModal.Provider>
-        </useComponentHub.Provider>
+        <EntitySchemaProvider>
+          <ComponentHubProvider>
+            <ModalProvider>
+              <SessionProvider>{children}</SessionProvider>
+            </ModalProvider>
+          </ComponentHubProvider>
+        </EntitySchemaProvider>
       </ApiClientProvider>
     </NotificationWrapper>
   );

@@ -1,11 +1,16 @@
-import { createContextHook } from '../../utils/hookContext';
+import { useContext } from 'react';
+
 import { ModalContext } from './context';
-import { ModalProvider } from './provider';
 
 export * from './context';
+export * from './provider';
 
-export const useModal = createContextHook(
-  ModalContext,
-  ModalProvider,
-  (context) => context.show
-);
+export function useModal() {
+  const context = useContext(ModalContext);
+
+  if (!context) {
+    throw new Error('useModal provider is not in the tree');
+  }
+
+  return context.show;
+}

@@ -2,6 +2,7 @@ import {
   EntityDataByIdWithId,
   searchEntities,
 } from '@game-cms/base-api/client';
+import { EntityList, useEntitySchema } from '@game-cms/base-components/micro';
 import { EntityId } from '@game-cms/base-core';
 import { useApiQuery } from '@game-cms/component-api';
 import { emptyPageData } from '@game-cms/shared';
@@ -9,15 +10,12 @@ import {
   ModalDialog,
   ModalProps,
   MultipleDataLoader,
+  PagePresenter,
   TextInput,
+  usePagingOptions,
 } from '@game-cms/ui';
 import { useState } from 'react';
 
-import { useEntitySchema } from '@/hooks/useEntitySchema';
-import { usePagingOptions } from '@/hooks/usePagingOptions';
-
-import { EntityList } from '../EntityList';
-import { PageView } from '../PageView';
 import styles from './EntitySearchDialog.module.scss';
 
 export interface EntitySearchDialogProps extends ModalProps {
@@ -63,7 +61,7 @@ export function EntitySearchDialog({
         result={[itemsResult, schemaResult] as const}
       >
         {([{ items, meta }, schema]) => (
-          <PageView
+          <PagePresenter
             page={page}
             pageSize={PAGE_SIZE}
             totalItems={meta.totalCount}
@@ -71,7 +69,7 @@ export function EntitySearchDialog({
             className={styles['page-view']}
           >
             <EntityList entityId={entityId} items={items} schema={schema} />
-          </PageView>
+          </PagePresenter>
         )}
       </MultipleDataLoader>
     </ModalDialog>

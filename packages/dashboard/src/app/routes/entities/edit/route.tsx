@@ -4,6 +4,7 @@ import {
   unpublishEntity,
   updateEntityById,
 } from '@game-cms/base-api/client';
+import { useEntitySchema } from '@game-cms/base-components/micro';
 import type {
   EntityClientInstanceData,
   EntityVariant,
@@ -18,7 +19,6 @@ import { useCallback } from 'react';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
 import { useCheckPermissions } from '@/hooks/useCheckPermissions';
-import { useEntitySchema } from '@/hooks/useEntitySchema';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';
@@ -45,7 +45,7 @@ export default function Page({ params }: Route.ComponentProps) {
     (data: EntityClientInstanceData, variant: EntityVariant) => {
       doUpdateEntity(name, id, data, variant)
         .then(() => {
-          void redirect('/entities');
+          void redirect(`/entities/${name}`);
 
           notification.info('Entity updated');
         })

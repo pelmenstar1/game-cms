@@ -1,5 +1,6 @@
 packages:
   - demo-app
+  - roundtrip-server
   - packages/*
 
 catalog:

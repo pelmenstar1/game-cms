@@ -1,10 +1,15 @@
 import { listApiTokens } from '@game-cms/base-api/client';
 import { useApiQuery } from '@game-cms/component-api';
-import { DataLoader, LinkButton, List, PlusIcon } from '@game-cms/ui';
+import {
+  DataLoader,
+  LinkButton,
+  List,
+  PagePresenter,
+  PlusIcon,
+  usePagingOptions,
+} from '@game-cms/ui';
 
 import { ApiTokenItem } from '@/components/ApiTokenItem';
-import { PageView } from '@/components/PageView';
-import { usePagingOptions } from '@/hooks/usePagingOptions';
 import { useQueryPage } from '@/hooks/useQueryPage';
 
 import styles from './route.module.scss';
@@ -33,7 +38,7 @@ export default function Page() {
 
       <DataLoader result={listResult} className={styles['page-view-loader']}>
         {({ items, meta }) => (
-          <PageView
+          <PagePresenter
             page={page}
             pageSize={PAGE_SIZE}
             totalItems={meta.totalCount}
@@ -45,7 +50,7 @@ export default function Page() {
                 <ApiTokenItem key={tokenInfo.id} info={tokenInfo} />
               ))}
             </List>
-          </PageView>
+          </PagePresenter>
         )}
       </DataLoader>
     </div>

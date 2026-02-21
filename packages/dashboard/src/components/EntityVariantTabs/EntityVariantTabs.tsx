@@ -1,13 +1,12 @@
+import {
+  EntityComposeData,
+  EntityComposeError,
+  EntityComposeOptions,
+} from '@game-cms/base-components/micro';
 import type { EntityId, EntityVariant } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
 import { Tab, Tabs } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
-
-import type {
-  EntityComposeData,
-  EntityComposeError,
-  EntityComposeOptions,
-} from '@/services/entity/transform';
 
 import { PublishedEntityView } from '../PublishedEntityView';
 

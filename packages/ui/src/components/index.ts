@@ -34,6 +34,7 @@ export * from './NavTabs';
 export * from './Notification';
 export * from './OptionBase';
 export * from './OptionSwitch';
+export * from './PagePresenter';
 export * from './Pagination';
 export * from './PasswordInput';
 export * from './Prefixed';

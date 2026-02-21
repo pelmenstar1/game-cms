@@ -1,9 +1,11 @@
-import { createContextHook } from '@game-cms/ui';
+import { contextUseFactory } from '@game-cms/ui';
 
 import { ComponentHubContext } from './context';
-import { ComponentHubProvider } from './provider';
 
-export const useComponentHub = createContextHook(
+export * from './context';
+export * from './provider';
+
+export const useComponentHub = contextUseFactory(
   ComponentHubContext,
-  ComponentHubProvider
+  'ComponentHubContext'
 );

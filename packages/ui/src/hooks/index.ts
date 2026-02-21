@@ -6,6 +6,7 @@ export * from './useFetch';
 export * from './useHotkey';
 export * from './useInterval';
 export * from './useModal';
+export * from './usePagingOptions';
 export * from './usePreventLeaving';
 export * from './useScrollbar';
 export * from './useTemporaryFonts';

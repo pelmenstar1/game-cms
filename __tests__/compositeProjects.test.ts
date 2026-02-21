@@ -3,17 +3,16 @@ import path from 'node:path';
 
 import { expect, test } from 'vitest';
 
-import { readJson5 } from '../packages/shared/src/node/file';
+import { readTsConfig } from '../packages/shared/src/node';
 import { packagesDir } from '../shared/constants';
-import { TsConfig } from '../shared/types';
 
-async function checkTsconfig(filePath: string) {
-  const config = await readJson5<TsConfig>(filePath);
+async function checkTsconfig(dirPath: string) {
+  const config = await readTsConfig(dirPath);
 
   if (config.extends === undefined) {
     expect(
       config.compilerOptions?.composite,
-      `Expected ${filePath} project to be composite`
+      `Expected ${dirPath} project to be composite`
     ).toEqual(true);
   }
 }
@@ -21,13 +20,11 @@ async function checkTsconfig(filePath: string) {
 test('composite TS projects', async () => {
   const entries = await fsp.readdir(packagesDir);
 
-  await checkTsconfig(
-    path.join(import.meta.dirname, '../demo-app/tsconfig.json')
-  );
+  await checkTsconfig(path.join(import.meta.dirname, '../demo-app'));
 
   await Promise.all(
     entries.map((name) => {
-      return checkTsconfig(path.join(packagesDir, name, 'tsconfig.json'));
+      return checkTsconfig(path.join(packagesDir, name));
     })
   );
 });

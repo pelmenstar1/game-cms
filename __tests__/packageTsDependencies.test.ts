@@ -5,11 +5,10 @@ import { expect, test } from 'vitest';
 
 import {
   PackageInfo,
-  readJson5,
   readPackageInfo,
+  readTsConfig,
 } from '../packages/shared/src/node';
 import { packagesDir } from '../shared/constants';
-import { TsConfig } from '../shared/types';
 
 type PackageRegistry = Awaited<ReturnType<typeof createPackageRegistry>>;
 
@@ -55,7 +54,7 @@ async function createPackageRegistry() {
 async function checkPackage(rootDir: string, registry: PackageRegistry) {
   const [packageInfo, tsConfig] = await Promise.all([
     readPackageInfo(rootDir),
-    readJson5<TsConfig>(path.join(rootDir, 'tsconfig.json')),
+    readTsConfig(rootDir),
   ]);
 
   const workspaceDeps = getWorkspaceDependencies(packageInfo);

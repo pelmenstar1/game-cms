@@ -4,5 +4,7 @@ import type { ResolveEntities } from 'game-cms';
 
 declare module 'game-cms' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface EntityMap extends ResolveEntities<[typeof import('./test.js')]> {}
+  interface EntityMap extends ResolveEntities<
+    [typeof import('./test.js'), typeof import('./test2.js')]
+  > {}
 }

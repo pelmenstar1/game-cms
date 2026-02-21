@@ -1,4 +1,10 @@
 {
+  "common": {
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "select": "Select",
+    "preview": "Preview"
+  },
   "components": {
     "Text": {
       "errors": {
@@ -46,9 +52,6 @@
     }
   },
   "micro": {
-    "ItemControlHeader": {
-      "delete": "Delete"
-    },
     "EntityComponentChoice": {
       "alternative": "Alternative"
     },
@@ -61,6 +64,12 @@
     },
     "AlternativeTestModal": {
       "title": "Alternative test"
+    },
+    "EntitySelectModal": {
+      "title": "Select entity"
+    },
+    "EntityPreviewModal": {
+      "title": "Entity preview"
     }
   }
 }

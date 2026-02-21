@@ -1,6 +1,7 @@
 {
   "references": [
     { "path": "./demo-app" },
+    { "path": "./roundtrip-server" },
     { "path": "./packages/game-cms" },
     { "path": "./packages/core" },
     { "path": "./packages/dashboard" },

@@ -12,3 +12,4 @@ export * from './random.js';
 export * from './scan.js';
 export * from './stream.js';
 export * from './tempDir.js';
+export * from './typescript.js';

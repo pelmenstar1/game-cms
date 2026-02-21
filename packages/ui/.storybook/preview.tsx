@@ -1,6 +1,6 @@
 import '../src/theme/global.scss';
 
-import { useModal } from '../src/hooks/useModal';
+import { ModalProvider } from '../src/hooks/useModal';
 
 import { NotificationWrapper } from '../src/components/Notification';
 import { createRoutesStub } from 'react-router';
@@ -24,9 +24,9 @@ const preview: ReactPreview<ReactTypes & { csf4: true }> = definePreview({
 
       return (
         <NotificationWrapper>
-          <useModal.Provider>
+          <ModalProvider>
             <Stub />
-          </useModal.Provider>
+          </ModalProvider>
         </NotificationWrapper>
       );
     },

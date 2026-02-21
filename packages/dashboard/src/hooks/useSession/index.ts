@@ -1,9 +1,11 @@
-import { createContextHook } from '@game-cms/ui';
+import { contextUseFactory } from '@game-cms/ui';
 
 import { SessionContext } from './context';
-import { SessionProvider } from './provider';
 
-export const useSelfSession = createContextHook(
+export * from './context';
+export * from './provider';
+
+export const useSelfSession = contextUseFactory(
   SessionContext,
-  SessionProvider
+  'SessionContext'
 );

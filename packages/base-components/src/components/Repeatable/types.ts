@@ -6,7 +6,7 @@ import {
   ComponentSchema,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
-import { UnpackArray } from '@game-cms/shared';
+import { IfExtends, UnpackArray } from '@game-cms/shared';
 import { Key } from 'react';
 
 import { TitleSpecById } from '../../internal/title.js';
@@ -16,7 +16,7 @@ export type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
   baseArgs: BaseArgs;
 };
 
-type ResolveArgs<Args> = Args extends RepeatableArgs ? Args : RepeatableArgs;
+type ResolveArgs<Args> = IfExtends<Args, RepeatableArgs>;
 
 type BaseRepeatableEntry<Types extends GetComponentSchemaTypes> = {
   options: {
