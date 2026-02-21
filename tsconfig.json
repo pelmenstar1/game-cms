@@ -14,11 +14,12 @@
     "resolveJsonModule": true
   },
   "include": [
-    "./eslint.config.mjs",
+    "eslint.config.mjs",
     "stylelint.config.js",
     "prettier.config.mjs",
     "__tests__",
-    "./scripts"
+    "scripts",
+    "shared"
   ],
   "exclude": ["./node_modules"]
 }

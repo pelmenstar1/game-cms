@@ -3,14 +3,17 @@ import path from 'node:path';
 
 import { expect, test } from 'vitest';
 
-import { readJson, readJson5 } from '../packages/shared/src/node/file';
-import { PackageInfo, TsConfig } from './types';
+import {
+  PackageInfo,
+  readJson5,
+  readPackageInfo,
+} from '../packages/shared/src/node';
+import { packagesDir } from '../shared/constants';
+import { TsConfig } from '../shared/types';
 
 type PackageRegistry = Awaited<ReturnType<typeof createPackageRegistry>>;
 
 const exceptions = new Set(['dashboard']);
-
-const packagesDir = path.join(import.meta.dirname, '../packages');
 
 function getWorkspaceDependencies(info: PackageInfo) {
   // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -31,9 +34,7 @@ async function createPackageRegistry() {
       try {
         return {
           directoryName: name,
-          info: await readJson<PackageInfo>(
-            path.join(packagesDir, name, 'package.json')
-          ),
+          info: await readPackageInfo(path.join(packagesDir, name)),
         };
       } catch (error) {
         throw new Error(`Invalid package.json in ${name}`, { cause: error });
@@ -53,7 +54,7 @@ async function createPackageRegistry() {
 
 async function checkPackage(rootDir: string, registry: PackageRegistry) {
   const [packageInfo, tsConfig] = await Promise.all([
-    readJson<PackageInfo>(path.join(rootDir, 'package.json')),
+    readPackageInfo(rootDir),
     readJson5<TsConfig>(path.join(rootDir, 'tsconfig.json')),
   ]);
 

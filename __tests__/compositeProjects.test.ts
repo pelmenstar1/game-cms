@@ -4,7 +4,8 @@ import path from 'node:path';
 import { expect, test } from 'vitest';
 
 import { readJson5 } from '../packages/shared/src/node/file';
-import { TsConfig } from './types';
+import { packagesDir } from '../shared/constants';
+import { TsConfig } from '../shared/types';
 
 async function checkTsconfig(filePath: string) {
   const config = await readJson5<TsConfig>(filePath);
@@ -18,7 +19,6 @@ async function checkTsconfig(filePath: string) {
 }
 
 test('composite TS projects', async () => {
-  const packagesDir = path.join(import.meta.dirname, '../packages');
   const entries = await fsp.readdir(packagesDir);
 
   await checkTsconfig(

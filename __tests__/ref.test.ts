@@ -5,9 +5,8 @@ import path from 'node:path';
 
 import { test } from 'vitest';
 
+import { packagesDir } from '../shared/constants';
 import { references } from '../tsconfig.ref.json';
-
-const packagesDir = path.join(import.meta.dirname, '../packages');
 
 function isErrorPackage(entry: Dirent) {
   if (entry.isDirectory()) {

@@ -3,12 +3,8 @@ import path from 'node:path';
 
 import { format, resolveConfig } from 'prettier';
 
-import { readJson, readJson5 } from '../packages/shared/src/node/file';
-
-type PackageInfo = {
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-};
+import { readJson5, readPackageInfo } from '../packages/shared/src/node';
+import { packagesDir } from '../shared/constants';
 
 type TsConfig = {
   references?: {
@@ -33,9 +29,7 @@ async function prettierApi() {
 }
 
 async function getWorkspaceDependencies(baseDir: string) {
-  const packageInfo = await readJson<PackageInfo>(
-    path.join(baseDir, 'package.json')
-  );
+  const packageInfo = await readPackageInfo(baseDir);
 
   const keys = [
     ...Object.keys(packageInfo.dependencies ?? {}),
@@ -71,7 +65,6 @@ async function processPackage(baseDir: string, prettier: PrettierApi) {
 async function main() {
   const prettier = await prettierApi();
 
-  const packagesDir = path.join(import.meta.dirname, '../packages');
   const packageEntries = await fsp.readdir(packagesDir, {
     withFileTypes: true,
   });
