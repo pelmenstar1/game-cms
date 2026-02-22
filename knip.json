@@ -35,7 +35,7 @@
       "entry": ["src/index.ts", "src/types.ts", "src/client.ts"]
     },
     "packages/base-plugin": {
-      "entry": ["src/index.ts", "src/entity/test-setups/**/registry.ts"]
+      "entry": ["src/index.ts", "src/entity/__tests__/fixtures/**/registry.ts"]
     },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]

@@ -5,7 +5,7 @@ import type { OwnEnvironment } from '@game-cms/base-core';
 import type { Plugin } from '@game-cms/core';
 import { resolveImportDirectory } from '@game-cms/shared/node';
 
-import { resolveEntitySchemas } from './entity/resolver.js';
+import { resolveEntityEnvConfig } from './entity/resolver.js';
 import { dashboardEntityPlugin } from './entity/vitePlugin.js';
 
 export const basePlugin: Plugin<OwnEnvironment> = {
@@ -26,7 +26,7 @@ export const basePlugin: Plugin<OwnEnvironment> = {
     await config.storage.provider.init?.();
   },
   env: {
-    entity: resolveEntitySchemas,
+    entity: resolveEntityEnvConfig,
   },
   dashboard: {
     plugins: [dashboardEntityPlugin()],

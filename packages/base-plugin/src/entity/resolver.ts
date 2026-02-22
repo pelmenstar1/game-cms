@@ -1,10 +1,12 @@
 import { EntityEnvConfig } from '@game-cms/base-core';
 import type { PluginValueSourceContext } from '@game-cms/core';
+import { mapObject } from '@game-cms/shared/object';
 import { createJiti } from 'jiti';
 
-import { shallowValidateEntitySchemaMap } from './validate.js';
+import { getReExportedSchemaPaths } from './analyzer.js';
+import { validateEntitySchemaMap } from './validate.js';
 
-export async function resolveEntitySchemas(
+export async function resolveEntityEnvConfig(
   context: PluginValueSourceContext
 ): Promise<EntityEnvConfig> {
   const jiti = createJiti(import.meta.url);
@@ -12,12 +14,15 @@ export async function resolveEntitySchemas(
   const registryFilePath = context.compiledFilePath('entities/registry.ts');
   const registry = await jiti.import(registryFilePath);
 
-  if (!shallowValidateEntitySchemaMap(registry)) {
-    throw new Error('Invalid entity registry');
-  }
+  const paths = await getReExportedSchemaPaths(registryFilePath);
+
+  validateEntitySchemaMap(registry);
 
   return {
     registryFilePath,
-    registry,
+    registry: mapObject(registry, (rest, id) => ({
+      ...rest,
+      filePath: paths[id]?.filePath,
+    })),
   };
 }

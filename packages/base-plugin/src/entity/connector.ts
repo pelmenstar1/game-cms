@@ -7,13 +7,15 @@ function emitDynamicPromise(filePath: string) {
 }
 
 export function emitEntityConnector(): string {
-  const { entity } = env();
+  const {
+    entity: { registry, registryFilePath },
+  } = env();
 
   return `
-export const registryImport = ${emitDynamicPromise(entity.registryFilePath)};
+export const registryImport = ${emitDynamicPromise(registryFilePath)};
 
 export const entityMap = {
-  ${Object.entries(entity.registry)
+  ${Object.entries(registry)
     .map(([id, { title, filePath }]) => {
       const schemaImport = filePath
         ? `schema: ${emitDynamicPromise(filePath)}`
