@@ -29,5 +29,8 @@ test('smoke', async () => {
   );
 
   await fsp.mkdir(path.dirname(outputPath), { recursive: true });
-  await buildSpritesheetImage(map).png().toFile(outputPath);
+
+  const spritesheetImage = await buildSpritesheetImage(map);
+
+  await spritesheetImage.png().toFile(outputPath);
 });

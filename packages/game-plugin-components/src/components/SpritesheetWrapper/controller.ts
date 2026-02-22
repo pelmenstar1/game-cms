@@ -107,7 +107,8 @@ async function generateSpritesheet(
   });
 
   const atlas = buildSpritesheetAtlas(map);
-  const spriteImage = buildSpritesheetImage(map).png();
+  const spriteImageBuilder = await buildSpritesheetImage(map);
+  const spriteImage = spriteImageBuilder.png();
 
   const { id: imageId } = await storageService.uploadFile({
     name: 'spritesheet.png',

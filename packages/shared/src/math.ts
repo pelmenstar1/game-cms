@@ -16,6 +16,10 @@ export function lerp(start: number, end: number, fraction: number) {
   return start + (end - start) * fraction;
 }
 
+export function lerpInt(start: number, end: number, fraction: number) {
+  return Math.floor(lerp(start, end, fraction));
+}
+
 export function rectsIntersect(a: Rect, b: Rect) {
   return (
     a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top

@@ -5,8 +5,24 @@ import type { SpritesheetMap } from './types.js';
 
 const TRANSPARENT: Color = { r: 0, g: 0, b: 0, alpha: 0 };
 
-export function buildSpritesheetImage(map: SpritesheetMap) {
+function preRotateImages(map: SpritesheetMap) {
+  return Promise.all(
+    map.entries.map(async (entry) => {
+      const { data } = entry.source;
+
+      if (entry.target.rotated) {
+        return sharp(data).rotate(90).toBuffer();
+      }
+
+      return Buffer.from(data);
+    })
+  );
+}
+
+export async function buildSpritesheetImage(map: SpritesheetMap) {
   const { bounds } = map.output;
+
+  const rotatedImages = await preRotateImages(map);
 
   return sharp({
     create: {
@@ -16,10 +32,10 @@ export function buildSpritesheetImage(map: SpritesheetMap) {
       height: bounds.height,
     },
   }).composite(
-    map.entries.map((entry) => ({
-      input: Buffer.from(entry.source.data),
-      left: entry.target.x - bounds.x,
-      top: entry.target.y - bounds.y,
+    map.entries.map(({ target }, index) => ({
+      input: rotatedImages[index],
+      left: target.x - bounds.x,
+      top: target.y - bounds.y,
     }))
   );
 }
@@ -29,17 +45,18 @@ export function buildSpritesheetAtlas(map: SpritesheetMap): SpritesheetData {
 
   return {
     frames: Object.fromEntries(
-      map.entries.map((entry) => {
+      map.entries.map(({ target, source }) => {
         const frameData: SpritesheetFrameData = {
           frame: {
-            x: entry.target.x,
-            y: entry.target.y,
-            w: entry.source.size.width,
-            h: entry.source.size.height,
+            x: target.x,
+            y: target.y,
+            w: source.size.width,
+            h: source.size.height,
           },
+          rotated: target.rotated,
         };
 
-        return [entry.target.tag, frameData] as const;
+        return [target.tag, frameData] as const;
       })
     ),
     meta: {

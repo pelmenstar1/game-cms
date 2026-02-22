@@ -1,5 +1,4 @@
 import type { Size } from '@game-cms/shared';
-import { asyncMapObject } from '@game-cms/shared/object';
 import sharp from 'sharp';
 
 import { inferRectsBounds } from './internal/rect.js';
@@ -10,12 +9,11 @@ export type CreateSpritesheetMapOptions = {
   images: Record<string, Uint8Array>;
 };
 
-function inferLimits(sizeMap: Record<string, Size>): Size {
-  const sizes = Object.values(sizeMap);
+function inferLimits(rects: Size[]): Size {
   let maxWidth = Number.NEGATIVE_INFINITY;
   let totalHeight = 0;
 
-  for (const { width, height } of sizes) {
+  for (const { width, height } of rects) {
     if (width > maxWidth) {
       maxWidth = width;
     }
@@ -31,19 +29,15 @@ export async function createSpritesheetMap(
 ): Promise<SpritesheetMap> {
   const { algorithm, images } = options;
 
-  const imageSizes = await asyncMapObject(images, async (source) => {
-    const { width, height } = await sharp(source).metadata();
+  const taggedRects = await Promise.all(
+    Object.entries(images).map(async ([name, source]) => {
+      const { width, height } = await sharp(source).metadata();
 
-    return { width, height };
-  });
+      return { tag: { name, source, width, height }, width, height };
+    })
+  );
 
-  const taggedRects = Object.entries(images).map(([name, source]) => {
-    const { width, height } = imageSizes[name];
-
-    return { tag: { name, source, width, height }, width, height };
-  });
-
-  const limits = inferLimits(imageSizes);
+  const limits = inferLimits(taggedRects);
 
   const { rects } = algorithm(taggedRects, limits);
 
@@ -65,7 +59,7 @@ export async function createSpritesheetMap(
           tag: name,
           x: rect.x,
           y: rect.y,
-          width: rect.height,
+          width: rect.width,
           height: rect.height,
           rotated: rect.rotated,
         },

@@ -176,7 +176,7 @@ function maxRectsPipeline<Tag>(limits: Size) {
         if (isContainedIn(newFreeRectangles[j], freeRect)) {
           checkedPop(newFreeRectangles, j);
         } else {
-          if (!isContainedIn(freeRect, newFreeRectangles[j])) {
+          if (isContainedIn(freeRect, newFreeRectangles[j])) {
             throw new Error('Old free rect is contained in new free rects');
           }
 

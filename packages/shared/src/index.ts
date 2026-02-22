@@ -13,6 +13,7 @@ export * from './mime.js';
 export * from './nameGenerator.js';
 export * from './paging.js';
 export * from './query.js';
+export * from './random.js';
 export * from './searchParams.js';
 export * from './string/isFloat.js';
 export * from './typecheck.js';
