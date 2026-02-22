@@ -1,4 +1,4 @@
-import type { FromEntries } from '@game-cms/core';
+import { FromEntries } from '@game-cms/shared';
 
 type ServiceExport = typeof import('./index.js');
 

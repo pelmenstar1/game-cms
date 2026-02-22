@@ -1,12 +1,27 @@
 import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
-import { fullEntityMap, metaMap } from 'virtual:dashboard/entityConnectorData';
+import {
+  entityMap,
+  registryImport,
+} from 'virtual:dashboard/entityConnectorData';
 
-export function getEntityMetaMap() {
-  return metaMap;
+export function getEntityIds() {
+  return Object.keys(entityMap);
+}
+
+export function getEntityTitle(id: EntityId) {
+  return entityMap[id].title;
 }
 
 export async function getEntitySchemaById<Id extends EntityId>(id: Id) {
-  const { default: result } = await fullEntityMap[id]();
+  const schemaImport = entityMap[id].schema;
 
-  return result as EntitySchemaById<Id>;
+  if (schemaImport) {
+    const { default: result } = await schemaImport();
+
+    return result as EntitySchemaById<Id>;
+  }
+
+  const registry = await registryImport();
+
+  return registry[id] as EntitySchemaById<Id>;
 }

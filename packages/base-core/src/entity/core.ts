@@ -3,26 +3,34 @@ import type {
   ComponentClientDataByIdPathExtends,
   ComponentData,
   ComponentSchema,
-  DefaultExport,
-  FromEntries,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
 import type z from 'zod';
 
-import type { EntityCheckStorageDataMap } from './entityCheck.js';
-import { AnyEntityPreviewController } from './entityPreview.js';
-import type { entityVariant } from './schema/entity.js';
+import type { entityVariant } from '../schema/entity.js';
+import type { EntityCheckStorageDataMap } from './check.js';
+import { AnyEntityPreviewController } from './preview.js';
 
 export type EntitySchemaComponents = Record<string, ComponentSchema>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface EntityMap {}
+export interface EntityTypeRegistry {
+  // Expected user-set properties:
+  // ids: string;
+}
 
-export type EntityId = keyof EntityMap extends never ? string : keyof EntityMap;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface EntityTypeDataRegistry {
+  // Expected key to be id of the entity, value - components of the entity
+}
+
+export type EntityId = EntityTypeRegistry extends { ids: string }
+  ? EntityTypeRegistry['ids']
+  : string;
 
 export type EntityComponents<Id extends EntityId> =
-  EntityMap extends Record<Id, unknown>
-    ? EntityMap[Id] & EntitySchemaComponents
+  EntityTypeDataRegistry extends Record<Id, EntitySchemaComponents>
+    ? EntityTypeDataRegistry[Id]
     : EntitySchemaComponents;
 
 export type EntityMeta = {
@@ -122,10 +130,8 @@ export type EntityDisplayKeyById<Id extends EntityId> = EntityDisplayKey<
 >;
 
 export interface EntitySchema<
-  Id extends EntityId = EntityId,
   Components extends EntitySchemaComponents = EntitySchemaComponents,
 > {
-  id: Id;
   title: string;
   displayKeys?: EntityDisplayKey<Components>[];
   preview?: AnyEntityPreviewController;
@@ -133,29 +139,16 @@ export interface EntitySchema<
 }
 
 export type EntitySchemaById<Id extends EntityId> = EntitySchema<
-  Id,
   EntityComponents<Id>
 >;
 
-type EntityToEntry<T extends { id: string; components: unknown }> = [
-  T['id'],
-  T['components'],
-];
-
-export type EntitiesToEntries<
-  T extends DefaultExport<{ id: string; components: unknown }>[],
-> = {
-  [K in keyof T]: EntityToEntry<T[K]['default']>;
-}[number];
-
-export type ResolveEntities<
-  T extends DefaultExport<{ id: string; components: unknown }>[],
-> = FromEntries<EntitiesToEntries<T>>;
+export type EntitySchemaRegistry = {
+  [K in EntityId]: EntitySchemaById<K>;
+};
 
 /*@__NO_SIDE_EFFECTS__*/
-export function entity<
-  Id extends string,
-  const Components extends EntitySchemaComponents,
->(value: EntitySchema<Id, Components>) {
+export function entity<const Components extends EntitySchemaComponents>(
+  value: EntitySchema<Components>
+) {
   return value;
 }

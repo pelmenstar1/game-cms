@@ -2,8 +2,8 @@ import path from 'node:path';
 
 import type {
   EnvResolver,
+  PluginValueSourceContext,
   ResolvedCmsConfig,
-  ValueSourceContext,
 } from '@game-cms/core';
 import {
   type BaseCmsEnvironment,
@@ -49,7 +49,7 @@ export async function initEnvFromConfigs(baseDir?: string) {
     baseEnvResolvers,
   ];
 
-  const context: ValueSourceContext = {
+  const context: PluginValueSourceContext = {
     config,
     compiledFilePath,
   };

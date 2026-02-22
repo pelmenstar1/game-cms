@@ -65,3 +65,7 @@ export type Or<T, U> =
   | (U & AllUndefined<keyof T>);
 
 export type UnpackArray<T> = T extends unknown[] ? T[number] : T;
+
+export type FromEntries<T extends [PropertyKey, unknown]> = {
+  [K in T[0]]: Extract<T, [K, unknown]>[1];
+};

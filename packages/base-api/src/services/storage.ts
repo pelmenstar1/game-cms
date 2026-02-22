@@ -41,7 +41,7 @@ declare module '@game-cms/base-core' {
     'base::storage::itemDeleted': { id: ObjectId };
   }
 
-  interface DatabaseEntityMap {
+  interface DatabaseCollectionTypeMap {
     'base::storage': StoragePersistentItem;
   }
 }

@@ -49,7 +49,7 @@ function PageView({ url }: PageViewProps) {
 export const renderer = <Id extends EntityId>({
   data,
   entityId,
-  objectId,
+  documentId,
   previewOptions: { urlSource },
 }: EntityPreviewRendererProps<Id, WebpageEntityPreviewOptions>) => {
   const result = useAbstractQueryResult(() => {
@@ -59,7 +59,7 @@ export const renderer = <Id extends EntityId>({
       return urlSource({
         data,
         entityId,
-        objectId,
+        documentId,
         abortSignal: abortController?.signal,
       });
     };

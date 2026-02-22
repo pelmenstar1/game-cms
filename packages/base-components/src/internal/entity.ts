@@ -6,11 +6,9 @@ import {
 
 const DEFAULT_KEYS = ['_id'];
 
-export function getEntityDisplayKeys<Id extends EntityId>(
-  schema: EntitySchema<Id>
-) {
+export function getEntityDisplayKeys(schema: EntitySchema) {
   return (
     schema.displayKeys?.slice(0, 5) ??
-    (DEFAULT_KEYS as EntityDisplayKeyById<Id>[])
+    (DEFAULT_KEYS as EntityDisplayKeyById<EntityId>[])
   );
 }

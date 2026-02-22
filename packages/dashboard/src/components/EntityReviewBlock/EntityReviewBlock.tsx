@@ -19,14 +19,14 @@ import styles from './EntityReviewBlock.module.scss';
 export interface EntityReviewBlockProps {
   className?: string;
   entityId: EntityId;
-  entityObjectId: string;
+  documentId: string;
   data: EntityCheckClientData;
 }
 
 export function EntityReviewBlock({
   className,
   entityId,
-  entityObjectId,
+  documentId,
   data,
 }: EntityReviewBlockProps) {
   const doInvokeAction = useApiAction(invokeEntityCheckAction);
@@ -41,13 +41,7 @@ export function EntityReviewBlock({
   const notification = useNotification();
 
   const onApprove = useCallback(() => {
-    doInvokeAction(
-      'base::review',
-      entityId,
-      entityObjectId,
-      'approve',
-      undefined
-    )
+    doInvokeAction('base::review', entityId, documentId, 'approve', undefined)
       .then(() => {
         notification.info('Entity approved');
       })
@@ -56,7 +50,7 @@ export function EntityReviewBlock({
 
         notification.error('Failed to approve entity');
       });
-  }, [doInvokeAction, entityId, entityObjectId, notification]);
+  }, [doInvokeAction, entityId, documentId, notification]);
 
   return (
     <div className={classNames(styles.root, className)}>

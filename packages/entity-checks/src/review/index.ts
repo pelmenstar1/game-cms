@@ -11,7 +11,7 @@ import { updateReviewersPayload } from './schema.js';
 import { GetReviewersResponse } from './types.js';
 
 declare module '@game-cms/base-core' {
-  interface DatabaseEntityMap {
+  interface DatabaseCollectionTypeMap {
     'base::entityCheck::review::config': {
       requiredReviewers: ObjectId[];
     };

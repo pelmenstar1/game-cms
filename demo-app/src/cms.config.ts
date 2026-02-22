@@ -43,7 +43,7 @@ export default config((env) => ({
     checks: [review()],
     hooks: [
       entityHook({
-        target: 'demo::test',
+        target: 'test',
         on: ['created', 'updated'],
         handler: entityWebhookHandler({
           url: 'http://localhost:3333/entity-webhook',

@@ -34,6 +34,9 @@
     "packages/entity-checks": {
       "entry": ["src/index.ts", "src/types.ts", "src/client.ts"]
     },
+    "packages/base-plugin": {
+      "entry": ["src/index.ts", "src/entity/test-setups/**/registry.ts"]
+    },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]
     },

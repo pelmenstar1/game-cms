@@ -12,12 +12,12 @@ import type { ObjectId } from 'mongodb';
 import type z from 'zod';
 import type { ZodType } from 'zod';
 
+import type { getEntityChecksResponse } from '../schema/entityCheck.js';
 import type {
   BaseEntityStorageDataById,
   EntityId,
   EntityMeta,
-} from './entity.js';
-import type { getEntityChecksResponse } from './schema/entityCheck.js';
+} from './core.js';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface EntityCheckTypeMap {}

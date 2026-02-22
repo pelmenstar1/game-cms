@@ -119,10 +119,7 @@ function hydratePermission(routeId: ApiRouteId, entities: EntityId[]) {
 }
 
 function getAllPermissions() {
-  const entities = cms()
-    .service('base::entitySchema')
-    .getAll()
-    .map((schema) => schema.id);
+  const entities = Object.keys(cms().service('base::entitySchema').getAll());
 
   const { routes } = env().api;
 

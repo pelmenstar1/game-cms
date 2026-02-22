@@ -10,7 +10,7 @@ export type WebpageEntityPreviewUrlSourcePayload<
   Id extends EntityId = EntityId,
 > = {
   entityId: Id;
-  objectId?: string;
+  documentId?: string;
   data: EntityClientDataById<Id>;
   abortSignal?: AbortSignal;
 };

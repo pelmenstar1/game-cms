@@ -1,7 +1,7 @@
 import type {
   Plugin,
   PluginValueSource,
-  ValueSourceContext,
+  PluginValueSourceContext,
 } from '@game-cms/core';
 import type { ApiEnvironment } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
@@ -15,7 +15,7 @@ function getApiRouteSourceFromPlugin(plugin: Plugin) {
 }
 
 async function resolvePluginValueSource<T>(
-  context: ValueSourceContext,
+  context: PluginValueSourceContext,
   getSource: (plugin: Plugin) => PluginValueSource<T[]> | undefined
 ): Promise<T[]> {
   const { plugins } = context.config;
@@ -33,11 +33,11 @@ async function resolvePluginValueSource<T>(
   return result.flat().filter((value) => value !== undefined) as T[];
 }
 
-async function getApiRoutes(context: ValueSourceContext) {
+async function getApiRoutes(context: PluginValueSourceContext) {
   return resolvePluginValueSource(context, getApiRouteSourceFromPlugin);
 }
 
-function getErrorStatusCodes(context: ValueSourceContext) {
+function getErrorStatusCodes(context: PluginValueSourceContext) {
   const result = filterOutNullable(
     context.config.plugins.map((plugin) => plugin.api?.error?.statuses)
   );
@@ -45,12 +45,12 @@ function getErrorStatusCodes(context: ValueSourceContext) {
   return mergeObjects(result);
 }
 
-export async function getAllServices(context: ValueSourceContext) {
+export async function getAllServices(context: PluginValueSourceContext) {
   return resolvePluginValueSource(context, (plugin) => plugin.services);
 }
 
 export async function getApiConfig(
-  context: ValueSourceContext
+  context: PluginValueSourceContext
 ): Promise<ApiEnvironment> {
   const routes = await getApiRoutes(context);
   const statusCodes = getErrorStatusCodes(context);

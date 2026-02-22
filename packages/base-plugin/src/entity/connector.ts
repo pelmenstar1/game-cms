@@ -2,20 +2,25 @@ import { pathToFileURL } from 'node:url';
 
 import { env } from '@game-cms/global';
 
-function emitGetEntitySchemas() {
-  const { entities } = env();
-
-  return `
-export const fullEntityMap = {
-  ${entities.map((descriptor) => `'${descriptor.id}': () => import('${pathToFileURL(descriptor.filePath)}')`)}
-};
-
-export const metaMap = {
-  ${entities.map(({ id, title }) => `'${id}': ${JSON.stringify({ title })}`)}
-};
-`;
+function emitDynamicPromise(filePath: string) {
+  return `() => import('${pathToFileURL(filePath)}')`;
 }
 
 export function emitEntityConnector(): string {
-  return emitGetEntitySchemas();
+  const { entity } = env();
+
+  return `
+export const registryImport = ${emitDynamicPromise(entity.registryFilePath)};
+
+export const entityMap = {
+  ${Object.entries(entity.registry)
+    .map(([id, { title, filePath }]) => {
+      const schemaImport = filePath
+        ? `schema: ${emitDynamicPromise(filePath)}`
+        : '';
+
+      return `'${id}': { title: ${JSON.stringify(title)}, ${schemaImport} }`;
+    })
+    .join(',')}
+};`;
 }

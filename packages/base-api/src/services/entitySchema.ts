@@ -2,18 +2,14 @@ import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
 
-function getById<Id extends EntityId>(id: Id) {
-  const { entities } = env();
-
-  const result = entities.find((schema) => schema.id === id);
-
-  return (result ?? null) as EntitySchemaById<Id> | null;
-}
-
 export default service({
   id: 'base::entitySchema',
-  getById,
+  getById<Id extends EntityId>(id: Id) {
+    const result = env().entity.registry[id] ?? null;
+
+    return result as unknown as EntitySchemaById<Id> | null;
+  },
   getAll() {
-    return env().entities;
+    return env().entity.registry;
   },
 });

@@ -1,3 +1,4 @@
+import { EntityId } from '@game-cms/base-core';
 import { ComponentEntry } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 
@@ -5,7 +6,7 @@ type EntityComponentEntry = {
   rawData: string | null;
   rawInData: string;
   options: {
-    entityId: string;
+    entityId: EntityId;
   };
   error: 'INVALID_TYPE';
   storageData: ObjectId | null;

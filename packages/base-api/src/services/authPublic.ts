@@ -3,7 +3,7 @@ import type { ApiRouteId } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
 declare module '@game-cms/base-core' {
-  interface DatabaseEntityMap {
+  interface DatabaseCollectionTypeMap {
     'base::auth::public': {
       permissions: ApiRouteId[];
     };

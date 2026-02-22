@@ -1,6 +1,6 @@
 import type {
   DatabaseCollectionId,
-  DatabaseEntityMap,
+  DatabaseCollectionTypeMap,
   EntityDataVariantsById,
   EntityId,
 } from '@game-cms/base-core';
@@ -56,7 +56,7 @@ export default service({
   },
   client,
   collection: <T extends DatabaseCollectionId>(id: T) => {
-    return client().db().collection<DatabaseEntityMap[T]>(id);
+    return client().db().collection<DatabaseCollectionTypeMap[T]>(id);
   },
   entityCollection: <Id extends EntityId>(id: Id) => {
     return client()

@@ -1,10 +1,14 @@
 import 'game-cms';
 
-import type { ResolveEntities } from 'game-cms';
+import type { ResolveEntityRegistryData } from 'game-cms';
+
+type Registry = typeof import('./registry.js');
 
 declare module 'game-cms' {
+  interface EntityTypeRegistry {
+    ids: keyof Registry;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface EntityMap extends ResolveEntities<
-    [typeof import('./test.js'), typeof import('./test2.js')]
-  > {}
+  interface EntityTypeDataRegistry extends ResolveEntityRegistryData<Registry> {}
 }

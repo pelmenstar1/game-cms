@@ -13,7 +13,7 @@ import styles from './PreviewPanel.module.scss';
 export interface PreviewPanelProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  objectId?: string;
+  documentId?: string;
   schema: EntitySchemaById<Id>;
   data: EntityClientDataById<Id>;
 }
@@ -29,14 +29,14 @@ export function PreviewPanel<Id extends EntityId>({
   schema,
   data,
   entityId,
-  objectId,
+  documentId,
 }: PreviewPanelProps<Id>) {
   const { preview } = schema;
   if (preview === undefined) {
     return null;
   }
 
-  const Component = getRenderer(schema.id, preview);
+  const Component = getRenderer(entityId, preview);
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -44,7 +44,7 @@ export function PreviewPanel<Id extends EntityId>({
         <Component
           data={data}
           entityId={entityId}
-          objectId={objectId}
+          documentId={documentId}
           schema={schema}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           previewOptions={preview.options}

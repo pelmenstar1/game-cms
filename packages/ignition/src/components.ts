@@ -5,7 +5,7 @@ import path from 'node:path';
 import type {
   ComponentController,
   ComponentControllerMap,
-  ValueSourceContext,
+  PluginValueSourceContext,
 } from '@game-cms/core';
 import type { ComponentDistributionInfo, ComponentEnv } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
@@ -13,7 +13,7 @@ import { filterOutNullable } from '@game-cms/shared/collections';
 import { importFile } from '@game-cms/shared/node';
 
 export async function getAllComponentDistributions(
-  context: ValueSourceContext
+  context: PluginValueSourceContext
 ): Promise<ComponentDistributionInfo[]> {
   const { plugins } = context.config;
 
@@ -59,7 +59,7 @@ async function getDistributionControllers(distPath: string) {
 }
 
 export async function getComponentEnv(
-  context: ValueSourceContext
+  context: PluginValueSourceContext
 ): Promise<ComponentEnv> {
   const distributions = await getAllComponentDistributions(context);
 

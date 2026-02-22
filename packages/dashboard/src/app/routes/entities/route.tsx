@@ -13,7 +13,7 @@ import { useCallback, useEffect } from 'react';
 
 import { EntityListLoader } from '@/components/EntityListLoader';
 import { EntitySearchDialog } from '@/components/EntitySearchDialog';
-import { getEntityMetaMap } from '@/connector/entity';
+import { getEntityIds, getEntityTitle } from '@/connector/entity';
 import { useSelfSession } from '@/hooks/useSession';
 
 import type { Route } from './+types/route';
@@ -28,9 +28,6 @@ export function meta() {
 
 export default function Page({ params }: Route.ComponentProps) {
   const { name: selectedEntity } = params;
-  const schemas = getEntityMetaMap();
-
-  const selectedSchema = selectedEntity ? schemas[selectedEntity] : null;
 
   const { permissions } = useSelfSession();
   const navigate = useTypedNavigate();
@@ -38,21 +35,20 @@ export default function Page({ params }: Route.ComponentProps) {
   const showModal = useModal();
 
   useEffect(() => {
-    const schemasArray = Object.entries(schemas);
+    const schemasArray = getEntityIds();
 
     if (schemasArray.length > 0 && selectedEntity === undefined) {
-      const [[id]] = schemasArray;
+      const [id] = schemasArray;
 
       void navigate(`/entities/${id}`);
     }
-  }, [navigate, schemas, selectedEntity]);
+  }, [navigate, selectedEntity]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (selectedSchema === undefined) {
+    if (!selectedEntity || !getEntityIds().includes(selectedEntity)) {
       void navigate('/404');
     }
-  }, [navigate, selectedSchema]);
+  }, [navigate, selectedEntity]);
 
   const onShowSearch = useCallback(() => {
     if (selectedEntity) {
@@ -70,15 +66,15 @@ export default function Page({ params }: Route.ComponentProps) {
     <div className={styles.root}>
       <NavTabs
         className={styles['entities-tabs']}
-        items={Object.entries(schemas)
-          .filter(([id]) => permissions.has(`entity/${id}$get`))
-          .map(([id, { title }]) => ({
-            text: title,
+        items={getEntityIds()
+          .filter((id) => permissions.has(`entity/${id}$get`))
+          .map((id) => ({
+            text: getEntityTitle(id),
             href: `/entities/${id}`,
           }))}
       />
 
-      {selectedEntity && selectedSchema && (
+      {selectedEntity && (
         <div className={styles.content}>
           <Toolbar>
             <IconButton

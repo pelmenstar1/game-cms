@@ -1,8 +1,8 @@
 import { RelativeTime } from '@game-cms/shared/chrono';
 import type { MongoClientOptions } from 'mongodb';
 
-import { AnyEntityCheck } from './entityCheck.js';
-import { AnyEntityHook } from './entityHook.js';
+import { AnyEntityCheck } from './entity/check.js';
+import { AnyEntityHook } from './entity/hook.js';
 import { AnyStorageAddon } from './storage.js';
 import { AnyStorageProvider } from './storageProvider.js';
 

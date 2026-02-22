@@ -24,7 +24,7 @@ import { hashPassword, verifyPassword } from '../utils/password.js';
 type NoPasswordServerUser = Omit<User, 'passwordHash'> & { id: ObjectId };
 
 declare module '@game-cms/base-core' {
-  interface DatabaseEntityMap {
+  interface DatabaseCollectionTypeMap {
     'base::users': User;
   }
 }

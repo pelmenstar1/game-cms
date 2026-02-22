@@ -11,7 +11,7 @@ type MigrationEntry = { name: string };
 type MigrationFn = () => MaybePromise<void>;
 
 declare module '@game-cms/base-core' {
-  interface DatabaseEntityMap {
+  interface DatabaseCollectionTypeMap {
     'base::migrations': MigrationEntry;
   }
 }

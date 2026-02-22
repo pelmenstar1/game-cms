@@ -9,13 +9,13 @@ import type { ApiRoute } from './api/route.js';
 import type { ResolvedCmsConfig } from './config.js';
 import type { Service } from './service.js';
 
-export interface ValueSourceContext {
+export interface PluginValueSourceContext {
   config: ResolvedCmsConfig;
 
   compiledFilePath: (name: string) => string;
 }
 
-export type PluginValueSourceArgs = [context: ValueSourceContext];
+export type PluginValueSourceArgs = [context: PluginValueSourceContext];
 export type PluginValueSource<T> = MaybeAsyncFactory<T, PluginValueSourceArgs>;
 
 export type ApiRouteSource = PluginValueSource<ApiRoute[]>;

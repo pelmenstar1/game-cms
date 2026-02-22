@@ -3,6 +3,7 @@ import { expectTypeOf, test } from 'vitest';
 import type {
   AnyKeyInObject,
   ConditionalPartial,
+  FromEntries,
   IsAllOptional,
   Or,
   UnpackArray,
@@ -40,4 +41,15 @@ test('Or', () => {
 test('UnpackArray', () => {
   expectTypeOf<UnpackArray<string[]>>().toEqualTypeOf<string>();
   expectTypeOf<UnpackArray<string | number>>().toEqualTypeOf<string | number>();
+});
+
+test('FromEntries', () => {
+  expectTypeOf<FromEntries<['a', string]>>().toEqualTypeOf<{
+    a: string;
+  }>();
+
+  expectTypeOf<FromEntries<['a', string] | ['b', number]>>().toEqualTypeOf<{
+    a: string;
+    b: number;
+  }>();
 });

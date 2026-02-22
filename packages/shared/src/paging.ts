@@ -10,13 +10,13 @@ export type PageData<T> = {
   };
 };
 
-const _emptyPageData: PageData<unknown> = {
+const _emptyPageData: PageData<never> = {
   items: [],
   meta: {
     totalCount: 0,
   },
 };
 
-export function emptyPageData<T>() {
-  return _emptyPageData as PageData<T>;
+export function emptyPageData<T>(): PageData<T> {
+  return _emptyPageData;
 }

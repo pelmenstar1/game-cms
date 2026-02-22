@@ -23,7 +23,7 @@ declare module '@game-cms/base-core' {
     'base::apiToken::deleted': { id: ObjectId };
   }
 
-  interface DatabaseEntityMap {
+  interface DatabaseCollectionTypeMap {
     'base::apiTokens': ApiToken;
   }
 }

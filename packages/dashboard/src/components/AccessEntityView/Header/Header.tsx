@@ -1,4 +1,4 @@
-import { EntitySchema } from '@game-cms/base-core';
+import { EntityId, EntitySchemaById } from '@game-cms/base-core';
 import {
   classNames,
   DeleteIcon,
@@ -12,9 +12,10 @@ import { useSelfSession } from '@/hooks/useSession';
 
 import styles from './Header.module.scss';
 
-export interface HeaderProps {
+export interface HeaderProps<Id extends EntityId> {
   className?: string;
-  schema: EntitySchema;
+  entityId: Id;
+  schema: EntitySchemaById<Id>;
   hasInitialValue: boolean;
   previewEnabled: boolean;
 
@@ -22,14 +23,15 @@ export interface HeaderProps {
   onPreviewEnabledChanged?: (state: boolean) => void;
 }
 
-export function Header({
+export function Header<Id extends EntityId>({
   className,
+  entityId,
   schema,
   hasInitialValue,
   previewEnabled,
   onDelete,
   onPreviewEnabledChanged,
-}: HeaderProps) {
+}: HeaderProps<Id>) {
   const { permissions } = useSelfSession();
 
   return (
@@ -38,7 +40,7 @@ export function Header({
         {schema.title}
       </Typography>
 
-      {hasInitialValue && permissions.has(`entity/${schema.id}$delete`) && (
+      {hasInitialValue && permissions.has(`entity/${entityId}$delete`) && (
         <IconButton
           className={classNames(styles['icon-button'], styles.delete)}
           title="Delete"

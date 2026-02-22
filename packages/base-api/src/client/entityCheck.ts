@@ -13,12 +13,12 @@ export const invokeEntityCheckAction = <
   context: RequestContext,
   checkId: Id,
   entityId: EntityId,
-  entityObjectId: string,
+  documentId: string,
   action: ActionType,
   payload: EntityCheckActionPayload<Id, ActionType>
 ) =>
   request(context, {
-    url: `/entity/${entityId}/${entityObjectId}/check/${checkId}/${action}`,
+    url: `/entity/${entityId}/${documentId}/check/${checkId}/${action}`,
     method: 'POST',
     body: payload && jsonInit(payload),
   });

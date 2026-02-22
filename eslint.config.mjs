@@ -30,6 +30,7 @@ export default defineConfig(
       'packages/game-plugin-components/scripts/*',
       'packages/game-plugin-components/.storybook',
       'packages/*/vite.storybook.config.ts',
+      'packages/base-plugin/test-setups',
       'e2e',
       'coverage',
     ],

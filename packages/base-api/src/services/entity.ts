@@ -60,7 +60,7 @@ declare module '@game-cms/base-core' {
     };
   }
 
-  interface DatabaseEntityMap {
+  interface DatabaseCollectionTypeMap {
     'base::entityStructure': {
       entityId: EntityId;
       structure: Record<string, ComponentDataStructure>;
@@ -289,9 +289,10 @@ function validate<Id extends EntityId>(
 }
 
 async function migrateEntityCollection<Id extends EntityId>(
+  id: Id,
   schema: EntitySchemaById<Id>
 ) {
-  const col = collection(schema.id);
+  const col = collection(id);
 
   for await (const oldValue of col.find()) {
     // Only migrate if old value is no longer valid.
@@ -361,24 +362,22 @@ export default service({
 
       const oldStructures = await col.find().toArray();
 
-      for (const schema of schemas) {
+      for (const [id, schema] of Object.entries(schemas)) {
         const oldStructure = oldStructures.find(
-          ({ entityId }) => entityId === schema.id
+          ({ entityId }) => entityId === id
         );
 
         const newStructure = getEntityDataStructure(schema);
 
         if (oldStructure === undefined) {
-          await col.insertOne({ entityId: schema.id, structure: newStructure });
+          await col.insertOne({ entityId: id, structure: newStructure });
         } else if (!deepEquals(oldStructure.structure, newStructure)) {
-          log()
-            .child({ service: 'base::entity' })
-            .info('Migrating %s', schema.id);
+          log().child({ service: 'base::entity' }).info('Migrating %s', id);
 
-          await migrateEntityCollection(schema);
+          await migrateEntityCollection(id, schema);
 
           await col.updateOne(
-            { entityId: schema.id },
+            { entityId: id },
             { $set: { structure: newStructure } }
           );
         }

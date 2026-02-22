@@ -7,7 +7,7 @@ import {
 import { MaybeArray } from '@game-cms/shared/collections';
 import { ObjectId } from 'mongodb';
 
-import { EntityId, EntityInstanceData, EntityVariant } from './entity.js';
+import { EntityId, EntityInstanceData, EntityVariant } from './core.js';
 
 type EventHookTarget = MaybeArray<EntityId>;
 

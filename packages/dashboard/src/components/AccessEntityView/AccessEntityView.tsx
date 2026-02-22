@@ -98,6 +98,7 @@ export function AccessEntityView<Id extends EntityId>({
       <Header
         className={styles.header}
         hasInitialValue={initialValue !== undefined}
+        entityId={entityId}
         schema={schema}
         onDelete={onDelete}
         previewEnabled={previewEnabled}
@@ -144,7 +145,7 @@ export function AccessEntityView<Id extends EntityId>({
           {reviewData && initialId && (
             <EntityReviewBlock
               entityId={entityId}
-              entityObjectId={initialId}
+              documentId={initialId}
               data={reviewData}
             />
           )}
@@ -156,7 +157,7 @@ export function AccessEntityView<Id extends EntityId>({
             entityId={entityId}
             data={clientData as EntityClientDataById<Id>}
             schema={schema}
-            objectId={initialId}
+            documentId={initialId}
           />
         )}
       </div>

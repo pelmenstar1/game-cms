@@ -1,14 +1,14 @@
 import { PartialIfUndefined } from '@game-cms/shared';
 import { ReactNode } from 'react';
 
-import { EntityClientDataById, EntityId, EntitySchemaById } from './entity.js';
+import { EntityClientDataById, EntityId, EntitySchemaById } from './core.js';
 
 export type EntityPreviewRendererProps<
   Id extends EntityId = EntityId,
   Options = undefined,
 > = {
   entityId: Id;
-  objectId?: string;
+  documentId?: string;
   data: EntityClientDataById<Id>;
   schema: EntitySchemaById<Id>;
 } & PartialIfUndefined<{ previewOptions: Options }, Options>;

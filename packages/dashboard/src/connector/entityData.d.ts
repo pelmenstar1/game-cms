@@ -1,8 +1,17 @@
 declare module 'virtual:dashboard/entityConnectorData' {
-  import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
+  import type {
+    EntityId,
+    EntitySchemaById,
+    EntitySchemaRegistry,
+  } from '@game-cms/base-core';
+  import { DefaultExport } from '@game-cms/shared';
 
-  export const fullEntityMap: {
-    [K in EntityId]: () => Promise<{ default: EntitySchemaById<K> }>;
+  export const registryImport: () => Promise<EntitySchemaRegistry>;
+
+  export const entityMap: {
+    [K in EntityId]: {
+      title: string;
+      schema?: () => Promise<DefaultExport<EntitySchemaById<K>>>;
+    };
   };
-  export const metaMap: Record<EntityId, { title: string }>;
 }

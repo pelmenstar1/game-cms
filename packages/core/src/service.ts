@@ -1,6 +1,6 @@
-import type { MaybePromise } from '@game-cms/shared';
+import type { DefaultExport, MaybePromise } from '@game-cms/shared';
 
-import type { DefaultExport, IdArrayToMap } from './typeutil.js';
+import type { IdArrayToMap } from './typeutil.js';
 
 export interface Service<Id extends string = string> {
   id: Id;
