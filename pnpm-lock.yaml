@@ -959,6 +959,9 @@ importers:
       jiti:
         specifier: 'catalog:'
         version: 2.6.1
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
     devDependencies:
       '@game-cms/base-api':
         specifier: workspace:*

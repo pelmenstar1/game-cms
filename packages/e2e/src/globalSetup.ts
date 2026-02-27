@@ -1,8 +1,7 @@
 import path from 'node:path';
 
-import { setCmsController } from '@game-cms/global';
 import {
-  createController,
+  initCmsController,
   initEnvFromConfigs,
   initServices,
 } from '@game-cms/ignition';
@@ -10,7 +9,7 @@ import { beforeAll } from 'vitest';
 
 beforeAll(async () => {
   await initEnvFromConfigs(path.join(import.meta.dirname, '../'));
-  setCmsController(createController());
+  initCmsController();
 
   await initServices();
 });

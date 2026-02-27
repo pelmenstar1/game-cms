@@ -1,5 +1,5 @@
 import type { GameCmsController, Service, ServiceMap } from '@game-cms/core';
-import { env } from '@game-cms/global';
+import { env, setCmsController } from '@game-cms/global';
 
 function createServiceMap(services: Service[]) {
   return Object.fromEntries(
@@ -22,4 +22,8 @@ export function createController(): GameCmsController {
       return result;
     },
   };
+}
+
+export function initCmsController() {
+  setCmsController(createController());
 }

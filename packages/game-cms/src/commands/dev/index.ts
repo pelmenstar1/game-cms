@@ -1,13 +1,13 @@
 import childProcess from 'node:child_process';
 import net, { type AddressInfo } from 'node:net';
 
-import { setCmsController } from '@game-cms/global';
-import { createController, initEnvFromConfigs } from '@game-cms/ignition';
-
 import {
-  getDashboardPackagePath,
-  writeDashboardMeta,
-} from '../../services/dashboard/index.js';
+  initCmsController,
+  initEnvFromConfigs,
+  writeDashboardBuildMeta,
+} from '@game-cms/ignition';
+
+import { getDashboardPackagePath } from '../../services/dashboard/index.js';
 import { executeRemainingMigrations } from '../../services/migration.js';
 import { startServer } from '../../services/server.js';
 
@@ -60,10 +60,10 @@ export default async function dev() {
   {
     using messageServer = await startMessageServer();
 
-    await writeDashboardMeta(dashboardPath, messageServer.port);
+    await writeDashboardBuildMeta(dashboardPath, messageServer.port);
     await initEnvFromConfigs();
 
-    setCmsController(createController());
+    initCmsController();
     runDashboardDev(dashboardPath);
 
     await executeRemainingMigrations();
