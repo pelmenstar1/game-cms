@@ -45,7 +45,7 @@ export default function Page({ params }: Route.ComponentProps) {
   }, [navigate, selectedEntity]);
 
   useEffect(() => {
-    if (!selectedEntity || !getEntityIds().includes(selectedEntity)) {
+    if (selectedEntity && !getEntityIds().includes(selectedEntity)) {
       void navigate('/404');
     }
   }, [navigate, selectedEntity]);
