@@ -2,8 +2,8 @@
   max-width: 100%;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-  grid-template-rows: repeat(auto-fit, 100px);
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-rows: repeat(auto-fit, 120px);
   gap: 0.5em;
 
   > * {

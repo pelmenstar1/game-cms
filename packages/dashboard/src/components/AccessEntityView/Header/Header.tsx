@@ -36,13 +36,13 @@ export function Header<Id extends EntityId>({
 
   return (
     <div className={classNames(styles.root, className)}>
-      <Typography variant="h4" className={styles.title}>
+      <Typography variant="h4" className={styles['title']}>
         {schema.title}
       </Typography>
 
       {hasInitialValue && permissions.has(`entity/${entityId}$delete`) && (
         <IconButton
-          className={classNames(styles['icon-button'], styles.delete)}
+          className={styles['icon-button']}
           title="Delete"
           onClick={onDelete}
         >

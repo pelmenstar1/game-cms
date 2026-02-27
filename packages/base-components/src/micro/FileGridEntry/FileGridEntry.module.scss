@@ -9,12 +9,6 @@
     background: var(--color-background-dark-variant);
   }
 
-  p {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-
   &-selected {
     background: var(--color-background-dark) !important;
   }
@@ -25,7 +19,7 @@
 
   align-self: center;
   width: 80%;
-  min-height: 3em;
+  height: 48px;
   margin-bottom: 0.5em;
 
   color: $color;

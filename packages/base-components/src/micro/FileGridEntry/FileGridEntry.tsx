@@ -1,5 +1,5 @@
 import { formatFileSize } from '@game-cms/shared/string';
-import { classNames, Typography } from '@game-cms/ui';
+import { classNames, MiddleEllipsis, Typography } from '@game-cms/ui';
 import { type MouseEvent, SyntheticEvent, useCallback } from 'react';
 
 import type { FileItem } from '../FileGrid/index.js';
@@ -49,7 +49,7 @@ export function FileGridEntry({
     >
       <FileGridEntryThumbnail className={styles.thumbnail} source={item} />
 
-      <Typography className={styles.name}>{item.name}</Typography>
+      <MiddleEllipsis className={styles.name}>{item.name}</MiddleEllipsis>
       {item.type === 'file' && (
         <Typography variant="caption">{formatFileSize(item.size)}</Typography>
       )}

@@ -27,6 +27,7 @@ export * from './Link';
 export * from './LinkButton';
 export * from './List';
 export * from './LowlightText';
+export * from './MiddleEllipsis';
 export * from './ModalDialog';
 export * from './ModalOverlay';
 export * from './MultipleDataLoader';

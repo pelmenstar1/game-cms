@@ -11,11 +11,15 @@ export function FileGridEntryThumbnail({
   className,
   source,
 }: FileGridEntryThumbnailProps) {
-  return source.type === 'folder' ? (
-    <FolderIcon className={className} />
-  ) : source.mime.startsWith('image/') ? (
-    <img src={source.url} className={classNames(styles.image, className)} />
-  ) : (
-    <UnknownDocumentIcon className={className} />
-  );
+  if (source.type === 'folder') {
+    return <FolderIcon className={className} />;
+  }
+
+  if (source.mime.startsWith('image/')) {
+    return (
+      <img src={source.url} className={classNames(styles.image, className)} />
+    );
+  }
+
+  return <UnknownDocumentIcon className={className} />;
 }
