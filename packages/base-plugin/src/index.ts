@@ -1,16 +1,33 @@
 import path from 'node:path';
 
 import { apiConfig, serviceSource } from '@game-cms/base-api';
-import type { OwnEnvironment } from '@game-cms/base-core';
+import type {
+  OwnEnvironment,
+  OwnPluginClientConfig,
+} from '@game-cms/base-core';
 import type { Plugin } from '@game-cms/core';
-import { resolveImportDirectory } from '@game-cms/shared/node';
+import {
+  resolveImportDirectory,
+  resolveImportFile,
+} from '@game-cms/shared/node';
 
+import { clientConfigPlugin } from './clientConfig/vitePlugin.js';
 import { resolveEntityEnvConfig } from './entity/resolver.js';
 import { dashboardEntityPlugin } from './entity/vitePlugin.js';
 
-export const basePlugin: Plugin<OwnEnvironment> = {
+export const basePlugin: Plugin<{
+  env: OwnEnvironment;
+  clientConfig: OwnPluginClientConfig;
+}> = {
   id: 'base',
-  api: apiConfig,
+  config: {
+    api: apiConfig,
+    dashboard: {
+      vite: {
+        plugins: [dashboardEntityPlugin(), clientConfigPlugin()],
+      },
+    },
+  },
   services: serviceSource,
   components: () => {
     const rootDir = resolveImportDirectory(
@@ -28,7 +45,10 @@ export const basePlugin: Plugin<OwnEnvironment> = {
   env: {
     entity: resolveEntityEnvConfig,
   },
-  dashboard: {
-    plugins: [dashboardEntityPlugin()],
+  clientConfigResolver: {
+    filePath: resolveImportFile(
+      import.meta,
+      './clientConfig/ownResolver.client.js'
+    ),
   },
 };

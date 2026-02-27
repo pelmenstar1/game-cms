@@ -1,4 +1,4 @@
-import type { Plugin, PluginApiFastifyConfig } from '@game-cms/core';
+import type { AnyPlugin, PluginApiFastifyConfig } from '@game-cms/core';
 import type { CmsFastifyInstance } from '@game-cms/core/api';
 import { env } from '@game-cms/global';
 
@@ -17,12 +17,12 @@ async function initPluginFastify(
   }
 }
 
-async function initPlugin(plugin: Plugin, app: CmsFastifyInstance) {
+async function initPlugin(plugin: AnyPlugin, app: CmsFastifyInstance) {
   const { config } = env();
 
   await plugin.setup?.(config);
 
-  const fastifyConfig = plugin.api?.fastify;
+  const fastifyConfig = plugin.config?.api?.fastify;
   if (fastifyConfig !== undefined) {
     await initPluginFastify(fastifyConfig, app);
   }

@@ -1,4 +1,4 @@
-export type DashboardMeta = {
+export type DashboardBuildMeta = {
   basePath: string;
   devMessagePort?: number;
 };

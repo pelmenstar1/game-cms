@@ -49,3 +49,16 @@ export function createCachedFactory<K extends PropertyKey, T, Context>(
     return result;
   };
 }
+
+/*@__NO_SIDE_EFFECTS__*/
+export function createCachedFactorySelfKeyed<T, Context = undefined>(
+  factory: (context: Context) => { value: () => T; key: PropertyKey }
+) {
+  const cache: Partial<Record<PropertyKey, T>> = {};
+
+  return (context: Context) => {
+    const { value, key } = factory(context);
+
+    return (cache[key] ??= value());
+  };
+}

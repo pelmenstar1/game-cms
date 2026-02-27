@@ -2,6 +2,7 @@ import { ModalProvider, NotificationWrapper } from '@game-cms/ui';
 import type { PropsWithChildren } from 'react';
 
 import { ApiClientProvider } from '@/context/ApiClientProvider';
+import { ClientConfigProvider } from '@/context/ClientConfigProvider';
 import { EntitySchemaProvider } from '@/context/EntitySchemaProvider';
 import { ComponentHubProvider } from '@/hooks/useComponentHub';
 import { SessionProvider } from '@/hooks/useSession';
@@ -12,9 +13,11 @@ export function Providers({ children }: PropsWithChildren) {
       <ApiClientProvider>
         <EntitySchemaProvider>
           <ComponentHubProvider>
-            <ModalProvider>
-              <SessionProvider>{children}</SessionProvider>
-            </ModalProvider>
+            <ClientConfigProvider>
+              <ModalProvider>
+                <SessionProvider>{children}</SessionProvider>
+              </ModalProvider>
+            </ClientConfigProvider>
           </ComponentHubProvider>
         </EntitySchemaProvider>
       </ApiClientProvider>

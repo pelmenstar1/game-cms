@@ -2,7 +2,7 @@ import { gamePlugin } from '@game-cms/game-plugin';
 import { localStorageProvider } from '@game-cms/storage-provider-local';
 import { config } from 'game-cms';
 
-const c: unknown = config((env) => ({
+const c = config((env) => ({
   plugins: [gamePlugin],
   auth: {
     jwtSignKey: env('JWT_SECRET_KEY'),

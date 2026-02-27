@@ -1,15 +1,13 @@
 import { pathToFileURL } from 'node:url';
 
+import { sanitizeId } from '@game-cms/shared/string';
+
 import type {
   ComponentClientChunkEntry,
   ComponentClientChunkMap,
 } from './gather.js';
 
 type EmitStep = (info: ComponentClientChunkMap) => string;
-
-function sanitizeId(componentId: string) {
-  return componentId.replaceAll(/[^\w\d]/g, '_');
-}
 
 function coreImportName(componentId: string) {
   return `${sanitizeId(componentId)}_shared`;

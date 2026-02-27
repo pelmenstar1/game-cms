@@ -3,6 +3,7 @@ export * from './clipboard.js';
 export * from './delay.js';
 export * from './error.js';
 export * from './fetch.js';
+export * from './filePortal.js';
 export * from './function.js';
 export * from './idSource.js';
 export * from './math.js';

@@ -12,7 +12,7 @@ import {
 } from '@game-cms/ui';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 
-import { FilePreview } from '../FilePreview/index.js';
+import { FileInlinePreview } from '../FileInlinePreview/index.js';
 import styles from './FileList.module.scss';
 
 type FileListItem = {
@@ -87,7 +87,7 @@ export function FileList<T extends FileListItem>({
           </PagerButton>
         )}
 
-        <FilePreview
+        <FileInlinePreview
           className={styles['preview']}
           url={item.value.url}
           mime={item.value.mime}

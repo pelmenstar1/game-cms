@@ -34,8 +34,12 @@ export function resolveImport(meta: ImportMeta, id: string) {
   }
 }
 
+export function resolveImportFile(meta: ImportMeta, id: string) {
+  return fileURLToPath(resolveImport(meta, id));
+}
+
 export function resolveImportDirectory(meta: ImportMeta, id: string) {
-  return path.dirname(fileURLToPath(resolveImport(meta, id)));
+  return path.dirname(resolveImportFile(meta, id));
 }
 
 export async function readPackageInfo(dirPath: string) {

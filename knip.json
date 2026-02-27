@@ -37,6 +37,9 @@
     "packages/base-plugin": {
       "entry": ["src/index.ts", "src/entity/__tests__/fixtures/**/registry.ts"]
     },
+    "packages/{base,game}-plugin": {
+      "entry": ["src/index.ts", "src/**/*.client.ts"]
+    },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]
     },

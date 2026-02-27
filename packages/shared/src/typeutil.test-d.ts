@@ -6,6 +6,7 @@ import type {
   FromEntries,
   IsAllOptional,
   Or,
+  UnionToIntersection,
   UnpackArray,
 } from './typeutil.js';
 
@@ -52,4 +53,14 @@ test('FromEntries', () => {
     a: string;
     b: number;
   }>();
+});
+
+test('UnionToIntersection', () => {
+  expectTypeOf<UnionToIntersection<{ a: string }>>().toEqualTypeOf<{
+    a: string;
+  }>();
+
+  expectTypeOf<
+    UnionToIntersection<{ a: string } | { b: number }>
+  >().toEqualTypeOf<{ a: string } & { b: number }>();
 });

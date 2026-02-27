@@ -9,6 +9,7 @@ export * from './isFloat.js';
 export * from './regex.js';
 export * from './repeatJoin.js';
 export * from './safeParseFloat.js';
+export * from './sanitizeId.js';
 export * from './shortenByWord.js';
 export * from './trimTrailingZeros.js';
 export * from './urlName.js';

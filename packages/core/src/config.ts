@@ -1,14 +1,14 @@
 import type { MaybePromise, RequiredProperty } from '@game-cms/shared';
 import type { EnvAccessor } from '@game-cms/shared/node';
 
-import type { Plugin } from './plugin.js';
+import type { AnyPlugin } from './plugin.js';
 
 export type ServerConfig = {
   port: number;
 };
 
 export interface UnresolvedCmsConfig {
-  plugins?: Plugin<object | null>[];
+  plugins?: AnyPlugin[];
   server: ServerConfig;
 }
 
@@ -19,7 +19,7 @@ export type ResolvedCmsConfig = RequiredProperty<
 
 type MaybeEnv<R extends object> = R | ((env: EnvAccessor) => MaybePromise<R>);
 
-type ConfigInit = MaybeEnv<UnresolvedCmsConfig>;
+export type ConfigInit = MaybeEnv<UnresolvedCmsConfig>;
 
 export function config(value: ConfigInit): ConfigInit {
   return value;

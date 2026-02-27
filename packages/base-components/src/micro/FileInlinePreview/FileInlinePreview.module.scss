@@ -3,24 +3,11 @@
   flex-direction: column;
 }
 
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.unknown-document,
-.audio {
+.unknown-document {
   place-self: center center;
   margin-top: auto;
   margin-bottom: auto;
-}
 
-.audio {
-  width: 80%;
-}
-
-.unknown-document {
   color: var(--color-text-on-background);
   fill: var(--color-text-on-background);
   width: 100%;

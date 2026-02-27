@@ -1,13 +1,13 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import type { DashboardMeta } from '@game-cms/core';
+import type { DashboardBuildMeta } from '@game-cms/base-core';
 
 export async function writeDashboardMeta(
   dashboardPath: string,
   devMessagePort?: number
 ) {
-  const meta: DashboardMeta = {
+  const meta: DashboardBuildMeta = {
     basePath: process.cwd(),
     devMessagePort,
   };

@@ -69,3 +69,9 @@ export type UnpackArray<T> = T extends unknown[] ? T[number] : T;
 export type FromEntries<T extends [PropertyKey, unknown]> = {
   [K in T[0]]: Extract<T, [K, unknown]>[1];
 };
+
+export type UnionToIntersection<U> =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (U extends any ? (x: U) => void : never) extends (x: infer I) => void
+    ? I
+    : never;

@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@game-cms/core": "workspace:*",
+    "@game-cms/base-core": "workspace:*",
     "typescript": "catalog:"
   },
   "exports": {

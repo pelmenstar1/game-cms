@@ -1,5 +1,5 @@
 import type {
-  Plugin,
+  AnyPlugin,
   PluginValueSource,
   PluginValueSourceContext,
 } from '@game-cms/core';
@@ -8,15 +8,15 @@ import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { mergeObjects } from '@game-cms/shared/object';
 
-function getApiRouteSourceFromPlugin(plugin: Plugin) {
-  const routes = plugin.api?.routes;
+function getApiRouteSourceFromPlugin(plugin: AnyPlugin) {
+  const routes = plugin.config?.api?.routes;
 
   return routes ? ('source' in routes ? routes.source : routes) : undefined;
 }
 
 async function resolvePluginValueSource<T>(
   context: PluginValueSourceContext,
-  getSource: (plugin: Plugin) => PluginValueSource<T[]> | undefined
+  getSource: (plugin: AnyPlugin) => PluginValueSource<T[]> | undefined
 ): Promise<T[]> {
   const { plugins } = context.config;
 
@@ -39,7 +39,7 @@ async function getApiRoutes(context: PluginValueSourceContext) {
 
 function getErrorStatusCodes(context: PluginValueSourceContext) {
   const result = filterOutNullable(
-    context.config.plugins.map((plugin) => plugin.api?.error?.statuses)
+    context.config.plugins.map((plugin) => plugin.config?.api?.error?.statuses)
   );
 
   return mergeObjects(result);
