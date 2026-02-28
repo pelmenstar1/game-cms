@@ -2,11 +2,12 @@
   display: grid;
   grid-template-columns: repeat(2, 50%);
   width: 80vw;
+  overflow: hidden;
 }
 
 .preview {
   padding-right: 1em;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .info {
