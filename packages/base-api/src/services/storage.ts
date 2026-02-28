@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { Readable } from 'node:stream';
 import { buffer } from 'node:stream/consumers';
 
@@ -165,6 +166,40 @@ async function getContent(
   return content;
 }
 
+function getStorageFileTypeAddons() {
+  return filterOutNullable(
+    env().config.plugins.flatMap((plugin) => plugin.config?.storageFileTypes)
+  );
+}
+
+function matchStorageFileTypeAddon(extension: string) {
+  const addons = getStorageFileTypeAddons();
+
+  return addons.find(({ test }) => {
+    if (typeof test === 'string') {
+      return test === extension;
+    }
+
+    return test(extension);
+  });
+}
+
+function enhanceMime(name: string, mime: string) {
+  if (mime === 'application/octet-stream') {
+    const extension = path.extname(name).slice(1);
+
+    if (extension) {
+      const addon = matchStorageFileTypeAddon(extension);
+
+      if (addon) {
+        return addon.resultMime;
+      }
+    }
+  }
+
+  return mime;
+}
+
 export default service({
   id: 'base::storage',
   init: async () => {
@@ -177,8 +212,13 @@ export default service({
     const { mime, name, parent, hidden, content } = payload;
     const addons = getAddons();
 
+    const enchancedPayload = {
+      ...payload,
+      mime: enhanceMime(name, mime),
+    };
+
     const item: StorageFilePersistentItem = {
-      mime,
+      mime: enchancedPayload.mime,
       name,
       parent,
       hidden,
@@ -189,7 +229,7 @@ export default service({
 
     if (addons.length > 0) {
       const staticPayload = {
-        ...payload,
+        ...enchancedPayload,
         content: content instanceof Readable ? await buffer(content) : content,
       };
 
@@ -211,7 +251,7 @@ export default service({
       Object.assign(item, uploadResult);
       item.addons = Object.fromEntries(filterOutNullable(addonEntries));
     } else {
-      const uploadResult = await protocol.upload(payload);
+      const uploadResult = await protocol.upload(enchancedPayload);
 
       Object.assign(item, uploadResult);
     }

@@ -12,6 +12,16 @@ export const gamePlugin: Plugin = {
     client: {
       filePath: resolveImportFile(import.meta, './config.client.js'),
     },
+    storageFileTypes: [
+      {
+        test: 'glb',
+        resultMime: 'model/gltf-binary',
+      },
+      {
+        test: 'fnt',
+        resultMime: 'application/x-font-sdf',
+      },
+    ],
   },
   components: () => {
     const rootDir = resolveImportDirectory(

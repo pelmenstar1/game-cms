@@ -65,21 +65,16 @@ export function createApplication() {
       return new Promise<void>((resolve, reject) => {
         const manager = new LoadingManager();
 
-        const loaderAbort = () => {
-          manager.abort();
-        };
-
-        const detachAbortListener = () => {
-          abortSignal?.removeEventListener('abort', loaderAbort);
-        };
-
-        abortSignal?.addEventListener('abort', loaderAbort);
-
         const loader = new GLTFLoader(manager);
+        loader.setWithCredentials(true);
 
         loader.load(
           source,
           (gltf) => {
+            if (abortSignal?.aborted) {
+              return;
+            }
+
             if (model) {
               scene.remove(model);
             }
@@ -88,20 +83,13 @@ export function createApplication() {
             scene.add(model);
 
             resolve();
-
-            detachAbortListener();
           },
           (event) => {
             if (event.lengthComputable && onProgress) {
               onProgress(event.loaded / event.total);
             }
           },
-          (error) => {
-            // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-            reject(error);
-
-            detachAbortListener();
-          }
+          reject
         );
       });
     },

@@ -10,6 +10,7 @@ export * from './filePreviews.js';
 export * from './i18n.js';
 export * from './plugin.js';
 export * from './storage.js';
+export * from './storageFileTypeAddon.js';
 export * from './storageProvider.js';
 export * from './types.js';
 export * from './user.js';

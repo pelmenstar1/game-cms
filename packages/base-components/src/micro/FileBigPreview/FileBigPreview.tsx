@@ -38,7 +38,7 @@ const getCachedComponent = createCachedFactorySelfKeyed<
   CachedPreviewProps
 >((context) => {
   const previews = [
-    ...(context.config.filePreviews?.inline ?? []),
+    ...(context.config.filePreviews?.fullScale ?? []),
     ...PREDEFINED_PREVIEWS,
   ];
   const target = previews.find((preview) => preview.test(context));

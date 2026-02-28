@@ -33,7 +33,11 @@ export const apiConfig: PluginApiConfig = {
     setup: (app) => {
       initAuth(app);
 
-      app.register(multipart);
+      app.register(multipart, {
+        limits: {
+          fileSize: Number.POSITIVE_INFINITY,
+        },
+      });
       app.register(abortablePlugin);
       app.setErrorHandler(errorHandler());
 

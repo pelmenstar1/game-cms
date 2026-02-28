@@ -2,8 +2,6 @@
   "name": "@game-cms/game-plugin-components",
   "packageManager": "pnpm@10.28.1",
   "type": "module",
-  "main": "./dist/src/index.js",
-  "types": "./dist/src/index.d.ts",
   "scripts": {
     "prebuild": "tsx ./scripts/copyStyles.ts",
     "new-component": "tsx ./scripts/newComponent.ts",
@@ -40,5 +38,15 @@
     "storybook": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    },
+    "./filePreviews/ThreeD": {
+      "import": "./dist/src/filePreviews/ThreeD.js",
+      "types": "./dist/src/filePreviews/ThreeD.d.ts"
+    }
   }
 }
