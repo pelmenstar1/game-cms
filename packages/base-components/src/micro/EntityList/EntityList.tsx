@@ -1,6 +1,6 @@
 import type {
   EntityId,
-  EntityOutDataById,
+  EntityInternalOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { List } from '@game-cms/ui';
@@ -12,7 +12,7 @@ import { Item } from './Item/index.js';
 export interface EntityListProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  items: (EntityOutDataById<Id> & { _id: string })[];
+  items: EntityInternalOutDataById<Id, string>[];
   schema: EntitySchemaById<Id>;
 }
 
@@ -26,7 +26,7 @@ export function EntityList<Id extends EntityId>({
       <Header schema={schema} />
 
       {items.map((item) => (
-        <Item key={item._id} entityId={entityId} value={item} schema={schema} />
+        <Item key={item.id} entityId={entityId} value={item} schema={schema} />
       ))}
     </List>
   );

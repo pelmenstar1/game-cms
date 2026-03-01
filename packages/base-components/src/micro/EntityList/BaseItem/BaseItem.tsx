@@ -2,6 +2,7 @@
 import {
   EntityDisplayKeyById,
   EntityId,
+  EntityInternalOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
@@ -9,7 +10,6 @@ import { classNames, Typography } from '@game-cms/ui';
 import { ComponentProps, FC, JSX, useMemo } from 'react';
 
 import { getEntityDisplayKeys } from '../../../internal/entity.js';
-import { EntityClientDataByIdWithId } from '../types.js';
 import styles from './BaseItem.module.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,26 +21,32 @@ export type BaseItemProps<
 > = ComponentProps<Wrapper> & {
   className?: string;
   schema: EntitySchemaById<Id>;
-  value: EntityClientDataByIdWithId<Id>;
+  value: EntityInternalOutDataById<Id, string>;
   wrapper: Wrapper;
 };
 
 function getSingleValueAtPath<Id extends EntityId>(
   api: ComponentApi,
-  value: EntityClientDataByIdWithId<Id>,
+  value: EntityInternalOutDataById<Id>,
   schema: EntitySchemaById<Id>,
   path: EntityDisplayKeyById<Id>
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (path === '_id') {
-    return value._id;
+  if (path === 'id') {
+    return value.id;
   }
 
   let returnValue: unknown;
 
-  api.applyAtPath('base::compose', value, schema.components, path, (result) => {
-    returnValue ??= result;
-  });
+  api.applyAtPath(
+    'base::compose',
+    value.components,
+    schema.components,
+    path,
+    (result) => {
+      returnValue ??= result;
+    }
+  );
 
   return String(returnValue);
 }

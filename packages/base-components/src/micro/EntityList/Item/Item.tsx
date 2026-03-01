@@ -1,14 +1,17 @@
-import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import type {
+  EntityId,
+  EntityInternalOutDataById,
+  EntitySchemaById,
+} from '@game-cms/base-core';
 import { Link } from '@game-cms/ui';
 
 import { BaseItem } from '../BaseItem/BaseItem.js';
-import { EntityClientDataByIdWithId } from '../types.js';
 
 export interface ItemProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
   schema: EntitySchemaById<Id>;
-  value: EntityClientDataByIdWithId<Id>;
+  value: EntityInternalOutDataById<Id, string>;
 }
 
 export function Item<Id extends EntityId>({
@@ -23,7 +26,7 @@ export function Item<Id extends EntityId>({
       wrapper={Link}
       schema={schema}
       value={value}
-      to={`/entities/${entityId}/edit/${value._id}`}
+      to={`/entities/${entityId}/edit/${value.id}`}
     />
   );
 }

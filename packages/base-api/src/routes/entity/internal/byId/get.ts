@@ -1,3 +1,4 @@
+import { EntityInternalOutDataById } from '@game-cms/base-core';
 import { entityVariant } from '@game-cms/base-core/schema';
 import { ApiError } from '@game-cms/core/api';
 import { apiRoute } from '@game-cms/core/api';
@@ -8,7 +9,7 @@ import z from 'zod';
 import { entityRouteId } from '../../../../utils/routeId.js';
 
 export default apiRoute({
-  url: '/entity/:entityId/raw/byId/:id',
+  url: '/entity/:entityId/internal/byId/:id',
   method: 'GET',
   config: {
     id: entityRouteId('get'),
@@ -22,7 +23,7 @@ export default apiRoute({
       variant: entityVariant.default('published'),
     }),
   },
-  handler: async (req) => {
+  handler: async (req): Promise<EntityInternalOutDataById<string>> => {
     const { entityId, id } = req.params;
     const { variant } = req.query;
 

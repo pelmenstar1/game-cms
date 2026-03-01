@@ -1,8 +1,9 @@
 import type {
   EntityId,
   EntityInDataById,
-  EntityOutDataWithChecksById,
-  EntityResolvedDataById,
+  EntityInDataByIdWithId,
+  EntityInternalOutDataById,
+  EntityResolvedDataByIdWithId,
   EntitySchema,
   EntitySchemaById,
   EntityVariant,
@@ -17,20 +18,6 @@ import {
 } from '@game-cms/core/api/client';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import qs from 'qs';
-
-export type EntityDataByIdWithId<T extends EntityId> =
-  EntityOutDataWithChecksById<T> & {
-    _id: string;
-  };
-
-export type EntityDataInByIdWithId<T extends EntityId> = EntityInDataById<T> & {
-  _id: string;
-};
-
-export type EntityResolvedDataByIdWithId<T extends EntityId> =
-  EntityResolvedDataById<T> & {
-    _id: string;
-  };
 
 export const getEntitySchemas = (context: RequestContext) =>
   request(context, {
@@ -57,7 +44,7 @@ export const createEntity = <Id extends EntityId>(
     url: url({ path: `/entity/${entityId}`, search: { variant } }),
     method: 'POST',
     body: jsonInit(body),
-    response: json<EntityDataInByIdWithId<Id>>(),
+    response: json<EntityInDataByIdWithId<Id>>(),
   });
 
 export const getResolvedEntityById = <T extends EntityId>(
@@ -96,10 +83,10 @@ export const getRawEntityDocumentById = <T extends EntityId>(
 ) =>
   request(context, {
     url: url({
-      path: `/entity/${entityId}/raw/byId/${id}`,
+      path: `/entity/${entityId}/internal/byId/${id}`,
       search: { variant },
     }),
-    response: json<EntityDataByIdWithId<T>>(),
+    response: json<EntityInternalOutDataById<T>>(),
   });
 
 export const deleteEntityById = (
@@ -129,7 +116,7 @@ export const listEntities = <T extends EntityId>(
 ) =>
   request(context, {
     url: url({ path: `/entity/${entityId}/list`, search: options }),
-    response: json<PageData<EntityDataByIdWithId<T>>>(),
+    response: json<PageData<EntityInternalOutDataById<T, string>>>(),
   });
 
 export const searchEntities = <T extends EntityId>(
@@ -143,5 +130,5 @@ export const searchEntities = <T extends EntityId>(
       path: `/entity/${entityId}/search`,
       search: { query, ...options },
     }),
-    response: json<PageData<EntityDataByIdWithId<T>>>(),
+    response: json<PageData<EntityInternalOutDataById<T, string>>>(),
   });

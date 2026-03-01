@@ -1,14 +1,17 @@
-import { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import {
+  EntityId,
+  EntityInternalOutDataById,
+  EntitySchemaById,
+} from '@game-cms/base-core';
 import { classNames } from '@game-cms/ui';
 
 import { BaseItem } from '../../EntityList/BaseItem/index.js';
-import { EntityClientDataByIdWithId } from '../../EntityList/types.js';
 import styles from './SelectableItem.module.scss';
 
 export type SelectableItemProps<Id extends EntityId> = {
   className?: string;
   schema: EntitySchemaById<Id>;
-  value: EntityClientDataByIdWithId<Id>;
+  value: EntityInternalOutDataById<Id, string>;
   isSelected?: boolean;
   onSelected: () => void;
 };

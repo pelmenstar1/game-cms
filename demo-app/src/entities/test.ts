@@ -3,7 +3,7 @@ import {
   webpageEntityPreview,
 } from '@game-cms/entity-previews';
 import { entity } from 'game-cms';
-import { entityReference } from 'game-cms/components';
+import { text } from 'game-cms/components';
 
 export default entity({
   title: 'Test',
@@ -11,8 +11,6 @@ export default entity({
     urlSource: postRequestUrlSource('http://localhost:3333'),
   }),
   components: {
-    abc2: entityReference({
-      entityId: 'test2',
-    }),
+    abc2: text(),
   },
 });

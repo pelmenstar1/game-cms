@@ -4,7 +4,7 @@ import {
   EntitySchema,
 } from '@game-cms/base-core';
 
-const DEFAULT_KEYS = ['_id'];
+const DEFAULT_KEYS = ['id'];
 
 export function getEntityDisplayKeys(schema: EntitySchema) {
   return (

@@ -47,7 +47,7 @@ export function PublishedEntityView<T extends EntityId>({
       {(data) =>
         data !== null ? (
           <Compose
-            data={transformDataToClientData(api, data, options)}
+            data={transformDataToClientData(api, data.components, options)}
             options={options}
             readonly
           />

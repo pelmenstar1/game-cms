@@ -9,7 +9,7 @@ import type {
   EntityComponents,
   EntityId,
   EntityInDataById,
-  EntityOutDataWithChecksById,
+  EntityInternalOutDataById,
   EntitySchemaById,
   EntityVariant,
 } from '@game-cms/base-core';
@@ -33,7 +33,7 @@ export interface AccessEntityViewProps<Id extends EntityId> {
   entityId: Id;
   schema: EntitySchemaById<Id>;
   initialId?: string;
-  initialValue?: EntityOutDataWithChecksById<Id>;
+  initialValue?: EntityInternalOutDataById<Id>;
   onSave?: (value: EntityInDataById<Id>, variant: EntityVariant) => void;
   onDelete?: () => void;
   onUnpublish?: () => void;
@@ -57,7 +57,7 @@ export function AccessEntityView<Id extends EntityId>({
   const composeOptions = schema.components as EntityComposeOptions<Id>;
 
   const [clientData, setClientData] = useState(() =>
-    transformDataToClientData(api, initialValue, composeOptions)
+    transformDataToClientData(api, initialValue?.components, composeOptions)
   );
 
   const [selectedVariant, setSelectedVariant] =
@@ -89,7 +89,7 @@ export function AccessEntityView<Id extends EntityId>({
     }
   }, [data, onSave]);
 
-  const reviewData = initialValue?.['#checks']?.['base::review'] as
+  const reviewData = initialValue?.checks['base::review'] as
     | EntityCheckClientData<'base::review'>
     | undefined;
 

@@ -5,6 +5,7 @@ import type {
   ComponentSchema,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
+import { ObjectId } from 'mongodb';
 import type z from 'zod';
 
 import type { entityVariant } from '../schema/entity.js';
@@ -39,22 +40,25 @@ export type EntityMeta = {
 
 export type EntityVariant = z.infer<typeof entityVariant>;
 
-export type EntityClientInstanceData = Record<string, ComponentData>;
-export type EntityInstanceData<
-  T = EntityClientInstanceData,
+export type EntityInstanceComponents = Record<string, ComponentData>;
+
+export type EntityVariantData<
+  Components = EntityInstanceComponents,
   Search = unknown,
-> = T & {
-  '#meta': EntityMeta;
-  '#search': Search;
-  '#checks'?: Partial<EntityCheckStorageDataMap>;
+> = {
+  components: Components;
+  meta: EntityMeta;
+  search: Search;
+  checks?: Partial<EntityCheckStorageDataMap>;
 };
 
-export type EntityData = Record<EntityVariant, EntityInstanceData>;
-
-export type EntityDataVariantsById<Id extends EntityId> = {
-  draft: EntityStorageDataById<Id>;
-  published?: EntityStorageDataById<Id>;
+export type EntityPersistentDocument<T = EntityVariantData> = {
+  draft: T;
+  published?: T;
 };
+
+export type EntityPersistentDocumentById<Id extends EntityId> =
+  EntityPersistentDocument<EntityStorageDataById<Id>>;
 
 type ComponentsToData<T, DataKey extends keyof GetComponentSchemaTypes> = {
   [K in keyof T]: GetComponentSchemaTypes<T[K]>[DataKey];
@@ -66,8 +70,8 @@ export type EntityOutDataById<Id extends EntityId> = ComponentsToData<
 >;
 
 export type EntityOutDataWithChecksById<Id extends EntityId> =
-  EntityInstanceData<EntityOutDataById<Id>, EntitySearchIndexDataById<Id>> & {
-    '#checks': Partial<EntityCheckStorageDataMap>;
+  EntityVariantData<EntityOutDataById<Id>, EntitySearchIndexDataById<Id>> & {
+    checks: Partial<EntityCheckStorageDataMap>;
   };
 
 export type EntityInDataById<Id extends EntityId> = ComponentsToData<
@@ -95,7 +99,7 @@ export type BaseEntityStorageDataById<Id extends EntityId> = ComponentsToData<
   'storageData'
 >;
 
-export type EntityStorageDataById<Id extends EntityId> = EntityInstanceData<
+export type EntityStorageDataById<Id extends EntityId> = EntityVariantData<
   BaseEntityStorageDataById<Id>,
   EntitySearchIndexDataById<Id>
 >;
@@ -110,6 +114,27 @@ export type EntityErrorById<Id extends EntityId> = {
   properties?: ComponentsToData<EntityComponents<Id>, 'error'>;
 };
 
+export type EntityInternalOutDataById<T extends EntityId, Id = ObjectId> = Omit<
+  EntityOutDataWithChecksById<T>,
+  'search'
+> & {
+  id: Id;
+};
+
+export type EntityInDataByIdWithId<
+  T extends EntityId,
+  Id = ObjectId,
+> = EntityInDataById<T> & {
+  id: Id;
+};
+
+export type EntityResolvedDataByIdWithId<
+  T extends EntityId,
+  Id = ObjectId,
+> = EntityResolvedDataById<T> & {
+  id: Id;
+};
+
 type BaseEntityDisplayKey<Components extends EntitySchemaComponents, U> = {
   [K in keyof Components & string]: Components[K] extends ComponentSchema<
     infer CId,
@@ -122,7 +147,7 @@ type BaseEntityDisplayKey<Components extends EntitySchemaComponents, U> = {
 }[keyof Components & string];
 
 type EntityDisplayKey<Components extends EntitySchemaComponents> =
-  | '_id'
+  | 'id'
   | BaseEntityDisplayKey<Components, string | number>;
 
 export type EntityDisplayKeyById<Id extends EntityId> = EntityDisplayKey<

@@ -24,7 +24,7 @@ type RunEntityChecksParams<Id extends EntityId> = {
   id?: ObjectId;
   entityMeta: EntityMeta;
   entityData: BaseEntityStorageDataById<Id> & {
-    '#checks'?: EntityCheckStorageDataMap;
+    checks?: EntityCheckStorageDataMap;
   };
 };
 
@@ -68,7 +68,7 @@ async function runEntityChecks<Id extends EntityId>({
 
   await Promise.all(
     checks.map(async (check) => {
-      const { '#checks': checks, ...restEntityData } = entityData;
+      const { checks, ...restEntityData } = entityData;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const storageData = checks?.[check.id];
@@ -119,7 +119,7 @@ async function invokeAction<
       { _id: params.entityObjectId },
       {
         projection: {
-          draft: { '#meta': 1, '#checks': 1 },
+          draft: { meta: 1, checks: 1 },
         },
       }
     );
@@ -133,8 +133,8 @@ async function invokeAction<
   const newStorageData = await action.execute({
     entityId: params.entityId,
     payload: params.actionPayload,
-    entityMeta: entityVariantData['#meta'],
-    storageData: entityVariantData['#checks']?.[
+    entityMeta: entityVariantData.meta,
+    storageData: entityVariantData.checks?.[
       params.actionId
     ] as EntityCheckStorageData<Id>,
     id: params.entityObjectId,
@@ -148,7 +148,7 @@ async function invokeAction<
     .entityCollection(params.entityId)
     .updateOne(
       { _id: params.entityObjectId },
-      { $set: { [`draft.#checks.${params.id}`]: newStorageData } }
+      { $set: { [`draft.checks.${params.id}`]: newStorageData } }
     );
 }
 

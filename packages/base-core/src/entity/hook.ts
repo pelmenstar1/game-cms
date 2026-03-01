@@ -7,7 +7,7 @@ import {
 import { MaybeArray } from '@game-cms/shared/collections';
 import { ObjectId } from 'mongodb';
 
-import { EntityId, EntityInstanceData, EntityVariant } from './core.js';
+import { EntityId, EntityVariant, EntityVariantData } from './core.js';
 
 type EventHookTarget = MaybeArray<EntityId>;
 
@@ -23,10 +23,10 @@ interface CreatedOrUpdatedPayload<Target> extends IdBasedPayload<Target> {
 type EntityHookEventMap<Target extends EventHookTarget = EventHookTarget> = {
   deleted: IdBasedPayload<Target>;
   updated: CreatedOrUpdatedPayload<Target> & {
-    newData: EntityInstanceData;
+    newData: EntityVariantData;
   };
   created: CreatedOrUpdatedPayload<Target> & {
-    data: EntityInstanceData;
+    data: EntityVariantData;
   };
   unpublished: IdBasedPayload<Target>;
 };

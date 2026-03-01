@@ -1,6 +1,8 @@
+import { EntityInternalOutDataById } from '@game-cms/base-core';
 import { apiRoute } from '@game-cms/core/api';
 import { pagingOptionsSchema } from '@game-cms/core/schema';
 import { cms } from '@game-cms/global';
+import { PageData } from '@game-cms/shared';
 import z from 'zod';
 
 import { entityRouteId } from '../../../utils/routeId.js';
@@ -20,7 +22,9 @@ export default apiRoute({
       ...pagingOptionsSchema.shape,
     }),
   },
-  handler: async (req) => {
+  handler: async (
+    req
+  ): Promise<PageData<EntityInternalOutDataById<string>>> => {
     const { entityId } = req.params;
     const { query, ...pagingOptions } = req.query;
 

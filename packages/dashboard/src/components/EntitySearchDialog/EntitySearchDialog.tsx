@@ -1,9 +1,6 @@
-import {
-  EntityDataByIdWithId,
-  searchEntities,
-} from '@game-cms/base-api/client';
+import { searchEntities } from '@game-cms/base-api/client';
 import { EntityList, useEntitySchema } from '@game-cms/base-components/micro';
-import { EntityId } from '@game-cms/base-core';
+import { EntityId, EntityInternalOutDataById } from '@game-cms/base-core';
 import { useApiQuery } from '@game-cms/component-api';
 import { emptyPageData } from '@game-cms/shared';
 import {
@@ -18,26 +15,28 @@ import { useState } from 'react';
 
 import styles from './EntitySearchDialog.module.scss';
 
-export interface EntitySearchDialogProps extends ModalProps {
-  entityId: EntityId;
+export interface EntitySearchDialogProps<
+  T extends EntityId,
+> extends ModalProps {
+  entityId: T;
 }
 
 const PAGE_SIZE = 10;
 
-export function EntitySearchDialog({
+export function EntitySearchDialog<T extends EntityId>({
   onClose,
   entityId,
-}: EntitySearchDialogProps) {
+}: EntitySearchDialogProps<T>) {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
 
   const pagingOptions = usePagingOptions(page, PAGE_SIZE);
   const [itemsResult] = useApiQuery(
-    searchEntities,
+    searchEntities<T>,
     [entityId, query, pagingOptions],
     {
       isEnabled: query.length > 0,
-      disabledData: emptyPageData<EntityDataByIdWithId<string>>(),
+      disabledData: emptyPageData<EntityInternalOutDataById<T, string>>(),
     }
   );
 

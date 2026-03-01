@@ -1,6 +1,6 @@
 import {
   EntityId,
-  EntityOutDataById,
+  EntityInternalOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { List } from '@game-cms/ui';
@@ -10,7 +10,7 @@ import { SelectableItem } from './SelectableItem/index.js';
 
 export type SelectableEntityListProps<Id extends EntityId> = {
   className?: string;
-  items: (EntityOutDataById<Id> & { _id: string })[];
+  items: EntityInternalOutDataById<Id, string>[];
   schema: EntitySchemaById<Id>;
 
   selectedItemId?: string;
@@ -30,12 +30,12 @@ export function SelectableEntityList<Id extends EntityId>({
 
       {items.map((item) => (
         <SelectableItem
-          key={item._id}
+          key={item.id}
           value={item}
           schema={schema}
-          isSelected={item._id === selectedItemId}
+          isSelected={item.id === selectedItemId}
           onSelected={() => {
-            onItemSelected?.(item._id);
+            onItemSelected?.(item.id);
           }}
         />
       ))}

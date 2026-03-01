@@ -1,8 +1,8 @@
 import type {
   DatabaseCollectionId,
   DatabaseCollectionTypeMap,
-  EntityDataVariantsById,
   EntityId,
+  EntityPersistentDocumentById,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
@@ -61,7 +61,7 @@ export default service({
   entityCollection: <Id extends EntityId>(id: Id) => {
     return client()
       .db()
-      .collection<EntityDataVariantsById<Id>>(`base::entity::${id}`);
+      .collection<EntityPersistentDocumentById<Id>>(`base::entity::${id}`);
   },
   withTransaction: async <R>(
     action: (session: ClientSession) => Promise<R>
