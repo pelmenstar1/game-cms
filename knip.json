@@ -4,7 +4,7 @@
   "include": ["files", "exports", "types", "catalog", "unlisted"],
   "ignore": [
     "**/*.stories.tsx",
-    "**/*.{test,btest,e2e-test}.ts",
+    "**/*.{test,btest,e2e-test,outer-loop-test}.ts",
     "**/.storybook/*.{ts,tsx}",
     "**/vite.storybook.config.ts",
     "packages/ui/src/theme/global.ts"

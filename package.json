@@ -11,6 +11,7 @@
     "prebuild:watch": "pnpm run -r prebuild && tsc --build tsconfig.packages.json --declaration --watch",
     "test": "vitest run --project unit",
     "test:e2e": "vitest run --project e2e",
+    "test:outer-loop": "vitest run --project outer-loop",
     "test:build": "pnpm run -r test-build",
     "clean": "tsx ./scripts/clean.ts",
     "gen-ts-deps": "tsx ./scripts/tsconfigDeps.ts",

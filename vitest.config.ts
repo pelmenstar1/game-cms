@@ -25,6 +25,14 @@ export default defineConfig({
       {
         plugins,
         test: {
+          include: ['**/*.outer-loop-test.ts'],
+          name: 'outer-loop',
+          environment: 'node',
+        },
+      },
+      {
+        plugins,
+        test: {
           include: ['**/*.btest.{ts,tsx}'],
           name: 'browser',
           browser: {
