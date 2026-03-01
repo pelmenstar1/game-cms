@@ -3,7 +3,7 @@ import { componentDataFlowTests } from '@game-cms/component-testing-lib';
 import { checkbox } from './index.js';
 
 componentDataFlowTests('base::checkbox', {
-  raws: [
+  outs: [
     {
       data: ['choice1', 'choice3'],
       component: checkbox({

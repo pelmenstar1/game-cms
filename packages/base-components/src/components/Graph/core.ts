@@ -5,7 +5,7 @@ import { dataShape } from './internal/schema.js';
 
 export default defineComponentCore({
   id: 'base::graph',
-  defaultRawData: () => ({
+  defaultOutData: () => ({
     nodes: {},
     edges: [],
   }),

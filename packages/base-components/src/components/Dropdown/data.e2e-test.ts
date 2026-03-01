@@ -3,7 +3,7 @@ import { componentDataFlowTests } from '@game-cms/component-testing-lib';
 import { dropdown } from './index.js';
 
 componentDataFlowTests('base::dropdown', {
-  raws: [
+  outs: [
     {
       data: 'option1',
       component: dropdown([

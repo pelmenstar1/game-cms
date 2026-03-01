@@ -23,9 +23,9 @@ export type GetComponentSchemaTypes<Schema = unknown> =
         args: Args;
       }
     : {
-        rawData: ComponentData;
-        rawInData: ComponentData;
-        partialRawInData: ComponentData;
+        outData: ComponentData;
+        inData: ComponentData;
+        partialInData: ComponentData;
         resolvedData: ComponentData;
         storageData: ComponentData;
         partialStorageData: ComponentData;

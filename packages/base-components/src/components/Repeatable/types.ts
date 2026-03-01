@@ -29,8 +29,8 @@ type BaseRepeatableEntry<Types extends GetComponentSchemaTypes> = {
     items?: (Types['error'] | undefined)[];
   };
   resolvedData: Types['resolvedData'][];
-  rawData: Types['rawData'][];
-  rawInData: Types['rawInData'][];
+  outData: Types['outData'][];
+  inData: Types['inData'][];
   clientData: {
     clientKey: Key;
     data: Types['clientData'];

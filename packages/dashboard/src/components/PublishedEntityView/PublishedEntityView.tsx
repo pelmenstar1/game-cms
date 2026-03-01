@@ -1,4 +1,4 @@
-import { getRawEntityById } from '@game-cms/base-api/client';
+import { getRawEntityDocumentById } from '@game-cms/base-api/client';
 import {
   EntityComposeOptions,
   transformDataToClientData,
@@ -25,7 +25,7 @@ export function PublishedEntityView<T extends EntityId>({
   onUnpublished,
 }: PublishedEntityViewProps<T>) {
   const [dataResult] = useApiQuery(
-    getRawEntityById<T>,
+    getRawEntityDocumentById<T>,
     [entityId, id, 'published'],
     {
       nullIfNotFound: true,

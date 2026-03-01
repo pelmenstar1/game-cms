@@ -6,7 +6,7 @@ import { text } from '../Text/index.js';
 import { dynamicZone, dynamicZoneEntry } from './index.js';
 
 componentDataFlowTests('base::dynamic-zone', {
-  raws: [
+  outs: [
     {
       data: [
         { key: 'item1', data: { abc: '123' } },

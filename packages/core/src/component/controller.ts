@@ -26,12 +26,12 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
     RequiredIfExists<
       { storageTransformer?: ComponentStorageDataTransformer<Id> },
       Id,
-      'storageData' | 'rawInData'
+      'storageData' | 'inData'
     > &
     RequiredIfExists<
       { mergeData?: ComponentDataMergeHandler<Id> },
       Id,
-      'partialRawInData'
+      'partialInData'
     > &
     RequiredIfExists<
       { search?: ComponentSearchController<Id> },

@@ -7,12 +7,12 @@ import { ComponentSchema } from './schema.js';
 import {
   ComponentId,
   ComponentOptionsById,
-  ComponentRawDataById,
+  ComponentOutDataById,
   GetComponentTypesById,
 } from './types.js';
 
 export type ComponentDataResolver<Id extends ComponentId> = <Args>(
-  raw: ComponentRawDataById<Id, Args>,
+  input: ComponentOutDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentDataResolverContext,
   args: ComponentDataResolverArgs
@@ -37,9 +37,9 @@ export type ComponentSchemaNestedPathDetails<T, Schema> =
 export interface ComponentDataResolverArgs {}
 
 export type ForeignComponentDataResolverContext = {
-  resolveRawData: <Id extends ComponentId, Args>(
+  resolveOutData: <Id extends ComponentId, Args>(
     id: Id,
-    data: ComponentRawDataById<Id, Args>,
+    data: ComponentOutDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     args: ComponentDataResolverArgs
   ) => ComponentResolvedDataById<Id>;

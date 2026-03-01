@@ -1,7 +1,7 @@
 import type {
   EntityId,
-  EntityRawDataWithChecksById,
-  EntityRawInDataById,
+  EntityInDataById,
+  EntityOutDataWithChecksById,
   EntityResolvedDataById,
   EntitySchema,
   EntitySchemaById,
@@ -19,14 +19,13 @@ import type { PageData, PagingOptions } from '@game-cms/shared';
 import qs from 'qs';
 
 export type EntityDataByIdWithId<T extends EntityId> =
-  EntityRawDataWithChecksById<T> & {
+  EntityOutDataWithChecksById<T> & {
     _id: string;
   };
 
-export type EntityDataInByIdWithId<T extends EntityId> =
-  EntityRawInDataById<T> & {
-    _id: string;
-  };
+export type EntityDataInByIdWithId<T extends EntityId> = EntityInDataById<T> & {
+  _id: string;
+};
 
 export type EntityResolvedDataByIdWithId<T extends EntityId> =
   EntityResolvedDataById<T> & {
@@ -51,7 +50,7 @@ export const getEntitySchema = <T extends EntityId>(
 export const createEntity = <Id extends EntityId>(
   context: RequestContext,
   entityId: Id,
-  body: EntityRawInDataById<Id>,
+  body: EntityInDataById<Id>,
   variant?: EntityVariant
 ) =>
   request(context, {
@@ -61,7 +60,7 @@ export const createEntity = <Id extends EntityId>(
     response: json<EntityDataInByIdWithId<Id>>(),
   });
 
-export const getEntityById = <T extends EntityId>(
+export const getResolvedEntityById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
   id: string,
@@ -73,14 +72,14 @@ export const getEntityById = <T extends EntityId>(
       path: `/entity/${entityId}/byId/${id}`,
       search: qs.stringify({ ...args, variant }),
     }),
-    response: json<EntityDataByIdWithId<T>>(),
+    response: json<EntityResolvedDataByIdWithId<T>>(),
   });
 
 export const updateEntityById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
   id: string,
-  data: EntityRawInDataById<T>,
+  data: EntityInDataById<T>,
   variant?: EntityVariant
 ) =>
   request(context, {
@@ -89,7 +88,7 @@ export const updateEntityById = <T extends EntityId>(
     body: jsonInit(data),
   });
 
-export const getRawEntityById = <T extends EntityId>(
+export const getRawEntityDocumentById = <T extends EntityId>(
   context: RequestContext,
   entityId: T,
   id: string,

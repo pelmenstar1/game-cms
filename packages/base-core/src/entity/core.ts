@@ -60,24 +60,24 @@ type ComponentsToData<T, DataKey extends keyof GetComponentSchemaTypes> = {
   [K in keyof T]: GetComponentSchemaTypes<T[K]>[DataKey];
 };
 
-export type EntityRawDataById<Id extends EntityId> = ComponentsToData<
+export type EntityOutDataById<Id extends EntityId> = ComponentsToData<
   EntityComponents<Id>,
-  'rawData'
+  'outData'
 >;
 
-export type EntityRawDataWithChecksById<Id extends EntityId> =
-  EntityInstanceData<EntityRawDataById<Id>, EntitySearchIndexDataById<Id>> & {
+export type EntityOutDataWithChecksById<Id extends EntityId> =
+  EntityInstanceData<EntityOutDataById<Id>, EntitySearchIndexDataById<Id>> & {
     '#checks': Partial<EntityCheckStorageDataMap>;
   };
 
-export type EntityRawInDataById<Id extends EntityId> = ComponentsToData<
+export type EntityInDataById<Id extends EntityId> = ComponentsToData<
   EntityComponents<Id>,
-  'rawInData'
+  'inData'
 >;
 
-export type EntityRawInPartialDataById<Id extends EntityId> = ComponentsToData<
+export type EntityPartialInDataById<Id extends EntityId> = ComponentsToData<
   EntityComponents<Id>,
-  'partialRawInData'
+  'partialInData'
 >;
 
 export type EntityResolvedDataById<Id extends EntityId> = ComponentsToData<

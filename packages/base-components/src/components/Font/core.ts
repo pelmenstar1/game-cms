@@ -9,7 +9,7 @@ export default defineComponentCore({
       compact: true,
     },
   },
-  defaultRawData: () => [],
+  defaultOutData: () => [],
   validator: (data, options, context) => {
     return context.validate<'base::repeatable', RepeatableArgs>(
       'base::repeatable',

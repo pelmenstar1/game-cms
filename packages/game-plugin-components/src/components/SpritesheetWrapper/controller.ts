@@ -1,6 +1,6 @@
 import {
+  ComponentInDataById,
   type ComponentOptionsById,
-  type ComponentRawInDataById,
   defineComponentController,
   type ForeignComponentStorageDataResolverContext,
 } from '@game-cms/core';
@@ -21,10 +21,10 @@ import type {
 } from './types.js';
 
 type Id = 'game::spritesheet-wrapper';
-type File = ComponentRawInDataById<'base::file'>[number];
+type File = ComponentInDataById<'base::file'>[number];
 
 function splitDataToBundles<Args>(
-  data: ComponentRawInDataById<Id, Args>,
+  data: ComponentInDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentStorageDataResolverContext
 ) {
@@ -128,7 +128,7 @@ async function generateSpritesheet(
 }
 
 async function generateSpritesheets<Args>(
-  data: ComponentRawInDataById<Id, Args>,
+  data: ComponentInDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentStorageDataResolverContext
 ): Promise<SpritesheetBundleStorageMap> {
@@ -152,7 +152,7 @@ export default defineComponentController({
   resolver: (data, options, context, args) => {
     const { componentId, baseOptions } = options;
 
-    return context.resolveRawData(componentId, data, baseOptions, args);
+    return context.resolveOutData(componentId, data, baseOptions, args);
   },
   mergeData: async (target, source, options, context) => {
     const mergedBase = await context.merge(

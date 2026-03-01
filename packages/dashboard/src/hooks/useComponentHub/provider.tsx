@@ -5,11 +5,11 @@ import {
 import type {
   ComponentClientDataById,
   ComponentId,
+  ComponentInDataById,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
+  ComponentOutDataById,
   ForeignComponentClientDataResolverContext,
-  ForeignComponentDefaultRawDataContext,
+  ForeignComponentDefaultDataContext,
   ForeignComponentPathWalkerContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
@@ -51,7 +51,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
   );
 
   const defaultDataContext = useMemo(
-    (): ForeignComponentDefaultRawDataContext => ({
+    (): ForeignComponentDefaultDataContext => ({
       getDefaultData: (id, options) => {
         return getComponentDefaultData(id, options, defaultDataContext);
       },
@@ -85,7 +85,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
 
         const response = resolver
           ? resolver.fromClient(clientData, options, clientTransformerContext)
-          : { result: clientData as ComponentRawInDataById<Id, Args> };
+          : { result: clientData as ComponentInDataById<Id, Args> };
 
         if (!resolver?.ownValidation && response.result !== undefined) {
           const coreError = validationContext.validate(
@@ -103,7 +103,7 @@ export function ComponentHubProvider({ children }: PropsWithChildren) {
       },
       toClient: <Id extends ComponentId, Args>(
         id: Id,
-        data: ComponentRawDataById<Id, Args>,
+        data: ComponentOutDataById<Id, Args>,
         options: ComponentOptionsById<Id>
       ) => {
         const resolver = getComponentClientTransformer(id);

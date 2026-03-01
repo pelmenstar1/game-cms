@@ -1,7 +1,7 @@
-import { getRawEntityById } from '@game-cms/base-api/client';
+import { getRawEntityDocumentById } from '@game-cms/base-api/client';
 import {
   EntityId,
-  EntityRawDataById,
+  EntityOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { useApiQuery, useComponentApi } from '@game-cms/component-api';
@@ -22,7 +22,7 @@ export interface EntityPreviewLoaderProps {
 
 type RendererProps<Id extends EntityId> = {
   entitySchema: EntitySchemaById<Id>;
-  document: EntityRawDataById<Id>;
+  document: EntityOutDataById<Id>;
 };
 
 function Renderer<Id extends EntityId>({
@@ -47,7 +47,7 @@ export function EntityPreviewLoader({
   entityId,
   documentId,
 }: EntityPreviewLoaderProps) {
-  const [documentResult] = useApiQuery(getRawEntityById, [
+  const [documentResult] = useApiQuery(getRawEntityDocumentById, [
     entityId,
     documentId,
     'draft',

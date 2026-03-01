@@ -11,7 +11,7 @@ test('data', () => {
     },
   });
 
-  expectTypeOf<GetComponentSchemaTypes<typeof component>['rawData']>().toExtend<
+  expectTypeOf<GetComponentSchemaTypes<typeof component>['outData']>().toExtend<
     'value'[]
   >();
 });

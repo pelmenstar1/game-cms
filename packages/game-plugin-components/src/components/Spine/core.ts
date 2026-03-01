@@ -9,7 +9,7 @@ export default defineComponentCore({
       compact: true,
     },
   },
-  defaultRawData: () => ({
+  defaultOutData: () => ({
     atlas: [],
     skeleton: [],
     images: [],

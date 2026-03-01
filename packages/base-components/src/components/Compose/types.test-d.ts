@@ -1,27 +1,27 @@
 import {
+  ComponentInDataByIdPath,
   ComponentNestedPath,
   ComponentNestedPathShape,
-  ComponentRawDataById,
-  ComponentRawInDataByIdPath,
+  ComponentOutDataById,
   ComponentSchema,
   ParseComponentNestedPath,
 } from '@game-cms/core';
 import { describe, expectTypeOf, test } from 'vitest';
 
-test('raw data', () => {
-  type RawData = ComponentRawDataById<
+test('out data', () => {
+  type OutData = ComponentOutDataById<
     'base::compose',
     {
       abc: ComponentSchema<'base::text'>;
     }
   >;
 
-  expectTypeOf<RawData>().toExtend<{ abc: string }>();
+  expectTypeOf<OutData>().toExtend<{ abc: string }>();
 });
 
 describe('nested path', () => {
   test('with args', () => {
-    type Path = ComponentRawInDataByIdPath<
+    type Path = ComponentInDataByIdPath<
       'base::compose',
       {
         abc: ComponentSchema<'base::text'>;

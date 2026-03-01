@@ -1,6 +1,6 @@
 import {
-  ComponentRawInDataById,
-  ComponentRawInDataByIdPath,
+  ComponentInDataById,
+  ComponentInDataByIdPath,
   GetComponentSchemaArgs,
   ParseComponentNestedPath,
 } from '@game-cms/core';
@@ -31,7 +31,7 @@ describe('DynamicZone', () => {
     });
 
     type Args = GetComponentSchemaArgs<typeof schema>;
-    type Result = ComponentRawInDataByIdPath<Id, Args>;
+    type Result = ComponentInDataByIdPath<Id, Args>;
 
     expectTypeOf<Result>().toEqualTypeOf<
       '[option1]' | '[option2]' | '[option2].field'
@@ -52,7 +52,7 @@ describe('ParseComponentNestedPath', () => {
     },
   });
   type Args = GetComponentSchemaArgs<typeof schema>;
-  type Data = ComponentRawInDataById<Id, Args>;
+  type Data = ComponentInDataById<Id, Args>;
 
   test('transition current', () => {
     type Actual = ParseComponentNestedPath<Data, '[option1]', Id, Args>;

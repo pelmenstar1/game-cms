@@ -1,6 +1,6 @@
 import {
   deleteEntityById,
-  getRawEntityById,
+  getRawEntityDocumentById,
   unpublishEntity,
   updateEntityById,
 } from '@game-cms/base-api/client';
@@ -28,7 +28,7 @@ export default function Page({ params }: Route.ComponentProps) {
 
   const entitySchema = useEntitySchema(name);
 
-  const [entity] = useApiQuery(getRawEntityById, [name, id, 'draft'], {
+  const [entity] = useApiQuery(getRawEntityDocumentById, [name, id, 'draft'], {
     redirectOnNotFound: true,
   });
 

@@ -2,7 +2,7 @@ import { defineComponentCore } from '@game-cms/core';
 
 export default defineComponentCore({
   id: 'base::repeatable',
-  defaultRawData: () => [],
+  defaultOutData: () => [],
   validator: (data, options, context) => {
     if (!Array.isArray(data)) {
       return { ownError: 'INVALID_TYPE' as const };

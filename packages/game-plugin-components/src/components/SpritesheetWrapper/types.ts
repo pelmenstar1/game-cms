@@ -3,13 +3,13 @@ import type {
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
+  ComponentInDataById,
+  ComponentInDataByIdPathExtends,
   ComponentNestedPathDetails,
   ComponentNestedPathShape,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
-  ComponentRawInDataByIdPathExtends,
-  ComponentRawInPartialDataById,
+  ComponentOutDataById,
+  ComponentPartialInDataById,
   ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
@@ -43,26 +43,26 @@ export type SpritesheetUrlEntry = {
 };
 
 type SpritesheetEntry<Args extends SpritesheetArgs> = {
-  rawData: {
-    base: ComponentRawDataById<Args['id'], Args['baseArgs']>;
+  outData: {
+    base: ComponentOutDataById<Args['id'], Args['baseArgs']>;
     spritesheets?: Record<string, SpritesheetUrlEntry>;
   };
-  rawInData: ComponentRawInDataById<Args['id'], Args['baseArgs']>;
-  partialRawInData: ComponentRawInPartialDataById<Args['id'], Args['baseArgs']>;
+  inData: ComponentInDataById<Args['id'], Args['baseArgs']>;
+  partialInData: ComponentPartialInDataById<Args['id'], Args['baseArgs']>;
   options: {
     componentId: Args['id'];
-    namePath: ComponentRawInDataByIdPathExtends<
+    namePath: ComponentInDataByIdPathExtends<
       string,
       Args['id'],
       Args['baseArgs']
     >;
-    bundlePath: ComponentRawInDataByIdPathExtends<
+    bundlePath: ComponentInDataByIdPathExtends<
       string,
       Args['id'],
       Args['baseArgs']
     >;
-    imagePath: ComponentRawInDataByIdPathExtends<
-      ComponentRawInDataById<'base::file'>,
+    imagePath: ComponentInDataByIdPathExtends<
+      ComponentInDataById<'base::file'>,
       Args['id'],
       Args['baseArgs']
     >;

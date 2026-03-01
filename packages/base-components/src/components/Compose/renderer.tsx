@@ -1,7 +1,7 @@
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
 import {
   ComponentOptionsById,
-  ComponentRawDataById,
+  ComponentOutDataById,
   ComponentRenderer,
 } from '@game-cms/core';
 import { useMemo } from 'react';
@@ -13,7 +13,7 @@ import { ComposeOptionsEntry } from './types.js';
 
 type Id = 'base::compose';
 
-type ComposeGroup<Args> = ComponentGroup<ComponentRawDataById<Id, Args>>;
+type ComposeGroup<Args> = ComponentGroup<ComponentOutDataById<Id, Args>>;
 
 function splitEntitySchemaComponentsToGroups<Args>(
   api: ComponentApi,

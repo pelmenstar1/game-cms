@@ -6,7 +6,7 @@ import { text } from '../Text/index.js';
 import { repeatable } from './index.js';
 
 componentDataFlowTests('base::repeatable', {
-  raws: [
+  outs: [
     {
       data: ['123', '321'],
       component: repeatable({ component: text() }),

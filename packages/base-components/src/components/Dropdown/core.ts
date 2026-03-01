@@ -7,7 +7,7 @@ export default defineComponentCore({
       compact: true,
     },
   },
-  defaultRawData: ({ items }) => items[0].key,
+  defaultOutData: ({ items }) => items[0].key,
   validator: (data, { items }) => {
     if (!items.some(({ key }) => data === key)) {
       return 'INVALID_TYPE';

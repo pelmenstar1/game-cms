@@ -4,11 +4,11 @@ import {
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
+  ComponentInDataById,
   ComponentNestedPathDetails,
   ComponentNestedPathShape,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
+  ComponentOutDataById,
   ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
@@ -40,10 +40,8 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
       condition: string | undefined;
     }[];
   };
-  rawData: ConditionalData<ComponentRawDataById<Args['id'], Args['baseArgs']>>;
-  rawInData: ConditionalData<
-    ComponentRawInDataById<Args['id'], Args['baseArgs']>
-  >;
+  outData: ConditionalData<ComponentOutDataById<Args['id'], Args['baseArgs']>>;
+  inData: ConditionalData<ComponentInDataById<Args['id'], Args['baseArgs']>>;
   resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>;
   clientData: ConditionalData<
     ComponentClientDataById<Args['id'], Args['baseArgs']>,

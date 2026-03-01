@@ -1,10 +1,10 @@
 import type {
   ComponentDataResolverArgs,
   ComponentId,
+  ComponentInDataById,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
-  ComponentRawInPartialDataById,
+  ComponentOutDataById,
+  ComponentPartialInDataById,
   ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
@@ -13,7 +13,7 @@ import type {
   ForeignComponentDataResolverContext,
   ForeignComponentDataSearchContext,
   ForeignComponentDataStructureContext,
-  ForeignComponentDefaultRawDataContext,
+  ForeignComponentDefaultDataContext,
   ForeignComponentStorageDataResolverContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
@@ -33,9 +33,9 @@ function getController<T extends ComponentId>(id: T) {
   return controller;
 }
 
-const foreignDefaultContext: ForeignComponentDefaultRawDataContext = {
+const foreignDefaultContext: ForeignComponentDefaultDataContext = {
   getDefaultData: (id, options) =>
-    getController(id).core.defaultRawData(options, foreignDefaultContext),
+    getController(id).core.defaultOutData(options, foreignDefaultContext),
 };
 
 const foreignValidationContext: ForeignComponentValidationContext = {
@@ -44,9 +44,9 @@ const foreignValidationContext: ForeignComponentValidationContext = {
 };
 
 const foreignResolverContext: ForeignComponentDataResolverContext = {
-  resolveRawData: <Id extends ComponentId, Args>(
+  resolveOutData: <Id extends ComponentId, Args>(
     id: Id,
-    data: ComponentRawDataById<Id, Args>,
+    data: ComponentOutDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     args: ComponentDataResolverArgs
   ) => {
@@ -71,7 +71,7 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
             options,
             foreignStorageResolverContext
           )
-        : (core.defaultRawData(
+        : (core.defaultOutData(
             options,
             foreignDefaultContext
           ) as ComponentStorageDataById<Id, Args>);
@@ -89,11 +89,11 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
             options,
             foreignStorageResolverContext
           )
-        : (data as ComponentRawDataById<Id, Args>);
+        : (data as ComponentOutDataById<Id, Args>);
     },
     toStorage: <Id extends ComponentId, Args>(
       id: Id,
-      data: ComponentRawInDataById<Id, Args>,
+      data: ComponentInDataById<Id, Args>,
       options: ComponentOptionsById<Id, Args>
     ) => {
       const { storageTransformer } = getController(id);
@@ -145,13 +145,13 @@ const foreignDataStructureContext: ForeignComponentDataStructureContext = {
 
 function toStoragePartial<Id extends ComponentId, Args>(
   id: Id,
-  data: ComponentRawInPartialDataById<Id, Args>,
+  data: ComponentPartialInDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>
 ) {
   if (foreignValidationContext.validate(id, data, options) === undefined) {
     return foreignStorageResolverContext.toStorage(
       id,
-      data as ComponentRawInDataById<Id, Args>,
+      data as ComponentInDataById<Id, Args>,
       options
     );
   }

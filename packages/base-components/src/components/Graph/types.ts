@@ -42,8 +42,8 @@ type Data<T, Meta = PositionMeta> = {
 };
 
 type BaseGraphEntry<Types extends GetComponentSchemaTypes> = {
-  rawData: Data<Types['rawData']>;
-  rawInData: Data<Types['rawInData']>;
+  outData: Data<Types['outData']>;
+  inData: Data<Types['inData']>;
   resolvedData: Data<Types['resolvedData']>;
   storageData: Data<Types['storageData']>;
   clientData: Data<Types['clientData'], ClientMeta>;

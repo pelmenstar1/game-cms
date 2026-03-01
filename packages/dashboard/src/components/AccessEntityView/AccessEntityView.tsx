@@ -8,8 +8,8 @@ import type {
   EntityClientDataById,
   EntityComponents,
   EntityId,
-  EntityRawDataWithChecksById,
-  EntityRawInDataById,
+  EntityInDataById,
+  EntityOutDataWithChecksById,
   EntitySchemaById,
   EntityVariant,
 } from '@game-cms/base-core';
@@ -33,8 +33,8 @@ export interface AccessEntityViewProps<Id extends EntityId> {
   entityId: Id;
   schema: EntitySchemaById<Id>;
   initialId?: string;
-  initialValue?: EntityRawDataWithChecksById<Id>;
-  onSave?: (value: EntityRawInDataById<Id>, variant: EntityVariant) => void;
+  initialValue?: EntityOutDataWithChecksById<Id>;
+  onSave?: (value: EntityInDataById<Id>, variant: EntityVariant) => void;
   onDelete?: () => void;
   onUnpublish?: () => void;
 }
@@ -77,7 +77,7 @@ export function AccessEntityView<Id extends EntityId>({
     const rawData = data.result;
 
     if (rawData !== undefined) {
-      onSave?.(rawData as EntityRawInDataById<Id>, 'published');
+      onSave?.(rawData as EntityInDataById<Id>, 'published');
     }
   }, [data, onSave]);
 
@@ -85,7 +85,7 @@ export function AccessEntityView<Id extends EntityId>({
     const rawData = data.result;
 
     if (rawData !== undefined) {
-      onSave?.(rawData as EntityRawInDataById<Id>, 'draft');
+      onSave?.(rawData as EntityInDataById<Id>, 'draft');
     }
   }, [data, onSave]);
 

@@ -7,7 +7,7 @@ export default defineComponentCore({
       compact: true,
     },
   },
-  defaultRawData: () => [],
+  defaultOutData: () => [],
   validator: (data, options) => {
     if (!Array.isArray(data) || data.some((item) => typeof item !== 'string')) {
       return 'INVALID_TYPE';

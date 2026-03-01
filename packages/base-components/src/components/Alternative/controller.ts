@@ -80,10 +80,10 @@ export default defineComponentController({
       };
     },
   },
-  resolver: (raw, options, context, args) => {
-    const result = resolveConditionalData(raw, args as ConditionalValueInput);
+  resolver: (input, options, context, args) => {
+    const result = resolveConditionalData(input, args as ConditionalValueInput);
 
-    return context.resolveRawData(
+    return context.resolveOutData(
       options.componentId,
       result,
       options.baseOptions,

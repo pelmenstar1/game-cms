@@ -1,4 +1,4 @@
-import type { EntityId, EntityRawInDataById } from '@game-cms/base-core';
+import type { EntityId, EntityInDataById } from '@game-cms/base-core';
 import type {
   ComponentDataValidatorParams,
   ComponentId,
@@ -46,7 +46,7 @@ export function getEntityValidationType<Id extends EntityId>(id: Id) {
 
   return z.strictObject(
     mapObject(schema.components, (value) => getValidatorForComponent(value))
-  ) as ZodType<EntityRawInDataById<Id>>;
+  ) as ZodType<EntityInDataById<Id>>;
 }
 
 export function getEntityValidationPartialType<Id extends EntityId>(id: Id) {
@@ -60,5 +60,5 @@ export function getEntityValidationPartialType<Id extends EntityId>(id: Id) {
     mapObject(schema.components, (value) =>
       getValidatorForComponent(value).optional()
     )
-  ) as ZodType<EntityRawInDataById<Id>>;
+  ) as ZodType<EntityInDataById<Id>>;
 }

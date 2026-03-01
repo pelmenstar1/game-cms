@@ -19,7 +19,7 @@ export default defineComponentController({
     const { baseOptions, componentId } = options;
 
     return raw.map((item) =>
-      context.resolveRawData(componentId, item, baseOptions, args)
+      context.resolveOutData(componentId, item, baseOptions, args)
     );
   },
   search: {

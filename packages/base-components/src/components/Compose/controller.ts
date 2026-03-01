@@ -22,7 +22,7 @@ export default defineComponentController({
     return mapObject(raw, (value, key) => {
       const { componentId, options: baseOptions } = options[key];
 
-      return context.resolveRawData(componentId, value, baseOptions, args);
+      return context.resolveOutData(componentId, value, baseOptions, args);
     });
   },
   search: {

@@ -1,7 +1,7 @@
 import type {
   ComponentId,
   ComponentOptionsById,
-  ForeignComponentDefaultRawDataContext,
+  ForeignComponentDefaultDataContext,
 } from '@game-cms/core';
 import data from 'virtual:dashboard/componentConnectorData';
 
@@ -19,9 +19,9 @@ function getComponent<Id extends ComponentId>(id: Id) {
 export function getComponentDefaultData<Id extends ComponentId>(
   id: Id,
   options: ComponentOptionsById<Id>,
-  context: ForeignComponentDefaultRawDataContext
+  context: ForeignComponentDefaultDataContext
 ) {
-  return getComponent(id).core.defaultRawData(options, context);
+  return getComponent(id).core.defaultOutData(options, context);
 }
 
 export function getComponentValidator<Id extends ComponentId>(id: Id) {

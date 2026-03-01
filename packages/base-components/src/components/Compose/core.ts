@@ -10,7 +10,7 @@ import { mapObject } from '@game-cms/shared/object';
 
 export default defineComponentCore({
   id: 'base::compose',
-  defaultRawData: (options, context) => {
+  defaultOutData: (options, context) => {
     return mapObject(options, (item) =>
       context.getDefaultData(item.componentId, item.options)
     );

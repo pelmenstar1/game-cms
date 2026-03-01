@@ -4,7 +4,7 @@ import { text } from '../Text/index.js';
 import { alternative } from './index.js';
 
 componentDataFlowTests('base::alternative', {
-  raws: [
+  outs: [
     {
       data: {
         default: '123',

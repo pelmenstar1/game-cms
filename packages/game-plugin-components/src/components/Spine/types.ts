@@ -2,14 +2,14 @@ import type {
   ComponentClientDataById,
   ComponentEntry,
   ComponentErrorById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
+  ComponentInDataById,
+  ComponentOutDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
 
 type FileError = ComponentErrorById<'base::file'>;
-type FileData = ComponentRawDataById<'base::file'>;
-type FileDataIn = ComponentRawInDataById<'base::file'>;
+type FileData = ComponentOutDataById<'base::file'>;
+type FileDataIn = ComponentInDataById<'base::file'>;
 type FileStorageData = ComponentStorageDataById<'base::file'>;
 type FileClientData = ComponentClientDataById<'base::file'>;
 
@@ -30,11 +30,11 @@ declare module '@game-cms/core' {
         atlas?: FileError;
         images?: FileError;
       };
-      rawData: BaseData<FileData> & {
+      outData: BaseData<FileData> & {
         originalAtlas?: FileData[number];
       };
-      rawInData: BaseData<FileDataIn>;
-      partialRawInData: Partial<BaseData<FileDataIn>>;
+      inData: BaseData<FileDataIn>;
+      partialInData: Partial<BaseData<FileDataIn>>;
       clientData: BaseData<FileClientData>;
       storageData: BaseData<FileStorageData> & {
         shadowAtlas?: FileStorageData[number];

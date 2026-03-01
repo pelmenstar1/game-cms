@@ -5,7 +5,7 @@ import { text } from '../Text/index.js';
 import { compose } from './index.js';
 
 componentDataFlowTests('base::compose', {
-  raws: [
+  outs: [
     {
       data: { name: 'Test', age: 25 },
       component: compose({

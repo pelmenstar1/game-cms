@@ -4,8 +4,8 @@
 import { ComponentClientDataById } from './client.js';
 import {
   ComponentId,
+  ComponentInDataById,
   ComponentOptionsById,
-  ComponentRawInDataById,
 } from './types.js';
 
 export type ComponentPathDetails = {
@@ -61,21 +61,21 @@ export type ComponentNestedPathExtends<
   Args = unknown,
 > = BaseComponentNestedPathExtends<ComponentNestedPathMap<T, Args>[Id], U>;
 
-export type ComponentRawInDataByIdPath<
+export type ComponentInDataByIdPath<
   Id extends ComponentId,
   Args = unknown,
-> = ComponentNestedPath<ComponentRawInDataById<Id, Args>, Id, Args>;
+> = ComponentNestedPath<ComponentInDataById<Id, Args>, Id, Args>;
 
 export type ComponentClientDataByIdPath<
   Id extends ComponentId,
   Args = unknown,
 > = ComponentNestedPath<ComponentClientDataById<Id, Args>, Id, Args>;
 
-export type ComponentRawInDataByIdPathExtends<
+export type ComponentInDataByIdPathExtends<
   U,
   Id extends ComponentId,
   Args = unknown,
-> = ComponentNestedPathExtends<ComponentRawInDataById<Id, Args>, U, Id, Args>;
+> = ComponentNestedPathExtends<ComponentInDataById<Id, Args>, U, Id, Args>;
 
 export type ComponentClientDataByIdPathExtends<
   U,

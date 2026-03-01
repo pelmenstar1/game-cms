@@ -9,7 +9,7 @@ export default defineComponentCore({
       compact: true,
     },
   },
-  defaultRawData: (_, context) =>
+  defaultOutData: (_, context) =>
     context.getDefaultData<'base::compose', ComposeArgs>(
       'base::compose',
       getComposeOptions()

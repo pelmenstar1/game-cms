@@ -7,9 +7,9 @@ import type {
   ComponentClientDataTransformer,
   ComponentCore,
   ComponentId,
+  ComponentInDataById,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
+  ComponentOutDataById,
   ComponentSchema,
   ForeignComponentClientDataResolverContext,
 } from '@game-cms/core';
@@ -24,7 +24,7 @@ import { importFile } from '@game-cms/shared/node';
 import { describe, expect, test } from 'vitest';
 
 type TestInput<Id extends ComponentId> = {
-  raws: { data: ComponentRawDataById<Id>; component: ComponentSchema<Id> }[];
+  outs: { data: ComponentOutDataById<Id>; component: ComponentSchema<Id> }[];
 };
 
 async function gatherComponentClientChunk(dirPath: string) {
@@ -93,12 +93,12 @@ async function clientResolverContext() {
           clientData,
           options,
           clientContext
-        ) ?? { result: clientData as ComponentRawInDataById<Id, Args> }
+        ) ?? { result: clientData as ComponentInDataById<Id, Args> }
       );
     },
     toClient: <Id extends ComponentId, Args>(
       id: Id,
-      data: ComponentRawDataById<Id, Args>,
+      data: ComponentOutDataById<Id, Args>,
       options: ComponentOptionsById<Id>
     ) => {
       return (
@@ -116,38 +116,38 @@ export function componentDataFlowTests<Id extends ComponentId>(
   input: MaybeFactory<TestInput<Id>>
 ) {
   describe(`${id} data flow`, () => {
-    test('raw -> client -> raw in -> storage -> raw', async () => {
+    test('out -> client -> out in -> storage -> out', async () => {
       const clientContext = await clientResolverContext();
       const { foreignStorageResolverContext } =
         cms().service('base::component');
 
-      for (const { data: raw, component } of resolveMaybeFactory(input).raws) {
+      for (const { data: out, component } of resolveMaybeFactory(input).outs) {
         const { options } = component;
 
-        const client = clientContext.toClient(id, raw, options);
-        const { result: rawIn, error: rawInError } = clientContext.fromClient(
+        const client = clientContext.toClient(id, out, options);
+        const { result: outIn, error: outInError } = clientContext.fromClient(
           id,
           client,
           options
         );
 
-        if (rawIn === undefined) {
-          expect.fail(`fromClient failed: ${rawInError}`);
+        if (outIn === undefined) {
+          expect.fail(`fromClient failed: ${outInError}`);
         }
 
         const storage = await foreignStorageResolverContext.toStorage(
           id,
-          rawIn,
+          outIn,
           options
         );
 
-        const actualRaw = await foreignStorageResolverContext.fromStorage(
+        const actualOut = await foreignStorageResolverContext.fromStorage(
           id,
           storage,
           options
         );
 
-        expect(actualRaw).toEqual(raw);
+        expect(actualOut).toEqual(out);
       }
     });
   });

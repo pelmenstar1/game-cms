@@ -8,7 +8,7 @@ type ResolveArgs<T> = T extends JsonArgs ? T : JsonArgs;
 type NullIfEmpty<T, Args> = Args extends { allowEmpty: true } ? T | null : T;
 
 type JsonEntry<Args extends JsonArgs> = {
-  rawData: NullIfEmpty<Args['type'], Args>;
+  outData: NullIfEmpty<Args['type'], Args>;
   options: {
     type?: ZodType<Args['type']>;
     allowEmpty?: Args['allowEmpty'];

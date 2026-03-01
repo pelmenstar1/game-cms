@@ -1,17 +1,17 @@
 import type {
   ComponentId,
-  ComponentRawInDataById,
-  ComponentRawInDataByIdPathExtends,
+  ComponentInDataById,
+  ComponentInDataByIdPathExtends,
   ComponentSchema,
 } from '@game-cms/core';
 
 import type { SpritesheetArgs } from './types';
 
 export function spritesheetWrapper<Id extends ComponentId, Args>(input: {
-  namePath: ComponentRawInDataByIdPathExtends<string, Id, Args>;
-  bundlePath: ComponentRawInDataByIdPathExtends<string, Id, Args>;
-  imagePath: ComponentRawInDataByIdPathExtends<
-    ComponentRawInDataById<'base::file'>,
+  namePath: ComponentInDataByIdPathExtends<string, Id, Args>;
+  bundlePath: ComponentInDataByIdPathExtends<string, Id, Args>;
+  imagePath: ComponentInDataByIdPathExtends<
+    ComponentInDataById<'base::file'>,
     Id,
     Args
   >;

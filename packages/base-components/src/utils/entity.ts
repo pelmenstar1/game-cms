@@ -1,7 +1,7 @@
 import {
   EntityComponents,
   EntityId,
-  EntityRawDataById,
+  EntityOutDataById,
 } from '@game-cms/base-core';
 import { ComponentApi } from '@game-cms/component-api';
 import {
@@ -27,7 +27,7 @@ export type EntityComposeError<Id extends EntityId> = ComponentErrorById<
 
 export function transformDataToClientData<Id extends EntityId>(
   api: ComponentApi,
-  data: EntityRawDataById<Id> | undefined,
+  data: EntityOutDataById<Id> | undefined,
   options: EntityComposeOptions<Id>
 ): EntityComposeData<Id> {
   if (data) {

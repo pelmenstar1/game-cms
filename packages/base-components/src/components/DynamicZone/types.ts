@@ -57,8 +57,8 @@ type GetDynamicZoneParams<
   id: Types['componentId'];
   options: Types['options'];
   error: Types['error'] | undefined;
-  rawData: DataEntry<Types['rawData'], K>;
-  rawInData: DataEntry<Types['rawInData'], K>;
+  outData: DataEntry<Types['outData'], K>;
+  inData: DataEntry<Types['inData'], K>;
   resolvedData: DataEntry<Types['resolvedData'], K>;
   clientData: ClientDataEntry<Types['clientData'], K>;
   storageData: DataEntry<Types['storageData'], K>;
@@ -99,8 +99,8 @@ type Error<Input extends DynamicZoneInputComponents> = {
 };
 
 type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
-  rawData: DynamicZoneArray<Input, 'rawData'>;
-  rawInData: DynamicZoneArray<Input, 'rawInData'>;
+  outData: DynamicZoneArray<Input, 'outData'>;
+  inData: DynamicZoneArray<Input, 'inData'>;
   options: Options<Input>;
   error: Error<Input>;
   resolvedData: DynamicZoneArray<Input, 'resolvedData'>;

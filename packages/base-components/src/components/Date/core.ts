@@ -10,7 +10,7 @@ export default defineComponentCore({
       compact: true,
     },
   },
-  defaultRawData: (options) => getDefaultData(options).toString(),
+  defaultOutData: (options) => getDefaultData(options).toString(),
   validator: (data, options) => {
     if (typeof data !== 'string') {
       return 'INVALID_TYPE';

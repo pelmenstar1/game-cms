@@ -26,7 +26,6 @@ export function emitClientConfigConnector() {
 
   const clientConfigResolverPortals = filterOutNullable(
     env().config.plugins.map((plugin) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const filePath = plugin.clientConfigResolver?.filePath;
 
       if (filePath) {

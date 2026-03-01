@@ -36,9 +36,9 @@ type BaseComposeEntry<Input extends ComposeInput> = {
         | undefined;
     };
   };
-  rawData: ComposeMap<Input, 'rawData'>;
-  rawInData: ComposeMap<Input, 'rawInData'>;
-  partialRawInData: Partial<ComposeMap<Input, 'partialRawInData'>>;
+  outData: ComposeMap<Input, 'outData'>;
+  inData: ComposeMap<Input, 'inData'>;
+  partialInData: Partial<ComposeMap<Input, 'partialInData'>>;
   resolvedData: ComposeMap<Input, 'resolvedData'>;
   clientData: ComposeMap<Input, 'clientData'>;
   storageData: ComposeMap<Input, 'storageData'>;

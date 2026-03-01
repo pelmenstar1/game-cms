@@ -11,7 +11,7 @@ export type DropdownItem<K> = {
 };
 
 type DropdownEntry<Args extends DropdownArgs> = {
-  rawData: Args['key'];
+  outData: Args['key'];
   error: 'INVALID_TYPE';
   options: {
     items: DropdownItem<Args['key']>[];

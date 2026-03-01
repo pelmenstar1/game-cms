@@ -1,9 +1,9 @@
 import {
   ComponentClientDataById,
   ComponentClientDataTransformer,
+  ComponentInDataOrError,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataOrError,
+  ComponentOutDataById,
   ForeignComponentClientDataResolverContext,
 } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
@@ -19,7 +19,7 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
       context.getDefaultData(item.componentId, item.options)
     ),
   toClient: <Args>(
-    data: ComponentRawDataById<Id, Args>,
+    data: ComponentOutDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentClientDataResolverContext
   ) => {
@@ -69,6 +69,6 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
           ),
         };
 
-    return resultOrError as ComponentRawInDataOrError<Id, Args>;
+    return resultOrError as ComponentInDataOrError<Id, Args>;
   },
 };

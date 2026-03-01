@@ -9,7 +9,7 @@ function invalidPath(message: string): never {
 
 export default defineComponentCore({
   id: 'base::dynamic-zone',
-  defaultRawData: () => [],
+  defaultOutData: () => [],
   validator: (data, { minItems, maxItems, options }, context) => {
     if (
       !Array.isArray(data) ||

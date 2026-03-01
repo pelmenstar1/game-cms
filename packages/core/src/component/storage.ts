@@ -3,9 +3,9 @@ import { MaybePromise } from '@game-cms/shared';
 import { ForeignComponentPathWalkerContext } from './pathWalker.js';
 import {
   ComponentId,
+  ComponentInDataById,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
+  ComponentOutDataById,
   GetComponentTypesById,
 } from './types.js';
 
@@ -27,7 +27,7 @@ export interface ForeignComponentStorageDataResolverContext extends ForeignCompo
 
   toStorage: <Id extends ComponentId, Args>(
     id: Id,
-    data: ComponentRawInDataById<Id, Args>,
+    data: ComponentInDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
   ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
 
@@ -35,7 +35,7 @@ export interface ForeignComponentStorageDataResolverContext extends ForeignCompo
     id: Id,
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => MaybePromise<ComponentRawDataById<Id, Args>>;
+  ) => MaybePromise<ComponentOutDataById<Id, Args>>;
 }
 
 export type ComponentStorageDataTransformer<Id extends ComponentId> = {
@@ -45,7 +45,7 @@ export type ComponentStorageDataTransformer<Id extends ComponentId> = {
   ) => ComponentStorageDataById<Id, Args>;
 
   toStorage: <Args>(
-    data: ComponentRawInDataById<Id, Args>,
+    data: ComponentInDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentStorageDataResolverContext
   ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
@@ -54,5 +54,5 @@ export type ComponentStorageDataTransformer<Id extends ComponentId> = {
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentStorageDataResolverContext
-  ) => MaybePromise<ComponentRawDataById<Id, Args>>;
+  ) => MaybePromise<ComponentOutDataById<Id, Args>>;
 };

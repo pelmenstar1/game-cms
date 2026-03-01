@@ -23,15 +23,15 @@ export default defineComponentController({
       };
     }
   },
-  resolver: (raw, options, context, args) => {
+  resolver: (input, options, context, args) => {
     const { componentId, baseOptions } = options;
 
     return {
-      nodes: mapObject(raw.nodes, ({ value, meta }) => ({
+      nodes: mapObject(input.nodes, ({ value, meta }) => ({
         meta,
-        value: context.resolveRawData(componentId, value, baseOptions, args),
+        value: context.resolveOutData(componentId, value, baseOptions, args),
       })),
-      edges: raw.edges,
+      edges: input.edges,
     };
   },
   search: {

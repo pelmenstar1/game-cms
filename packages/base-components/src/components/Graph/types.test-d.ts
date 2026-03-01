@@ -1,6 +1,6 @@
 import {
+  ComponentInDataById,
   ComponentNestedPath,
-  ComponentRawInDataById,
   GetComponentSchemaArgs,
   GetComponentSchemaId,
 } from '@game-cms/core';
@@ -24,7 +24,7 @@ const schema = graph({
 type Schema = typeof schema;
 type Id = GetComponentSchemaId<Schema>;
 type Args = GetComponentSchemaArgs<Schema>;
-type Data = ComponentRawInDataById<Id, Args>;
+type Data = ComponentInDataById<Id, Args>;
 
 test('ComponentNestedPath', () => {
   type Actual = ComponentNestedPath<Data, Id, Args>;

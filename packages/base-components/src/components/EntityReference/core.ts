@@ -7,7 +7,7 @@ export default defineComponentCore({
       compact: true,
     },
   },
-  defaultRawData: () => null,
+  defaultOutData: () => null,
   validator: (data) => {
     if (typeof data !== 'string') {
       return 'INVALID_TYPE';

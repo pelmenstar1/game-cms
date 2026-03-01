@@ -1,6 +1,6 @@
 import {
   EntityId,
-  EntityRawDataById,
+  EntityOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { List } from '@game-cms/ui';
@@ -10,7 +10,7 @@ import { SelectableItem } from './SelectableItem/index.js';
 
 export type SelectableEntityListProps<Id extends EntityId> = {
   className?: string;
-  items: (EntityRawDataById<Id> & { _id: string })[];
+  items: (EntityOutDataById<Id> & { _id: string })[];
   schema: EntitySchemaById<Id>;
 
   selectedItemId?: string;

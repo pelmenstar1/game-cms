@@ -1,8 +1,8 @@
 import {
   ComponentDataSearchTarget,
+  ComponentInDataById,
   ComponentNestedPath,
   ComponentNestedPathExtends,
-  ComponentRawInDataById,
   ComponentSchema,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
@@ -31,7 +31,7 @@ const schema = repeatable({
 type Schema = typeof schema;
 type Id = Schema extends ComponentSchema<infer R> ? R : never;
 type Args = Schema extends ComponentSchema<string, infer R> ? R : never;
-type Data = ComponentRawInDataById<Id, Args>;
+type Data = ComponentInDataById<Id, Args>;
 
 test('ComponentNestedPath', () => {
   type Actual = ComponentNestedPath<Data, Id, Args>;

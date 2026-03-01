@@ -8,7 +8,7 @@ export type ComponentData =
 export type ComponentOptions = ComponentData;
 
 export type ComponentTypes = {
-  rawData: ComponentData;
+  outData: ComponentData;
   options: ComponentOptions;
   error: unknown;
 };
@@ -24,20 +24,17 @@ export interface ComponentTypeMap<_Args = unknown> extends Record<
 export type ComponentId = keyof ComponentTypeMap;
 
 type GetOrRawData<Types extends ComponentTypes, K extends string> = {
-  [U in K]: GetPropertyOr<Types, U, Types['rawData']>;
+  [U in K]: GetPropertyOr<Types, U, Types['outData']>;
 };
 
 type GetPartialName<T extends string> = `partial${Capitalize<T>}`;
 
 type GetComponentExtendedTypes<Types extends ComponentTypes = ComponentTypes> =
-  GetOrRawData<
-    Types,
-    'rawInData' | 'resolvedData' | 'clientData' | 'storageData'
-  >;
+  GetOrRawData<Types, 'inData' | 'resolvedData' | 'clientData' | 'storageData'>;
 
 type GetComponentPartialTypes<Types extends ComponentTypes> = {
   [K in
-    | 'rawData'
+    | 'outData'
     | keyof GetComponentExtendedTypes as GetPartialName<K>]: GetPropertyOr<
     Types,
     GetPartialName<K>,
@@ -62,20 +59,25 @@ export type GetComponentTypesById<
   Args = unknown,
 > = GetComponentTypes<ComponentTypeMap<Args>[Id]>;
 
-export type ComponentRawDataById<
+export type ComponentOutDataById<
   T extends ComponentId,
   Args = unknown,
-> = GetComponentTypesById<T, Args>['rawData'];
+> = GetComponentTypesById<T, Args>['outData'];
 
-export type ComponentRawInDataById<
-  T extends ComponentId,
-  Args = unknown,
-> = GetComponentTypesById<T, Args>['rawInData'];
+// export type ComponentClientOutDataById<
+//   T extends ComponentId,
+//   Args = unknown,
+// > = GetComponentTypesById<T, Args>['clientOutData'];
 
-export type ComponentRawInPartialDataById<
+export type ComponentInDataById<
   T extends ComponentId,
   Args = unknown,
-> = GetComponentTypesById<T, Args>['partialRawInData'];
+> = GetComponentTypesById<T, Args>['inData'];
+
+export type ComponentPartialInDataById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['partialInData'];
 
 export type ComponentOptionsById<
   T extends ComponentId,

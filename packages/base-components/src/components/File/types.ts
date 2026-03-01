@@ -2,14 +2,14 @@ import { StorageFileItemWithId } from '@game-cms/base-core';
 import { ComponentEntry, ToClientType } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 
-export type FileRawDataItem = StorageFileItemWithId;
-export type FileClientDataItem = ToClientType<FileRawDataItem>;
+export type FileOutDataItem = StorageFileItemWithId;
+export type FileClientDataItem = ToClientType<FileOutDataItem>;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap {
     'base::file': ComponentEntry<{
-      rawData: FileRawDataItem[];
-      rawInData: string[];
+      outData: FileOutDataItem[];
+      inData: string[];
       options: {
         supportedMimeTypes?: string[];
         minItems?: number;

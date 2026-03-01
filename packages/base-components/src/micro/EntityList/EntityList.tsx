@@ -1,6 +1,6 @@
 import type {
   EntityId,
-  EntityRawDataById,
+  EntityOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { List } from '@game-cms/ui';
@@ -12,7 +12,7 @@ import { Item } from './Item/index.js';
 export interface EntityListProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  items: (EntityRawDataById<Id> & { _id: string })[];
+  items: (EntityOutDataById<Id> & { _id: string })[];
   schema: EntitySchemaById<Id>;
 }
 

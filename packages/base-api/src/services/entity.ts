@@ -4,12 +4,12 @@ import {
   EntityDataVariantsById,
   EntityErrorById,
   EntityId,
+  EntityInDataById,
   EntityInstanceData,
   EntityMeta,
-  EntityRawDataById,
-  EntityRawDataWithChecksById,
-  EntityRawInDataById,
-  EntityRawInPartialDataById,
+  EntityOutDataById,
+  EntityOutDataWithChecksById,
+  EntityPartialInDataById,
   EntityResolvedDataById,
   EntitySchema,
   EntitySchemaById,
@@ -147,7 +147,7 @@ async function fromStorageData<Id extends EntityId>(
     '#meta': meta,
     '#checks': clientChecksData,
     ...rawComponents,
-  } as unknown as WithId<EntityRawDataWithChecksById<Id>>;
+  } as unknown as WithId<EntityOutDataWithChecksById<Id>>;
 }
 
 function createSearchIndex<Id extends EntityId>(
@@ -169,7 +169,7 @@ function createSearchIndex<Id extends EntityId>(
 
 async function toStorageData<Id extends EntityId>(
   entityId: Id,
-  rawData: EntityRawInDataById<Id>
+  rawData: EntityInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
   const entitySchema = getEntitySchema(entityId);
   const { foreignStorageResolverContext } = cms().service('base::component');
@@ -202,7 +202,7 @@ async function toStorageData<Id extends EntityId>(
 async function toStoragePartialData<Id extends EntityId>(
   entityId: Id,
   target: EntityStorageDataById<Id>,
-  source: EntityRawInPartialDataById<Id>
+  source: EntityPartialInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
   const entitySchema = getEntitySchema(entityId);
   const { foreignDataMergeContext } = cms().service('base::component');
@@ -386,7 +386,7 @@ export default service({
   },
   create: async <Id extends EntityId>(
     id: Id,
-    data: EntityRawInDataById<Id>,
+    data: EntityInDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
     const storageData = await toStorageData(id, data);
@@ -407,7 +407,7 @@ export default service({
   update: async <Id extends EntityId>(
     entityId: Id,
     id: ObjectId,
-    data: EntityRawInPartialDataById<Id>,
+    data: EntityPartialInDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
     const target = await collection(entityId).findOne({ _id: id });
@@ -482,12 +482,12 @@ export default service({
     const { _id, ...ownResult } = result;
 
     return mapObject(
-      ownResult as unknown as EntityRawDataById<Id>,
+      ownResult as unknown as EntityOutDataById<Id>,
       (item, key) => {
         const { componentId, options: baseOptions } =
           entitySchema.components[key];
 
-        return foreignResolverContext.resolveRawData(
+        return foreignResolverContext.resolveOutData(
           componentId,
           item,
           baseOptions,

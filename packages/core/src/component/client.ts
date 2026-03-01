@@ -5,9 +5,9 @@ import { ForeignComponentValidationContext } from './core.js';
 import {
   ComponentErrorById,
   ComponentId,
+  ComponentInDataById,
   ComponentOptionsById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
+  ComponentOutDataById,
   GetComponentTypesById,
 } from './types.js';
 
@@ -34,13 +34,10 @@ export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
   renderer: ComponentRenderer<Id>;
 };
 
-export type ComponentRawInDataOrError<
+export type ComponentInDataOrError<
   Id extends ComponentId,
   Args = unknown,
-> = ResultOrError<
-  ComponentRawInDataById<Id, Args>,
-  ComponentErrorById<Id, Args>
->;
+> = ResultOrError<ComponentInDataById<Id, Args>, ComponentErrorById<Id, Args>>;
 
 export type ForeignComponentClientDataResolverContext = {
   idSource: IdSource<Key>;
@@ -53,7 +50,7 @@ export type ForeignComponentClientDataResolverContext = {
 
   toClient: <Id extends ComponentId, Args>(
     id: Id,
-    data: ComponentRawDataById<Id, Args>,
+    data: ComponentOutDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
   ) => ComponentClientDataById<Id, Args>;
 
@@ -61,7 +58,7 @@ export type ForeignComponentClientDataResolverContext = {
     id: Id,
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => ComponentRawInDataOrError<Id, Args>;
+  ) => ComponentInDataOrError<Id, Args>;
 };
 
 export type ForeignComponentClientDefaultDataContext = Pick<
@@ -83,7 +80,7 @@ export type ComponentClientDataTransformer<
   ) => ComponentClientDataById<Id, Args>;
 
   toClient: <Args>(
-    data: ComponentRawDataById<Id, Args>,
+    data: ComponentOutDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentClientDataResolverContext
   ) => ComponentClientDataById<Id, Args>;
@@ -92,5 +89,5 @@ export type ComponentClientDataTransformer<
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentClientDataResolverContext
-  ) => ComponentRawInDataOrError<Id, Args>;
+  ) => ComponentInDataOrError<Id, Args>;
 };

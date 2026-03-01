@@ -3,8 +3,8 @@ import { ComponentEntry } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 
 type EntityComponentEntry = {
-  rawData: string | null;
-  rawInData: string;
+  outData: string | null;
+  inData: string;
   options: {
     entityId: EntityId;
   };

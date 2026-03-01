@@ -13,7 +13,7 @@ declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentTypeMap<_Args> {
     'base::text': ComponentEntry<{
-      rawData: TextData;
+      outData: TextData;
       options: TextOptions;
       error: TextError;
     }>;

@@ -8,7 +8,7 @@ type ResolveArgs<T> = IfExtends<T, CheckboxArgs>;
 export type CheckboxChoice = { title: string };
 
 type CheckboxEntry<Args extends CheckboxArgs> = {
-  rawData: Args['key'][];
+  outData: Args['key'][];
   error: 'INVALID_TYPE';
   options: {
     choices: Record<Args['key'], CheckboxChoice>;

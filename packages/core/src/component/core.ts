@@ -5,20 +5,20 @@ import {
   ComponentErrorById,
   ComponentId,
   ComponentOptionsById,
-  ComponentRawDataById,
+  ComponentOutDataById,
 } from './types.js';
 
-export type ForeignComponentDefaultRawDataContext = {
+export type ForeignComponentDefaultDataContext = {
   getDefaultData: <Id extends ComponentId, Args>(
     id: Id,
     options: ComponentOptionsById<Id, Args>
-  ) => ComponentRawDataById<Id, Args>;
+  ) => ComponentOutDataById<Id, Args>;
 };
 
 export type ComponentDefaultDataHandler<Id extends ComponentId> = <Args>(
   options: ComponentOptionsById<Id, Args>,
-  context: ForeignComponentDefaultRawDataContext
-) => ComponentRawDataById<Id, Args>;
+  context: ForeignComponentDefaultDataContext
+) => ComponentOutDataById<Id, Args>;
 
 export type ComponentDataValidatorParams = {
   partial?: boolean;
@@ -49,7 +49,7 @@ export type ComponentMeta = {
 type BaseComponentCore<Id extends ComponentId = ComponentId> = {
   id: Id;
   meta?: ComponentMeta;
-  defaultRawData: ComponentDefaultDataHandler<Id>;
+  defaultOutData: ComponentDefaultDataHandler<Id>;
   validator: ComponentDataValidator<Id>;
 };
 

@@ -2,8 +2,8 @@ import {
   ComponentClientDataById,
   ComponentEntry,
   ComponentErrorById,
-  ComponentRawDataById,
-  ComponentRawInDataById,
+  ComponentInDataById,
+  ComponentOutDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
@@ -13,10 +13,10 @@ import { ComposeArgs } from './internal/options';
 type ComposeId = 'base::compose';
 
 type BitmapFontEntry = {
-  rawData: ComponentRawDataById<ComposeId, ComposeArgs> & {
-    originalAtlas?: ComponentRawDataById<'base::file'>[number];
+  outData: ComponentOutDataById<ComposeId, ComposeArgs> & {
+    originalAtlas?: ComponentOutDataById<'base::file'>[number];
   };
-  rawInData: ComponentRawInDataById<ComposeId, ComposeArgs>;
+  inData: ComponentInDataById<ComposeId, ComposeArgs>;
   options: Record<never, never>;
   error: ComponentErrorById<ComposeId, ComposeArgs>;
   clientData: ComponentClientDataById<ComposeId, ComposeArgs>;

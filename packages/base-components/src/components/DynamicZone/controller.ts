@@ -2,7 +2,7 @@ import {
   ComponentDataResolverArgs,
   ComponentDataStructure,
   ComponentOptionsById,
-  ComponentRawDataById,
+  ComponentOutDataById,
   ComponentResolvedDataById,
   defineComponentController,
   ForeignComponentDataResolverContext,
@@ -79,15 +79,15 @@ export default defineComponentController({
     }
   },
   resolver: <Args>(
-    raw: ComponentRawDataById<Id, Args>,
+    input: ComponentOutDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentDataResolverContext,
     args: ComponentDataResolverArgs
   ) => {
-    return raw.map((item) => {
+    return input.map((item) => {
       const { componentId, options: baseOptions } = options.options[item.key];
 
-      return context.resolveRawData(componentId, item.data, baseOptions, args);
+      return context.resolveOutData(componentId, item.data, baseOptions, args);
     }) as ComponentResolvedDataById<Id, Args>;
   },
   storageTransformer: {
