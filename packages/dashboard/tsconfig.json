@@ -36,7 +36,6 @@
     { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../core" },
-    { "path": "../entity-checks" },
     { "path": "../global" },
     { "path": "../ignition" },
     { "path": "../shared" },

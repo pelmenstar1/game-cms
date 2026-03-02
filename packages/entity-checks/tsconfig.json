@@ -3,14 +3,20 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "types": ["@game-cms/base-api/types"]
   },
-  "include": ["./src"],
+  "include": ["./src", "../ui/src/types/css.d.ts"],
   "references": [
     { "path": "../base-api" },
+    { "path": "../base-components" },
     { "path": "../base-core" },
+    { "path": "../codegen" },
+    { "path": "../component-api" },
     { "path": "../core" },
     { "path": "../global" },
-    { "path": "../shared" }
+    { "path": "../shared" },
+    { "path": "../ui" }
   ]
 }

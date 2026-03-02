@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import {
   defineEntityCheck,
   type EntityMeta,
@@ -8,6 +10,7 @@ import { cms } from '@game-cms/global';
 import { ObjectId, WithId } from 'mongodb';
 
 import { updateReviewersPayload } from './schema.js';
+import { routes as dashboardRoutes } from './settings/routes.js';
 import { GetReviewersResponse } from './types.js';
 
 declare module '@game-cms/base-core' {
@@ -68,36 +71,47 @@ function isApproved(
 export function review() {
   return defineEntityCheck({
     id: 'base::review',
-    routes: [
-      apiRoute({
-        url: '/entityCheck/base$review/reviewers',
-        method: 'GET',
-        config: {
-          id: 'entityCheck/base::review/reviewers$get',
-        },
-        handler: async (): Promise<GetReviewersResponse> => {
-          return { users: await getRequiredReviewersWithUserData() };
-        },
-      }),
-      apiRoute({
-        url: '/entityCheck/base$review/reviewers',
-        method: 'PUT',
-        config: {
-          id: 'entityCheck/base::review/reviewers$update',
-        },
-        schema: {
-          body: updateReviewersPayload,
-        },
-        handler: async (req) => {
-          const { userIds } = req.body;
+    clientConfig: {
+      filePath: path.join(import.meta.dirname, './config.client.js'),
+    },
+    dashboard: {
+      entityAccessRenderer: {
+        filePath: path.join(import.meta.dirname, './entityAccessRenderer.js'),
+      },
+      routes: dashboardRoutes,
+    },
+    api: {
+      routes: [
+        apiRoute({
+          url: '/entityCheck/base$review/reviewers',
+          method: 'GET',
+          config: {
+            id: 'entityCheck/base::review/reviewers$get',
+          },
+          handler: async (): Promise<GetReviewersResponse> => {
+            return { users: await getRequiredReviewersWithUserData() };
+          },
+        }),
+        apiRoute({
+          url: '/entityCheck/base$review/reviewers',
+          method: 'PUT',
+          config: {
+            id: 'entityCheck/base::review/reviewers$update',
+          },
+          schema: {
+            body: updateReviewersPayload,
+          },
+          handler: async (req) => {
+            const { userIds } = req.body;
 
-          await configCollection().updateOne(
-            {},
-            { $set: { requiredReviewers: userIds } }
-          );
-        },
-      }) as ApiRoute,
-    ],
+            await configCollection().updateOne(
+              {},
+              { $set: { requiredReviewers: userIds } }
+            );
+          },
+        }) as ApiRoute,
+      ],
+    },
     actions: {
       approve: {
         execute: ({ storageData, context }) => {

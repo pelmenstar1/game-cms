@@ -1,6 +1,7 @@
 import type { ApiRoute } from '@game-cms/core/api';
 import type {
   AnyKeyInObject,
+  FilePortal,
   GetPropertyOr,
   IsAllOptional,
   MaybePromise,
@@ -9,9 +10,11 @@ import type {
   RequiredProperty,
 } from '@game-cms/shared';
 import type { ObjectId } from 'mongodb';
+import { ReactNode } from 'react';
 import type z from 'zod';
 import type { ZodType } from 'zod';
 
+import { CustomDashboardRoute } from '../dashboard.js';
 import type { getEntityChecksResponse } from '../schema/entityCheck.js';
 import type {
   BaseEntityStorageDataById,
@@ -131,13 +134,31 @@ export type EntityCheckActionMap<Id extends EntityCheckId> = {
   >;
 };
 
+export type EntityCheckRendererProps<Id extends EntityCheckId> = {
+  className?: string;
+  entityId: EntityId;
+  documentId: string;
+  data: EntityCheckClientData<Id>;
+};
+
+export type EntityCheckRenderer<Id extends EntityCheckId> = (
+  props: EntityCheckRendererProps<Id>
+) => ReactNode;
+
 type BaseEntityCheck<Id extends string = string> = {
   id: Id;
-  routes?: ApiRoute[];
+  clientConfig?: FilePortal;
   when?: (params: EntityCheckWhenParams<Id>) => MaybePromise<boolean>;
   execute: <EId extends EntityId>(
     value: EntityCheckExecuteParams<Id, EId>
   ) => MaybePromise<void>;
+  dashboard?: {
+    routes?: CustomDashboardRoute[];
+    entityAccessRenderer?: FilePortal;
+  };
+  api?: {
+    routes?: ApiRoute[];
+  };
 };
 
 export type EntityCheck<Id extends string = string> = BaseEntityCheck<Id> &

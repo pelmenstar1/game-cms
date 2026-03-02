@@ -4,7 +4,10 @@ import {
   unpublishEntity,
   updateEntityById,
 } from '@game-cms/base-api/client';
-import { useEntitySchema } from '@game-cms/base-components/micro';
+import {
+  useCheckPermissions,
+  useEntitySchema,
+} from '@game-cms/base-components/micro';
 import type {
   EntityInstanceComponents,
   EntityVariant,
@@ -18,7 +21,6 @@ import {
 import { useCallback } from 'react';
 
 import { AccessEntityView } from '@/components/AccessEntityView';
-import { useCheckPermissions } from '@/hooks/useCheckPermissions';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';

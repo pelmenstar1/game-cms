@@ -1,14 +1,19 @@
-import { useTypedNavigate } from '@game-cms/ui';
+import { useClientConfig } from '@game-cms/base-components/micro';
+import { PageUrl, useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
 
-import { items } from './items';
-
 export default function Page() {
+  const clientConfigResult = useClientConfig();
+
   const navigate = useTypedNavigate();
 
   useEffect(() => {
-    void navigate(items[0].href);
-  });
+    if (clientConfigResult.status === 'success') {
+      const tabs = clientConfigResult.value.settings?.tabs ?? {};
+
+      void navigate(Object.values(tabs)[0].href as PageUrl);
+    }
+  }, [clientConfigResult, navigate]);
 
   return <div></div>;
 }

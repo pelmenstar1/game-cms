@@ -1,3 +1,4 @@
+import { useSelfSession } from '@game-cms/base-components/micro';
 import {
   IconButton,
   LinkButton,
@@ -14,7 +15,6 @@ import { useCallback, useEffect } from 'react';
 import { EntityListLoader } from '@/components/EntityListLoader';
 import { EntitySearchDialog } from '@/components/EntitySearchDialog';
 import { getEntityIds, getEntityTitle } from '@/connector/entity';
-import { useSelfSession } from '@/hooks/useSession';
 
 import type { Route } from './+types/route';
 import styles from './route.module.scss';

@@ -1,8 +1,15 @@
 import { pathToFileURL } from 'node:url';
 
 import { env } from '@game-cms/global';
-import { filterOutNullable } from '@game-cms/shared/collections';
-import { sanitizeId } from '@game-cms/shared/string';
+import {
+  NameGenerator,
+  nameGenerator,
+  resolveAsyncMaybeFactory,
+} from '@game-cms/shared';
+import {
+  filterOutNullable,
+  normalizeMaybeArray,
+} from '@game-cms/shared/collections';
 
 function importList(imports: { varName: string; filePath: string }[]) {
   return imports
@@ -13,16 +20,34 @@ function importList(imports: { varName: string; filePath: string }[]) {
     .join('\n');
 }
 
-export function emitClientConfigConnector() {
-  const clientConfigPortals = filterOutNullable(
-    env().config.plugins.map((plugin) => {
-      const filePath = plugin.config?.client?.filePath;
+async function getClientConfigPortals(nameGen: NameGenerator) {
+  const { config } = env();
 
-      if (filePath) {
-        return { varName: `${sanitizeId(plugin.id)}_config`, filePath };
-      }
+  const sources = filterOutNullable(
+    config.plugins.flatMap((plugin) => [
+      plugin.config?.client,
+      plugin.clientConfigSource,
+    ])
+  );
+
+  const result = await Promise.all(
+    sources.map(async (source) => {
+      const items = await resolveAsyncMaybeFactory(source, config);
+
+      return normalizeMaybeArray(items).map((item) => ({
+        varName: nameGen.create(),
+        filePath: item.filePath,
+      }));
     })
   );
+
+  return result.flat();
+}
+
+export async function emitClientConfigConnector() {
+  const nameGen = nameGenerator();
+
+  const clientConfigPortals = await getClientConfigPortals(nameGen);
 
   const clientConfigResolverPortals = filterOutNullable(
     env().config.plugins.map((plugin) => {
@@ -30,7 +55,7 @@ export function emitClientConfigConnector() {
 
       if (filePath) {
         return {
-          varName: `${sanitizeId(plugin.id)}_configResolver`,
+          varName: nameGen.create(),
           filePath,
         };
       }
@@ -58,9 +83,14 @@ export function emitClientConfigConnector() {
     })
     .join('\n');
 
-  const resultVars = clientConfigResolverPortals
-    .map((_, index) => `partial${index}`)
-    .join(', ');
+  const resultVars = clientConfigResolverPortals.map(
+    (_, index) => `partial${index}`
+  );
+
+  const result =
+    clientConfigResolverPortals.length > 1
+      ? `Object.assign({}, ${resultVars.join(',')})`
+      : resultVars[0];
 
   return `
 ${importList(clientConfigPortals)}
@@ -68,7 +98,7 @@ ${importList(clientConfigResolverPortals)}
 
 ${partials}
 
-const result = Object.assign({}, ${resultVars});
+const result = ${result};
 
 export default result;
 `;

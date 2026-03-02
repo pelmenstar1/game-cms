@@ -49,9 +49,14 @@
     "./micro": {
       "import": "./dist/src/shared.js",
       "types": "./dist/src/shared.d.ts"
+    },
+    "./settings": {
+      "import": "./dist/src/settings/index.js",
+      "types": "./dist/src/settings/index.d.ts"
+    },
+    "./routes": {
+      "import": "./dist/src/routes/index.js",
+      "types": "./dist/src/routes/index.d.ts"
     }
-  },
-  "browserslist": [
-    "since 2020-01-01"
-  ]
+  }
 }

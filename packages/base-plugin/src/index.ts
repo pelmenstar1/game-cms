@@ -1,19 +1,19 @@
 import path from 'node:path';
 
 import { apiConfig, serviceSource } from '@game-cms/base-api';
+import { routes } from '@game-cms/base-components/routes';
 import type {
   OwnEnvironment,
   OwnPluginClientConfig,
 } from '@game-cms/base-core';
 import type { Plugin } from '@game-cms/core';
-import {
-  resolveImportDirectory,
-  resolveImportFile,
-} from '@game-cms/shared/node';
+import { filterOutNullable } from '@game-cms/shared/collections';
+import { resolveImportDirectory } from '@game-cms/shared/node';
 
 import { clientConfigPlugin } from './clientConfig/vitePlugin.js';
 import { resolveEntityEnvConfig } from './entity/resolver.js';
 import { dashboardEntityPlugin } from './entity/vitePlugin.js';
+import { entityCheckPlugin } from './entityCheck/vitePlugin.js';
 
 export const basePlugin: Plugin<{
   env: OwnEnvironment;
@@ -24,8 +24,22 @@ export const basePlugin: Plugin<{
     api: apiConfig,
     dashboard: {
       vite: {
-        plugins: [dashboardEntityPlugin(), clientConfigPlugin()],
+        plugins: [
+          dashboardEntityPlugin(),
+          clientConfigPlugin(),
+          entityCheckPlugin(),
+        ],
       },
+      routes: (config) =>
+        filterOutNullable(
+          [
+            ...routes,
+            config.entity?.checks?.map((check) => check.dashboard?.routes),
+          ].flat(2)
+        ),
+    },
+    client: {
+      filePath: path.join(import.meta.dirname, './config.client.js'),
     },
   },
   services: serviceSource,
@@ -46,9 +60,14 @@ export const basePlugin: Plugin<{
     entity: resolveEntityEnvConfig,
   },
   clientConfigResolver: {
-    filePath: resolveImportFile(
-      import.meta,
+    filePath: path.join(
+      import.meta.dirname,
       './clientConfig/ownResolver.client.js'
     ),
+  },
+  clientConfigSource: (config) => {
+    const result = config.entity?.checks?.map((check) => check.clientConfig);
+
+    return filterOutNullable(result ?? []);
   },
 };

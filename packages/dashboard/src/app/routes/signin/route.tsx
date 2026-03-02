@@ -1,4 +1,5 @@
 import { signUserIn } from '@game-cms/base-api/client';
+import { useSelfSession } from '@game-cms/base-components/micro';
 import { useApiAction } from '@game-cms/component-api';
 import { emailRegex } from '@game-cms/shared/string';
 import {
@@ -13,8 +14,6 @@ import {
   useTypedNavigate,
 } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
-
-import { useSelfSession } from '@/hooks/useSession';
 
 import styles from './route.module.scss';
 

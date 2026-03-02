@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 import {
   EntityComposeOptions,
   transformDataToClientData,
 } from '@game-cms/base-components/micro';
 import type {
-  EntityCheckClientData,
   EntityClientDataById,
   EntityComponents,
   EntityId,
@@ -17,10 +15,10 @@ import { useComponentApi } from '@game-cms/component-api';
 import { classNames } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
-import { EntityReviewBlock } from '../EntityReviewBlock';
 import { EntityVariantTabs } from '../EntityVariantTabs';
 import styles from './AccessEntityView.module.scss';
 import { ActionBlock } from './ActionBlock';
+import { EntityCheckBlock } from './EntityCheckBlock';
 import { Header } from './Header';
 import { PreviewPanel } from './PreviewPanel';
 
@@ -89,10 +87,6 @@ export function AccessEntityView<Id extends EntityId>({
     }
   }, [data, onSave]);
 
-  const reviewData = initialValue?.checks['base::review'] as
-    | EntityCheckClientData<'base::review'>
-    | undefined;
-
   return (
     <div className={classNames(styles.root, className)}>
       <Header
@@ -142,11 +136,11 @@ export function AccessEntityView<Id extends EntityId>({
             }
           />
 
-          {reviewData && initialId && (
-            <EntityReviewBlock
+          {initialId && initialValue?.checks && (
+            <EntityCheckBlock
               entityId={entityId}
               documentId={initialId}
-              data={reviewData}
+              data={initialValue.checks}
             />
           )}
         </div>

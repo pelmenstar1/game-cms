@@ -3,7 +3,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "resolveJsonModule": true,
-    "types": ["node", "vite/client", "@game-cms/base-api/types"],
+    "types": [
+      "node",
+      "vite/client",
+      "@game-cms/base-api/types",
+      "@game-cms/ui/types"
+    ],
     "paths": { "#storybook/*": ["./.storybook/*"] }
   },
   "references": [
@@ -25,7 +30,8 @@
     "./scripts",
     "./src/**/*.json",
     "./.storybook/preview.tsx",
-    "./.storybook/main.ts"
+    "./.storybook/main.ts",
+    "../ui/src/types/css.d.ts"
   ],
   "exclude": ["./scripts"]
 }

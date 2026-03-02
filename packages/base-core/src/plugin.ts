@@ -1,11 +1,10 @@
-import { FilePortal, PartialIfUndefined } from '@game-cms/shared';
-import type { Plugin as VitePlugin } from 'vite';
-
-export type PluginDashboardConfig = {
-  vite?: {
-    plugins?: VitePlugin[];
-  };
-};
+import { ResolvedCmsConfig } from '@game-cms/core';
+import {
+  FilePortal,
+  MaybeAsyncFactory,
+  PartialIfUndefined,
+} from '@game-cms/shared';
+import { MaybeArray } from '@game-cms/shared/collections';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface OwnPluginClientConfig {}
@@ -17,9 +16,13 @@ export interface PluginClientConfigResolver<OwnConfig> {
   mergeConfigs: (base: OwnConfig, next: OwnConfig) => OwnConfig;
 }
 
+export type PluginClientConfigSource = MaybeAsyncFactory<
+  MaybeArray<FilePortal>,
+  [config: ResolvedCmsConfig]
+>;
+
 declare module '@game-cms/core' {
   interface PluginConfig {
-    dashboard?: PluginDashboardConfig;
     client?: FilePortal;
   }
 
@@ -34,5 +37,10 @@ declare module '@game-cms/core' {
       },
       Types['clientConfig']
     >;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface PluginMixins<Types extends PluginTypes> {
+    clientConfigSource?: PluginClientConfigSource;
   }
 }

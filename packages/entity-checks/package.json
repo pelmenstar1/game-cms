@@ -2,16 +2,23 @@
   "name": "@game-cms/entity-checks",
   "packageManager": "pnpm@10.28.1",
   "type": "module",
+  "scripts": {
+    "prebuild": "tsx ./scripts/copyStyles.ts"
+  },
   "dependencies": {
     "@game-cms/core": "workspace:*",
     "@game-cms/base-core": "workspace:*",
+    "@game-cms/base-api": "workspace:*",
+    "@game-cms/base-components": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/global": "workspace:*",
+    "@game-cms/component-api": "workspace:*",
+    "@game-cms/ui": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@game-cms/base-api": "workspace:*",
     "@types/node": "catalog:",
+    "@game-cms/codegen": "workspace:*",
     "mongodb": "catalog:",
     "typescript": "catalog:"
   },

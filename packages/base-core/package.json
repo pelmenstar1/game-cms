@@ -6,6 +6,7 @@
   "types": "./dist/index.d.ts",
   "devDependencies": {
     "@game-cms/core": "workspace:*",
+    "@react-router/dev": "^7.13.0",
     "fastify": "catalog:"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     }
   },
   "peerDependencies": {
+    "@react-router/dev": "^7.13.0",
     "vite": "^7.0.0"
   }
 }

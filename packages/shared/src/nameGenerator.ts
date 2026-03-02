@@ -8,7 +8,7 @@ export function nameGenerator() {
   const registry = new Set<string>();
 
   return {
-    create: (prefix: string) => {
+    create: (prefix: string = 'var') => {
       prefix = sanitizeName(prefix);
 
       for (let i = 0; ; i++) {

@@ -9,7 +9,10 @@ import { ObjectId } from 'mongodb';
 import type z from 'zod';
 
 import type { entityVariant } from '../schema/entity.js';
-import type { EntityCheckStorageDataMap } from './check.js';
+import type {
+  EntityCheckClientDataMap,
+  EntityCheckStorageDataMap,
+} from './check.js';
 import { AnyEntityPreviewController } from './preview.js';
 
 export type EntitySchemaComponents = Record<string, ComponentSchema>;
@@ -116,9 +119,10 @@ export type EntityErrorById<Id extends EntityId> = {
 
 export type EntityInternalOutDataById<T extends EntityId, Id = ObjectId> = Omit<
   EntityOutDataWithChecksById<T>,
-  'search'
+  'search' | 'checks'
 > & {
   id: Id;
+  checks: EntityCheckClientDataMap;
 };
 
 export type EntityInDataByIdWithId<

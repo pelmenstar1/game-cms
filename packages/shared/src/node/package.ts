@@ -20,14 +20,23 @@ export type PackageInfo = {
 };
 
 export function resolveImport(meta: ImportMeta, id: string) {
+  function fallbackResolve() {
+    const result = createRequire(meta.url).resolve(id);
+
+    return pathToFileURL(result).href;
+  }
+
   try {
-    return meta.resolve(id);
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (meta.resolve) {
+      return meta.resolve(id);
+    }
+
+    return fallbackResolve();
   } catch (error) {
     // To handle the case when we're are resolving an import inside the Vitest env
     if (error instanceof Error && error.message.includes('[module runner]')) {
-      const result = createRequire(meta.url).resolve(id);
-
-      return pathToFileURL(result);
+      return fallbackResolve();
     }
 
     throw error;

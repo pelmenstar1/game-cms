@@ -25,7 +25,7 @@ export const apiConfig: PluginApiConfig = {
       ({ config }) => config.storage.provider.routes ?? [],
       ({ config }) =>
         config.entity?.checks?.flatMap(
-          (check) => check.routes as UnknownApiRoute[]
+          (check) => check.api?.routes as UnknownApiRoute[]
         ) ?? []
     ),
   },

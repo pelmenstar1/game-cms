@@ -31,6 +31,7 @@ export default defineConfig(
       'packages/game-plugin-components/.storybook',
       'packages/*/vite.storybook.config.ts',
       'packages/base-plugin/test-setups',
+      'packages/entity-checks/scripts/*',
       'e2e',
       'coverage',
     ],
@@ -75,6 +76,7 @@ export default defineConfig(
       'unicorn/no-for-loop': 'off',
       'unicorn/no-process-exit': 'off',
       'unicorn/prefer-event-target': 'off',
+      'unicorn/no-magic-array-flat-depth': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/await-thenable': 'off',

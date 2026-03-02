@@ -13,7 +13,13 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "composite": true
+    "composite": true,
+    "allowJs": true
   },
-  "include": ["./src"]
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.cjs",
+    "./src/**/*.mjs",
+    "./src/**/*.js"
+  ]
 }

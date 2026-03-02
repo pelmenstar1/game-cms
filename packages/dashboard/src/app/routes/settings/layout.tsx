@@ -1,27 +1,51 @@
-import { NavTabs } from '@game-cms/ui';
+import {
+  useClientConfig,
+  useSelfSession,
+} from '@game-cms/base-components/micro';
+import { PluginClientConfig } from '@game-cms/base-core';
+import { DataLoader, NavTabInfo, NavTabs, PageUrl } from '@game-cms/ui';
 import { useMemo } from 'react';
 import { Outlet } from 'react-router';
 
-import { useSelfSession } from '@/hooks/useSession';
-
-import { items } from './items';
 import styles from './layout.module.scss';
 
-export default function Layout() {
+function Tabs({ config }: { config: PluginClientConfig }) {
   const { permissions } = useSelfSession();
+  const tabs = config.settings?.tabs;
 
-  const allowedItems = useMemo(
-    () => items.filter((item) => permissions.has(item.permission)),
-    [permissions]
-  );
+  const allowedItems = useMemo((): NavTabInfo[] => {
+    if (tabs) {
+      return Object.entries(tabs)
+        .filter(
+          ([, tab]) =>
+            tab.permission === undefined || permissions.has(tab.permission)
+        )
+        .map(([, tab]) => ({
+          text: tab.title,
+          href: tab.href as PageUrl,
+        }));
+    }
+
+    return [];
+  }, [permissions, tabs]);
 
   return (
-    <div className={styles.root}>
+    <>
       <NavTabs className={styles['nav-tabs']} items={allowedItems} />
 
       <div className={styles.content}>
         <Outlet />
       </div>
-    </div>
+    </>
+  );
+}
+
+export default function Page() {
+  const clientConfig = useClientConfig();
+
+  return (
+    <DataLoader result={clientConfig} className={styles.root}>
+      {(config) => <Tabs config={config} />}
+    </DataLoader>
   );
 }

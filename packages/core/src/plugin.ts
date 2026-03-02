@@ -61,6 +61,9 @@ type PluginCore = {
   setup?: (config: ResolvedCmsConfig) => MaybePromise<void>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+export interface PluginMixins<Types extends PluginTypes> {}
+
 export interface PluginTypeManager<Types extends PluginTypes> {
   env: {
     env: EnvResolver<Types['env']>;
@@ -97,7 +100,7 @@ type PluginAddons<Types extends PluginTypes> = UnionToIntersection<
 >;
 
 export type Plugin<Types extends PluginTypes = UndefinedPluginTypes> =
-  PluginCore & PluginAddons<Types>;
+  PluginCore & PluginAddons<Types> & PluginMixins<Types>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyPlugin = Plugin<any>;

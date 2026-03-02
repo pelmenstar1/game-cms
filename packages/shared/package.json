@@ -44,12 +44,20 @@
       "import": "./dist/json/index.js",
       "types": "./dist/json/index.d.ts"
     },
+    "./vite": {
+      "import": "./dist/vite/index.js",
+      "types": "./dist/vite/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }
   },
   "peerDependencies": {
-    "fastify": "*",
-    "mongodb": "catalog:"
+    "fastify": "5.x",
+    "mongodb": "7.x",
+    "vite": "7.x"
+  },
+  "devDependencies": {
+    "vite": "7.x"
   }
 }

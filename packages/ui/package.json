@@ -51,6 +51,10 @@
       "import": "./dist/src/index.js",
       "types": "./dist/src/index.d.ts"
     },
+    "./types": {
+      "import": "./dist/src/types/index.js",
+      "types": "./dist/src/types/index.d.ts"
+    },
     "./theme/global": {
       "import": "./dist/src/theme/global.scss",
       "types": "./dist/src/theme/global.d.ts"

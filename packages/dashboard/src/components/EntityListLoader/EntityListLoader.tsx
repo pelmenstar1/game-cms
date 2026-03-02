@@ -1,5 +1,9 @@
 import { listEntities } from '@game-cms/base-api/client';
-import { EntityList, useEntitySchema } from '@game-cms/base-components/micro';
+import {
+  EntityList,
+  useEntitySchema,
+  useQueryPage,
+} from '@game-cms/base-components/micro';
 import { EntityId } from '@game-cms/base-core';
 import { useApiQuery } from '@game-cms/component-api';
 import {
@@ -8,8 +12,6 @@ import {
   PagePresenter,
   usePagingOptions,
 } from '@game-cms/ui';
-
-import { useQueryPage } from '@/hooks/useQueryPage';
 
 import styles from './EntityListLoader.module.scss';
 

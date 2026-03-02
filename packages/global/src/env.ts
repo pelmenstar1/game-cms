@@ -42,3 +42,7 @@ export function env(): CmsEnvironment {
 
   return _env;
 }
+
+export function isEnvInitialized(): boolean {
+  return _env !== undefined;
+}

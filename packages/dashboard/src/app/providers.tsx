@@ -4,8 +4,8 @@ import type { PropsWithChildren } from 'react';
 import { ApiClientProvider } from '@/context/ApiClientProvider';
 import { ClientConfigProvider } from '@/context/ClientConfigProvider';
 import { EntitySchemaProvider } from '@/context/EntitySchemaProvider';
+import { SessionProvider } from '@/context/SessionProvider';
 import { ComponentHubProvider } from '@/hooks/useComponentHub';
-import { SessionProvider } from '@/hooks/useSession';
 
 export function Providers({ children }: PropsWithChildren) {
   return (

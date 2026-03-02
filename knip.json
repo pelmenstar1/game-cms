@@ -18,6 +18,7 @@
     "packages/{base,game-plugin}-components": {
       "entry": [
         "src/components/*/{client,controller,core,renderer,types}.{ts,tsx}",
+        "src/**/route.tsx",
         "src/i18n/types.ts"
       ],
       "project": "src/**/*.{ts,tsx}",
@@ -32,13 +33,23 @@
       "project": "**/*.{ts,tsx}"
     },
     "packages/entity-checks": {
-      "entry": ["src/index.ts", "src/types.ts", "src/client.ts"]
+      "entry": [
+        "src/index.ts",
+        "src/types.ts",
+        "src/client.ts",
+        "src/**/route.tsx",
+        "src/**/config.client.ts",
+        "src/**/entityAccessRenderer.tsx"
+      ]
     },
     "packages/base-plugin": {
       "entry": ["src/index.ts", "src/entity/__tests__/fixtures/**/registry.ts"]
     },
     "packages/{base,game}-plugin": {
       "entry": ["src/index.ts", "src/**/*.client.ts"]
+    },
+    "packages/ui": {
+      "entry": ["src/index.ts", "src/types/index.ts"]
     },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]

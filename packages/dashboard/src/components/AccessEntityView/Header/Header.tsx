@@ -1,3 +1,4 @@
+import { useSelfSession } from '@game-cms/base-components/micro';
 import { EntityId, EntitySchemaById } from '@game-cms/base-core';
 import {
   classNames,
@@ -7,8 +8,6 @@ import {
   PreviewIcon,
   Typography,
 } from '@game-cms/ui';
-
-import { useSelfSession } from '@/hooks/useSession';
 
 import styles from './Header.module.scss';
 
