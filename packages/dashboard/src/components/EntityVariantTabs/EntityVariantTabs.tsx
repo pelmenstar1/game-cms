@@ -2,7 +2,7 @@ import {
   EntityComposeData,
   EntityComposeError,
   EntityComposeOptions,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import type { EntityId, EntityVariant } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
 import { Tab, Tabs } from '@game-cms/ui';

@@ -1,4 +1,4 @@
-import { useSelfSession } from '@game-cms/base-components/micro';
+import { useSelfSession } from '@game-cms/base-components/shared';
 import { EntityId, EntitySchemaById } from '@game-cms/base-core';
 import {
   classNames,

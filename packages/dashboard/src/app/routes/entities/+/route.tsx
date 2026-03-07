@@ -3,7 +3,7 @@ import {
   useApiAction,
   useCheckPermissions,
   useEntitySchema,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import type {
   EntityInstanceComponents,
   EntityVariant,

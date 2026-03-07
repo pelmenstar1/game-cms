@@ -1,7 +1,7 @@
 import {
   ClientConfigContext,
   ClientConfigContextType,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import { PropsWithChildren, useMemo } from 'react';
 
 import { getClientConfig } from '@/connector/clientConfig';

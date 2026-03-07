@@ -3,7 +3,7 @@ import {
   EntityList,
   useApiQuery,
   useEntitySchema,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import { EntityId, EntityInternalOutDataById } from '@game-cms/base-core';
 import { emptyPageData } from '@game-cms/shared';
 import {

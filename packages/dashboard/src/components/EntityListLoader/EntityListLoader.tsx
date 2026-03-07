@@ -4,7 +4,7 @@ import {
   useApiQuery,
   useEntitySchema,
   useQueryPage,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import { EntityId } from '@game-cms/base-core';
 import {
   classNames,

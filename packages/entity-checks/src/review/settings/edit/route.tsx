@@ -3,7 +3,7 @@ import {
   useApiQuery,
   useCheckPermissions,
   useSelfSession,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import { NoPasswordUser } from '@game-cms/base-core';
 import {
   Button,

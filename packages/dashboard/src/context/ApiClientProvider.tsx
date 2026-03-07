@@ -4,7 +4,7 @@ import {
   ApiClientContextType,
   ApiRequestOptions,
   ResolveApiRequestResult,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import {
   ApiError,
   ApiErrorCode,

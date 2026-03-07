@@ -1,7 +1,7 @@
 import {
   EntityComposeOptions,
   transformDataToClientData,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import type {
   EntityClientDataById,
   EntityComponents,

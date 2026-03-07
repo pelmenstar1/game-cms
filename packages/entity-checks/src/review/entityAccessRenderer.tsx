@@ -1,5 +1,5 @@
 import { invokeEntityCheckAction } from '@game-cms/base-api/client';
-import { useApiAction, useSelfSession } from '@game-cms/base-components/micro';
+import { useApiAction, useSelfSession } from '@game-cms/base-components/shared';
 import { EntityCheckRenderer } from '@game-cms/base-core';
 import {
   Button,

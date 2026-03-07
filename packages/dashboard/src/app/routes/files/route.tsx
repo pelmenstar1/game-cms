@@ -1,4 +1,4 @@
-import { FileExplorer } from '@game-cms/base-components/micro';
+import { FileExplorer } from '@game-cms/base-components/shared';
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router';
 

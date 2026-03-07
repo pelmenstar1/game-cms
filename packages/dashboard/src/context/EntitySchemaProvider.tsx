@@ -1,7 +1,7 @@
 import {
   EntitySchemaContext,
   EntitySchemaContextType,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import { PropsWithChildren } from 'react';
 
 import { getEntitySchemaById } from '@/connector/entity';

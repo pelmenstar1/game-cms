@@ -3,7 +3,7 @@ import {
   EntityComposeOptions,
   transformDataToClientData,
   useApiQuery,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import type { EntityId } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
 import { DataLoader, Typography } from '@game-cms/ui';

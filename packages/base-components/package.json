@@ -46,7 +46,7 @@
       "types": "./dist/src/index.d.ts",
       "require": "./dist/src/index.js"
     },
-    "./micro": {
+    "./shared": {
       "import": "./dist/src/shared.js",
       "types": "./dist/src/shared.d.ts"
     },

@@ -1,4 +1,4 @@
-import { useClientConfig } from '@game-cms/base-components/micro';
+import { useClientConfig } from '@game-cms/base-components/shared';
 import { PageUrl, useTypedNavigate } from '@game-cms/ui';
 import { useEffect } from 'react';
 

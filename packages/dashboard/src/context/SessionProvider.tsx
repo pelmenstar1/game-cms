@@ -3,7 +3,7 @@ import {
   SessionContext,
   SessionContextType,
   useApiQuery,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import { ApiRouteId } from '@game-cms/core/api';
 import { type PropsWithChildren, useMemo } from 'react';
 

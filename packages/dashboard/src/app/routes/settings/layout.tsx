@@ -1,7 +1,7 @@
 import {
   useClientConfig,
   useSelfSession,
-} from '@game-cms/base-components/micro';
+} from '@game-cms/base-components/shared';
 import { PluginClientConfig } from '@game-cms/base-core';
 import { DataLoader, NavTabInfo, NavTabs, PageUrl } from '@game-cms/ui';
 import { useMemo } from 'react';
