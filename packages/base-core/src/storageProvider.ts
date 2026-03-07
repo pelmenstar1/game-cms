@@ -39,7 +39,7 @@ export interface StorageProviderProtocol<Extra> {
   ) => Promise<{ size: number }>;
 
   delete: (extra: Extra) => Promise<void>;
-  getUrl: (extra: Extra) => string;
+  getUrl: (extra: Extra) => MaybePromise<string>;
   getContent: (extra: Extra, options?: AbortOptions) => Promise<Uint8Array>;
 }
 
@@ -52,6 +52,9 @@ export interface StorageProviderProtocol<Extra> {
 export interface StorageProvider<Extra = unknown> {
   init?: () => MaybePromise<void>;
 
+  meta?: {
+    deterministicUrls?: boolean;
+  };
   routes?: UnknownApiRoute[];
   protocol: StorageProviderProtocol<Extra>;
 }

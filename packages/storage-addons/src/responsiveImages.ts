@@ -65,14 +65,16 @@ export function responsiveImages(options: ResponsiveImagesOptions) {
 
       return { variants };
     },
-    hydrateData: (data, context) => {
+    hydrateData: async (data, context) => {
       const { protocol } = context.provider;
 
       return {
-        variants: data.variants.map(({ size, extra }) => ({
-          size,
-          url: protocol.getUrl(extra),
-        })),
+        variants: await Promise.all(
+          data.variants.map(async ({ size, extra }) => ({
+            size,
+            url: await protocol.getUrl(extra),
+          }))
+        ),
       };
     },
   });

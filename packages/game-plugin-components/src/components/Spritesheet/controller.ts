@@ -1,5 +1,4 @@
 import { defineComponentController } from '@game-cms/core';
-import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
 import { createShadowFileOrchestration } from '../../utils/shadowFile.js';
@@ -10,10 +9,8 @@ import { createShadowAtlasContent } from './internal/shadowAtlas.js';
 const shadowAtlasOrchestration = createShadowFileOrchestration({
   shadowName: 'atlas.json',
   mime: 'application/json',
-  getContent: async (atlasContent, args: { textureId: ObjectId }) => {
-    const textureUrl = await cms()
-      .service('base::storage')
-      .getUrl(args.textureId);
+  getContent: async (atlasContent, args: { textureId: ObjectId }, context) => {
+    const textureUrl = await context.getUrl(args.textureId);
 
     return createShadowAtlasContent(atlasContent, textureUrl);
   },

@@ -104,7 +104,7 @@ async function hydrateItem(
   const { protocol } = storageProvider();
 
   const { _id, mime, name, extra, parent, hidden, size, addons } = item;
-  const url = protocol.getUrl(extra);
+  const url = await protocol.getUrl(extra);
 
   const hydratedAddons = await hydrateAddonData(addons);
 
@@ -261,7 +261,7 @@ export default service({
       type: StorageItemType.FILE,
     });
 
-    const url = protocol.getUrl(item.extra);
+    const url = await protocol.getUrl(item.extra);
 
     cms()
       .service('base::appEvents')
@@ -325,7 +325,7 @@ export default service({
   getUrl: async (id: ObjectId, options?: AbortOptions) => {
     const extra = await getFileExtraById(id, options);
 
-    return storageProvider().protocol.getUrl(extra);
+    return await storageProvider().protocol.getUrl(extra);
   },
   list: async (options: ListStorageItemsOptions & AbortOptions) => {
     const { parent } = options;

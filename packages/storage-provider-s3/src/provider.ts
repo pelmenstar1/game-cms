@@ -1,103 +1,16 @@
-import { Readable } from 'node:stream';
-
 import {
   DeleteObjectCommand,
   GetObjectCommand,
-  NoSuchKey,
   S3Client,
 } from '@aws-sdk/client-s3';
-import { Upload } from '@aws-sdk/lib-storage';
-import { FileSource, type StorageProvider } from '@game-cms/base-core';
-import { ApiError, apiRoute } from '@game-cms/core/api';
-import { meteredStream } from '@game-cms/shared/node';
-import { stripUndefined } from '@game-cms/shared/object';
-import z from 'zod';
+import { StorageProvider } from '@game-cms/base-core';
+import { resolveMaybeFactory } from '@game-cms/shared';
 
-import type { S3StorageProviderConfig } from './types.js';
-import { createFileKey, GET_ROUTE, getFileUrl } from './utils.js';
+import { getFileRoute } from './internal/getRoute.js';
+import { baseUpload, createFileKey, getFileUrl } from './internal/utils.js';
+import { S3StorageProviderConfig } from './types.js';
 
 type Extra = { key: string };
-
-function getFileRoute(config: S3StorageProviderConfig, client: S3Client) {
-  return apiRoute({
-    url: `${GET_ROUTE}/:key`,
-    method: 'GET',
-    config: {
-      id: 'storage/file$get',
-    },
-    schema: {
-      params: z.object({
-        key: z.string(),
-      }),
-    },
-    handler: async (req, res) => {
-      const { key } = req.params;
-
-      try {
-        const object = await client.send(
-          new GetObjectCommand({ Bucket: config.bucket, Key: key })
-        );
-
-        res.raw.writeHead(
-          200,
-          stripUndefined({
-            'content-length': object.ContentLength?.toString(),
-            'content-type': object.ContentType,
-            'content-disposition': object.ContentDisposition,
-            'content-encoding': object.ContentEncoding,
-            'content-language': object.ContentLanguage,
-            'cache-control': object.CacheControl,
-            etag: object.ETag,
-            expires: object.ExpiresString,
-          })
-        );
-
-        if (object.Body instanceof Readable) {
-          object.Body.pipe(res.raw);
-        }
-      } catch (error) {
-        if (error instanceof NoSuchKey) {
-          throw new ApiError('File not found', 'base::entity/notFound');
-        }
-
-        throw error;
-      }
-    },
-  });
-}
-
-async function baseUpload(
-  client: S3Client,
-  bucket: string,
-  key: string,
-  content: FileSource,
-  mime: string,
-  signal?: AbortSignal
-) {
-  const stream = meteredStream(content);
-
-  const upload = new Upload({
-    client,
-    params: {
-      Bucket: bucket,
-      Key: key,
-      ContentType: mime,
-      Body: stream.body,
-    },
-  });
-
-  const abortCallback = () => {
-    void upload.abort();
-  };
-
-  signal?.addEventListener('abort', abortCallback);
-
-  await upload.done();
-
-  signal?.removeEventListener('abort', abortCallback);
-
-  return stream.size;
-}
 
 export function s3StorageProvider(
   config: S3StorageProviderConfig
@@ -105,10 +18,15 @@ export function s3StorageProvider(
   const { bucket } = config;
   const client = new S3Client(config.client);
 
+  const presignConfig = resolveMaybeFactory(config.presignConfig);
+
   return {
+    meta: {
+      deterministicUrls: !(presignConfig?.enabled ?? false),
+    },
     routes: [getFileRoute(config, client)],
     protocol: {
-      getUrl: ({ key }) => getFileUrl(config, key),
+      getUrl: ({ key }) => getFileUrl({ client, config }, key),
       upload: async (info, options) => {
         const { name, mime, content } = info;
         const key = createFileKey(mime, name);

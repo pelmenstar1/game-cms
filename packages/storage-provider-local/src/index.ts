@@ -90,6 +90,9 @@ export function localStorageProvider(
 
       await collection().createIndex({ 'extra.fileName': 1 }, { unique: true });
     },
+    meta: {
+      deterministicUrls: true,
+    },
     routes: [getFileRoute(storagePath)],
     protocol: {
       getUrl: ({ fileName }) => encodeURI(`/api${GET_ROUTE}/${fileName}`),

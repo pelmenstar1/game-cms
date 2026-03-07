@@ -1,9 +1,7 @@
 import { randomUUID } from 'node:crypto';
-import path from 'node:path';
 
 import { HeadObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { ApiError } from '@game-cms/core/api';
-import { loadEnvFileIfExists } from '@game-cms/shared/node';
 import { setupStorageProviderTests } from '@game-cms/testing-lib';
 import { fastify, RouteOptions } from 'fastify';
 import {
@@ -12,25 +10,12 @@ import {
 } from 'fastify-type-provider-zod';
 import { describe, expect, test } from 'vitest';
 
+import { GET_ROUTE } from './internal/constants.js';
+import { getTestConfig, loadTestEnv } from './internal/testUtils.js';
 import { s3StorageProvider } from './provider.js';
 import type { S3StorageProviderConfig } from './types.js';
-import { GET_ROUTE } from './utils.js';
 
-await loadEnvFileIfExists(path.join(import.meta.dirname, '../'), '.env.test');
-
-function getTestConfig(): S3StorageProviderConfig {
-  return {
-    bucket: process.env.TEST_S3_BUCKET as string,
-    client: {
-      endpoint: process.env.TEST_S3_API_URL as string,
-      region: 'auto',
-      credentials: {
-        accessKeyId: process.env.TEST_S3_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.TEST_S3_SECRET_ACCESS_KEY as string,
-      },
-    },
-  };
-}
+await loadTestEnv();
 
 function createAppWithRoutes(config: S3StorageProviderConfig) {
   const provider = s3StorageProvider(config);

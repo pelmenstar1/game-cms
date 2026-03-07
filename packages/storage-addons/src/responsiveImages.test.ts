@@ -103,10 +103,10 @@ describe('responsiveImages', () => {
     });
   });
 
-  it('should hydrate variants with urls from provider', () => {
+  it('should hydrate variants with urls from provider', async () => {
     const context = createMockContext();
 
-    const result = addon.hydrateData(
+    const result = await addon.hydrateData(
       {
         variants: [
           { size: { width: 200, height: 100 }, extra: 'extra-1' },

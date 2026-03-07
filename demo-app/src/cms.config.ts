@@ -36,6 +36,9 @@ export default config((env) => ({
           secretAccessKey: env('S3_SECRET_ACCESS_KEY'),
         },
       },
+      presignConfig: {
+        enabled: true,
+      },
     }),
     addons: [imageSize(), responsiveImages({ breakpoints: [320, 420] })],
   },
