@@ -4,9 +4,15 @@ import {
 } from '@game-cms/base-components/shared';
 import { PropsWithChildren } from 'react';
 
-import { getEntitySchemaById } from '@/connector/entity';
+import {
+  getEntityIds,
+  getEntitySchemaById,
+  getEntityTitle,
+} from '@/connector/entity';
 
 const context: EntitySchemaContextType = {
+  entityIds: getEntityIds(),
+  getEntityTitle,
   getEntitySchemaById,
 };
 

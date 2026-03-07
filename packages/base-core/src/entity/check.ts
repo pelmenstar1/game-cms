@@ -14,7 +14,7 @@ import { ReactNode } from 'react';
 import type z from 'zod';
 import type { ZodType } from 'zod';
 
-import { CustomDashboardRoute } from '../dashboard.js';
+import { CustomDashboardRoute } from '../dashboard/routes.js';
 import type { getEntityChecksResponse } from '../schema/entityCheck.js';
 import type {
   BaseEntityStorageDataById,

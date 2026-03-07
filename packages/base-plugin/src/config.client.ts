@@ -1,8 +1,6 @@
-import { settings as settingsTabs } from '@game-cms/base-components/settings';
+import dashboardConfig from '@game-cms/base-components/dashboard';
 import { PluginClientConfig } from '@game-cms/base-core';
 
 export default {
-  settings: {
-    tabs: settingsTabs,
-  },
+  dashboard: dashboardConfig,
 } satisfies PluginClientConfig;

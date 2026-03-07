@@ -11,17 +11,17 @@ import styles from './layout.module.scss';
 
 function Tabs({ config }: { config: PluginClientConfig }) {
   const { permissions } = useSelfSession();
-  const tabs = config.settings?.tabs;
+  const tabs = config.dashboard?.settings?.tabs;
 
   const allowedItems = useMemo((): NavTabInfo[] => {
     if (tabs) {
-      return Object.entries(tabs)
+      return tabs
         .filter(
-          ([, tab]) =>
+          (tab) =>
             tab.permission === undefined || permissions.has(tab.permission)
         )
-        .map(([, tab]) => ({
-          text: tab.title,
+        .map((tab) => ({
+          text: tab.text,
           href: tab.href as PageUrl,
         }));
     }

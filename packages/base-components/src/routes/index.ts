@@ -1,17 +1,30 @@
 import path from 'node:path';
 
-import { CustomDashboardRoute } from '@game-cms/base-core';
+import {
+  CustomDashboardRoute,
+  CustomDashboardRouteLayout,
+} from '@game-cms/base-core';
 
-const settingsRoute = (
+const settingsRoute = (file: string, routePath: string): CustomDashboardRoute =>
+  route(`settings/${file}`, `settings/${routePath}`, 'settings');
+
+const route = (
   file: string,
-  routePath: string
+  routePath: string,
+  layout?: CustomDashboardRouteLayout
 ): CustomDashboardRoute => ({
-  layout: 'settings',
-  path: `settings/${routePath}`,
-  file: path.join(import.meta.dirname, '../settings', file),
+  layout,
+  path: routePath,
+  file: path.join(import.meta.dirname, file),
 });
 
 export const routes: CustomDashboardRoute[] = [
+  route('entities/route.js', 'entities/:name?'),
+  route('entities/+/route.js', 'entities/:name/+'),
+  route('entities/edit/route.js', 'entities/:name/edit/:id'),
+  route('files/route.js', 'files'),
+  settingsRoute('route.js', 'settings'),
+
   // Users
   settingsRoute('users/route.js', 'users'),
   settingsRoute('users/+/route.js', 'users/+'),

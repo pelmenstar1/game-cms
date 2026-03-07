@@ -17,8 +17,14 @@ export default {
           next.filePreviews?.fullScale
         ),
       },
-      settings: {
-        tabs: { ...base.settings?.tabs, ...next.settings?.tabs },
+      dashboard: {
+        tabs: mergeArrays(base.dashboard?.tabs, next.dashboard?.tabs),
+        settings: {
+          tabs: mergeArrays(
+            base.dashboard?.settings?.tabs,
+            next.dashboard?.settings?.tabs
+          ),
+        },
       },
     };
   },

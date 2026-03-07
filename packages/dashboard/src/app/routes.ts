@@ -37,14 +37,10 @@ const baseConfig: RouteConfig = [
   route('signin', 'routes/signin/route.tsx'),
   layout('routes/tabLayout.tsx', [
     index('routes/home/route.tsx'),
-    route('entities/:name?', 'routes/entities/route.tsx'),
-    route('entities/:name/+', 'routes/entities/+/route.tsx'),
-    route('entities/:name/edit/:id', 'routes/entities/edit/route.tsx'),
-    route('files', 'routes/files/route.tsx'),
-    layout('routes/settings/layout.tsx', [
-      route('settings', 'routes/settings/route.tsx'),
-      ...customRoutes.filter((route) => route.layout === 'settings'),
-    ]),
+    layout(
+      'routes/settings/layout.tsx',
+      customRoutes.filter((route) => route.layout === 'settings')
+    ),
     ...customRoutes.filter((route) => route.layout !== 'settings'),
   ]),
   route('*', 'routes/notFound/route.tsx'),

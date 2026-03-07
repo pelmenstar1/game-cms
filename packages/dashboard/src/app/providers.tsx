@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react';
 
 import { ApiClientProvider } from '@/context/ApiClientProvider';
 import { ClientConfigProvider } from '@/context/ClientConfigProvider';
+import { EntityCheckProvider } from '@/context/EntityCheckProvider';
 import { EntitySchemaProvider } from '@/context/EntitySchemaProvider';
 import { SessionProvider } from '@/context/SessionProvider';
 import { ComponentHubProvider } from '@/hooks/useComponentHub';
@@ -14,9 +15,11 @@ export function Providers({ children }: PropsWithChildren) {
         <EntitySchemaProvider>
           <ComponentHubProvider>
             <ClientConfigProvider>
-              <ModalProvider>
-                <SessionProvider>{children}</SessionProvider>
-              </ModalProvider>
+              <EntityCheckProvider>
+                <ModalProvider>
+                  <SessionProvider>{children}</SessionProvider>
+                </ModalProvider>
+              </EntityCheckProvider>
             </ClientConfigProvider>
           </ComponentHubProvider>
         </EntitySchemaProvider>

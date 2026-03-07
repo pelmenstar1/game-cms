@@ -1,23 +1,36 @@
+import { useClientConfig } from '@game-cms/base-components/shared';
+import { DashboardTabInfo, PluginClientConfig } from '@game-cms/base-core';
 import {
-  AppsIcon,
-  FilesIcon,
+  DataLoader,
   HomeIcon,
-  type NavTabInfo,
+  NavTabInfo,
   NavTabs,
-  SettingsIcon,
+  PageUrl,
 } from '@game-cms/ui';
+import React, { useMemo } from 'react';
 import { Outlet } from 'react-router';
 
 import styles from './tabLayout.module.scss';
 
-const items: NavTabInfo[] = [
-  { href: '/', icon: <HomeIcon />, text: 'Home' },
-  { href: '/entities', icon: <AppsIcon />, text: 'Entities' },
-  { href: '/files', icon: <FilesIcon />, text: 'Files' },
-  { href: '/settings', icon: <SettingsIcon />, text: 'Settings' },
+const defaultTabs: DashboardTabInfo[] = [
+  { href: '/', icon: HomeIcon, text: 'Home' },
 ];
 
-export default function Layout() {
+type RendererProps = {
+  config: PluginClientConfig;
+};
+
+function Renderer({ config }: RendererProps) {
+  const items = useMemo((): NavTabInfo[] => {
+    const resolvedItems = [...defaultTabs, ...(config.dashboard?.tabs ?? [])];
+
+    return resolvedItems.map(({ href, text, icon: Icon }) => ({
+      href: href as PageUrl,
+      text,
+      icon: <Icon />,
+    }));
+  }, [config.dashboard?.tabs]);
+
   return (
     <div className={styles.root}>
       <NavTabs collapsable className={styles['nav-tabs']} items={items} />
@@ -26,5 +39,15 @@ export default function Layout() {
         <Outlet />
       </div>
     </div>
+  );
+}
+
+export default function Layout() {
+  const clientConfigResult = useClientConfig();
+
+  return (
+    <DataLoader result={clientConfigResult}>
+      {(config) => <Renderer config={config} />}
+    </DataLoader>
   );
 }
