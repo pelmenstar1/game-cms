@@ -1,7 +1,7 @@
 import { getPermissions } from '@game-cms/base-api/client';
-import { useApiQuery } from '@game-cms/component-api';
 import { DataLoader } from '@game-cms/ui';
 
+import { useApiQuery } from '../../hooks/useApiQuery.js';
 import {
   BasePermissionsEditor,
   type BasePermissionsEditorProps,

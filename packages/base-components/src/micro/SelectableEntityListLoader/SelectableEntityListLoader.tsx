@@ -1,5 +1,4 @@
 import { listEntities } from '@game-cms/base-api/client';
-import { useApiQuery } from '@game-cms/component-api';
 import {
   classNames,
   MultipleDataLoader,
@@ -8,6 +7,7 @@ import {
 } from '@game-cms/ui';
 import { useState } from 'react';
 
+import { useApiQuery } from '../../hooks/useApiQuery.js';
 import { useEntitySchema } from '../../hooks/useEntitySchema.js';
 import { SelectableEntityList } from '../SelectableEntityList/index.js';
 import styles from './SelectableEntityListLoader.module.scss';

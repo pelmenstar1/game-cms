@@ -5,7 +5,6 @@ import path from 'node:path';
 import type {
   ComponentClientDataById,
   ComponentClientDataTransformer,
-  ComponentCore,
   ComponentId,
   ComponentInDataById,
   ComponentOptionsById,
@@ -13,6 +12,7 @@ import type {
   ComponentSchema,
   ForeignComponentClientDataResolverContext,
 } from '@game-cms/core';
+import { getComponentIdFromCoreFile } from '@game-cms/core/node';
 import { cms, env } from '@game-cms/global';
 import {
   incrementingIdSource,
@@ -32,14 +32,13 @@ async function gatherComponentClientChunk(dirPath: string) {
   const clientPath = path.join(dirPath, 'client.js');
 
   if (fs.existsSync(clientPath)) {
-    const { default: core } = await importFile<{ default: ComponentCore }>(
-      corePath
-    );
+    const componentId = getComponentIdFromCoreFile(corePath);
+
     const { clientTransformer } = await importFile<{
       clientTransformer: ComponentClientDataTransformer;
     }>(clientPath);
 
-    return [core.id, clientTransformer] as const;
+    return [componentId, clientTransformer] as const;
   }
 }
 

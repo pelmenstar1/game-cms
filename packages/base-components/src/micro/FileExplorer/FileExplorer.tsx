@@ -6,7 +6,6 @@ import {
   uploadFile,
 } from '@game-cms/base-api/client';
 import { StorageItemWithId } from '@game-cms/base-core';
-import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import type { ToClientType } from '@game-cms/core';
 import {
   classNames,
@@ -17,8 +16,10 @@ import {
   useModal,
   useNotification,
 } from '@game-cms/ui';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useApiAction } from '../../hooks/useApiAction.js';
+import { useApiQuery } from '../../hooks/useApiQuery.js';
 import { FileControlHeader } from '../FileControlHeader/index.js';
 import { FileGrid, FileItem } from '../FileGrid/index.js';
 import { FolderNameModal } from '../FolderNameModal/index.js';

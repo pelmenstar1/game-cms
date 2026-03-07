@@ -1,9 +1,10 @@
 import {
+  useApiAction,
+  useApiQuery,
   useCheckPermissions,
   useSelfSession,
 } from '@game-cms/base-components/micro';
 import { NoPasswordUser } from '@game-cms/base-core';
-import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import {
   Button,
   DataLoader,

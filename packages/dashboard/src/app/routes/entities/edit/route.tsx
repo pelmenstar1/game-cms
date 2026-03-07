@@ -5,6 +5,8 @@ import {
   updateEntityById,
 } from '@game-cms/base-api/client';
 import {
+  useApiAction,
+  useApiQuery,
   useCheckPermissions,
   useEntitySchema,
 } from '@game-cms/base-components/micro';
@@ -12,7 +14,6 @@ import type {
   EntityInstanceComponents,
   EntityVariant,
 } from '@game-cms/base-core';
-import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import {
   MultipleDataLoader,
   useNotification,

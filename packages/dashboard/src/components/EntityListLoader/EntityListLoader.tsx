@@ -1,11 +1,11 @@
 import { listEntities } from '@game-cms/base-api/client';
 import {
   EntityList,
+  useApiQuery,
   useEntitySchema,
   useQueryPage,
 } from '@game-cms/base-components/micro';
 import { EntityId } from '@game-cms/base-core';
-import { useApiQuery } from '@game-cms/component-api';
 import {
   classNames,
   MultipleDataLoader,

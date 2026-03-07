@@ -2,8 +2,6 @@ import {
   getPublicPermissions,
   updatePublicPermissions,
 } from '@game-cms/base-api/client';
-import { useSelfSession } from '@game-cms/base-components/micro';
-import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import type { ApiRouteId } from '@game-cms/core/api';
 import {
   Button,
@@ -14,7 +12,10 @@ import {
 } from '@game-cms/ui';
 import { useLayoutEffect, useState } from 'react';
 
+import { useApiAction } from '../../hooks/useApiAction.js';
+import { useApiQuery } from '../../hooks/useApiQuery.js';
 import { useCheckPermissions } from '../../hooks/useCheckPermissions.js';
+import { useSelfSession } from '../../hooks/useSelfSession.js';
 import { PermissionsEditor } from '../../micro/PermissionsEditor/index.js';
 import styles from './route.module.scss';
 

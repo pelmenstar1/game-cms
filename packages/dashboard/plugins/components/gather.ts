@@ -3,10 +3,9 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import type { ComponentId } from '@game-cms/core';
+import { getComponentIdFromCoreFile } from '@game-cms/core/node';
 import { env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
-
-import { getComponentIdFromCoreFile } from './analysis.js';
 
 export type ComponentClientChunkEntry = {
   paths: {
@@ -45,11 +44,11 @@ async function gatherComponentsForDistribution(distPath: string) {
   const entries = await fsp.readdir(distPath, { withFileTypes: true });
 
   const result = await Promise.all(
-    entries.map(async (entry) => {
-      if (entry.isDirectory()) {
-        return gatherComponentClientChunk(path.join(distPath, entry.name));
-      }
-    })
+    entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) =>
+        gatherComponentClientChunk(path.join(distPath, entry.name))
+      )
   );
 
   return filterOutNullable(result);

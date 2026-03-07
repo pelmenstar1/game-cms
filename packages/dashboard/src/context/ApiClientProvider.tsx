@@ -1,10 +1,10 @@
 import { refreshUserSession } from '@game-cms/base-api/client';
 import {
   ApiClientContext,
-  type ApiClientContextType,
-  type ApiRequestOptions,
-  type ResolveApiRequestResult,
-} from '@game-cms/component-api';
+  ApiClientContextType,
+  ApiRequestOptions,
+  ResolveApiRequestResult,
+} from '@game-cms/base-components/micro';
 import {
   ApiError,
   ApiErrorCode,

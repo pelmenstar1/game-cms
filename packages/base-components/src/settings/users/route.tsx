@@ -1,5 +1,4 @@
 import { listUsers } from '@game-cms/base-api/client';
-import { useApiQuery } from '@game-cms/component-api';
 import {
   DataLoader,
   LinkButton,
@@ -10,6 +9,7 @@ import {
   usePagingOptions,
 } from '@game-cms/ui';
 
+import { useApiQuery } from '../../hooks/useApiQuery.js';
 import { useCheckPermissions } from '../../hooks/useCheckPermissions.js';
 import { useQueryPage } from '../../hooks/useQueryPage.js';
 import { useSelfSession } from '../../hooks/useSelfSession.js';

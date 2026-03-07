@@ -4,15 +4,16 @@ import {
   EntityOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
-import { useApiQuery, useComponentApi } from '@game-cms/component-api';
+import { useComponentApi } from '@game-cms/component-api';
 import { MultipleDataLoader } from '@game-cms/ui';
 import { useMemo } from 'react';
 
+import { useApiQuery } from '../../hooks/useApiQuery.js';
 import { useEntitySchema } from '../../hooks/useEntitySchema.js';
 import {
   EntityComposeOptions,
   transformDataToClientData,
-} from '../../shared.js';
+} from '../../utils/entity.js';
 
 export interface EntityPreviewLoaderProps {
   className?: string;

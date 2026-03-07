@@ -1,7 +1,10 @@
 import { searchEntities } from '@game-cms/base-api/client';
-import { EntityList, useEntitySchema } from '@game-cms/base-components/micro';
+import {
+  EntityList,
+  useApiQuery,
+  useEntitySchema,
+} from '@game-cms/base-components/micro';
 import { EntityId, EntityInternalOutDataById } from '@game-cms/base-core';
-import { useApiQuery } from '@game-cms/component-api';
 import { emptyPageData } from '@game-cms/shared';
 import {
   ModalDialog,

@@ -2,8 +2,8 @@ import { getSelfSessionInfo } from '@game-cms/base-api/client';
 import {
   SessionContext,
   SessionContextType,
+  useApiQuery,
 } from '@game-cms/base-components/micro';
-import { useApiQuery } from '@game-cms/component-api';
 import { ApiRouteId } from '@game-cms/core/api';
 import { type PropsWithChildren, useMemo } from 'react';
 

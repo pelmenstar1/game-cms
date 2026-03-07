@@ -1,9 +1,9 @@
 import { createUser } from '@game-cms/base-api/client';
 import type { CreateUserPayload } from '@game-cms/base-core';
-import { useApiAction } from '@game-cms/component-api';
 import { useNotification, usePreventLeaving } from '@game-cms/ui';
 import { useCallback } from 'react';
 
+import { useApiAction } from '../../../hooks/useApiAction.js';
 import { useCheckPermissions } from '../../../hooks/useCheckPermissions.js';
 import { AccessUserView } from '../../../micro/AccessUserView/index.js';
 

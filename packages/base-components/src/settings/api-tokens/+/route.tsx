@@ -1,5 +1,4 @@
 import { createApiToken } from '@game-cms/base-api/client';
-import { useApiAction } from '@game-cms/component-api';
 import type { ApiRouteId } from '@game-cms/core/api';
 import {
   parseTimeSpec,
@@ -21,6 +20,7 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
 
+import { useApiAction } from '../../../hooks/useApiAction.js';
 import { DisplayApiTokenDialog } from '../../../micro/DisplayApiTokenDialog/index.js';
 import { PermissionsEditor } from '../../../micro/PermissionsEditor/index.js';
 import styles from './route.module.scss';

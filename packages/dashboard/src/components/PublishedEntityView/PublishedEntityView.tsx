@@ -2,9 +2,10 @@ import { getRawEntityDocumentById } from '@game-cms/base-api/client';
 import {
   EntityComposeOptions,
   transformDataToClientData,
+  useApiQuery,
 } from '@game-cms/base-components/micro';
 import type { EntityId } from '@game-cms/base-core';
-import { useApiQuery, useComponentApi } from '@game-cms/component-api';
+import { useComponentApi } from '@game-cms/component-api';
 import { DataLoader, Typography } from '@game-cms/ui';
 import { useEffect } from 'react';
 

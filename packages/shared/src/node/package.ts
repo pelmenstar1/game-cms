@@ -20,27 +20,23 @@ export type PackageInfo = {
 };
 
 export function resolveImport(meta: ImportMeta, id: string) {
-  function fallbackResolve() {
-    const result = createRequire(meta.url).resolve(id);
-
-    return pathToFileURL(result).href;
-  }
-
   try {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (meta.resolve) {
       return meta.resolve(id);
     }
-
-    return fallbackResolve();
   } catch (error) {
     // To handle the case when we're are resolving an import inside the Vitest env
-    if (error instanceof Error && error.message.includes('[module runner]')) {
-      return fallbackResolve();
+    if (
+      !(error instanceof Error && error.message.includes('[module runner]'))
+    ) {
+      throw error;
     }
-
-    throw error;
   }
+
+  const result = createRequire(meta.url).resolve(id);
+
+  return pathToFileURL(result).href;
 }
 
 export function resolveImportFile(meta: ImportMeta, id: string) {

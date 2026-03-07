@@ -7,7 +7,8 @@
     "**/*.{test,btest,e2e-test,outer-loop-test}.ts",
     "**/.storybook/*.{ts,tsx}",
     "**/vite.storybook.config.ts",
-    "packages/ui/src/theme/global.ts"
+    "packages/ui/src/theme/global.ts",
+    "packages/**/fixtures/**/*.ts"
   ],
   "ignoreFiles": ["e2e/src/cms.config.ts"],
   "workspaces": {

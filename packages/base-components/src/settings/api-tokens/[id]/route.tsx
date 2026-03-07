@@ -1,5 +1,4 @@
 import { deleteApiToken, getApiTokenInfo } from '@game-cms/base-api/client';
-import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import {
   Button,
   ConfirmationDialog,
@@ -13,6 +12,8 @@ import {
   useTypedNavigate,
 } from '@game-cms/ui';
 
+import { useApiAction } from '../../../hooks/useApiAction.js';
+import { useApiQuery } from '../../../hooks/useApiQuery.js';
 import { PermissionsEditor } from '../../../micro/PermissionsEditor/index.js';
 import { formatExpirationDate } from '../../../utils/expirationDate.js';
 import styles from './route.module.scss';

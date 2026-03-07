@@ -1,6 +1,5 @@
 import { signUserIn } from '@game-cms/base-api/client';
-import { useSelfSession } from '@game-cms/base-components/micro';
-import { useApiAction } from '@game-cms/component-api';
+import { useApiAction, useSelfSession } from '@game-cms/base-components/micro';
 import { emailRegex } from '@game-cms/shared/string';
 import {
   Button,

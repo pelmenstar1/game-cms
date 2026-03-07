@@ -3,12 +3,7 @@ import {
   getUserById,
   updateUserById,
 } from '@game-cms/base-api/client';
-import {
-  useCheckPermissions,
-  useSelfSession,
-} from '@game-cms/base-components/micro';
 import type { CreateUserPayload } from '@game-cms/base-core';
-import { useApiAction, useApiQuery } from '@game-cms/component-api';
 import {
   Button,
   ConfirmationDialog,
@@ -21,6 +16,10 @@ import {
   useTypedNavigate,
 } from '@game-cms/ui';
 
+import { useApiAction } from '../../../hooks/useApiAction.js';
+import { useApiQuery } from '../../../hooks/useApiQuery.js';
+import { useCheckPermissions } from '../../../hooks/useCheckPermissions.js';
+import { useSelfSession } from '../../../hooks/useSelfSession.js';
 import { AccessUserView } from '../../../micro/AccessUserView/index.js';
 import styles from './route.module.scss';
 
