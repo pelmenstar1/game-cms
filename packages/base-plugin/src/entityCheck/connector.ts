@@ -12,14 +12,13 @@ export default {
       const renderer = dashboard?.entityAccessRenderer;
 
       if (renderer) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        return { id, renderer };
+        return { id: id as string, renderer };
       }
     })
     .filter((pair) => pair !== undefined)
     .map(
       ({ id, renderer }) =>
-        `${JSON.stringify(id)}: import('${pathToFileURL(renderer.filePath)}')`
+        `${JSON.stringify(id)}: () => import('${pathToFileURL(renderer.filePath)}')`
     )
     .join(',')}
 }`;

@@ -1,3 +1,4 @@
+export * from './atomWalker.js';
 export * from './client.js';
 export * from './controller.js';
 export * from './core.js';

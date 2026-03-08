@@ -21,11 +21,12 @@ declare module '@game-cms/core/api' {
     'PUT /entity/:entityId/byId/:id': typeof import('./entity/byId/update.js');
     'POST /entity/:entityId/:entityObjectId/check/:checkId/:actionId': typeof import('./entity/check/action.js');
     'POST /entity/:entityId': typeof import('./entity/create.js');
-    'GET /entity/:entityId/raw/byId/:id': typeof import('./entity/internal/byId/get.js');
+    'GET /entity/:entityId/internal/byId/:id': typeof import('./entity/internal/byId/get.js');
     'GET /entity/:entityId/list': typeof import('./entity/list.js');
     'GET /entity/:entityId/search': typeof import('./entity/search/get.js');
     'DELETE /storage/byId/:id': typeof import('./storage/byId/delete.js');
     'GET /storage/byId/:id': typeof import('./storage/byId/get.js');
+    'GET /storage/file/:id/trace': typeof import('./storage/file/trace.js');
     'POST /storage/file': typeof import('./storage/file/upload.js');
     'POST /storage/folder': typeof import('./storage/folder/create.js');
     'GET /storage/list': typeof import('./storage/list/get.js');

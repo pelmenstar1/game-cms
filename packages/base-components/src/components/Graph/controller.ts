@@ -8,6 +8,13 @@ export default defineComponentController({
   core,
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
+  atomWalker: (data, options, apply, context) => {
+    const { componentId, baseOptions } = options;
+
+    for (const { value } of Object.values(data.nodes)) {
+      context.walk(componentId, value, baseOptions, apply);
+    }
+  },
   migrate: (data, options, context) => {
     const result = dataShape.safeParse(data);
 

@@ -1,18 +1,15 @@
-import type {
-  EntityId,
-  EntityInternalOutDataById,
-  EntitySchemaById,
-} from '@game-cms/base-core';
+import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
 import { List } from '@game-cms/ui';
 
 import styles from './EntityList.module.scss';
 import { Header } from './Header/index.js';
 import { Item } from './Item/index.js';
+import { EntityListItem } from './types.js';
 
 export interface EntityListProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  items: EntityInternalOutDataById<Id, string>[];
+  items: EntityListItem<Id>[];
   schema: EntitySchemaById<Id>;
 }
 

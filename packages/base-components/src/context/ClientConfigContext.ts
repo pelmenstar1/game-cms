@@ -6,7 +6,5 @@ export type ClientConfigContextType = {
 };
 
 export const ClientConfigContext = createContext<ClientConfigContextType>({
-  getClientConfig: () => {
-    return Promise.reject(new Error('getClientConfig is not implemented'));
-  },
+  getClientConfig: () => Promise.resolve({}),
 });

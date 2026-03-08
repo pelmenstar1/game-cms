@@ -1,55 +1,36 @@
-import { isNonNullObject } from '@game-cms/shared';
-import { ModalDialog, ModalProps, Prefixed } from '@game-cms/ui';
+import { ModalDialog, ModalProps, Tab, UncontrolledTabs } from '@game-cms/ui';
 
-import { FileBigPreview } from '../FileBigPreview/FileBigPreview.js';
+import { useHasPermission } from '../../shared.js';
 import styles from './FileInfoModal.module.scss';
+import { GeneralTab } from './GeneralTab/index.js';
+import { PreviewTab } from './PreviewTab/index.js';
+import { TraceTab } from './TraceTab/index.js';
+import { FileInfo } from './types.js';
 
 export interface FileInfoModalProps extends ModalProps {
-  item: {
-    name: string;
-    url: string;
-    id: string;
-    mime: string;
-    addons: Record<string, unknown>;
-  };
-}
-
-function getImageSize(addons: Record<string, unknown>) {
-  const { imageSize } = addons;
-
-  if (isNonNullObject(imageSize)) {
-    const { width, height } = imageSize;
-
-    if (typeof width === 'number' && typeof height === 'number') {
-      return { width, height };
-    }
-  }
+  item: FileInfo;
 }
 
 export function FileInfoModal({ item, onClose }: FileInfoModalProps) {
-  const imageSize = getImageSize(item.addons);
+  const canTraceFile = useHasPermission('storage/file$trace');
 
   return (
     <ModalDialog onClose={onClose} contentClassName={styles.content}>
-      <FileBigPreview
-        className={styles.preview}
-        mime={item.mime}
-        url={item.url}
-      />
+      <UncontrolledTabs className={styles.tabs} tabClassName={styles.tab}>
+        <Tab tabId="general" title="General">
+          <GeneralTab item={item} />
+        </Tab>
 
-      <div className={styles.info}>
-        <Prefixed value="Internal ID">{item.id}</Prefixed>
-        <Prefixed value="Name">{item.name}</Prefixed>
-        <Prefixed value="URL">{item.url}</Prefixed>
-        <Prefixed value="Mime type">{item.mime}</Prefixed>
+        <Tab tabId="preview" title="Preview">
+          <PreviewTab item={item} />
+        </Tab>
 
-        {imageSize && (
-          <>
-            <Prefixed value="Width">{imageSize.width}</Prefixed>
-            <Prefixed value="Height">{imageSize.height}</Prefixed>
-          </>
+        {canTraceFile && (
+          <Tab tabId="trace" title="Trace">
+            <TraceTab fileId={item.id} />
+          </Tab>
         )}
-      </div>
+      </UncontrolledTabs>
     </ModalDialog>
   );
 }

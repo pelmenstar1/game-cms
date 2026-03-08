@@ -6,6 +6,13 @@ export default defineComponentController({
   core,
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
+  atomWalker: (data, options, apply, context) => {
+    const { componentId, baseOptions } = options;
+
+    for (const item of data) {
+      context.walk(componentId, item, baseOptions, apply);
+    }
+  },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {
       const { componentId, baseOptions } = options;

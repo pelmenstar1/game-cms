@@ -4,4 +4,5 @@ export * from './authPublic.js';
 export * from './entity.js';
 export * from './entityCheck.js';
 export * from './storage.js';
+export * from './storageTrace.js';
 export * from './user.js';

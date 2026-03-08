@@ -380,6 +380,7 @@ export default service({
       }
     },
   },
+  storageDataToOut: fromStorageData,
   create: async <Id extends EntityId>(
     id: Id,
     data: EntityInDataById<Id>,

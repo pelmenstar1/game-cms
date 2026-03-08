@@ -8,6 +8,8 @@ import {
 } from '@storybook/react-vite';
 import { createRoutesStub } from 'react-router';
 
+import { SessionProvider } from './stubs/SessionProvider.js';
+
 const preview: ReactPreview<ReactTypes & { csf4: true }> = definePreview({
   addons: [],
   decorators: [
@@ -21,7 +23,9 @@ const preview: ReactPreview<ReactTypes & { csf4: true }> = definePreview({
 
       return (
         <NotificationWrapper>
-          <Stub />
+          <SessionProvider>
+            <Stub />
+          </SessionProvider>
         </NotificationWrapper>
       );
     },

@@ -141,7 +141,7 @@ export type EntityCheckRendererProps<Id extends EntityCheckId> = {
   data: EntityCheckClientData<Id>;
 };
 
-export type EntityCheckRenderer<Id extends EntityCheckId> = (
+export type EntityCheckRenderer<Id extends EntityCheckId = EntityCheckId> = (
   props: EntityCheckRendererProps<Id>
 ) => ReactNode;
 

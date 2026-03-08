@@ -6,5 +6,6 @@ export * from './useClientConfig.js';
 export * from './useEntitySchema.js';
 export * from './useEntitySchemaContext.js';
 export * from './useEntitySchemaContext.js';
+export * from './useHasPermission.js';
 export * from './useQueryPage.js';
 export * from './useSelfSession.js';

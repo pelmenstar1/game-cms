@@ -23,6 +23,15 @@ export default defineComponentController({
       context.getStructure(prop.componentId, prop.options)
     ) as ComponentDataStructure;
   },
+  atomWalker: (data, options, apply, context) => {
+    const { options: optionsMap } = options;
+
+    for (const item of data) {
+      const { componentId, options: baseOptions } = optionsMap[item.key];
+
+      context.walk(componentId, item.data, baseOptions, apply);
+    }
+  },
   search: {
     getScore: (query, target, options, context) => {
       const { storage, searchIndex } = target;

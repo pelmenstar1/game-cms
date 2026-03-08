@@ -141,6 +141,9 @@ export default defineComponentController({
   core,
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
+  atomWalker: (data, options, apply, context) => {
+    context.walk(options.componentId, data.base, options.baseOptions, apply);
+  },
   migrate: (data, options, context) => {
     const { componentId, baseOptions } = options;
 

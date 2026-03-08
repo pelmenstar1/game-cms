@@ -1,19 +1,17 @@
-.content {
-  display: grid;
-  grid-template-columns: repeat(2, 50%);
-  width: 80vw;
-  overflow: hidden;
-}
-
-.preview {
-  padding-right: 1em;
-  overflow: auto;
-}
-
-.info {
+.content,
+.tabs,
+.tab {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  border-left: 1px solid var(--color-background-dark);
-  padding-left: 1em;
+}
+
+.tabs {
+  flex-grow: 1;
+}
+
+.tab {
+  &,
+  > * {
+    flex-grow: 1;
+  }
 }

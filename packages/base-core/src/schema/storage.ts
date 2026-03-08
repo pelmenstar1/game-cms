@@ -37,3 +37,8 @@ export const listStorageItemsOptions = z.object({
 export const deleteStorageItemOptions = z.object({
   force: z.boolean().optional(),
 });
+
+export const traceFileOptions = z.object({
+  ...pagingOptionsSchema.shape,
+  concise: z.boolean().optional(),
+});

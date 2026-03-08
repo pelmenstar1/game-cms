@@ -3,6 +3,7 @@ import { isNonNullObject } from '@game-cms/shared';
 import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
+import { ComposeOptionsEntry } from './types.js';
 
 export default defineComponentController({
   core,
@@ -10,6 +11,15 @@ export default defineComponentController({
     return mapObject(options, (prop) =>
       context.getStructure(prop.componentId, prop.options)
     );
+  },
+  atomWalker: (data, options, apply, context) => {
+    for (const entry of Object.entries(options)) {
+      const key = entry[0];
+      const { componentId, options: baseOptions } =
+        entry[1] as ComposeOptionsEntry;
+
+      context.walk(componentId, data[key], baseOptions, apply);
+    }
   },
   migrate: (data, options, context) => {
     if (isNonNullObject(data)) {

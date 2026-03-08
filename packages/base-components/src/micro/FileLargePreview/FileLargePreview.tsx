@@ -10,15 +10,15 @@ import React, { FC } from 'react';
 import { useClientConfig } from '../../hooks/useClientConfig.js';
 import { FileInlinePreviewContent } from '../FileInlinePreview/index.js';
 
-export interface FileBigPreviewProps {
+export interface FileLargePreviewProps {
   className?: string;
   mime: string;
   url: string;
 }
 
-type CachedPreviewProps = FilePreviewInputEntry & {
+interface CachedPreviewProps extends FilePreviewInputEntry {
   config: PluginClientConfig;
-};
+}
 
 const PREDEFINED_PREVIEWS: FilePreview[] = [
   {
@@ -53,19 +53,23 @@ const getCachedComponent = createCachedFactorySelfKeyed<
   };
 });
 
-export function FileBigPreviewContent(props: CachedPreviewProps) {
+function FileLargePreviewContent(props: CachedPreviewProps) {
   const Component = getCachedComponent(props);
 
   return <Component {...props} />;
 }
 
-export function FileBigPreview({ className, mime, url }: FileBigPreviewProps) {
+export function FileLargePreview({
+  className,
+  mime,
+  url,
+}: FileLargePreviewProps) {
   const clientConfigResult = useClientConfig();
 
   return (
     <DataLoader result={clientConfigResult} className={className}>
       {(clientConfig) => (
-        <FileBigPreviewContent config={clientConfig} mime={mime} url={url} />
+        <FileLargePreviewContent config={clientConfig} mime={mime} url={url} />
       )}
     </DataLoader>
   );

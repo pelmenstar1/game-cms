@@ -7,11 +7,13 @@ import type {
 import type { ObjectId } from 'mongodb';
 import type z from 'zod';
 
+import { EntityId, EntityInternalOutDataById } from './entity/core.js';
 import type {
   createFolderPayload,
   createFolderResponse,
   deleteStorageItemOptions,
   listStorageItemsOptions,
+  traceFileOptions,
   uploadFileMeta,
   uploadFileResponse,
 } from './schema/storage.js';
@@ -133,6 +135,21 @@ export type ListStorageItemsOptions = z.infer<typeof listStorageItemsOptions>;
 export type ListStorageItemsResponse = PageData<StorageItemWithId>;
 
 export type DeleteStorageItemOptions = z.infer<typeof deleteStorageItemOptions>;
+
+export type TraceFileConciseEntry<Id extends EntityId = EntityId> = {
+  entityId: Id;
+  document: { id: ObjectId };
+};
+
+export type TraceFileEntry<Id extends EntityId = EntityId> = {
+  entityId: Id;
+  document: EntityInternalOutDataById<Id>;
+};
+
+export type TraceFileOptions = z.infer<typeof traceFileOptions>;
+
+export type TraceFileConciseResponse = PageData<TraceFileConciseEntry>;
+export type TraceFileResponse = PageData<TraceFileEntry>;
 
 export function storageAddon<Id extends StorageAddonId>(
   value: StorageAddon<Id>

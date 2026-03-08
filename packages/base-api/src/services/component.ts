@@ -8,6 +8,7 @@ import type {
   ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
+  ForeignComponentAtomWalkerContext,
   ForeignComponentDataMergeContext,
   ForeignComponentDataMigrationContext,
   ForeignComponentDataResolverContext,
@@ -143,6 +144,18 @@ const foreignDataStructureContext: ForeignComponentDataStructureContext = {
   },
 };
 
+const foreignAtomWalkerContext: ForeignComponentAtomWalkerContext = {
+  walk: (id, data, options, apply) => {
+    const { atomWalker } = getController(id);
+
+    if (atomWalker) {
+      atomWalker(data, options, apply, foreignAtomWalkerContext);
+    } else {
+      apply(id, data, options);
+    }
+  },
+};
+
 function toStoragePartial<Id extends ComponentId, Args>(
   id: Id,
   data: ComponentPartialInDataById<Id, Args>,
@@ -204,5 +217,6 @@ export default service({
   foreignDataStructureContext,
   foreignDataMergeContext,
   foreignDataSearchContext,
+  foreignAtomWalkerContext,
   getController,
 });

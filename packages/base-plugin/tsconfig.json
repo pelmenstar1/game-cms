@@ -1,6 +1,10 @@
 {
   "extends": "../../configs/tsconfig.lib.json",
-  "compilerOptions": { "rootDir": "./src", "outDir": "./dist" },
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "allowJs": true
+  },
   "include": ["./src"],
   "references": [
     { "path": "../base-api" },

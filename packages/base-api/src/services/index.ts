@@ -9,4 +9,5 @@ export { default as entityCheck } from './entityCheck.js';
 export { default as entityHook } from './entityHook.js';
 export { default as entitySchema } from './entitySchema.js';
 export { default as storage } from './storage.js';
+export { default as storageTrace } from './storageTrace.js';
 export { default as user } from './user.js';

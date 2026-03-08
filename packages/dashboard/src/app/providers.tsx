@@ -16,9 +16,9 @@ export function Providers({ children }: PropsWithChildren) {
           <ComponentHubProvider>
             <ClientConfigProvider>
               <EntityCheckProvider>
-                <ModalProvider>
-                  <SessionProvider>{children}</SessionProvider>
-                </ModalProvider>
+                <SessionProvider>
+                  <ModalProvider>{children}</ModalProvider>
+                </SessionProvider>
               </EntityCheckProvider>
             </ClientConfigProvider>
           </ComponentHubProvider>

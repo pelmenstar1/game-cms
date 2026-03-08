@@ -1,0 +1,12 @@
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-presenter {
+  flex-grow: 1;
+}
+
+.list {
+  flex-grow: 1;
+}

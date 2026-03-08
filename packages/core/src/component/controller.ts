@@ -1,3 +1,4 @@
+import { ComponentAtomWalker } from './atomWalker.js';
 import { ComponentCore } from './core.js';
 import { ComponentDataMergeHandler } from './merge.js';
 import {
@@ -14,6 +15,7 @@ interface BaseComponentController<Id extends ComponentId = ComponentId> {
   core: ComponentCore<Id>;
   structure?: ComponentDataStructureSource<Id>;
   migrate?: ComponentDataMigration<Id>;
+  atomWalker?: ComponentAtomWalker<Id>;
 }
 
 export type ComponentController<Id extends ComponentId = ComponentId> =

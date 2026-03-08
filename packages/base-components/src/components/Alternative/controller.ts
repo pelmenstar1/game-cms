@@ -11,6 +11,15 @@ export default defineComponentController({
   core,
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
+  atomWalker: (data, options, apply, context) => {
+    const { componentId, baseOptions } = options;
+
+    context.walk(componentId, data.default, baseOptions, apply);
+
+    for (const choice of data.alternative) {
+      context.walk(componentId, choice.value, baseOptions, apply);
+    }
+  },
   migrate: (data, options, context) => {
     const result = unknownConditionalData.safeParse(data);
 

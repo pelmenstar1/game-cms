@@ -1,7 +1,6 @@
 import type { QueryResult } from '@game-cms/shared';
 import type { ReactNode } from 'react';
 
-import { classNames } from '../../utils/classNames';
 import { ErrorMessage } from '../ErrorMessage';
 import { IndeterminateCircularProgress } from '../IndeterminateCircularProgress';
 
@@ -19,7 +18,7 @@ export function DataLoader<T>({
   children,
 }: DataLoaderProps<T>) {
   return (
-    <div className={classNames(className)}>
+    <div className={className}>
       {result.status === 'pending' ? (
         <IndeterminateCircularProgress />
       ) : result.status === 'error' ? (

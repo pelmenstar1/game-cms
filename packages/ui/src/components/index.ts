@@ -57,6 +57,7 @@ export * from './TimeSelect';
 export * from './Toolbar';
 export * from './TransformView';
 export * from './Typography';
+export * from './UncontrolledTabs';
 export * from './UnstyledOption';
 export * from './UploadFileButton';
 export * from './WarningBlock';

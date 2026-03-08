@@ -23,6 +23,9 @@ export default defineComponentController({
       'base::compose',
       getComposeOptions(options)
     ),
+  atomWalker: (data, options, apply, context) => {
+    context.walk('base::compose', data, getComposeOptions(options), apply);
+  },
   mergeData: async (target, source, options, context) => {
     const result = await context.merge<'base::compose', ComposeArgs>(
       'base::compose',

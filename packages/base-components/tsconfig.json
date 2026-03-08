@@ -31,6 +31,7 @@
     "./src/**/*.json",
     "./.storybook/preview.tsx",
     "./.storybook/main.ts",
+    "./.storybook/stubs/SessionProvider.tsx",
     "../ui/src/types/css.d.ts"
   ],
   "exclude": ["./scripts"]

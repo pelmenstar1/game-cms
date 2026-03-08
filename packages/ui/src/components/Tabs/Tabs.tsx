@@ -7,23 +7,30 @@ import { Button } from '../Button';
 import { List } from '../List';
 import styles from './Tabs.module.scss';
 
-type TabComponent<K extends string> = ReactElement<{
+export type TabComponent<K extends string> = ReactElement<{
   id?: string;
   tabId: K;
   isSelected?: boolean;
   title: string;
   labelledBy?: string;
+  className?: string;
 }>;
+
+export type TabsChildren<K extends string> = MaybeArray<
+  TabComponent<K> | undefined | null | false
+>;
 
 export type TabsProps<K extends string> = {
   className?: string;
+  tabClassName?: string;
   selectedTab: K;
   onSelectedTabChanged: (value: K) => void;
-  children: MaybeArray<TabComponent<K> | undefined | null | false>;
+  children: TabsChildren<K>;
 };
 
 export function Tabs<K extends string>({
   className,
+  tabClassName,
   selectedTab,
   onSelectedTabChanged,
   children,
@@ -67,6 +74,7 @@ export function Tabs<K extends string>({
         isSelected: true,
         id: `${globalId}-panel-${selectedChild.props.tabId}`,
         labelledBy: `${globalId}-tab-${selectedChild.props.tabId}`,
+        className: classNames(selectedChild.props.className, tabClassName),
       })}
     </div>
   );
