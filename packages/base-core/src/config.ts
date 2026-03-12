@@ -3,8 +3,8 @@ import type { MongoClientOptions } from 'mongodb';
 
 import { AnyEntityCheck } from './entity/check.js';
 import { AnyEntityHook } from './entity/hook.js';
-import { AnyStorageAddon } from './storage.js';
-import { AnyStorageProvider } from './storageProvider.js';
+import { AnyStorageAddon } from './storage/addon.js';
+import { AnyStorageProvider } from './storage/provider.js';
 
 export type DatabaseConfig = {
   mongo: { url: string } & MongoClientOptions;

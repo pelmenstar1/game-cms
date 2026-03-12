@@ -3,8 +3,8 @@ import type { Readable } from 'node:stream';
 import type { UnknownApiRoute } from '@game-cms/core/api';
 import type { MaybePromise } from '@game-cms/shared';
 
-import type { UploadFileMeta } from './storage.js';
-import { AbortOptions } from './types.js';
+import { AbortOptions } from '../types.js';
+import type { UploadFileMeta } from './core.js';
 
 export type StaticFileSource = Uint8Array;
 export type FileSource = StaticFileSource | Readable;

@@ -47,6 +47,10 @@
     "./filePreviews/ThreeD": {
       "import": "./dist/src/filePreviews/ThreeD.js",
       "types": "./dist/src/filePreviews/ThreeD.d.ts"
+    },
+    "./filePreviews/Spine": {
+      "import": "./dist/src/filePreviews/Spine.js",
+      "types": "./dist/src/filePreviews/Spine.d.ts"
     }
   }
 }

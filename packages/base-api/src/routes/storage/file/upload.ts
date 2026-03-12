@@ -8,20 +8,20 @@ import { parseJsonOptional } from '@game-cms/shared/json';
 import { apiValidateValue } from '../../../utils/validate.js';
 
 function getInfo(data: MultipartFile) {
-  const infoField = data.fields.info;
-  if (infoField === undefined) {
+  const metaField = data.fields.meta;
+  if (metaField === undefined) {
     return undefined;
   }
 
-  if (Array.isArray(infoField)) {
+  if (Array.isArray(metaField)) {
     throw new ApiError('Invalid info field format', 'base::schema/validation');
   }
 
-  if (infoField.type !== 'field') {
+  if (metaField.type !== 'field') {
     throw new ApiError('Info must not be a file', 'base::schema/validation');
   }
 
-  const rawInfo = infoField.value;
+  const rawInfo = metaField.value;
   if (typeof rawInfo !== 'string') {
     throw new ApiError('Info must be a string', 'base::schema/validation');
   }

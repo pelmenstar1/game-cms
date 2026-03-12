@@ -14,7 +14,7 @@ import { useCallback } from 'react';
 
 import styles from './entityAccessRenderer.module.scss';
 
-const renderer: EntityCheckRenderer<'base::review'> = ({
+const renderer: EntityCheckRenderer = ({
   className,
   entityId,
   documentId,

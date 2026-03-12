@@ -16,6 +16,7 @@ export default {
           base.filePreviews?.fullScale,
           next.filePreviews?.fullScale
         ),
+        group: mergeArrays(base.filePreviews?.group, next.filePreviews?.group),
       },
       dashboard: {
         tabs: mergeArrays(base.dashboard?.tabs, next.dashboard?.tabs),

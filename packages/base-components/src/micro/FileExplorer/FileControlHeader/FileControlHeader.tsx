@@ -1,3 +1,4 @@
+import { StorageClientItem } from '@game-cms/base-core';
 import {
   ArrowLeftIcon,
   classNames,
@@ -9,11 +10,12 @@ import {
   UploadIcon,
 } from '@game-cms/ui';
 
+import { FileGroupPreviewButton } from '../FileGroupPreviewButton/index.js';
 import styles from './FileControlHeader.module.scss';
 
 export interface FileControlHeaderProps {
   className?: string;
-
+  items: StorageClientItem[];
   isDeleteEnabled?: boolean;
   hasParent?: boolean;
 
@@ -26,6 +28,7 @@ export interface FileControlHeaderProps {
 
 export function FileControlHeader({
   className,
+  items,
   isDeleteEnabled,
   hasParent,
   onDelete,
@@ -68,6 +71,8 @@ export function FileControlHeader({
       <IconButton title="Upload" onClick={onUpload} hover="fill">
         <UploadIcon />
       </IconButton>
+
+      <FileGroupPreviewButton items={items} />
     </List>
   );
 }

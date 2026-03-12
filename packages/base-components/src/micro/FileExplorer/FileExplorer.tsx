@@ -20,10 +20,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useApiAction } from '../../hooks/useApiAction.js';
 import { useApiQuery } from '../../hooks/useApiQuery.js';
-import { FileControlHeader } from '../FileControlHeader/index.js';
 import { FileGrid, FileItem } from '../FileGrid/index.js';
 import { FolderNameModal } from '../FolderNameModal/index.js';
 import { UploadFileDialog } from '../UploadFileDialog/index.js';
+import { FileControlHeader } from './FileControlHeader/index.js';
 import styles from './FileExplorer.module.scss';
 import { transformItems } from './transform.js';
 
@@ -189,6 +189,7 @@ export function FileExplorer({
             onCreateFolder={onCreateFolder}
             onRefresh={refreshItems}
             onGoToParent={onGoToParent}
+            items={items}
           />
           <FileGrid
             className={styles.grid}

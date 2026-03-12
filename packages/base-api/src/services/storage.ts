@@ -73,9 +73,9 @@ async function moveItemsToRoot(folderId: ObjectId, session?: ClientSession) {
   );
 }
 
-async function hydrateAddonData(
-  persistent: StorageAddonPersistentDataMap
-): Promise<StorageAddonHydratedDataMap> {
+async function hydrateAddonData<Extra>(
+  persistent: StorageAddonPersistentDataMap<Extra>
+): Promise<StorageAddonHydratedDataMap<Extra>> {
   const addons = getAddons();
   const context = storageAddonContext();
 
@@ -89,9 +89,9 @@ async function hydrateAddonData(
   });
 }
 
-async function hydrateItem(
-  item: WithId<StoragePersistentItem>
-): Promise<StorageItemWithId> {
+async function hydrateItem<Extra>(
+  item: WithId<StoragePersistentItem<Extra>>
+): Promise<StorageItemWithId<Extra>> {
   if (item.type === StorageItemType.FOLDER) {
     return {
       id: item._id,
@@ -121,9 +121,11 @@ async function hydrateItem(
   };
 }
 
-function ensureFileItem(
-  item: StoragePersistentItem | null
-): asserts item is StoragePersistentItem & { type: StorageItemType.FILE } {
+function ensureFileItem<Extra>(
+  item: StoragePersistentItem<Extra> | null
+): asserts item is StoragePersistentItem<Extra> & {
+  type: StorageItemType.FILE;
+} {
   if (item?.type !== StorageItemType.FILE) {
     throw new Error('Expected file item');
   }
