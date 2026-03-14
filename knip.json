@@ -26,7 +26,11 @@
       "ignore": ["src/micro/FileBigPreview/**/*.ts"]
     },
     "packages/dashboard": {
-      "entry": ["src/app/routes/**/*/route.tsx", "src/types/page.ts"],
+      "entry": [
+        "src/app/routes/**/*/route.tsx",
+        "src/types/page.ts",
+        "lib/index.ts"
+      ],
       "project": "**/*.{ts,tsx}"
     },
     "packages/base-api": {

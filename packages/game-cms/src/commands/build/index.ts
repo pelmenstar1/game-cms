@@ -1,20 +1,13 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
+import { build as dashboardBuild } from '@game-cms/dashboard';
 import { writeDashboardBuildMeta } from '@game-cms/ignition';
-import { redirectProcess } from '@game-cms/shared/node';
 
 import {
   getDashboardPackagePath,
   getLocalDashboardBuildPath,
 } from '../../services/dashboard/index.js';
-
-async function runDashboardBuild(dashboardPath: string) {
-  await redirectProcess('npm run build', {
-    shell: true,
-    cwd: dashboardPath,
-  });
-}
 
 async function copyDashboardOutput(dashboardPath: string) {
   const localDashboardPath = getLocalDashboardBuildPath();
@@ -29,7 +22,7 @@ export default async function build() {
   const dashboardPath = getDashboardPackagePath();
 
   await writeDashboardBuildMeta(dashboardPath);
-  await runDashboardBuild(dashboardPath);
+  await dashboardBuild();
 
   await copyDashboardOutput(dashboardPath);
 }

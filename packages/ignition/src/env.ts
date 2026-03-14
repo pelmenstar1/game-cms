@@ -16,6 +16,7 @@ import { mergeObjects, resolveObject } from '@game-cms/shared/object';
 import { getAllServices, getApiConfig } from './api.js';
 import { getComponentEnv } from './components.js';
 import { resolveConfig } from './config.js';
+import { initCmsController } from './controller.js';
 
 type BaseEnvResolvers = EnvResolver<
   Omit<BaseCmsEnvironment, 'config' | 'compiledFilePath'>
@@ -59,4 +60,6 @@ export async function initEnvFromConfigs(baseDir?: string) {
   );
 
   setEnvironment(mergeObjects([{ config }, ...items]) as CmsEnvironment);
+
+  initCmsController();
 }

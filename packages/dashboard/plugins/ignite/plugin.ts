@@ -24,7 +24,7 @@ export async function ignitePlugin(): Promise<PluginOption> {
   return [
     dashboardComponentsPlugin(),
     i18nPlugin(),
-    devPlugin({ messagePort: meta.devMessagePort }),
+    devPlugin({ messageTunnel: meta.devMessageTunnel }),
     ...plugins,
   ];
 }

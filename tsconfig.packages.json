@@ -24,7 +24,8 @@
     { "path": "./packages/component-testing-lib" },
     { "path": "./packages/storage-addons" },
     { "path": "./packages/entity-checks" },
-    { "path": "./packages/entity-previews" }
+    { "path": "./packages/entity-previews" },
+    { "path": "./packages/dashboard/tsconfig.lib.json" }
   ],
   "include": []
 }

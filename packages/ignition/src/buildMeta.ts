@@ -6,20 +6,27 @@ import z from 'zod';
 
 export const DASHBOARD_BUILD_META_FILE_PATH = './.game-cms/meta.json';
 
+const devMessageTunnel = z.object({
+  address: z.string(),
+  port: z.number(),
+  family: z.enum(['v4', 'v6']),
+});
+
 export const dashboardBuildMeta = z.object({
   basePath: z.string(),
-  devMessagePort: z.number().optional(),
+  devMessageTunnel: devMessageTunnel.optional(),
 });
 
 export type DashboardBuildMeta = z.infer<typeof dashboardBuildMeta>;
+export type DevMessageTunnel = z.infer<typeof devMessageTunnel>;
 
 export async function writeDashboardBuildMeta(
   dashboardPath: string,
-  devMessagePort?: number
+  devMessageTunnel?: DevMessageTunnel
 ) {
   const meta: DashboardBuildMeta = {
     basePath: process.cwd(),
-    devMessagePort,
+    devMessageTunnel,
   };
 
   await fsp.writeFile(

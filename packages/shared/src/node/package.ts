@@ -16,6 +16,7 @@ export type PackageInfo = {
   types?: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
+  bin?: string | Record<string, string>;
   exports?: Record<string, { import?: string; types?: string }>;
 };
 
@@ -49,4 +50,14 @@ export function resolveImportDirectory(meta: ImportMeta, id: string) {
 
 export async function readPackageInfo(dirPath: string) {
   return readJson<PackageInfo>(path.join(dirPath, 'package.json'));
+}
+
+export async function resolvePackageBin(packagePath: string, target: string) {
+  const { bin } = await readJson<PackageInfo>(packagePath);
+
+  if (typeof bin === 'string') {
+    return bin;
+  } else if (typeof bin === 'object') {
+    return bin[target];
+  }
 }

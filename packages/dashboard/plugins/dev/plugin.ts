@@ -1,27 +1,40 @@
-import net from 'node:net';
+import net, { AddressInfo } from 'node:net';
 
-import type { Plugin } from 'vite';
+import { DevMessageTunnel, DevServerManifest } from '@game-cms/ignition';
+import { addressInfoToHttpUrl } from '@game-cms/shared/node';
+import type { HttpServer, Plugin } from 'vite';
 
 type DevPluginOptions = {
-  messagePort?: number;
+  messageTunnel?: DevMessageTunnel;
 };
+
+function createDevServerManifest(server: HttpServer): DevServerManifest {
+  const info = server.address() as AddressInfo;
+
+  return { address: addressInfoToHttpUrl(info) };
+}
 
 export function devPlugin(options: DevPluginOptions = {}): Plugin {
   return {
     name: 'game-cms:dev',
     apply: 'serve',
     configureServer: (server) => {
-      server.httpServer?.once('listening', () => {
-        const port = options.messagePort;
+      const { httpServer } = server;
 
-        if (port) {
+      httpServer?.once('listening', () => {
+        const { messageTunnel } = options;
+
+        if (messageTunnel) {
           const socket = net.connect({
-            host: 'localhost',
-            port,
+            host: messageTunnel.address,
+            port: messageTunnel.port,
+            family: messageTunnel.family === 'v4' ? 4 : 6,
           });
 
           socket.on('connect', () => {
-            socket.end('VITE_UP');
+            const manifest = createDevServerManifest(httpServer);
+
+            socket.end(JSON.stringify(manifest));
           });
 
           socket.on('error', (error) => {

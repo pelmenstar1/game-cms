@@ -1,4 +1,5 @@
 import http from 'node:http';
+import type { AddressInfo } from 'node:net';
 
 export function httpListenAsync(server: http.Server, port: number) {
   return new Promise<void>((resolve) => server.listen(port, resolve));
@@ -20,4 +21,20 @@ export function httpCloseAsync(server: http.Server) {
       }
     });
   });
+}
+
+export function addressInfoToHttpUrl(info: AddressInfo) {
+  const { family, address, port } = info;
+
+  switch (family) {
+    case 'IPv4': {
+      return `http://${address}:${port}`;
+    }
+    case 'IPv6': {
+      return `http://[${address}]:${port}`;
+    }
+    default: {
+      throw new Error(`Unexpected address family: ${family}`);
+    }
+  }
 }
