@@ -27,11 +27,16 @@ export type PatchFileInfo<
   extra: Extra;
 };
 
+export type StorageProviderUploadResult<Extra> = {
+  extra: Extra;
+  size: number;
+};
+
 export interface StorageProviderProtocol<Extra> {
   upload: (
     info: UploadFileToProviderInfo,
     options?: AbortOptions
-  ) => Promise<{ extra: Extra; size: number }>;
+  ) => Promise<StorageProviderUploadResult<Extra>>;
 
   patchContent: (
     info: PatchFileInfo<FileSource, Extra>,

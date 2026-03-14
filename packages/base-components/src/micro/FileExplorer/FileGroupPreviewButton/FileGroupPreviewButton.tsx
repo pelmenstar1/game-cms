@@ -1,5 +1,6 @@
 import {
   AsyncFileGroupPreviewRenderer,
+  FileGroupPreviewRendererProps,
   StorageClientItem,
   StorageFileClientItemWithType,
   StorageItemType,
@@ -10,10 +11,10 @@ import {
   PreviewIcon,
   useModal,
 } from '@game-cms/ui';
-import { JSX } from 'react';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useClientConfig } from '../../../hooks/useClientConfig.js';
-import { FileGroupPreviewModal } from '../FileGroupPreviewModal/index.js';
 
 export type FileGroupPreviewButtonProps<Extra> = {
   className?: string;
@@ -26,22 +27,24 @@ type BasePreviewButtonProps<PreviewProps> = {
   preview: AsyncFileGroupPreviewRenderer<PreviewProps>;
 };
 
-function BasePreviewButton<PreviewProps extends JSX.IntrinsicAttributes>({
+function BasePreviewButton<PreviewProps extends FileGroupPreviewRendererProps>({
   className,
   preview,
   previewProps,
 }: BasePreviewButtonProps<PreviewProps>) {
   const showModal = useModal();
+  const { t } = useTranslation('base');
 
   const onClick = () => {
-    void showModal(FileGroupPreviewModal<PreviewProps>, {
-      preview,
-      previewProps,
-    });
+    void showModal(React.lazy(preview), previewProps);
   };
 
   return (
-    <IconButton className={className} title="Preview" onClick={onClick}>
+    <IconButton
+      className={className}
+      title={t('common.preview')}
+      onClick={onClick}
+    >
       <PreviewIcon />
     </IconButton>
   );

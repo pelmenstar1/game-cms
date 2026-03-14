@@ -1,8 +1,8 @@
-import { SpineController } from '../micro/SpineController';
+import { FileGroupPreviewRenderer } from '@game-cms/base-core';
+
+import { SpineModal } from '../micro/SpineModal';
 import { SpineData } from '../micro/SpineRenderer/types';
 
-export function Spine({ spine }: { spine: SpineData }) {
-  return <SpineController spine={spine} />;
-}
+const Spine: FileGroupPreviewRenderer<{ spine: SpineData }> = SpineModal;
 
 export default Spine;

@@ -7,6 +7,7 @@ import type {
   FileSource,
   StorageAddon,
   StorageAddonContext,
+  StorageProviderUploadResult,
 } from '@game-cms/base-core';
 import {
   type CreateFolderPayload,
@@ -214,13 +215,13 @@ export default service({
     const { mime, name, parent, hidden, content } = payload;
     const addons = getAddons();
 
-    const enchancedPayload = {
+    const enhancedPayload = {
       ...payload,
       mime: enhanceMime(name, mime),
     };
 
     const item: StorageFilePersistentItem = {
-      mime: enchancedPayload.mime,
+      mime: enhancedPayload.mime,
       name,
       parent,
       hidden,
@@ -229,13 +230,15 @@ export default service({
       addons: {},
     };
 
+    let uploadResult: StorageProviderUploadResult<unknown>;
+
     if (addons.length > 0) {
       const staticPayload = {
-        ...enchancedPayload,
+        ...enhancedPayload,
         content: content instanceof Readable ? await buffer(content) : content,
       };
 
-      const uploadResult = await protocol.upload(staticPayload);
+      uploadResult = await protocol.upload(staticPayload);
 
       const context = storageAddonContext();
       const addonEntries = await Promise.all(
@@ -250,13 +253,13 @@ export default service({
         })
       );
 
-      Object.assign(item, uploadResult);
       item.addons = Object.fromEntries(filterOutNullable(addonEntries));
     } else {
-      const uploadResult = await protocol.upload(enchancedPayload);
-
-      Object.assign(item, uploadResult);
+      uploadResult = await protocol.upload(enhancedPayload);
     }
+
+    item.extra = uploadResult.extra;
+    item.size = uploadResult.size;
 
     const { insertedId } = await collection().insertOne({
       ...item,

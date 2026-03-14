@@ -92,7 +92,7 @@ export function MiddleEllipsis({ children, ...props }: MiddleEllipsisProps) {
   }, [children, size]);
 
   return (
-    <Typography ref={ref} {...props}>
+    <Typography ref={ref} title={children} {...props}>
       {effectiveText}
     </Typography>
   );

@@ -36,6 +36,8 @@ export const apiConfig: PluginApiConfig = {
       app.register(multipart, {
         limits: {
           fileSize: Number.POSITIVE_INFINITY,
+          fields: 10,
+          fieldSize: Number.POSITIVE_INFINITY,
         },
       });
       app.register(abortablePlugin);

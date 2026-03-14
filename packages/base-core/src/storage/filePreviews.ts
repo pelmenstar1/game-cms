@@ -16,7 +16,13 @@ export interface FilePreviewRendererProps extends FilePreviewInputEntry {
 
 export type FilePreviewRenderer = FC<FilePreviewRendererProps>;
 
-export type FileGroupPreviewRenderer<Props> = FC<Props>;
+export type FileGroupPreviewRendererProps<T = Record<never, never>> = T & {
+  onClose: () => void;
+};
+
+export type FileGroupPreviewRenderer<Props> = FC<
+  FileGroupPreviewRendererProps<Props>
+>;
 
 export type AsyncFileGroupPreviewRenderer<Props> = () => Promise<
   DefaultExport<FileGroupPreviewRenderer<Props>>

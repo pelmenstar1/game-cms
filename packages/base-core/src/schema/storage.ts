@@ -18,7 +18,7 @@ export const createFolderResponse = z.object({
   id: objectId,
 });
 
-export const uploadFileMeta = z.object({
+export const uploadFileMeta = z.strictObject({
   parent: stringObjectId.optional(),
   hidden: z.boolean().optional(),
 });
