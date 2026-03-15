@@ -1,5 +1,6 @@
 import {
   createAbortController,
+  handleResponseError,
   type MaybePromise,
   type QueryResult,
 } from '@game-cms/shared';
@@ -13,12 +14,17 @@ export function useFetch<T>(
   return useAbstractQueryResult(() => {
     const abortController = createAbortController();
 
-    const promise = fetch(url, {
-      signal: abortController?.signal,
-    }).then(resolver);
+    const worker = async () => {
+      const response = await fetch(url, { signal: abortController?.signal });
+      if (!response.ok) {
+        await handleResponseError(response, 'Cannot fetch');
+      }
+
+      return resolver(response);
+    };
 
     return {
-      promise,
+      promise: worker(),
       cleanup: () => {
         abortController?.abort();
       },

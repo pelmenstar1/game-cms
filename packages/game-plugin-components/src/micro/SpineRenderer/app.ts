@@ -1,6 +1,8 @@
 import {
   SkinsAndAnimationBoundsProvider,
   Spine,
+  SpineTexture,
+  TextureAtlas,
 } from '@esotericsoftware/spine-pixi-v8';
 import { handleResponseError, lerp } from '@game-cms/shared';
 import {
@@ -11,7 +13,6 @@ import {
   type RectangleLike,
   type Size,
   Texture,
-  TextureSource,
   Ticker,
 } from 'pixi.js';
 
@@ -21,7 +22,6 @@ import type { OnAnimationTimeChanged, SpineData } from './types.js';
 type ResolvedSpineContext = {
   atlas: string;
   skeleton: string;
-  images: string[];
   component: Spine;
 };
 
@@ -65,16 +65,30 @@ function getSpineBounds(spine: Spine, animation: string | null) {
   return new SkinsAndAnimationBoundsProvider(animation).calculateBounds(spine);
 }
 
-async function getAtlasPages(url: string): Promise<string[]> {
-  const response = await fetch(url);
+async function loadAtlas(
+  atlasUrl: string,
+  textureUrls: string[],
+  alias: string
+) {
+  const imageTextures = await Assets.loader.load<Texture>(textureUrls);
+  const imageTextureArray = Object.values(imageTextures);
+
+  const response = await fetch(atlasUrl);
 
   if (!response.ok) {
     await handleResponseError(response, 'Cannot fetch atlas file');
   }
 
-  const text = await response.text();
+  const atlasText = await response.text();
 
-  return text.split('\n\n').map((page) => page.split('\n', 2)[0]);
+  const atlas = new TextureAtlas(atlasText);
+  const { pages } = atlas;
+
+  for (let i = 0; i < pages.length; i++) {
+    pages[i].setTexture(SpineTexture.from(imageTextureArray[i].source));
+  }
+
+  Assets.cache.set(alias, atlas);
 }
 
 export async function createSpineApplication() {
@@ -156,12 +170,11 @@ export async function createSpineApplication() {
       const cx = (screenWidth - worldSpineWidth) * 0.5;
       const cy = (screenHeight - worldSpineHeight) * 0.5;
 
-      boundsRect.setPosition({ x: cx, y: cy });
-      boundsRect.setSize({ width: worldSpineWidth, height: worldSpineHeight });
-
       spine.skeleton.x = cx - x;
       spine.skeleton.y = cy - y;
       spine.scale = scale;
+
+      updateBoundsRect();
     }
   }
 
@@ -198,9 +211,19 @@ export async function createSpineApplication() {
     }
   }
 
+  function updateBoundsRect() {
+    if (resolvedSpine) {
+      const bounds = resolvedSpine.component.getBounds();
+
+      boundsRect.setPosition({ x: bounds.x, y: bounds.y });
+      boundsRect.setSize({ width: bounds.width, height: bounds.height });
+    }
+  }
+
   function onTick(ticker: Ticker) {
     resolvedSpine?.component.update(ticker.deltaMS / 1000);
 
+    updateBoundsRect();
     invokeAnimationTimeCallback();
   }
 
@@ -208,30 +231,9 @@ export async function createSpineApplication() {
     const prefix = `spine-app-${globalSpineIndex++}`;
     const atlasAlias = `${prefix}-atlas`;
     const skeletonAlias = `${prefix}-skel`;
-    const imageAliases = data.images.map((_, i) => `${prefix}-image-${i}`);
 
-    const imageTextures: Record<string, Texture> = await Assets.load(
-      data.images.map((src, i) => ({ alias: imageAliases[i], src }))
-    );
-
-    const atlasPages = await getAtlasPages(data.atlas);
-
-    const atlasImages: Record<string, TextureSource> = Object.fromEntries(
-      data.images.map(
-        (imageId, i) => [atlasPages[i], imageTextures[imageId].source] as const
-      )
-    );
-
-    await Assets.load([
-      {
-        alias: atlasAlias,
-        src: data.atlas,
-        data: {
-          images: atlasImages,
-        },
-      },
-      { alias: skeletonAlias, src: data.skeleton },
-    ]);
+    await loadAtlas(data.atlas, data.images, atlasAlias);
+    await Assets.load({ alias: skeletonAlias, src: data.skeleton });
 
     const spine = Spine.from({
       atlas: atlasAlias,
@@ -242,7 +244,6 @@ export async function createSpineApplication() {
     return {
       atlas: atlasAlias,
       skeleton: skeletonAlias,
-      images: imageAliases,
       component: spine,
     };
   }
@@ -251,11 +252,7 @@ export async function createSpineApplication() {
     const { stage } = app;
 
     if (resolvedSpine) {
-      await Assets.unload([
-        resolvedSpine.atlas,
-        resolvedSpine.skeleton,
-        ...resolvedSpine.images,
-      ]);
+      await Assets.unload([resolvedSpine.atlas, resolvedSpine.skeleton]);
 
       if (stage.children.length > 0) {
         stage.removeChildren();
@@ -322,6 +319,7 @@ export async function createSpineApplication() {
 
         getSpineComponent().update(0);
 
+        updateBoundsRect();
         onAnimationTimeChanged?.(relativeTime);
       }
     }
