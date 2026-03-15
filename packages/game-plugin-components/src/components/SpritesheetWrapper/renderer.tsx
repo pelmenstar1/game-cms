@@ -1,23 +1,12 @@
 import { useComponentApi } from '@game-cms/component-api';
 import type { ComponentClientDataById, ComponentProps } from '@game-cms/core';
-import {
-  IconButton,
-  namedLazy,
-  PreviewIcon,
-  Toolbar,
-  useModal,
-} from '@game-cms/ui';
-import React, { useCallback } from 'react';
+import { IconButton, PreviewIcon, Toolbar } from '@game-cms/ui';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-// import { SpritesheetPreviewModal } from '../../micro/SpritesheetPreviewModal';
+import { useSpritesheetPreviewModal } from '../../hooks/useSpritesheetPreviewModal';
 import styles from './renderer.module.scss';
 import type { ResolveSpritesheetArgs } from './types';
-
-const SpritesheetPreviewModal = namedLazy(
-  () => import('../../micro/SpritesheetPreviewModal'),
-  'SpritesheetPreviewModal'
-);
 
 export const renderer = <Args,>({
   data,
@@ -30,7 +19,7 @@ export const renderer = <Args,>({
 
   const api = useComponentApi();
   const { t } = useTranslation('game');
-  const showModal = useModal();
+  const showSpritesheetPreview = useSpritesheetPreviewModal();
 
   const { base: baseData, spritesheets } = data;
 
@@ -38,11 +27,11 @@ export const renderer = <Args,>({
 
   const onPreview = useCallback(() => {
     if (spritesheets) {
-      void showModal(SpritesheetPreviewModal, {
+      void showSpritesheetPreview({
         entryMap: spritesheets,
       });
     }
-  }, [spritesheets, showModal]);
+  }, [showSpritesheetPreview, spritesheets]);
 
   const handleDataChanged = useCallback(
     (data: ComponentClientDataById<Id, BaseArgs>) => {

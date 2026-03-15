@@ -2,6 +2,7 @@ import { ComponentRenderer } from '@game-cms/core';
 import {
   classNames,
   IconButton,
+  namedLazy,
   PlusIcon,
   Typography,
   useAsyncCallback,
@@ -10,10 +11,14 @@ import {
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FileExplorerModal } from '../../micro/FileExplorerModal/index.js';
 import { FileList } from '../../micro/FileList/index.js';
 import styles from './renderer.module.scss';
 import { FileClientDataItem } from './types.js';
+
+const FileExplorerModal = namedLazy(
+  () => import('../../micro/FileExplorerModal/index.js'),
+  'FileExplorerModal'
+);
 
 export const renderer: ComponentRenderer<'base::file'> = ({
   data: items,

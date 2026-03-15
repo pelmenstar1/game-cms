@@ -4,6 +4,7 @@ import { removeIndex } from '@game-cms/shared/collections';
 import {
   DraggableList,
   IconButton,
+  namedLazy,
   PlusIcon,
   PreviewIcon,
   Typography,
@@ -12,9 +13,13 @@ import {
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AlternativeTestModal } from '../../micro/AlternativeTestModal/index.js';
 import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
 import styles from './renderer.module.scss';
+
+const AlternativeTestModal = namedLazy(
+  () => import('../../micro/AlternativeTestModal/index.js'),
+  'AlternativeTestModal'
+);
 
 type Id = 'base::alternative';
 
@@ -71,7 +76,7 @@ export const renderer = <Args,>({
   };
 
   const onShowTestModal = useCallback(() => {
-    void showModal(AlternativeTestModal<Args>, {
+    void showModal(AlternativeTestModal, {
       data,
       options,
     });

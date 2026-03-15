@@ -1,8 +1,8 @@
 import { useComponentApi } from '@game-cms/component-api';
 import { ComponentRenderer } from '@game-cms/core';
-import { IconButton, PreviewIcon, Toolbar, useModal } from '@game-cms/ui';
+import { IconButton, PreviewIcon, Toolbar } from '@game-cms/ui';
 
-import { SpritesheetPreviewModal } from '../../micro/SpritesheetPreviewModal';
+import { useSpritesheetPreviewModal } from '../../hooks/useSpritesheetPreviewModal';
 import { getComposeOptions } from './internal/options';
 
 export const renderer: ComponentRenderer<'game::spritesheet'> = ({
@@ -14,10 +14,11 @@ export const renderer: ComponentRenderer<'game::spritesheet'> = ({
 }) => {
   const api = useComponentApi();
   const Compose = api.getComponent('base::compose');
-  const showModal = useModal();
+
+  const showSpritesheetPreview = useSpritesheetPreviewModal();
 
   const onPreview = () => {
-    void showModal(SpritesheetPreviewModal, {
+    void showSpritesheetPreview({
       entryMap: {
         base: {
           imageUrl: data.texture[0].url,
