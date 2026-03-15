@@ -31,6 +31,8 @@
     "@game-cms/core": "workspace:*",
     "@game-cms/storybook-config": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-links": "catalog:",
     "@storybook/react-vite": "catalog:",
     "@types/three": "^0.182.0",
     "mongodb": "catalog:",

@@ -2,8 +2,7 @@ import { ModalDialog, type ModalProps, Tab, Tabs } from '@game-cms/ui';
 import { useState } from 'react';
 
 import type { SpritesheetUrlEntry } from '../../components/SpritesheetWrapper/types';
-import { AtlasPreview } from './AtlasPreview';
-import { ImagePreview } from './ImagePreview';
+import { PreviewTab } from './PreviewTab';
 import styles from './SpritesheetPreviewModal.module.scss';
 
 export interface SpritesheetPreviewModalProps extends ModalProps {
@@ -25,14 +24,8 @@ export function SpritesheetPreviewModal({
         className={styles['tabs']}
       >
         {entries.map(([key, { imageUrl, atlasUrl }]) => (
-          <Tab key={key} tabId={key} title={key} className={styles['tab']}>
-            <ImagePreview
-              atlasUrl={atlasUrl}
-              imageUrl={imageUrl}
-              className={styles['image']}
-            />
-
-            <AtlasPreview url={atlasUrl} className={styles['atlas']} />
+          <Tab key={key} tabId={key} title={key} className={styles.tab}>
+            <PreviewTab imageUrl={imageUrl} atlasUrl={atlasUrl} />
           </Tab>
         ))}
       </Tabs>

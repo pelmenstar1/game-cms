@@ -8,8 +8,8 @@ export const Primary: unknown = meta.story({
   args: {
     entryMap: {
       a: {
-        imageUrl: 'https://i.imgur.com/gbt7JG7.jpg',
-        atlasUrl: '/spineboy/spineboy.json',
+        imageUrl: '/spritesheet1/texture.png',
+        atlasUrl: '/spritesheet1/atlas.json',
       },
       b: {
         imageUrl: 'https://i.imgur.com/gbt7JG7.jpg',
