@@ -23,27 +23,35 @@ export enum StorageItemType {
   FOLDER = 1,
 }
 
-type BaseStorageFileItem<Addons> = {
+interface BaseStorageFileItem<Addons> {
   name: string;
   mime: string;
   parent?: ObjectId;
   hidden?: boolean;
   size: number;
   addons: Addons;
-};
 
-export type StorageFilePersistentItem<Extra = unknown> = BaseStorageFileItem<
-  StorageAddonPersistentDataMap<Extra>
-> & { extra: Extra };
+  // The ID of the actual file this file is shadowing
+  originFile?: ObjectId;
+}
 
-export type StorageFileItem<Extra = unknown> = BaseStorageFileItem<
+export interface StorageFilePersistentItem<
+  Extra = unknown,
+> extends BaseStorageFileItem<StorageAddonPersistentDataMap<Extra>> {
+  extra: Extra;
+}
+
+export interface StorageFileItem<Extra = unknown> extends BaseStorageFileItem<
   StorageAddonHydratedDataMap<Extra>
-> & { url: string };
+> {
+  url: string;
+}
 
-export type StorageFileItemWithType<Extra = unknown> =
-  StorageFileItem<Extra> & {
-    type: StorageItemType.FILE;
-  };
+export interface StorageFileItemWithType<
+  Extra = unknown,
+> extends StorageFileItem<Extra> {
+  type: StorageItemType.FILE;
+}
 
 export type StorageFileClientItemWithType<Extra = unknown> = ToClientType<
   StorageFileItemWithType<Extra>

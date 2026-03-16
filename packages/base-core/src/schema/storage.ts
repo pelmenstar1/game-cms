@@ -21,6 +21,7 @@ export const createFolderResponse = z.object({
 export const uploadFileMeta = z.strictObject({
   parent: stringObjectId.optional(),
   hidden: z.boolean().optional(),
+  originFile: stringObjectId.optional(),
 });
 
 export const uploadFileResponse = z.object({

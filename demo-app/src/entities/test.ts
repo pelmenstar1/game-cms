@@ -2,8 +2,8 @@ import {
   postRequestUrlSource,
   webpageEntityPreview,
 } from '@game-cms/entity-previews';
+import { spine } from '@game-cms/game-plugin/components';
 import { entity } from 'game-cms';
-import { file } from 'game-cms/components';
 
 export default entity({
   title: 'Test',
@@ -11,6 +11,6 @@ export default entity({
     urlSource: postRequestUrlSource('http://localhost:3333'),
   }),
   components: {
-    abc3: file(),
+    abc3: spine(),
   },
 });

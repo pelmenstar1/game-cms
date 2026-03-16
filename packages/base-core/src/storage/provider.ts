@@ -9,23 +9,26 @@ import type { UploadFileMeta } from './core.js';
 export type StaticFileSource = Uint8Array;
 export type FileSource = StaticFileSource | Readable;
 
-export type UploadFileToProviderInfo<Source extends FileSource = FileSource> = {
-  name: string;
+interface ContentWitType<Source extends FileSource> {
   mime: string;
   content: Source;
-};
+}
+
+export interface UploadFileToProviderInfo<
+  Source extends FileSource = FileSource,
+> extends ContentWitType<Source> {
+  name: string;
+}
 
 export type UploadFilePayload<Source extends FileSource = FileSource> =
   UploadFileToProviderInfo<Source> & UploadFileMeta;
 
-export type PatchFileInfo<
+export interface PatchFileInfo<
   Source extends FileSource = FileSource,
   Extra = unknown,
-> = {
-  mime: string;
-  content: Source;
+> extends ContentWitType<Source> {
   extra: Extra;
-};
+}
 
 export type StorageProviderUploadResult<Extra> = {
   extra: Extra;

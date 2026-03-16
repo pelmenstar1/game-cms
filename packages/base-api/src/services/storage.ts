@@ -212,24 +212,15 @@ export default service({
   uploadFile: async (payload: UploadFilePayload) => {
     const { protocol } = storageProvider();
 
-    const { mime, name, parent, hidden, content } = payload;
+    const { mime, name, parent, hidden, content, originFile } = payload;
     const addons = getAddons();
 
-    const enhancedPayload = {
+    const enhancedPayload: UploadFilePayload = {
       ...payload,
       mime: enhanceMime(name, mime),
     };
 
-    const item: StorageFilePersistentItem = {
-      mime: enhancedPayload.mime,
-      name,
-      parent,
-      hidden,
-      size: 0,
-      extra: null,
-      addons: {},
-    };
-
+    let addonData: StorageAddonPersistentDataMap = {};
     let uploadResult: StorageProviderUploadResult<unknown>;
 
     if (addons.length > 0) {
@@ -253,13 +244,21 @@ export default service({
         })
       );
 
-      item.addons = Object.fromEntries(filterOutNullable(addonEntries));
+      addonData = Object.fromEntries(filterOutNullable(addonEntries));
     } else {
       uploadResult = await protocol.upload(enhancedPayload);
     }
 
-    item.extra = uploadResult.extra;
-    item.size = uploadResult.size;
+    const item: StorageFilePersistentItem = {
+      mime: enhancedPayload.mime,
+      name,
+      parent,
+      hidden,
+      originFile,
+      size: uploadResult.size,
+      extra: uploadResult.extra,
+      addons: addonData,
+    };
 
     const { insertedId } = await collection().insertOne({
       ...item,
@@ -356,29 +355,43 @@ export default service({
     };
   },
   deleteById: async (id: ObjectId, options?: DeleteStorageItemOptions) => {
-    const item = await collection().findOne(
-      { _id: id },
-      { projection: { type: 1, extra: 1 } }
+    async function deleteViaProvider(extra: unknown) {
+      try {
+        await storageProvider().protocol.delete(extra);
+      } catch (error) {
+        if (!options?.force) {
+          throw error;
+        }
+      }
+    }
+
+    const items = await collection()
+      .find(
+        { $or: [{ _id: id }, { originFile: id }] },
+        { projection: { type: 1, extra: 1 } }
+      )
+      .toArray();
+
+    const folderItem = items.find(
+      (item) => item.type === StorageItemType.FOLDER
     );
 
-    if (item) {
-      if (item.type === StorageItemType.FILE) {
-        try {
-          await storageProvider().protocol.delete(item.extra);
-        } catch (error) {
-          if (!options?.force) {
-            throw error;
-          }
-        }
-      } else {
-        await moveItemsToRoot(id);
-      }
+    if (folderItem) {
+      await moveItemsToRoot(id);
 
       await collection().deleteOne({ _id: id });
+    } else {
+      await Promise.all(
+        items
+          .filter((item) => item.type === StorageItemType.FILE)
+          .map((item) => deleteViaProvider(item.extra))
+      );
 
-      cms()
-        .service('base::appEvents')
-        .emit('base::storage::itemDeleted', { id });
+      await collection().deleteMany({
+        _id: { $in: items.map(({ _id }) => _id) },
+      });
     }
+
+    cms().service('base::appEvents').emit('base::storage::itemDeleted', { id });
   },
 });

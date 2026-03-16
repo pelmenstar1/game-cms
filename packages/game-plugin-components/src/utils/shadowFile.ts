@@ -46,8 +46,8 @@ export function createShadowFileOrchestration<Args>(
   }
 
   return {
-    async upload(originalId: ObjectId, args: Args) {
-      const shadowContent = await loadAndGetContent(originalId, args);
+    async upload(originFile: ObjectId, args: Args) {
+      const shadowContent = await loadAndGetContent(originFile, args);
 
       const { id: shadowAtlasId } = await cms()
         .service('base::storage')
@@ -56,6 +56,7 @@ export function createShadowFileOrchestration<Args>(
           mime: options.mime,
           content: Buffer.from(shadowContent, 'utf8'),
           hidden: true,
+          originFile,
         });
 
       return shadowAtlasId;

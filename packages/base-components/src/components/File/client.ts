@@ -7,6 +7,7 @@ export const clientTransformer: ComponentClientDataTransformer<'base::file'> = {
       ...item,
       id: item.id.toString(),
       parent: item.parent?.toString(),
+      originFile: item.originFile?.toString(),
     }));
   },
   fromClient: (clientData) => {
