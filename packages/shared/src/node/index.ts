@@ -5,6 +5,8 @@ export * from './error.js';
 export * from './file.js';
 export * from './http.js';
 export * from './import.js';
+export * from './jiti.js';
+export * from './module.js';
 export * from './package.js';
 export * from './path.js';
 export * from './process.js';

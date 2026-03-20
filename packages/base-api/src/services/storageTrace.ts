@@ -113,10 +113,10 @@ export default service({
     const schemas = cms().service('base::entitySchema').getAll();
 
     const result = await Promise.all(
-      Object.entries(schemas).map(async ([entityId, schema]) => {
+      Object.entries(schemas).map(async ([entityId, descriptor]) => {
         const result = await traceFileInEntityCollection(
           entityId,
-          schema,
+          descriptor.schema.value,
           fileId
         );
 

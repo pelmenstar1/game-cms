@@ -4,7 +4,8 @@
   "type": "module",
   "dependencies": {
     "@game-cms/shared": "workspace:*",
-    "@game-cms/game-plugin-components": "workspace:*"
+    "@game-cms/game-plugin-components": "workspace:*",
+    "@game-cms/game-plugin-core": "workspace:*"
   },
   "devDependencies": {
     "@game-cms/core": "workspace:*",

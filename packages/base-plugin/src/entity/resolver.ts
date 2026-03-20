@@ -1,28 +1,52 @@
 import { EntityEnvConfig } from '@game-cms/base-core';
-import type { PluginValueSourceContext } from '@game-cms/core';
+import type {
+  ComponentBackContextMap,
+  PluginValueSourceContext,
+} from '@game-cms/core';
+import { maybeJitiImport, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
 import { mapObject } from '@game-cms/shared/object';
-import { createJiti } from 'jiti';
+import { createJiti, Jiti } from 'jiti';
 
 import { getReExportedSchemaPaths } from './analyzer.js';
 import { validateEntitySchemaMap } from './validate.js';
+
+const SCHEMA_REGISTRY_PATH = 'entities/registry.ts';
+const BACK_CONTEXT_REGISTRY_PATH = 'entities/registry.backContext.ts';
+
+async function resolveBackContextRegistry(jiti: Jiti) {
+  const moduleValue = await maybeJitiImport<ComponentBackContextMap>(
+    jiti,
+    BACK_CONTEXT_REGISTRY_PATH
+  );
+
+  if (moduleValue !== MODULE_NOT_FOUND_MARK) {
+    return moduleValue;
+  }
+
+  return {};
+}
 
 export async function resolveEntityEnvConfig(
   context: PluginValueSourceContext
 ): Promise<EntityEnvConfig> {
   const jiti = createJiti(import.meta.url);
 
-  const registryFilePath = context.compiledFilePath('entities/registry.ts');
-  const registry = await jiti.import(registryFilePath);
+  const schemaRegistryFilePath = context.compiledFilePath(SCHEMA_REGISTRY_PATH);
+  const schemaRegistry = await jiti.import(schemaRegistryFilePath);
+  const schemaPaths = await getReExportedSchemaPaths(schemaRegistryFilePath);
 
-  const paths = await getReExportedSchemaPaths(registryFilePath);
+  const backContextRegistry = await resolveBackContextRegistry(jiti);
 
-  validateEntitySchemaMap(registry);
+  validateEntitySchemaMap(schemaRegistry);
 
   return {
-    registryFilePath,
-    registry: mapObject(registry, (rest, id) => ({
-      ...rest,
-      filePath: paths[id]?.filePath,
+    registryFilePath: schemaRegistryFilePath,
+    registry: mapObject(schemaRegistry, (schema, id) => ({
+      schema: {
+        value: schema,
+        filePath: schemaPaths[id]?.filePath,
+      },
+      backContext: backContextRegistry[id] ?? {},
     })),
   };
 }

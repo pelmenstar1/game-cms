@@ -1,4 +1,5 @@
 export * from './atomWalker.js';
+export * from './backContext.js';
 export * from './client.js';
 export * from './controller.js';
 export * from './core.js';

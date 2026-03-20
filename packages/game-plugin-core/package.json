@@ -1,0 +1,29 @@
+{
+  "name": "@game-cms/game-plugin-core",
+  "packageManager": "pnpm@10.28.1",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@game-cms/base-core": "workspace:*",
+    "@game-cms/global": "workspace:*",
+    "@game-cms/core": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "@game-cms/spritesheet": "workspace:*"
+  },
+  "devDependencies": {
+    "@game-cms/base-api": "workspace:*",
+    "mongodb": "catalog:",
+    "typescript": "catalog:"
+  },
+  "peerDependencies": {
+    "mongodb": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
+}

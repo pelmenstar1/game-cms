@@ -19,6 +19,7 @@
     { "path": "./packages/base-core" },
     { "path": "./packages/base-components" },
     { "path": "./packages/game-plugin" },
+    { "path": "./packages/game-plugin-core" },
     { "path": "./packages/game-plugin-components" },
     { "path": "./packages/spritesheet" },
     { "path": "./packages/component-api" },

@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
@@ -10,7 +9,7 @@ import type {
 import type { ComponentDistributionInfo, ComponentEnv } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { importFile } from '@game-cms/shared/node';
+import { maybeImportFile, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
 
 export async function getAllComponentDistributions(
   context: PluginValueSourceContext
@@ -44,12 +43,12 @@ async function getDistributionControllers(distPath: string) {
       if (entry.isDirectory()) {
         const controllerPath = path.join(distPath, entry.name, 'controller.js');
 
-        if (fs.existsSync(controllerPath)) {
-          const { default: controller } = await importFile<{
-            default: ComponentController;
-          }>(controllerPath);
+        const controllerModule = await maybeImportFile<{
+          default: ComponentController;
+        }>(controllerPath);
 
-          return controller;
+        if (controllerModule !== MODULE_NOT_FOUND_MARK) {
+          return controllerModule.default;
         }
       }
     })

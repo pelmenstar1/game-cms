@@ -38,7 +38,7 @@ function getValidatorForComponent<Id extends ComponentId, Args>(
 }
 
 export function getEntityValidationType<Id extends EntityId>(id: Id) {
-  const schema = cms().service('base::entitySchema').getById(id);
+  const schema = cms().service('base::entitySchema').getSchemaById(id);
 
   if (schema === null) {
     throw new Error(`Unknown schema: ${id}`);
@@ -50,7 +50,7 @@ export function getEntityValidationType<Id extends EntityId>(id: Id) {
 }
 
 export function getEntityValidationPartialType<Id extends EntityId>(id: Id) {
-  const schema = cms().service('base::entitySchema').getById(id);
+  const schema = cms().service('base::entitySchema').getSchemaById(id);
 
   if (schema === null) {
     throw new Error(`Unknown schema: ${id}`);

@@ -10,6 +10,7 @@
   "dependencies": {
     "@esotericsoftware/spine-pixi-v8": "^4.2.96",
     "@game-cms/base-components": "workspace:*",
+    "@game-cms/game-plugin-core": "workspace:*",
     "@game-cms/component-api": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",

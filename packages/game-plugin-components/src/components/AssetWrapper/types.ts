@@ -4,7 +4,6 @@ import type {
   ComponentErrorById,
   ComponentId,
   ComponentInDataById,
-  ComponentInDataByIdPathExtends,
   ComponentNestedPathDetails,
   ComponentNestedPathShape,
   ComponentOptionsById,
@@ -14,10 +13,13 @@ import type {
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
+import {
+  GameAssetPipelineStepOutDataMap,
+  GameAssetPipelineStepStorageDataMap,
+} from '@game-cms/game-plugin-core';
 import { IfExtends } from '@game-cms/shared';
-import type { ObjectId } from 'mongodb';
 
-export type SpritesheetArgs<
+export type AssetWrapperArgs<
   Id extends ComponentId = ComponentId,
   Args = unknown,
 > = {
@@ -25,87 +27,53 @@ export type SpritesheetArgs<
   baseArgs: Args;
 };
 
-export type ResolveSpritesheetArgs<Args> = IfExtends<Args, SpritesheetArgs>;
+export type ResolveAssetWrapperArgs<Args> = IfExtends<Args, AssetWrapperArgs>;
 
-export type SpritesheetStorageEntry = {
-  imageId: ObjectId;
-  atlasId: ObjectId;
-};
-
-export type SpritesheetBundleStorageMap = Record<
-  string,
-  SpritesheetStorageEntry
->;
-
-export type SpritesheetUrlEntry = {
-  imageUrl: string;
-  atlasUrl: string;
-};
-
-type SpritesheetEntry<Args extends SpritesheetArgs> = {
+type AssetWrapperEntry<Args extends AssetWrapperArgs> = {
   outData: {
     base: ComponentOutDataById<Args['id'], Args['baseArgs']>;
-    spritesheets?: Record<string, SpritesheetUrlEntry>;
+    derived?: GameAssetPipelineStepOutDataMap;
   };
   inData: ComponentInDataById<Args['id'], Args['baseArgs']>;
   partialInData: ComponentPartialInDataById<Args['id'], Args['baseArgs']>;
   options: {
     componentId: Args['id'];
-    namePath: ComponentInDataByIdPathExtends<
-      string,
-      Args['id'],
-      Args['baseArgs']
-    >;
-    bundlePath: ComponentInDataByIdPathExtends<
-      string,
-      Args['id'],
-      Args['baseArgs']
-    >;
-    imagePath: ComponentInDataByIdPathExtends<
-      ComponentInDataById<'base::file'>,
-      Args['id'],
-      Args['baseArgs']
-    >;
+    pipelineId: string;
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: ComponentErrorById<Args['id'], Args['baseArgs']>;
   clientData: {
     base: ComponentClientDataById<Args['id'], Args['baseArgs']>;
-    spritesheets?: Record<string, SpritesheetUrlEntry>;
+    derived?: GameAssetPipelineStepOutDataMap;
   };
   resolvedData: ComponentResolvedDataById<Args['id'], Args['baseArgs']>;
   storageData: {
     base: ComponentStorageDataById<Args['id'], Args['baseArgs']>;
-    spritesheets: SpritesheetBundleStorageMap;
+    derived: GameAssetPipelineStepStorageDataMap;
   };
   searchIndexData: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>;
 };
 
 type BaseNestedPath<
   T,
-  Args extends SpritesheetArgs,
+  Args extends AssetWrapperArgs,
 > = ComponentNestedPathDetails<T, Args['id'], Args['baseArgs']>;
 
-type BaseNestedPathShape<Args extends SpritesheetArgs> =
+type BaseNestedPathShape<Args extends AssetWrapperArgs> =
   ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
 
 declare module '@game-cms/core' {
   interface ComponentTypeMap<_Args> {
-    'game::spritesheet-wrapper': ComponentEntry<
-      SpritesheetEntry<ResolveSpritesheetArgs<_Args>>
+    'game::asset-wrapper': ComponentEntry<
+      AssetWrapperEntry<ResolveAssetWrapperArgs<_Args>>
     >;
   }
 
   interface ComponentNestedPathMap<T, Args> {
-    'game::spritesheet-wrapper': BaseNestedPath<
-      T,
-      ResolveSpritesheetArgs<Args>
-    >;
+    'game::asset-wrapper': BaseNestedPath<T, ResolveAssetWrapperArgs<Args>>;
   }
 
   interface ComponentNestedPathShapeMap<Args> {
-    'game::spritesheet-wrapper': BaseNestedPathShape<
-      ResolveSpritesheetArgs<Args>
-    >;
+    'game::asset-wrapper': BaseNestedPathShape<ResolveAssetWrapperArgs<Args>>;
   }
 }

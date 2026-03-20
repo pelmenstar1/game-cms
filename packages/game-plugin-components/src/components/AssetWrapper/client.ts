@@ -1,6 +1,6 @@
 import type { ComponentClientDataTransformer } from '@game-cms/core';
 
-export const clientTransformer: ComponentClientDataTransformer<'game::spritesheet-wrapper'> =
+export const clientTransformer: ComponentClientDataTransformer<'game::asset-wrapper'> =
   {
     getDefaultData: (options, context) => {
       return {
@@ -21,7 +21,7 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spriteshee
           data.base,
           options.baseOptions
         ),
-        spritesheets: data.spritesheets,
+        derived: data.derived,
       };
     },
   };

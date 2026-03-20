@@ -16,7 +16,10 @@ export const registryImport = ${emitDynamicPromise(registryFilePath)};
 
 export const entityMap = {
   ${Object.entries(registry)
-    .map(([id, { title, filePath }]) => {
+    .map(([id, entry]) => {
+      const filePath = entry.schema.filePath;
+      const { title } = entry.schema.value;
+
       const schemaImport = filePath
         ? `schema: ${emitDynamicPromise(filePath)}`
         : '';

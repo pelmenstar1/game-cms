@@ -36,6 +36,9 @@ catalogs:
     '@types/node':
       specifier: 25.0.6
       version: 25.0.6
+    '@types/qs':
+      specifier: ^6.14.0
+      version: 6.14.0
     '@types/react':
       specifier: 19.2.8
       version: 19.2.8
@@ -315,7 +318,7 @@ importers:
         specifier: 'catalog:'
         version: 25.0.6
       '@types/qs':
-        specifier: ^6.14.0
+        specifier: 'catalog:'
         version: 6.14.0
       tsx:
         specifier: 'catalog:'
@@ -854,6 +857,9 @@ importers:
       '@game-cms/game-plugin-components':
         specifier: workspace:*
         version: link:../game-plugin-components
+      '@game-cms/game-plugin-core':
+        specifier: workspace:*
+        version: link:../game-plugin-core
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
@@ -879,6 +885,9 @@ importers:
       '@game-cms/component-api':
         specifier: workspace:*
         version: link:../component-api
+      '@game-cms/game-plugin-core':
+        specifier: workspace:*
+        version: link:../game-plugin-core
       '@game-cms/global':
         specifier: workspace:*
         version: link:../global
@@ -959,6 +968,34 @@ importers:
         specifier: 'catalog:'
         version: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
+  packages/game-plugin-core:
+    dependencies:
+      '@game-cms/base-core':
+        specifier: workspace:*
+        version: link:../base-core
+      '@game-cms/core':
+        specifier: workspace:*
+        version: link:../core
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../global
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@game-cms/spritesheet':
+        specifier: workspace:*
+        version: link:../spritesheet
+    devDependencies:
+      '@game-cms/base-api':
+        specifier: workspace:*
+        version: link:../base-api
+      mongodb:
+        specifier: 'catalog:'
+        version: 7.0.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   packages/global:
     dependencies:
       '@game-cms/core':
@@ -1030,6 +1067,9 @@ importers:
         specifier: 'catalog:'
         version: 4.3.5
     devDependencies:
+      jiti:
+        specifier: ^2.6.0
+        version: 2.6.1
       vite:
         specifier: 7.x
         version: 7.3.1(@types/node@25.0.6)(jiti@2.6.1)(sass-embedded@1.97.2)(sass@1.97.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
@@ -1345,6 +1385,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 25.0.6
+      '@types/qs':
+        specifier: 'catalog:'
+        version: 6.14.0
       tsx:
         specifier: 'catalog:'
         version: 4.21.0
@@ -3513,6 +3556,10 @@ packages:
 
   bson@7.0.0:
     resolution: {integrity: sha512-Kwc6Wh4lQ5OmkqqKhYGKIuELXl+EPYSCObVE6bWsp1T/cGkOCBN0I8wF/T44BiuhHyNi1mmKVPXk60d41xZ7kw==}
+    engines: {node: '>=20.19.0'}
+
+  bson@7.2.0:
+    resolution: {integrity: sha512-YCEo7KjMlbNlyHhz7zAZNDpIpQbd+wOEHJYezv0nMYTn4x31eIUM2yomNNubclAt63dObUzKHWsBLJ9QcZNSnQ==}
     engines: {node: '>=20.19.0'}
 
   buffer-builder@0.2.0:
@@ -8677,6 +8724,8 @@ snapshots:
 
   bson@7.0.0: {}
 
+  bson@7.2.0: {}
+
   buffer-builder@0.2.0: {}
 
   buffer-from@1.1.2:
@@ -9977,7 +10026,7 @@ snapshots:
   mongodb@7.0.0:
     dependencies:
       '@mongodb-js/saslprep': 1.4.4
-      bson: 7.0.0
+      bson: 7.2.0
       mongodb-connection-string-url: 7.0.0
 
   mrmime@2.0.1: {}

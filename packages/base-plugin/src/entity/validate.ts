@@ -1,5 +1,15 @@
 import { EntitySchema } from '@game-cms/base-core';
+import { ComponentBackContextMap } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
+
+function assertMapObject(
+  value: unknown,
+  name: string
+): asserts value is Record<string, unknown> {
+  if (!isNonNullObject(value)) {
+    throw new TypeError(`Invalid entity ${name} map: expected an object`);
+  }
+}
 
 export function validateEntitySchema(
   value: unknown,
@@ -27,11 +37,30 @@ export function validateEntitySchema(
 export function validateEntitySchemaMap(
   value: unknown
 ): asserts value is Record<string, EntitySchema> {
-  if (!isNonNullObject(value)) {
-    throw new TypeError('Invalid entity schema map: expected an object');
-  }
+  assertMapObject(value, 'schema');
 
   for (const [id, schema] of Object.entries(value)) {
     validateEntitySchema(schema, id);
+  }
+}
+
+export function validateEntityBackContext(
+  value: unknown,
+  id: string
+): asserts value is EntitySchema {
+  if (!isNonNullObject(value)) {
+    throw new TypeError(
+      `Invalid entity back context (${id}): expected an object`
+    );
+  }
+}
+
+export function validateEntityBackContextMap(
+  value: unknown
+): asserts value is ComponentBackContextMap {
+  assertMapObject(value, 'back context');
+
+  for (const [id, schema] of Object.entries(value)) {
+    validateEntityBackContext(schema, id);
   }
 }

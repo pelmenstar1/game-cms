@@ -10,7 +10,7 @@
     "@game-cms/conditional": "workspace:*",
     "@game-cms/testing-lib": "workspace:*",
     "@types/node": "catalog:",
-    "@types/qs": "^6.14.0",
+    "@types/qs": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   },

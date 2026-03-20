@@ -10,8 +10,8 @@ describe('resolveEntitySchemas', () => {
 
     expect(actual).toMatchObject({
       registry: {
-        test: testEntity,
-        test2: test2Entity,
+        test: { schema: { value: testEntity } },
+        test2: { schema: { value: test2Entity } },
       },
     });
   });

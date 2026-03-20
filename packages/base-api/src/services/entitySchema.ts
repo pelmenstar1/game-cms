@@ -1,13 +1,21 @@
-import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import type { EntityDescriptor, EntityId } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { env } from '@game-cms/global';
 
+function getEntry<Id extends EntityId>(id: Id) {
+  return env().entity.registry[id] as unknown as
+    | EntityDescriptor<Id>
+    | undefined;
+}
+
 export default service({
   id: 'base::entitySchema',
-  getById<Id extends EntityId>(id: Id) {
-    const result = env().entity.registry[id] ?? null;
-
-    return result as unknown as EntitySchemaById<Id> | null;
+  getEntry,
+  getSchemaById<Id extends EntityId>(id: Id) {
+    return getEntry(id)?.schema.value ?? null;
+  },
+  getBackContextById(id: EntityId) {
+    return getEntry(id)?.backContext ?? null;
   },
   getAll() {
     return env().entity.registry;

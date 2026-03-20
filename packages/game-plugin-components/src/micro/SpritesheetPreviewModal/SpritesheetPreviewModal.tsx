@@ -1,12 +1,21 @@
 import { ModalDialog, type ModalProps, Tab, Tabs } from '@game-cms/ui';
 import { useState } from 'react';
 
-import type { SpritesheetUrlEntry } from '../../components/SpritesheetWrapper/types';
 import { PreviewTab } from './PreviewTab';
 import styles from './SpritesheetPreviewModal.module.scss';
 
+export type SpritesheetPreviewModalEntry = {
+  imageUrl: string;
+  atlasUrl: string;
+};
+
+export type SpritesheetPreviewModalEntryMap = Record<
+  string,
+  SpritesheetPreviewModalEntry
+>;
+
 export interface SpritesheetPreviewModalProps extends ModalProps {
-  entryMap: Record<string, SpritesheetUrlEntry>;
+  entryMap: SpritesheetPreviewModalEntryMap;
 }
 
 export function SpritesheetPreviewModal({

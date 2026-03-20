@@ -21,6 +21,7 @@
     { "path": "../codegen" },
     { "path": "../component-api" },
     { "path": "../core" },
+    { "path": "../game-plugin-core" },
     { "path": "../global" },
     { "path": "../shared" },
     { "path": "../spritesheet" },

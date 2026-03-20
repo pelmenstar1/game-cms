@@ -16,7 +16,7 @@ export default apiRoute({
   },
   handler: (req) => {
     const { id } = req.params;
-    const result = cms().service('base::entitySchema').getById(id);
+    const result = cms().service('base::entitySchema').getSchemaById(id);
 
     if (result === null) {
       throw new ApiError('Unknown entity', 'base::entity/notFound');

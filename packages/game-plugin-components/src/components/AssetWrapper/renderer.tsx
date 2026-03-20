@@ -6,22 +6,23 @@ import { useTranslation } from 'react-i18next';
 
 import { useSpritesheetPreviewModal } from '../../hooks/useSpritesheetPreviewModal';
 import styles from './renderer.module.scss';
-import type { ResolveSpritesheetArgs } from './types';
+import type { ResolveAssetWrapperArgs } from './types';
 
 export const renderer = <Args,>({
   data,
   options,
   error,
   onDataChanged,
-}: ComponentProps<'game::spritesheet-wrapper', Args>) => {
-  type Id = ResolveSpritesheetArgs<Args>['id'];
-  type BaseArgs = ResolveSpritesheetArgs<Args>['baseArgs'];
+}: ComponentProps<'game::asset-wrapper', Args>) => {
+  type Id = ResolveAssetWrapperArgs<Args>['id'];
+  type BaseArgs = ResolveAssetWrapperArgs<Args>['baseArgs'];
 
   const api = useComponentApi();
   const { t } = useTranslation('game');
   const showSpritesheetPreview = useSpritesheetPreviewModal();
 
-  const { base: baseData, spritesheets } = data;
+  const { base: baseData, derived } = data;
+  const spritesheets = derived?.spritesheet;
 
   const BaseComponent = api.getComponent(options.componentId);
 
@@ -35,15 +36,15 @@ export const renderer = <Args,>({
 
   const handleDataChanged = useCallback(
     (data: ComponentClientDataById<Id, BaseArgs>) => {
-      onDataChanged?.({ base: data, spritesheets });
+      onDataChanged?.({ base: data, derived });
     },
-    [onDataChanged, spritesheets]
+    [onDataChanged, derived]
   );
 
   return (
     <div>
       <Toolbar className={styles['header']}>
-        {data.spritesheets && (
+        {spritesheets && (
           <IconButton title={t('common.preview')} onClick={onPreview}>
             <PreviewIcon />
           </IconButton>

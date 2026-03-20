@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
@@ -20,7 +19,7 @@ import {
   resolveMaybeFactory,
 } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { importFile } from '@game-cms/shared/node';
+import { maybeImportFile, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
 import { describe, expect, test } from 'vitest';
 
 type TestInput<Id extends ComponentId> = {
@@ -31,12 +30,14 @@ async function gatherComponentClientChunk(dirPath: string) {
   const corePath = path.join(dirPath, 'core.js');
   const clientPath = path.join(dirPath, 'client.js');
 
-  if (fs.existsSync(clientPath)) {
+  const clientModule = await maybeImportFile<{
+    clientTransformer: ComponentClientDataTransformer;
+  }>(clientPath);
+
+  if (clientModule !== MODULE_NOT_FOUND_MARK) {
     const componentId = getComponentIdFromCoreFile(corePath);
 
-    const { clientTransformer } = await importFile<{
-      clientTransformer: ComponentClientDataTransformer;
-    }>(clientPath);
+    const { clientTransformer } = clientModule;
 
     return [componentId, clientTransformer] as const;
   }
@@ -117,8 +118,9 @@ export function componentDataFlowTests<Id extends ComponentId>(
   describe(`${id} data flow`, () => {
     test('out -> client -> out in -> storage -> out', async () => {
       const clientContext = await clientResolverContext();
-      const { foreignStorageResolverContext } =
-        cms().service('base::component');
+      const foreignStorageResolverContext = cms()
+        .service('base::component')
+        .createForeignStorageResolverContext({});
 
       for (const { data: out, component } of resolveMaybeFactory(input).outs) {
         const { options } = component;
