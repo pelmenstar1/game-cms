@@ -7,7 +7,6 @@
   },
   "devDependencies": {
     "@game-cms/codegen": "workspace:*",
-    "@game-cms/conditional": "workspace:*",
     "@game-cms/testing-lib": "workspace:*",
     "@types/node": "catalog:",
     "@types/qs": "catalog:",

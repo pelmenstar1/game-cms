@@ -5,11 +5,9 @@
   "dependencies": {
     "@game-cms/shared": "workspace:*",
     "@game-cms/core": "workspace:*",
-    "@game-cms/ui": "workspace:*",
     "react": "catalog:"
   },
   "devDependencies": {
-    "i18next": "catalog:",
     "typescript": "catalog:"
   },
   "exports": {

@@ -9,7 +9,6 @@
   "references": [
     { "path": "../base-core" },
     { "path": "../codegen" },
-    { "path": "../conditional" },
     { "path": "../core" },
     { "path": "../global" },
     { "path": "../shared" },

@@ -1,9 +1,17 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "tags": ["knip"],
-  "include": ["files", "exports", "types", "catalog", "unlisted"],
+  "include": [
+    "files",
+    "exports",
+    "types",
+    "catalog",
+    "unlisted",
+    "dependencies",
+    "binaries"
+  ],
   "ignore": ["packages/ui/src/theme/global.ts"],
-  "ignoreFiles": ["e2e/src/cms.config.ts"],
+  "ignoreDependencies": ["game-cms", "@storybook/*"],
   "storybook": {
     "entry": [
       "packages/*/.storybook/main.ts",
@@ -25,9 +33,11 @@
         "src/index.ts",
         "src/main.ts",
         "src/bin.ts",
-        "src/cms.config.ts"
+        "src/cms.config.ts",
+        "scripts/*/*.ts"
       ],
-      "project": "src/**/*.{ts,tsx}"
+      "project": "src/**/*.{ts,tsx}",
+      "ignoreDependencies": ["@game-cms/codegen"]
     },
     "packages/{base,game-plugin}-components": {
       "entry": [
@@ -36,7 +46,7 @@
         "src/i18n/types.ts"
       ],
       "project": "src/**/*.{ts,tsx}",
-      "ignore": ["src/micro/FileBigPreview/**/*.ts"]
+      "ignoreDependencies": ["@game-cms/vite-plugins", "react-router"]
     },
     "packages/dashboard": {
       "entry": [
@@ -69,7 +79,8 @@
     },
     "packages/ui": {
       "entry": ["src/index.ts", "src/types/index.ts"],
-      "project": "src/**/*.{ts,tsx}"
+      "project": "src/**/*.{ts,tsx}",
+      "ignoreDependencies": ["sass-embedded"]
     },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]

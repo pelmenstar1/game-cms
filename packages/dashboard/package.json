@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
-    "storybook:start": "storybook dev --port 6006",
     "dev": "react-router dev",
     "typegen": "react-router typegen",
     "new-component": "tsx ./scripts/newComponent.ts"
@@ -12,17 +11,12 @@
   "devDependencies": {
     "@game-cms/base-api": "workspace:*",
     "@game-cms/codegen": "workspace:*",
-    "@game-cms/storybook-config": "workspace:*",
     "@game-cms/vite-plugins": "workspace:*",
     "@react-router/dev": "catalog:",
-    "@storybook/react-vite": "catalog:",
-    "@types/lodash": "^4.17.23",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
     "sass-embedded": "catalog:",
-    "storybook": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
@@ -40,7 +34,6 @@
     "@react-router/node": "catalog:",
     "i18next": "catalog:",
     "isbot": "5.1.36",
-    "lodash": "^4.17.23",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-i18next": "catalog:",

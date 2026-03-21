@@ -4,7 +4,7 @@ import path from 'node:path';
 import { format, resolveConfig } from 'prettier';
 
 import { readJson5, readPackageInfo } from '../packages/shared/src/node';
-import { packagesDir } from '../shared/constants';
+import { packagesDir, tsConfigImplicitDependencies } from '../shared/constants';
 
 type TsConfig = {
   references?: {
@@ -20,7 +20,7 @@ type PrettierApi = Awaited<ReturnType<typeof prettierApi>>;
 
 async function prettierApi() {
   const config = await resolveConfig('.', {
-    config: path.join(import.meta.dirname, '../prettier.config.mjs'),
+    config: path.join(import.meta.dirname, '../prettier.config.js'),
   });
 
   return {
@@ -48,13 +48,24 @@ async function getWorkspaceDependencies(baseDir: string) {
     .toSorted();
 }
 
+async function getTsConfigReferences(baseDir: string) {
+  const deps = await getWorkspaceDependencies(baseDir);
+
+  const name = path.basename(baseDir);
+  const refs = deps.map((name) => ({ path: `../${name}` }));
+
+  const implicitRefs = (tsConfigImplicitDependencies[name] ?? []).map(
+    (path) => ({ path })
+  );
+
+  return [...refs, ...implicitRefs];
+}
+
 async function processPackage(baseDir: string, prettier: PrettierApi) {
   const configPath = path.join(baseDir, 'tsconfig.json');
   const config = await readJson5<TsConfig>(configPath);
 
-  const deps = await getWorkspaceDependencies(baseDir);
-  const refs = deps.map((name) => ({ path: `../${name}` }));
-
+  const refs = await getTsConfigReferences(baseDir);
   config.references = refs.length > 0 ? refs : undefined;
 
   const output = await prettier.format(JSON.stringify(config));

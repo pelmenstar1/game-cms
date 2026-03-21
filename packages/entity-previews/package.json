@@ -7,13 +7,12 @@
   },
   "dependencies": {
     "@game-cms/base-core": "workspace:*",
-    "@game-cms/codegen": "workspace:*",
-    "@game-cms/core": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "@game-cms/ui": "workspace:*",
     "react": "catalog:"
   },
   "devDependencies": {
+    "@game-cms/codegen": "workspace:*",
     "@types/react": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"

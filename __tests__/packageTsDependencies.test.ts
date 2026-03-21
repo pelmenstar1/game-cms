@@ -9,13 +9,11 @@ import {
   readTsConfig,
   TsConfig,
 } from '../packages/shared/src/node';
-import { packagesDir } from '../shared/constants';
+import { packagesDir, tsConfigImplicitDependencies } from '../shared/constants';
 
 type PackageRegistry = Awaited<ReturnType<typeof createPackageRegistry>>;
 
 const exceptions = new Set(['dashboard']);
-
-const actualExceptions = new Set(['../dashboard/tsconfig.lib.json']);
 
 function getWorkspaceDependencies(info: PackageInfo) {
   // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -54,9 +52,12 @@ async function createPackageRegistry() {
   };
 }
 
-function getActualReferences(tsConfig: TsConfig) {
+function getActualReferences(rootDir: string, tsConfig: TsConfig) {
+  const name = path.basename(rootDir);
+  const exceptions = tsConfigImplicitDependencies[name] ?? [];
+
   let result = tsConfig.references?.map(({ path }) => path) ?? [];
-  result = result.filter((value) => !actualExceptions.has(value));
+  result = result.filter((value) => !exceptions.includes(value));
 
   return new Set(result);
 }
@@ -73,7 +74,7 @@ async function checkPackage(rootDir: string, registry: PackageRegistry) {
     .filter((name) => name !== undefined && !exceptions.has(name))
     .map((name) => `../${name}`);
 
-  const actualReferences = getActualReferences(tsConfig);
+  const actualReferences = getActualReferences(rootDir, tsConfig);
 
   expect(actualReferences, rootDir).toEqual(new Set(expectedReferences));
 }

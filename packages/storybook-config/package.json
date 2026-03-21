@@ -5,9 +5,6 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "dependencies": {
-    "@storybook/addon-a11y": "catalog:",
-    "@storybook/addon-links": "catalog:",
-    "@storybook/react": "catalog:",
     "@storybook/react-vite": "catalog:",
     "storybook": "catalog:",
     "@vitejs/plugin-react": "catalog:",

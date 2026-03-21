@@ -10,13 +10,14 @@
     "incremental": true,
     "allowJs": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true
   },
   "include": [
-    "eslint.config.mjs",
+    "eslint.config.js",
     "stylelint.config.js",
-    "prettier.config.mjs",
+    "prettier.config.js",
+    "vitest.config.ts",
     "__tests__",
     "scripts",
     "shared"

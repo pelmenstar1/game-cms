@@ -8,13 +8,12 @@
   "include": ["./src"],
   "references": [
     { "path": "../base-api" },
-    { "path": "../base-components" },
     { "path": "../base-core" },
     { "path": "../base-plugin" },
-    { "path": "../dashboard/tsconfig.lib.json" },
     { "path": "../core" },
     { "path": "../global" },
     { "path": "../ignition" },
-    { "path": "../shared" }
+    { "path": "../shared" },
+    { "path": "../dashboard/tsconfig.lib.json" }
   ]
 }

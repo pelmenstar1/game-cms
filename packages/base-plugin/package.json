@@ -8,7 +8,6 @@
     "@game-cms/core": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "@typescript-eslint/typescript-estree": "^8.56.0",
     "jiti": "catalog:"
   },
   "devDependencies": {

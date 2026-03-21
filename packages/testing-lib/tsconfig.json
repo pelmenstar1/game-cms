@@ -4,7 +4,6 @@
   "references": [
     { "path": "../base-core" },
     { "path": "../core" },
-    { "path": "../global" },
     { "path": "../shared" }
   ],
   "compilerOptions": { "rootDir": "./src", "outDir": "./dist" }

@@ -6,7 +6,6 @@
   "dependencies": {
     "game-cms": "workspace:*",
     "@game-cms/ignition": "workspace:*",
-    "@game-cms/global": "workspace:*",
     "@game-cms/game-plugin": "workspace:*",
     "@game-cms/storage-provider-local": "workspace:*"
   }

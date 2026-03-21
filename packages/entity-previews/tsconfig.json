@@ -10,7 +10,6 @@
   "references": [
     { "path": "../base-core" },
     { "path": "../codegen" },
-    { "path": "../core" },
     { "path": "../shared" },
     { "path": "../ui" }
   ]

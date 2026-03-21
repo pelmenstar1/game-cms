@@ -13,7 +13,6 @@
     { "path": "../base-components" },
     { "path": "../base-core" },
     { "path": "../codegen" },
-    { "path": "../component-api" },
     { "path": "../core" },
     { "path": "../global" },
     { "path": "../shared" },

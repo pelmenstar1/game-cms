@@ -20,7 +20,7 @@
     "jsx": "react-jsx",
     "rootDirs": [".", "./.react-router/types"],
     "baseUrl": ".",
-    "paths": { "@/*": ["./src/*"], "#storybook/*": ["./.storybook/*"] },
+    "paths": { "@/*": ["./src/*"] },
     "noEmit": true,
     "strict": true,
     "isolatedModules": true,
@@ -39,7 +39,6 @@
     { "path": "../global" },
     { "path": "../ignition" },
     { "path": "../shared" },
-    { "path": "../storybook-config" },
     { "path": "../ui" },
     { "path": "../vite-plugins" }
   ]

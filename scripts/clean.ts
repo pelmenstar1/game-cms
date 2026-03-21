@@ -3,14 +3,17 @@ import fsp from 'node:fs/promises';
 import { glob } from 'glob';
 
 const patterns = [
-  './packages/*/tsconfig.tsbuildinfo',
+  '*.tsbuildinfo',
+  './packages/*/*.tsbuildinfo',
   './packages/*/dist',
   './.stylelintcache',
   './.eslintcache',
 ];
 
 async function main() {
-  const files = await glob(patterns);
+  const files = await glob(patterns, {
+    ignore: ['**/node_modules/**'],
+  });
 
   await Promise.all(
     files.map(async (file) => {

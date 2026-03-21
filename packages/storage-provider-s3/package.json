@@ -19,7 +19,6 @@
     "@aws-sdk/lib-storage": "^3.1014.0",
     "@aws-sdk/s3-request-presigner": "^3.1014.0",
     "@game-cms/core": "workspace:*",
-    "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "zod": "catalog:"
   }

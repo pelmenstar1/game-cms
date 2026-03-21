@@ -5,12 +5,9 @@
   "types": "./dist/index.d.ts",
   "type": "module",
   "dependencies": {
-    "@game-cms/shared": "workspace:*",
-    "chokidar": "^5.0.0",
-    "rollup": "catalog:"
+    "chokidar": "^5.0.0"
   },
   "devDependencies": {
-    "@game-cms/core": "workspace:*",
     "typescript": "catalog:",
     "vite": "catalog:"
   }

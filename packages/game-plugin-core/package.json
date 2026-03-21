@@ -6,7 +6,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@game-cms/base-core": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/core": "workspace:*",
     "@game-cms/shared": "workspace:*",

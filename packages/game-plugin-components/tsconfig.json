@@ -24,7 +24,6 @@
     { "path": "../game-plugin-core" },
     { "path": "../global" },
     { "path": "../shared" },
-    { "path": "../spritesheet" },
     { "path": "../storybook-config" },
     { "path": "../ui" },
     { "path": "../vite-plugins" }

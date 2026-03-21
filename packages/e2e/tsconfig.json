@@ -4,7 +4,6 @@
   "include": ["./src", "./globalSetup.ts"],
   "references": [
     { "path": "../game-plugin" },
-    { "path": "../global" },
     { "path": "../ignition" },
     { "path": "../storage-provider-local" }
   ]
