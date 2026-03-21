@@ -108,7 +108,7 @@ export type ComponentClientOptionsTransformer<
 };
 
 // Contains values/functions that can be read/executed only on both client-side and server-side.
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+
 export interface ComponentClientContext {}
 
 export type ComponentClientContextMap<K extends PropertyKey = string> = Record<

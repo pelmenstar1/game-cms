@@ -21,7 +21,7 @@
     "pixi.js": "catalog:",
     "react-i18next": "catalog:",
     "three": "^0.183.2",
-    "uuid": "^13.0.0",
+    "uuid": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

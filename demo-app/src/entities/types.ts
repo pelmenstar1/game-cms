@@ -9,6 +9,5 @@ declare module 'game-cms' {
     ids: keyof Registry;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface EntityTypeDataRegistry extends ResolveEntityRegistryData<Registry> {}
 }

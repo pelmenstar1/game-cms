@@ -13,23 +13,14 @@ export default defineConfig(
   {
     ignores: [
       '*/**/dist/',
+      '*/**/build/',
       '*/**/vite.config.ts',
       '**/.react-router',
       'node_modules',
-      'demo-app/build',
-      'packages/dashboard/build',
-      'packages/dashboard/.storybook',
-      'packages/dashboard/vite.storybook.config.ts',
-      'packages/ui/.storybook',
-      'packages/ui/vite.storybook.config.ts',
-      'packages/base-api/scripts/*',
-      'packages/entity-previews/scripts/*',
-      'packages/base-components/scripts/*',
-      'packages/game-plugin-components/scripts/*',
-      'packages/game-plugin-components/.storybook',
       'packages/*/vite.storybook.config.ts',
+      'packages/*/scripts/*',
+      'packages/*/.storybook',
       'packages/base-plugin/test-setups',
-      'packages/entity-checks/scripts/*',
     ],
   },
   eslint.configs.recommended,
@@ -81,6 +72,10 @@ export default defineConfig(
         {
           argsIgnorePattern: '^_',
         },
+      ],
+      '@typescript-eslint/no-empty-object-type': [
+        'error',
+        { allowInterfaces: 'always' },
       ],
 
       'react/react-in-jsx-scope': 'off',

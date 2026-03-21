@@ -22,7 +22,6 @@ import type {
   EntityMeta,
 } from './core.js';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface EntityCheckTypeMap {}
 
 export type EntityCheckId = keyof EntityCheckTypeMap extends never

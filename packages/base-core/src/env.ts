@@ -31,6 +31,5 @@ declare module '@game-cms/global' {
     statusCodes: ApiErrorStatusMap;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface CmsEnvironment extends OwnEnvironment {}
 }

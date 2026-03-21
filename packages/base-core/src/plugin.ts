@@ -6,10 +6,8 @@ import {
 } from '@game-cms/shared';
 import { MaybeArray } from '@game-cms/shared/collections';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface OwnPluginClientConfig {}
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PluginClientConfig extends OwnPluginClientConfig {}
 
 export interface PluginClientConfigResolver<OwnConfig> {

@@ -57,7 +57,6 @@ export type ApiRoute<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UnknownApiRoute = ApiRoute<any, any, any, any, any>;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ApiRouteMap {}
 
 /*@__NO_SIDE_EFFECTS__*/

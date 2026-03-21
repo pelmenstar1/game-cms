@@ -27,7 +27,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-zoom-pan-pinch": "^3.7.0",
-    "uuid": "^13.0.0"
+    "uuid": "catalog:"
   },
   "devDependencies": {
     "@game-cms/codegen": "workspace:*",

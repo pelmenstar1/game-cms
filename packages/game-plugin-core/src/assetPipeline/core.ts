@@ -6,7 +6,6 @@ import {
 } from '@game-cms/core';
 import { GetPropertyOr } from '@game-cms/shared';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface GameAssetPipelineStepTypeRegistry {
   // Expected shape:
   // [Id of the pipeline step]: { client: unknown; out: unknown; storage: unknown; }

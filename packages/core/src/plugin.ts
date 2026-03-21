@@ -61,7 +61,7 @@ type PluginCore = {
   setup?: (config: ResolvedCmsConfig) => MaybePromise<void>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface PluginMixins<Types extends PluginTypes> {}
 
 export interface PluginTypeManager<Types extends PluginTypes> {

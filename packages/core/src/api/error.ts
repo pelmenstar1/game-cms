@@ -6,7 +6,6 @@ export type ApiErrorCodePath<T> = T extends string
         [K in keyof T & string]: `${K}/${ApiErrorCodePath<T[K]>}`;
       }[keyof T & string];
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ApiErrorCodeMap {}
 
 type BaseApiErrorCode = {

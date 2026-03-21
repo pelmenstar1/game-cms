@@ -1,6 +1,5 @@
 import 'i18next';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentI18NTypes {}
 
 declare module 'i18next' {

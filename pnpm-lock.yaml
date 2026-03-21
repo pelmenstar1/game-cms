@@ -105,6 +105,9 @@ catalogs:
     typescript:
       specifier: 5.9.3
       version: 5.9.3
+    uuid:
+      specifier: ^13.0.0
+      version: 13.0.0
     vite:
       specifier: 7.3.1
       version: 7.3.1
@@ -862,7 +865,7 @@ importers:
         specifier: ^0.183.2
         version: 0.183.2
       uuid:
-        specifier: ^13.0.0
+        specifier: 'catalog:'
         version: 13.0.0
       zod:
         specifier: 'catalog:'
@@ -1224,7 +1227,7 @@ importers:
         specifier: ^3.7.0
         version: 3.7.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       uuid:
-        specifier: ^13.0.0
+        specifier: 'catalog:'
         version: 13.0.0
     devDependencies:
       '@game-cms/codegen':

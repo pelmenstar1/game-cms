@@ -30,13 +30,11 @@ export type EntityTypeDataRegistryEntry = Record<
   ComponentTypeDataRegistryEntry
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface EntityTypeRegistry {
   // Expected user-set properties:
   // ids: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface EntityTypeDataRegistry {
   // Expected key to be id of the entity, value - components of the entity
 }

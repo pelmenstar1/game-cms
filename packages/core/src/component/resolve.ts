@@ -33,7 +33,6 @@ export type ComponentSchemaNestedPathDetails<T, Schema> =
     ? ComponentNestedPathDetails<T, Id, Args>
     : ComponentPathDetails;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ComponentDataResolverArgs {}
 
 export type ForeignComponentDataResolverContext = {

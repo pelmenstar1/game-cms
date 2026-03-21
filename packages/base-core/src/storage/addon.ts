@@ -6,7 +6,7 @@ import {
 
 import { StorageProvider, UploadFilePayload } from './provider.js';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface StorageAddonTypeMap<Extra> {}
 
 export type StorageAddonId = keyof StorageAddonTypeMap<unknown>;

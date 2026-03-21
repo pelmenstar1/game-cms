@@ -26,7 +26,6 @@ export type BaseCmsEnvironment = {
   services: Service[];
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface CmsEnvironment extends BaseCmsEnvironment {}
 
 let _env: CmsEnvironment | undefined;
