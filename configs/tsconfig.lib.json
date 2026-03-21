@@ -3,9 +3,7 @@
     "module": "nodenext",
     "target": "esnext",
     "moduleResolution": "nodenext",
-
     "declaration": true,
-
     "jsx": "react-jsx",
     "strict": true,
     "isolatedModules": true,

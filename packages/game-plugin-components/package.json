@@ -8,7 +8,7 @@
     "storybook:start": "storybook dev --port 6006"
   },
   "dependencies": {
-    "@esotericsoftware/spine-pixi-v8": "^4.2.96",
+    "@esotericsoftware/spine-pixi-v8": "^4.2.107",
     "@game-cms/base-components": "workspace:*",
     "@game-cms/game-plugin-core": "workspace:*",
     "@game-cms/component-api": "workspace:*",
@@ -16,12 +16,12 @@
     "@game-cms/shared": "workspace:*",
     "@game-cms/spritesheet": "workspace:*",
     "@game-cms/ui": "workspace:*",
-    "fast-xml-parser": "^5.3.6",
+    "fast-xml-parser": "^5.5.8",
     "i18next": "catalog:",
     "mongodb": "catalog:",
     "pixi.js": "catalog:",
     "react-i18next": "catalog:",
-    "three": "^0.182.0",
+    "three": "^0.183.2",
     "uuid": "^13.0.0",
     "zod": "catalog:"
   },
@@ -35,7 +35,7 @@
     "@storybook/addon-a11y": "catalog:",
     "@storybook/addon-links": "catalog:",
     "@storybook/react-vite": "catalog:",
-    "@types/three": "^0.182.0",
+    "@types/three": "^0.183.1",
     "mongodb": "catalog:",
     "react-router": "catalog:",
     "storybook": "catalog:",

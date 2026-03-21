@@ -11,6 +11,7 @@
     { "path": "../base-components" },
     { "path": "../base-core" },
     { "path": "../base-plugin" },
+    { "path": "../dashboard/tsconfig.lib.json" },
     { "path": "../core" },
     { "path": "../global" },
     { "path": "../ignition" },

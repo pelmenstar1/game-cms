@@ -2,18 +2,31 @@
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "tags": ["knip"],
   "include": ["files", "exports", "types", "catalog", "unlisted"],
-  "ignore": [
-    "**/*.stories.tsx",
-    "**/*.{test,btest,e2e-test,outer-loop-test}.ts",
-    "**/.storybook/*.{ts,tsx}",
-    "**/vite.storybook.config.ts",
-    "packages/ui/src/theme/global.ts",
-    "packages/**/fixtures/**/*"
-  ],
+  "ignore": ["packages/ui/src/theme/global.ts"],
   "ignoreFiles": ["e2e/src/cms.config.ts"],
+  "storybook": {
+    "entry": [
+      "packages/*/.storybook/main.ts",
+      "packages/*/vite.storybook.config.ts",
+      "packages/*/.storybook/preview.tsx",
+      "**/*.stories.tsx"
+    ]
+  },
+  "vitest": {
+    "config": ["**/vitest.config.ts"],
+    "entry": [
+      "**/*.{test,btest,e2e-test,outer-loop-test,test-d}.ts",
+      "**/fixtures/**/*.{ts,js}"
+    ]
+  },
   "workspaces": {
     "packages/*": {
-      "entry": ["src/index.ts", "src/bin.ts", "src/cms.config.ts"],
+      "entry": [
+        "src/index.ts",
+        "src/main.ts",
+        "src/bin.ts",
+        "src/cms.config.ts"
+      ],
       "project": "src/**/*.{ts,tsx}"
     },
     "packages/{base,game-plugin}-components": {
@@ -29,9 +42,10 @@
       "entry": [
         "src/app/routes/**/*/route.tsx",
         "src/types/page.ts",
-        "lib/index.ts"
+        "lib/index.ts",
+        ".storybook/preview.tsx"
       ],
-      "project": "**/*.{ts,tsx}"
+      "project": "src/**/*.{ts,tsx}"
     },
     "packages/base-api": {
       "entry": ["src/index.ts", "src/types.ts", "src/routes/**/*.ts"],
@@ -54,13 +68,14 @@
       "entry": ["src/index.ts", "src/**/*.client.ts"]
     },
     "packages/ui": {
-      "entry": ["src/index.ts", "src/types/index.ts"]
+      "entry": ["src/index.ts", "src/types/index.ts"],
+      "project": "src/**/*.{ts,tsx}"
     },
     "demo-app": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]
     },
-    "roundtrip-server": {
-      "entry": ["src/main.ts"]
+    "packages/e2e": {
+      "entry": ["src/cms.config.ts", "src/globalSetup.ts"]
     }
   }
 }
