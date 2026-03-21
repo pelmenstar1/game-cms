@@ -146,6 +146,16 @@ export default defineComponentController({
         ),
       };
     },
+    disposeData: async (data, options, context) => {
+      const { baseOptions, componentId } = options;
+
+      await Promise.all([
+        context.disposeData(componentId, data.default, baseOptions),
+        ...data.alternative.map(({ value }) =>
+          context.disposeData(componentId, value, baseOptions)
+        ),
+      ]);
+    },
   },
   clientOptionsTransformer: {
     toClient: (options, context) => {

@@ -1,4 +1,5 @@
 import { defineComponentController } from '@game-cms/core';
+import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
 import { createShadowFileOrchestration } from '../../utils/shadowFile.js';
@@ -114,6 +115,13 @@ export default defineComponentController({
       );
 
       return { images, atlas, skeleton, originalAtlas: originalAtlas[0] };
+    },
+    disposeData: async (data) => {
+      const { shadowAtlas } = data;
+
+      if (shadowAtlas) {
+        await cms().service('base::storage').deleteById(shadowAtlas);
+      }
     },
   },
 });

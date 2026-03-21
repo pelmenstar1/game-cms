@@ -115,6 +115,15 @@ export default defineComponentController({
 
       return { nodes: Object.fromEntries(nodes), edges: data.edges };
     },
+    disposeData: async (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      await Promise.all(
+        Object.values(data.nodes).map(async ({ value }) =>
+          context.disposeData(componentId, value, baseOptions)
+        )
+      );
+    },
   },
   clientOptionsTransformer: {
     toClient: (options, context) => {

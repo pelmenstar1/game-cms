@@ -4,7 +4,7 @@ import {
   ComponentOptionsById,
   ForeignComponentStorageDataResolverContext,
 } from '@game-cms/core';
-import { GetPropertyOr } from '@game-cms/shared';
+import { GetPropertyOr, MaybePromise } from '@game-cms/shared';
 
 export interface GameAssetPipelineStepTypeRegistry {
   // Expected shape:
@@ -59,6 +59,10 @@ export type GameAssetPipelineStep<Id extends string = string> = {
     options: GameAssetPipelineStepDataOptions<CId, Args>,
     context: ForeignComponentStorageDataResolverContext
   ) => Promise<GameAssetPipelineStepStorageData<Id>>;
+
+  disposeStorage?: (
+    storageData: GameAssetPipelineStepStorageData<Id>
+  ) => MaybePromise<void>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -19,6 +19,10 @@ export type ComponentStoragePartialDataById<
   Args = unknown,
 > = GetComponentTypesById<T, Args>['partialStorageData'];
 
+export type ComponentStorageDisposeDataParams = {
+  afterUpdate: boolean;
+};
+
 export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
   getDefaultData: <Id extends ComponentId, Args>(
     id: Id,
@@ -36,6 +40,13 @@ export interface ForeignComponentStorageDataResolverContext extends ForeignCompo
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
   ) => MaybePromise<ComponentOutDataById<Id, Args>>;
+
+  disposeData: <Id extends ComponentId, Args>(
+    id: Id,
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    params?: Partial<ComponentStorageDisposeDataParams>
+  ) => MaybePromise<void>;
 }
 
 export type ComponentStorageDataTransformer<Id extends ComponentId> = {
@@ -55,4 +66,11 @@ export type ComponentStorageDataTransformer<Id extends ComponentId> = {
     options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentStorageDataResolverContext
   ) => MaybePromise<ComponentOutDataById<Id, Args>>;
+
+  disposeData?: <Args>(
+    data: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    context: ForeignComponentStorageDataResolverContext,
+    params: ComponentStorageDisposeDataParams
+  ) => MaybePromise<void>;
 };

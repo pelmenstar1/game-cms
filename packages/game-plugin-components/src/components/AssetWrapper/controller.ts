@@ -87,6 +87,20 @@ export default defineComponentController({
         derived: Object.fromEntries(derivedEntries),
       };
     },
+    disposeData: async (data, options) => {
+      const { derived } = data;
+      const { pipeline } = options;
+
+      await Promise.all(
+        pipeline.map(async (step) => {
+          const value = derived[step.id as keyof typeof derived];
+
+          if (value) {
+            await step.disposeStorage?.(value);
+          }
+        })
+      );
+    },
   },
   clientOptionsTransformer: {
     toClient: (options, context) => {

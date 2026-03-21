@@ -8,6 +8,8 @@ import {
 } from './types.js';
 
 export interface ForeignComponentDataMergeContext {
+  isMergeHandlerImplemented: (id: ComponentId) => boolean;
+
   merge: <Id extends ComponentId, Args>(
     id: Id,
     target: ComponentStorageDataById<Id, Args>,

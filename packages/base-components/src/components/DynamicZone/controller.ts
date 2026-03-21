@@ -135,6 +135,17 @@ export default defineComponentController({
         })
       );
     },
+    disposeData: async (data, options, context) => {
+      const { options: optionsMap } = options;
+
+      await Promise.all(
+        data.map((item) => {
+          const { componentId, options: baseOptions } = optionsMap[item.key];
+
+          return context.disposeData(componentId, item.data, baseOptions);
+        })
+      );
+    },
   },
   clientOptionsTransformer: {
     toClient: <Args>(

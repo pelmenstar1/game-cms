@@ -119,6 +119,16 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
         apply(data);
       }
     },
+    disposeData: async (id, data, options, params) => {
+      const { storageTransformer } = getController(id);
+      const disposeData = storageTransformer?.disposeData;
+
+      if (disposeData) {
+        await disposeData(data, options, foreignStorageResolverContext, {
+          afterUpdate: params?.afterUpdate ?? false,
+        });
+      }
+    },
   };
 
 const foreignDataMigrationContext: ForeignComponentDataMigrationContext = {
@@ -175,6 +185,11 @@ function toStoragePartial<Id extends ComponentId, Args>(
 }
 
 const foreignDataMergeContext: ForeignComponentDataMergeContext = {
+  isMergeHandlerImplemented: (id) => {
+    const { mergeData } = getController(id);
+
+    return mergeData !== undefined;
+  },
   merge: (id, target, source, options) => {
     const { mergeData } = getController(id);
 

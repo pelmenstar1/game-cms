@@ -32,23 +32,34 @@ async function generateSpritesheet(
     images: Object.fromEntries(imageEntries),
   });
 
-  const atlas = buildSpritesheetAtlas(map);
-  const spriteImageBuilder = await buildSpritesheetImage(map);
-  const spriteImage = spriteImageBuilder.png();
+  async function uploadAtlas() {
+    const atlas = buildSpritesheetAtlas(map);
 
-  const { id: imageId } = await storageService.uploadFile({
-    name: 'spritesheet.png',
-    mime: 'image/png',
-    content: spriteImage,
-    hidden: true,
-  });
+    const { id: atlasId } = await storageService.uploadFile({
+      name: 'spritesheet.json',
+      mime: 'application/json',
+      content: Buffer.from(JSON.stringify(atlas), 'utf8'),
+      hidden: true,
+    });
 
-  const { id: atlasId } = await storageService.uploadFile({
-    name: 'spritesheet.json',
-    mime: 'application/json',
-    content: Buffer.from(JSON.stringify(atlas), 'utf8'),
-    hidden: true,
-  });
+    return atlasId;
+  }
+
+  async function uploadImage() {
+    const spriteImageBuilder = await buildSpritesheetImage(map);
+    const spriteImage = spriteImageBuilder.png();
+
+    const { id: imageId } = await storageService.uploadFile({
+      name: 'spritesheet.png',
+      mime: 'image/png',
+      content: spriteImage,
+      hidden: true,
+    });
+
+    return imageId;
+  }
+
+  const [atlasId, imageId] = await Promise.all([uploadAtlas(), uploadImage()]);
 
   return { atlasId, imageId };
 }
@@ -69,17 +80,28 @@ export function spritesheetStep({ source, algorithm }: SpritesheetStepOptions) {
       );
     },
     fromStorage: async (data) => {
-      return asyncMapObject(data, async (entry) => {
-        const atlasUrl = await cms()
-          .service('base::storage')
-          .getUrl(entry.atlasId);
+      const storageService = cms().service('base::storage');
 
-        const imageUrl = await cms()
-          .service('base::storage')
-          .getUrl(entry.imageId);
+      return asyncMapObject(data, async (entry) => {
+        const [atlasUrl, imageUrl] = await Promise.all([
+          storageService.getUrl(entry.atlasId),
+          storageService.getUrl(entry.imageId),
+        ]);
 
         return { atlasUrl, imageUrl };
       });
+    },
+    disposeStorage: async (data) => {
+      const storageService = cms().service('base::storage');
+
+      await Promise.all(
+        Object.values(data).map((entry) =>
+          Promise.all([
+            storageService.deleteById(entry.atlasId),
+            storageService.deleteById(entry.imageId),
+          ])
+        )
+      );
     },
   });
 }

@@ -20,6 +20,7 @@ import {
   ComponentDataResolverArgs,
   ComponentDataStructure,
   ComponentSchema,
+  ComponentStorageDisposeDataParams,
   searchScoreComposer,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
@@ -82,15 +83,13 @@ type ServiceEntityDescriptor<Id extends EntityId> = {
   schema: EntitySchemaById<Id>;
 };
 
-function getEntityDescriptor<T extends EntityId>(
-  entityId: T
-): ServiceEntityDescriptor<T> {
-  const result = cms().service('base::entitySchema').getEntry(entityId);
+function getEntitySchema<Id extends EntityId>(entityId: Id) {
+  const result = cms().service('base::entitySchema').getSchemaById(entityId);
   if (result === undefined) {
     throw new ApiError('Unknown entity', 'base::entity/notFound');
   }
 
-  return { schema: result.schema };
+  return result;
 }
 
 async function fromStorageData<Id extends EntityId>(
@@ -100,7 +99,7 @@ async function fromStorageData<Id extends EntityId>(
 ): Promise<EntityInternalOutDataById<Id>> {
   const { components, meta, checks } = storageData;
 
-  const { schema } = getEntityDescriptor(entityId);
+  const schema = getEntitySchema(entityId);
 
   const { foreignStorageResolverContext } = cms().service('base::component');
 
@@ -171,7 +170,7 @@ async function toStorageData<Id extends EntityId>(
   entityId: Id,
   rawData: EntityInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
-  const { schema } = getEntityDescriptor(entityId);
+  const schema = getEntitySchema(entityId);
   const { foreignStorageResolverContext } = cms().service('base::component');
 
   const { run: runEntityChecks } = cms().service('base::entityCheck');
@@ -205,7 +204,7 @@ async function toStoragePartialData<Id extends EntityId>(
   target: EntityStorageDataById<Id>,
   source: EntityPartialInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
-  const { schema } = getEntityDescriptor(entityId);
+  const schema = getEntitySchema(entityId);
   const { foreignDataMergeContext } = cms().service('base::component');
 
   const sourceMerged = await asyncMapObject(source, (item, key) => {
@@ -329,6 +328,35 @@ function getEntityDataStructure(schema: EntitySchema) {
   );
 }
 
+async function disposeEntity<Id extends EntityId>(
+  entityId: Id,
+  data: EntityStorageDataById<Id>,
+  params?: ComponentStorageDisposeDataParams
+) {
+  const { foreignStorageResolverContext, foreignDataMergeContext } =
+    cms().service('base::component');
+
+  const schema = getEntitySchema(entityId);
+
+  await Promise.all(
+    Object.entries<ComponentSchema>(schema.components).map(([key, item]) => {
+      const { componentId, options } = item;
+
+      if (
+        !params?.afterUpdate ||
+        !foreignDataMergeContext.isMergeHandlerImplemented(componentId)
+      ) {
+        return foreignStorageResolverContext.disposeData(
+          componentId,
+          data.components[key],
+          options,
+          params
+        );
+      }
+    })
+  );
+}
+
 function getEntitySearchScore<Id extends EntityId>(
   query: string,
   data: EntityStorageDataById<Id>,
@@ -421,7 +449,9 @@ export default service({
     data: EntityPartialInDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
-    const target = await collection(entityId).findOne({ _id: id });
+    const col = collection(entityId);
+
+    const target = await col.findOne({ _id: id });
     if (target === null) {
       return false;
     }
@@ -432,7 +462,15 @@ export default service({
       data
     );
 
-    await collection(entityId).updateOne(idFilter(id), {
+    const disposeParams = { afterUpdate: true };
+
+    await Promise.all([
+      disposeEntity(entityId, target.draft, disposeParams),
+      target.published &&
+        disposeEntity(entityId, target.published, disposeParams),
+    ]);
+
+    await col.updateOne(idFilter(id), {
       $set: createEntityVariants(storageData, variant),
     });
 
@@ -446,16 +484,26 @@ export default service({
     return true;
   },
   deleteById: async (entityId: string, id: ObjectId) => {
-    const { deletedCount } = await collection(entityId).deleteOne(idFilter(id));
-    const isDeleted = deletedCount > 0;
+    const deletedDocument = await collection(entityId).findOneAndDelete(
+      idFilter(id)
+    );
 
-    if (isDeleted) {
+    if (deletedDocument !== null) {
+      const { draft, published } = deletedDocument;
+
       cms()
         .service('base::appEvents')
         .emit('base::entity::deleted', { entityId, id });
+
+      await Promise.all([
+        disposeEntity(entityId, draft),
+        published && disposeEntity(entityId, published),
+      ]);
+
+      return true;
     }
 
-    return isDeleted;
+    return false;
   },
   list: async <Id extends EntityId>(
     entityId: Id,
@@ -480,7 +528,7 @@ export default service({
     variant: EntityVariant = 'published',
     options?: AbortOptions
   ): Promise<EntityResolvedDataById<Id> | null> => {
-    const { schema } = getEntityDescriptor(entityId);
+    const schema = getEntitySchema(entityId);
     const { foreignResolverContext } = cms().service('base::component');
 
     const result = await getRawById(entityId, id, variant, options);
@@ -523,7 +571,7 @@ export default service({
     query: string,
     options: PagingOptions & AbortOptions
   ) => {
-    const { schema } = getEntityDescriptor(entityId);
+    const schema = getEntitySchema(entityId);
 
     const allItems: { id: ObjectId; data: EntityStorageDataById<Id> }[] = [];
 

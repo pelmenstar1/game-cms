@@ -113,6 +113,13 @@ export default defineComponentController({
         return context.toStorage(componentId, item as never, baseOptions);
       });
     },
+    disposeData: async (data, options, context) => {
+      await Promise.all(
+        Object.entries(options).map(([key, { componentId, options }]) =>
+          context.disposeData(componentId, data[key], options)
+        )
+      );
+    },
   },
   clientOptionsTransformer: {
     toClient: <Args>(

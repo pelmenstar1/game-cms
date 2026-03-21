@@ -76,6 +76,13 @@ export default defineComponentController({
         data.map((item) => context.toStorage(componentId, item, baseOptions))
       );
     },
+    disposeData: async (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      await Promise.all(
+        data.map((item) => context.disposeData(componentId, item, baseOptions))
+      );
+    },
   },
   clientOptionsTransformer: {
     toClient: (options, context) => {
