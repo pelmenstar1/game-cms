@@ -1,7 +1,9 @@
 import type {
   ComponentClientDataById,
   ComponentClientDataByIdPathExtends,
+  ComponentClientSchema,
   ComponentData,
+  ComponentId,
   ComponentSchema,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
@@ -15,7 +17,18 @@ import type {
 } from './check.js';
 import { AnyEntityPreviewController } from './preview.js';
 
-export type EntitySchemaComponents = Record<string, ComponentSchema>;
+export type ComponentTypeDataRegistryEntry<
+  Id extends ComponentId = ComponentId,
+  Args = unknown,
+> = {
+  id: Id;
+  args: Args;
+};
+
+export type EntityTypeDataRegistryEntry = Record<
+  string,
+  ComponentTypeDataRegistryEntry
+>;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface EntityTypeRegistry {
@@ -32,10 +45,29 @@ export type EntityId = EntityTypeRegistry extends { ids: string }
   ? EntityTypeRegistry['ids']
   : string;
 
-export type EntityComponents<Id extends EntityId> =
-  EntityTypeDataRegistry extends Record<Id, EntitySchemaComponents>
+export type EntitySchemaComponents = Record<string, ComponentSchema>;
+
+export type EntityComponentsTypes<Id extends EntityId> =
+  EntityTypeDataRegistry extends Record<Id, EntityTypeDataRegistryEntry>
     ? EntityTypeDataRegistry[Id]
-    : EntitySchemaComponents;
+    : EntityTypeDataRegistryEntry;
+
+type BaseEntitySchemaComponents<Entry extends EntityTypeDataRegistryEntry> = {
+  [K in keyof Entry]: ComponentSchema<Entry[K]['id'], Entry[K]['args']>;
+};
+
+export type EntityComponents<Id extends EntityId> = BaseEntitySchemaComponents<
+  EntityComponentsTypes<Id>
+>;
+
+type BaseEntityClientSchemaComponents<
+  Entry extends EntityTypeDataRegistryEntry,
+> = {
+  [K in keyof Entry]: ComponentClientSchema<Entry[K]['id'], Entry[K]['args']>;
+};
+
+export type EntityClientComponents<Id extends EntityId> =
+  BaseEntityClientSchemaComponents<EntityComponentsTypes<Id>>;
 
 export type EntityMeta = {
   lastUpdatedTime: number;
@@ -139,7 +171,7 @@ export type EntityResolvedDataByIdWithId<
   id: Id;
 };
 
-type BaseEntityDisplayKey<Components extends EntitySchemaComponents, U> = {
+type BaseEntityDisplayKey<Components, U> = {
   [K in keyof Components & string]: Components[K] extends ComponentSchema<
     infer CId,
     infer Args
@@ -150,7 +182,7 @@ type BaseEntityDisplayKey<Components extends EntitySchemaComponents, U> = {
     : never;
 }[keyof Components & string];
 
-type EntityDisplayKey<Components extends EntitySchemaComponents> =
+type EntityDisplayKey<Components> =
   | 'id'
   | BaseEntityDisplayKey<Components, string | number>;
 
@@ -158,18 +190,30 @@ export type EntityDisplayKeyById<Id extends EntityId> = EntityDisplayKey<
   EntityComponents<Id>
 >;
 
-export interface EntitySchema<
-  Components extends EntitySchemaComponents = EntitySchemaComponents,
-> {
+export interface EntitySchema<Components = EntitySchemaComponents> {
   title: string;
   displayKeys?: EntityDisplayKey<Components>[];
   preview?: AnyEntityPreviewController;
   components: Components;
 }
 
+export interface EntityClientSchema<Components = EntitySchemaComponents> {
+  title: string;
+  displayKeys?: EntityDisplayKey<Components>[];
+  components: Components;
+}
+
 export type EntitySchemaById<Id extends EntityId> = EntitySchema<
   EntityComponents<Id>
 >;
+
+export type EntityClientSchemaById<Id extends EntityId> = EntityClientSchema<
+  EntityComponents<Id>
+>;
+
+export type EntityClientSchemaMap = {
+  [Id in EntityId]: EntityClientSchemaById<Id>;
+};
 
 export type EntitySchemaRegistry = {
   [K in EntityId]: EntitySchemaById<K>;

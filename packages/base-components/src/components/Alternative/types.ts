@@ -1,6 +1,7 @@
 import { ConditionalData } from '@game-cms/conditional';
 import {
   ComponentClientDataById,
+  ComponentClientOptionsById,
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
@@ -31,6 +32,10 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
   options: {
     componentId: Args['id'];
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
+  };
+  clientOptions: {
+    componentId: Args['id'];
+    baseOptions: ComponentClientOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: {
     ownError?: 'INVALID_TYPE';

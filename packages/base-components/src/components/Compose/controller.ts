@@ -1,9 +1,17 @@
-import { defineComponentController, searchScoreComposer } from '@game-cms/core';
+import {
+  ComponentClientOptionsById,
+  ComponentOptionsById,
+  defineComponentController,
+  ForeignComponentClientOptionsTransformerContext,
+  searchScoreComposer,
+} from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { ComposeOptionsEntry } from './types.js';
+
+type Id = (typeof core)['id'];
 
 export default defineComponentController({
   core,
@@ -104,6 +112,19 @@ export default defineComponentController({
 
         return context.toStorage(componentId, item as never, baseOptions);
       });
+    },
+  },
+  clientOptionsTransformer: {
+    toClient: <Args>(
+      options: ComponentOptionsById<Id, Args>,
+      context: ForeignComponentClientOptionsTransformerContext
+    ) => {
+      return mapObject(options, (item) => {
+        return {
+          componentId: item.componentId,
+          options: context.toClient(item.componentId, item.options),
+        };
+      }) as ComponentClientOptionsById<Id, Args>;
     },
   },
 });

@@ -1,6 +1,7 @@
 import { IsAllOptional } from '@game-cms/shared';
 
 import {
+  ComponentClientOptionsById,
   ComponentData,
   ComponentId,
   ComponentOptions,
@@ -14,6 +15,14 @@ export type ComponentSchema<
 > = {
   componentId: Id;
   options: ComponentOptionsById<Id, Args>;
+};
+
+export type ComponentClientSchema<
+  Id extends ComponentId = ComponentId,
+  Args = unknown,
+> = {
+  componentId: Id;
+  options: ComponentClientOptionsById<Id, Args>;
 };
 
 export type GetComponentSchemaTypes<Schema = unknown> =
@@ -32,6 +41,7 @@ export type GetComponentSchemaTypes<Schema = unknown> =
         clientData: ComponentData;
         searchIndexData: unknown;
         options: ComponentOptions;
+        clientOptions: ComponentOptions;
         error: unknown;
         componentId: ComponentId;
         args: unknown;

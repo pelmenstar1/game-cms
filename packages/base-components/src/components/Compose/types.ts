@@ -1,4 +1,5 @@
 import {
+  ComponentClientOptionsById,
   ComponentEntry,
   ComponentNestedPathShape,
   ComponentSchema,
@@ -27,6 +28,14 @@ export type ComposeEntry<Args> = BaseComposeEntry<ResolveComposeInput<Args>>;
 type BaseComposeEntry<Input extends ComposeInput> = {
   options: {
     [K in keyof Input]: ComposeOptionsEntry<Input[K]>;
+  };
+  clientOptions: {
+    [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
+      ? {
+          componentId: Id;
+          options: ComponentClientOptionsById<Id, Args>;
+        }
+      : ComposeOptionsEntry;
   };
   error: {
     ownError?: 'INVALID_TYPE';

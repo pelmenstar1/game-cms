@@ -23,3 +23,9 @@ export type EntityPreviewController<Options = undefined> = {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyEntityPreviewController = EntityPreviewController<any>;
+
+declare module './clientContext.js' {
+  interface EntityClientContext {
+    preview?: AnyEntityPreviewController;
+  }
+}

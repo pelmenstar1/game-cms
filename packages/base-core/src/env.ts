@@ -2,20 +2,10 @@ import '@game-cms/global';
 
 import { ApiErrorStatusMap } from '@game-cms/core/api';
 
-import { EntityBackContext } from './entity/backContext.js';
 import type { EntityId, EntitySchemaById } from './entity/core.js';
 
 export interface EntityDescriptor<Id extends EntityId> {
-  schema: {
-    value: EntitySchemaById<Id>;
-
-    /**
-     * Path to the file where entity schema is defined. Might not be present, if entity is defined in-place in the registry, i.e. it's not re-exported.
-     */
-    filePath?: string;
-  };
-
-  backContext: EntityBackContext;
+  schema: EntitySchemaById<Id>;
 }
 
 export type EntityDescriptorMap = {
@@ -23,8 +13,13 @@ export type EntityDescriptorMap = {
 };
 
 export type EntityEnvConfig = {
-  registryFilePath: string;
-  registry: EntityDescriptorMap;
+  schemaRegistry: {
+    filePath: string;
+    items: EntityDescriptorMap;
+  };
+  clientContextRegistry?: {
+    filePath: string;
+  };
 };
 
 export interface OwnEnvironment {

@@ -1,10 +1,10 @@
 import {
   ComponentClientDataById,
   ComponentClientDataTransformer,
+  ComponentClientOptionsById,
   ComponentInDataOrError,
-  ComponentOptionsById,
   ComponentOutDataById,
-  ForeignComponentClientDataResolverContext,
+  ForeignComponentClientDataTransformerContext,
 } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
@@ -20,8 +20,8 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
     ),
   toClient: <Args>(
     data: ComponentOutDataById<Id, Args>,
-    options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentClientDataResolverContext
+    options: ComponentClientOptionsById<Id, Args>,
+    context: ForeignComponentClientDataTransformerContext
   ) => {
     return mapObject(options, (prop, key) =>
       context.toClient(prop.componentId, data[key], prop.options)
@@ -29,22 +29,16 @@ export const clientTransformer: ComponentClientDataTransformer<Id> = {
   },
   fromClient: <Args>(
     data: ComponentClientDataById<Id, Args>,
-    options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentClientDataResolverContext
+    options: ComponentClientOptionsById<Id, Args>,
+    context: ForeignComponentClientDataTransformerContext
   ) => {
-    type Options = ComposeEntry<Args>['options'];
+    type Options = ComposeEntry<Args>['clientOptions'];
     type OptionsEntry = Options[keyof Options];
 
     const result = Object.entries<OptionsEntry>(options).map(([key, prop]) => {
       const { componentId, options } = prop;
 
-      const client = context.fromClient(
-        componentId,
-        // TODO: Fix any
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-        data[key] as any,
-        options
-      );
+      const client = context.fromClient(componentId, data[key], options);
 
       return {
         key,

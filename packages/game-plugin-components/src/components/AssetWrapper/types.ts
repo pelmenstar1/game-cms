@@ -1,5 +1,6 @@
 import type {
   ComponentClientDataById,
+  ComponentClientOptionsById,
   ComponentEntry,
   ComponentErrorById,
   ComponentId,
@@ -8,12 +9,12 @@ import type {
   ComponentNestedPathShape,
   ComponentOptionsById,
   ComponentOutDataById,
-  ComponentPartialInDataById,
   ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
 import {
+  GameAssetPipeline,
   GameAssetPipelineStepOutDataMap,
   GameAssetPipelineStepStorageDataMap,
 } from '@game-cms/game-plugin-core';
@@ -35,11 +36,14 @@ type AssetWrapperEntry<Args extends AssetWrapperArgs> = {
     derived?: GameAssetPipelineStepOutDataMap;
   };
   inData: ComponentInDataById<Args['id'], Args['baseArgs']>;
-  partialInData: ComponentPartialInDataById<Args['id'], Args['baseArgs']>;
   options: {
     componentId: Args['id'];
-    pipelineId: string;
+    pipeline: GameAssetPipeline;
     baseOptions: ComponentOptionsById<Args['id'], Args['baseArgs']>;
+  };
+  clientOptions: {
+    componentId: Args['id'];
+    baseOptions: ComponentClientOptionsById<Args['id'], Args['baseArgs']>;
   };
   error: ComponentErrorById<Args['id'], Args['baseArgs']>;
   clientData: {

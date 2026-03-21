@@ -6,14 +6,14 @@ import { PropsWithChildren } from 'react';
 
 import {
   getEntityIds,
-  getEntitySchemaById,
+  getEntitySharedContext,
   getEntityTitle,
 } from '@/connector/entity';
 
 const context: EntitySchemaContextType = {
   entityIds: getEntityIds(),
   getEntityTitle,
-  getEntitySchemaById,
+  getEntitySharedContext,
 };
 
 export function EntitySchemaProvider({ children }: PropsWithChildren) {

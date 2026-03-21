@@ -9,9 +9,11 @@ describe('resolveEntitySchemas', () => {
     const actual = await getEntityEnvConfigSetup('two-entities');
 
     expect(actual).toMatchObject({
-      registry: {
-        test: { schema: { value: testEntity } },
-        test2: { schema: { value: test2Entity } },
+      schemaRegistry: {
+        items: {
+          test: { schema: testEntity },
+          test2: { schema: test2Entity },
+        },
       },
     });
   });

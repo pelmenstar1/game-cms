@@ -5,7 +5,11 @@ import {
   EntitySchemaById,
   StorageItemType,
 } from '@game-cms/base-core';
-import { ComponentAtomWalkerApplyFn, service } from '@game-cms/core';
+import {
+  ComponentAtomWalkerApplyFn,
+  ComponentSchema,
+  service,
+} from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
@@ -14,12 +18,7 @@ async function checkFile(fileId: ObjectId, signal?: AbortSignal) {
   const item = await cms()
     .service('base::storage')
     .collection()
-    .findOne(
-      {
-        _id: fileId,
-      },
-      { projection: { type: 1 }, signal }
-    );
+    .findOne({ _id: fileId }, { projection: { type: 1 }, signal });
 
   if (item === null) {
     throw new ApiError('File does not exist', 'base::entity/notFound');
@@ -50,7 +49,9 @@ function isFileUsedInEntity<Id extends EntityId>(
     }
   };
 
-  for (const [key, componentSchema] of Object.entries(schema.components)) {
+  for (const [key, componentSchema] of Object.entries<ComponentSchema>(
+    schema.components
+  )) {
     const { componentId, options } = componentSchema;
 
     foreignAtomWalkerContext.walk(
@@ -116,7 +117,7 @@ export default service({
       Object.entries(schemas).map(async ([entityId, descriptor]) => {
         const result = await traceFileInEntityCollection(
           entityId,
-          descriptor.schema.value,
+          descriptor.schema,
           fileId
         );
 

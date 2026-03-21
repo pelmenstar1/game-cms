@@ -15,7 +15,8 @@ export interface GameAssetPipelineStepTypeRegistry {
 type GetStepType<Id extends string, K extends string> = GetPropertyOr<
   GetPropertyOr<GameAssetPipelineStepTypeRegistry, Id, unknown>,
   K,
-  unknown
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any
 >;
 
 type BaseStepTypeMap<K extends string> = {
@@ -61,7 +62,10 @@ export type GameAssetPipelineStep<Id extends string = string> = {
   ) => Promise<GameAssetPipelineStepStorageData<Id>>;
 };
 
-export type GameAssetPipeline = GameAssetPipelineStep[];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyGameAssetPipelineStep = GameAssetPipelineStep<any>;
+
+export type GameAssetPipeline = AnyGameAssetPipelineStep[];
 
 export function defineGameAssetPipelineStep<Id extends string>(
   step: GameAssetPipelineStep<Id>

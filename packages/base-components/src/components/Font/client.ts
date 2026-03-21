@@ -1,23 +1,30 @@
 import { ComponentClientDataTransformer } from '@game-cms/core';
 
-import { getRepeatableOptions, RepeatableArgs } from './internal/repeatable.js';
+import {
+  getRepeatableClientOptions,
+  RepeatableArgs,
+} from './internal/repeatable.js';
+
+const id = 'base::repeatable';
+
+type Id = typeof id;
 
 export const clientTransformer: ComponentClientDataTransformer<'base::font'> = {
   getDefaultData: (options, context) =>
-    context.getDefaultData<'base::repeatable', RepeatableArgs>(
-      'base::repeatable',
-      getRepeatableOptions(options)
+    context.getDefaultData<Id, RepeatableArgs>(
+      id,
+      getRepeatableClientOptions(options)
     ),
   toClient: (data, options, context) =>
-    context.toClient<'base::repeatable', RepeatableArgs>(
-      'base::repeatable',
+    context.toClient<Id, RepeatableArgs>(
+      id,
       data,
-      getRepeatableOptions(options)
+      getRepeatableClientOptions(options)
     ),
   fromClient: (clientData, options, context) =>
-    context.fromClient<'base::repeatable', RepeatableArgs>(
-      'base::repeatable',
+    context.fromClient<Id, RepeatableArgs>(
+      id,
       clientData,
-      getRepeatableOptions(options)
+      getRepeatableClientOptions(options)
     ),
 };

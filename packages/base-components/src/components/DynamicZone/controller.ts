@@ -1,10 +1,12 @@
 import {
+  ComponentClientOptionsById,
   ComponentDataResolverArgs,
   ComponentDataStructure,
   ComponentOptionsById,
   ComponentOutDataById,
   ComponentResolvedDataById,
   defineComponentController,
+  ForeignComponentClientOptionsTransformerContext,
   ForeignComponentDataResolverContext,
   searchScoreComposer,
 } from '@game-cms/core';
@@ -132,6 +134,25 @@ export default defineComponentController({
           };
         })
       );
+    },
+  },
+  clientOptionsTransformer: {
+    toClient: <Args>(
+      options: ComponentOptionsById<Id, Args>,
+      context: ForeignComponentClientOptionsTransformerContext
+    ) => {
+      const { options: optionsMap } = options;
+
+      return {
+        minItems: options.minItems,
+        maxItems: options.maxItems,
+        options: mapObject(optionsMap, (item) => {
+          return {
+            ...item,
+            options: context.toClient(item.componentId, item.options),
+          };
+        }),
+      } as ComponentClientOptionsById<Id, Args>;
     },
   },
 });

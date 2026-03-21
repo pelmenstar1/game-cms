@@ -1,4 +1,4 @@
-import { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import { EntityClientSchemaById, EntityId } from '@game-cms/base-core';
 import {
   classNames,
   DeleteIcon,
@@ -14,8 +14,9 @@ import styles from './Header.module.scss';
 export interface HeaderProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  schema: EntitySchemaById<Id>;
+  schema: EntityClientSchemaById<Id>;
   hasInitialValue: boolean;
+  hasPreview: boolean;
   previewEnabled: boolean;
 
   onDelete?: () => void;
@@ -27,6 +28,7 @@ export function Header<Id extends EntityId>({
   entityId,
   schema,
   hasInitialValue,
+  hasPreview,
   previewEnabled,
   onDelete,
   onPreviewEnabledChanged,
@@ -49,7 +51,7 @@ export function Header<Id extends EntityId>({
         </IconButton>
       )}
 
-      {schema.preview && (
+      {hasPreview && (
         <IconSwitchButton
           className={styles['icon-button']}
           checked={previewEnabled}

@@ -1,5 +1,5 @@
 import type {
-  ComponentBackContext,
+  ComponentClientOptionsById,
   ComponentDataResolverArgs,
   ComponentId,
   ComponentInDataById,
@@ -10,6 +10,7 @@ import type {
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
   ForeignComponentAtomWalkerContext,
+  ForeignComponentClientOptionsTransformerContext,
   ForeignComponentDataMergeContext,
   ForeignComponentDataMigrationContext,
   ForeignComponentDataResolverContext,
@@ -60,11 +61,8 @@ const foreignResolverContext: ForeignComponentDataResolverContext = {
   },
 };
 
-function createForeignStorageResolverContext(
-  backContext: ComponentBackContext
-) {
-  const context: ForeignComponentStorageDataResolverContext = {
-    backContext,
+const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext =
+  {
     getDefaultData: <Id extends ComponentId, Args>(
       id: Id,
       options: ComponentOptionsById<Id, Args>
@@ -72,7 +70,10 @@ function createForeignStorageResolverContext(
       const { core, storageTransformer } = getController(id);
 
       return storageTransformer
-        ? storageTransformer.getDefaultData(options, context)
+        ? storageTransformer.getDefaultData(
+            options,
+            foreignStorageResolverContext
+          )
         : (core.defaultOutData(
             options,
             foreignDefaultContext
@@ -86,7 +87,11 @@ function createForeignStorageResolverContext(
       const { storageTransformer } = getController(id);
 
       return storageTransformer
-        ? storageTransformer.fromStorage(data, options, context)
+        ? storageTransformer.fromStorage(
+            data,
+            options,
+            foreignStorageResolverContext
+          )
         : (data as ComponentOutDataById<Id, Args>);
     },
     toStorage: <Id extends ComponentId, Args>(
@@ -97,7 +102,11 @@ function createForeignStorageResolverContext(
       const { storageTransformer } = getController(id);
 
       return storageTransformer
-        ? storageTransformer.toStorage(data, options, context)
+        ? storageTransformer.toStorage(
+            data,
+            options,
+            foreignStorageResolverContext
+          )
         : (data as ComponentStorageDataById<Id, Args>);
     },
     applyAtPath: (id, data, options, path, apply) => {
@@ -105,36 +114,26 @@ function createForeignStorageResolverContext(
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (pathWalker) {
-        pathWalker(data, options, path, apply, context);
+        pathWalker(data, options, path, apply, foreignStorageResolverContext);
       } else {
         apply(data);
       }
     },
   };
 
-  return context;
-}
+const foreignDataMigrationContext: ForeignComponentDataMigrationContext = {
+  migrate: (id, data, options) => {
+    const { migrate } = getController(id);
 
-function createForeignDataMigrationContext(backContext: ComponentBackContext) {
-  const storageResolverContext =
-    createForeignStorageResolverContext(backContext);
+    const result = migrate?.(data, options, foreignDataMigrationContext);
 
-  const context: ForeignComponentDataMigrationContext = {
-    migrate: (id, data, options) => {
-      const { migrate } = getController(id);
+    if (result !== undefined) {
+      return result;
+    }
 
-      const result = migrate?.(data, options, context);
-
-      if (result !== undefined) {
-        return result;
-      }
-
-      return storageResolverContext.getDefaultData(id, options);
-    },
-  };
-
-  return context;
-}
+    return foreignStorageResolverContext.getDefaultData(id, options);
+  },
+};
 
 const foreignDataStructureContext: ForeignComponentDataStructureContext = {
   getStructure: (id, options) => {
@@ -159,40 +158,33 @@ const foreignAtomWalkerContext: ForeignComponentAtomWalkerContext = {
   },
 };
 
-function createForeignDataMergeContext(backContext: ComponentBackContext) {
-  const storageResolverContext =
-    createForeignStorageResolverContext(backContext);
-
-  function toStoragePartial<Id extends ComponentId, Args>(
-    id: Id,
-    data: ComponentPartialInDataById<Id, Args>,
-    options: ComponentOptionsById<Id, Args>
-  ) {
-    if (foreignValidationContext.validate(id, data, options) === undefined) {
-      return storageResolverContext.toStorage(
-        id,
-        data as ComponentInDataById<Id, Args>,
-        options
-      );
-    }
-
-    throw new Error('Expected partial data to be full');
+function toStoragePartial<Id extends ComponentId, Args>(
+  id: Id,
+  data: ComponentPartialInDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>
+) {
+  if (foreignValidationContext.validate(id, data, options) === undefined) {
+    return foreignStorageResolverContext.toStorage(
+      id,
+      data as ComponentInDataById<Id, Args>,
+      options
+    );
   }
 
-  const context: ForeignComponentDataMergeContext = {
-    merge: (id, target, source, options) => {
-      const { mergeData } = getController(id);
-
-      if (mergeData !== undefined) {
-        return mergeData(target, source, options, context);
-      }
-
-      return toStoragePartial(id, source, options);
-    },
-  };
-
-  return context;
+  throw new Error('Expected partial data to be full');
 }
+
+const foreignDataMergeContext: ForeignComponentDataMergeContext = {
+  merge: (id, target, source, options) => {
+    const { mergeData } = getController(id);
+
+    if (mergeData !== undefined) {
+      return mergeData(target, source, options, foreignDataMergeContext);
+    }
+
+    return toStoragePartial(id, source, options);
+  },
+};
 
 const foreignDataSearchContext: ForeignComponentDataSearchContext = {
   getScore: (query, id, target, options) => {
@@ -217,16 +209,36 @@ const foreignDataSearchContext: ForeignComponentDataSearchContext = {
   },
 };
 
+const foreignClientOptionsTransformerContext: ForeignComponentClientOptionsTransformerContext =
+  {
+    toClient: <Id extends ComponentId, Args>(
+      id: Id,
+      options: ComponentOptionsById<Id, Args>
+    ) => {
+      const { clientOptionsTransformer } = getController(id);
+
+      if (clientOptionsTransformer) {
+        return clientOptionsTransformer.toClient(
+          options,
+          foreignClientOptionsTransformerContext
+        );
+      }
+
+      return options as ComponentClientOptionsById<Id, Args>;
+    },
+  };
+
 export default service({
   id: 'base::component',
   foreignDefaultContext,
   foreignValidationContext,
   foreignResolverContext,
-  createForeignStorageResolverContext,
-  createForeignDataMigrationContext,
+  foreignStorageResolverContext,
+  foreignDataMigrationContext,
   foreignDataStructureContext,
-  createForeignDataMergeContext,
+  foreignDataMergeContext,
   foreignDataSearchContext,
   foreignAtomWalkerContext,
+  foreignClientOptionsTransformerContext,
   getController,
 });

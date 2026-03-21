@@ -1,9 +1,9 @@
 import { useComponentApi } from '@game-cms/component-api';
 import {
   ComponentClientDataById,
+  ComponentClientOptionsById,
   ComponentErrorById,
   ComponentId,
-  ComponentOptionsById,
 } from '@game-cms/core';
 import { classNames } from '@game-cms/ui';
 import { Handle, NodeProps, Position } from '@xyflow/react';
@@ -13,7 +13,7 @@ import styles from './GraphCustomNode.module.scss';
 export type GraphCustomNodeData<Id extends ComponentId, Args> = {
   componentId: Id;
   data: ComponentClientDataById<Id, Args>;
-  options: ComponentOptionsById<Id, Args>;
+  options: ComponentClientOptionsById<Id, Args>;
   onDataChanged?: (data: ComponentClientDataById<Id, Args>) => void;
   error?: ComponentErrorById<Id, Args>;
   readonly?: boolean;

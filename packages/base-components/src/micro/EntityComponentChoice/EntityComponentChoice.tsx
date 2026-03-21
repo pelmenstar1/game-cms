@@ -1,9 +1,9 @@
 import { useComponentApi } from '@game-cms/component-api';
 import type {
   ComponentClientDataById,
+  ComponentClientOptionsById,
   ComponentErrorById,
   ComponentId,
-  ComponentOptionsById,
 } from '@game-cms/core';
 import { classNames, Typography } from '@game-cms/ui';
 import type { RefObject } from 'react';
@@ -18,7 +18,7 @@ export interface EntityComponentChoiceProps<Id extends ComponentId> {
   handleRef?: RefObject<HTMLButtonElement | null>;
 
   componentId: Id;
-  options: ComponentOptionsById<Id>;
+  options: ComponentClientOptionsById<Id>;
   data: ComponentClientDataById<Id>;
   dataError: ComponentErrorById<Id> | undefined;
   condition: string;

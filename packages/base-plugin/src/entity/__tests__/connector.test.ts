@@ -22,10 +22,10 @@ test('emitEntityConnector', async () => {
   });
 
   const expectedRegistry =
-    await import('./fixtures/two-entities/entities/registry.js');
+    await import('./fixtures/two-entities/entities/registry.client.js');
 
   expect(moduleValue).toMatchObject({
-    entityMap: {
+    entityMetaMap: {
       test: {
         title: 'Test',
       },
@@ -35,8 +35,7 @@ test('emitEntityConnector', async () => {
     },
   });
 
-  await expect(moduleValue.registryImport()).resolves.toEqual({
+  await expect(moduleValue.getClientContextRegistry()).resolves.toEqual({
     test: expectedRegistry.test,
-    test2: expectedRegistry.test2,
   });
 });

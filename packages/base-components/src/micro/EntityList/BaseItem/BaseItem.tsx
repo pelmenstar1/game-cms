@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
+  EntityClientSchemaById,
   EntityDisplayKeyById,
   EntityId,
-  EntitySchemaById,
 } from '@game-cms/base-core';
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
 import { classNames, Typography } from '@game-cms/ui';
@@ -20,7 +20,7 @@ export type BaseItemProps<
   Wrapper extends WrapperComponent,
 > = ComponentProps<Wrapper> & {
   className?: string;
-  schema: EntitySchemaById<Id>;
+  schema: EntityClientSchemaById<Id>;
   value: EntityListItem<Id>;
   wrapper: Wrapper;
 };
@@ -28,7 +28,7 @@ export type BaseItemProps<
 function getSingleValueAtPath<Id extends EntityId>(
   api: ComponentApi,
   value: EntityListItem<Id>,
-  schema: EntitySchemaById<Id>,
+  schema: EntityClientSchemaById<Id>,
   path: EntityDisplayKeyById<Id>
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

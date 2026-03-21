@@ -1,8 +1,9 @@
 import {
+  AnyEntityPreviewController,
   EntityClientDataById,
+  EntityClientSchemaById,
   EntityId,
   EntityPreviewController,
-  EntitySchemaById,
 } from '@game-cms/base-core';
 import { createCachedFactory } from '@game-cms/shared';
 import { classNames, namedLazy } from '@game-cms/ui';
@@ -14,7 +15,8 @@ export interface PreviewPanelProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
   documentId?: string;
-  schema: EntitySchemaById<Id>;
+  schema: EntityClientSchemaById<Id>;
+  previewController: AnyEntityPreviewController;
   data: EntityClientDataById<Id>;
 }
 
@@ -30,13 +32,9 @@ export function PreviewPanel<Id extends EntityId>({
   data,
   entityId,
   documentId,
+  previewController,
 }: PreviewPanelProps<Id>) {
-  const { preview } = schema;
-  if (preview === undefined) {
-    return null;
-  }
-
-  const Component = getRenderer(entityId, preview);
+  const Component = getRenderer(entityId, previewController);
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -47,7 +45,7 @@ export function PreviewPanel<Id extends EntityId>({
           documentId={documentId}
           schema={schema}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          previewOptions={preview.options}
+          previewOptions={previewController.options}
         />
       </Suspense>
     </div>

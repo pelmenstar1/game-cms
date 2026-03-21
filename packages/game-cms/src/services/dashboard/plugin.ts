@@ -28,6 +28,7 @@ function initProxyDashboard(app: FastifyInstance, url: string) {
   app.register(httpProxy, {
     upstream: url,
     websocket: true,
+    disableRequestLogging: true,
   });
 }
 

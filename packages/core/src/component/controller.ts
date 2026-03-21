@@ -1,4 +1,5 @@
 import { ComponentAtomWalker } from './atomWalker.js';
+import { ComponentClientOptionsTransformer } from './client.js';
 import { ComponentCore } from './core.js';
 import { ComponentDataMergeHandler } from './merge.js';
 import {
@@ -39,6 +40,11 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
       { search?: ComponentSearchController<Id> },
       Id,
       'searchIndexData'
+    > &
+    RequiredIfExists<
+      { clientOptionsTransformer?: ComponentClientOptionsTransformer<Id> },
+      Id,
+      'clientOptions'
     >;
 
 export type ComponentControllerMap = {

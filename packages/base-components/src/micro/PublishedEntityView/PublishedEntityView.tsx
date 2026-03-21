@@ -1,10 +1,11 @@
 import { getRawEntityDocumentById } from '@game-cms/base-api/client';
 import type { EntityId } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
-import { DataLoader, Typography } from '@game-cms/ui';
+import { MultipleDataLoader, Typography } from '@game-cms/ui';
 import { useEffect } from 'react';
 
 import { useApiQuery } from '../../hooks/useApiQuery.js';
+import { useClientTransformerContext } from '../../hooks/useClientTransformerContext.js';
 import {
   EntityComposeOptions,
   transformDataToClientData,
@@ -35,6 +36,7 @@ export function PublishedEntityView<T extends EntityId>({
   );
 
   const api = useComponentApi();
+  const clientTransformerContextResult = useClientTransformerContext(entityId);
 
   const Compose = api.getComponent('base::compose');
 
@@ -45,11 +47,18 @@ export function PublishedEntityView<T extends EntityId>({
   }, [dataResult, onUnpublished]);
 
   return (
-    <DataLoader className={className} result={dataResult}>
-      {(data) =>
+    <MultipleDataLoader
+      className={className}
+      result={[dataResult, clientTransformerContextResult] as const}
+    >
+      {([data, clientTransformerContext]) =>
         data !== null ? (
           <Compose
-            data={transformDataToClientData(api, data.components, options)}
+            data={transformDataToClientData(
+              clientTransformerContext,
+              data.components,
+              options
+            )}
             options={options}
             readonly
           />
@@ -59,6 +68,6 @@ export function PublishedEntityView<T extends EntityId>({
           </Typography>
         )
       }
-    </DataLoader>
+    </MultipleDataLoader>
   );
 }

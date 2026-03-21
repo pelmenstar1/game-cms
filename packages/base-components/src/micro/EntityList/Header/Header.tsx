@@ -1,4 +1,4 @@
-import { EntitySchema } from '@game-cms/base-core';
+import { EntityClientSchema } from '@game-cms/base-core';
 import { classNames, Typography } from '@game-cms/ui';
 
 import { getEntityDisplayKeys } from '../../../internal/entity.js';
@@ -6,7 +6,7 @@ import styles from './Header.module.scss';
 
 export interface HeaderProps {
   className?: string;
-  schema: EntitySchema;
+  schema: EntityClientSchema;
 }
 
 export function Header({ className, schema }: HeaderProps) {

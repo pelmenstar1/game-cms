@@ -116,4 +116,14 @@ export default defineComponentController({
       return { nodes: Object.fromEntries(nodes), edges: data.edges };
     },
   },
+  clientOptionsTransformer: {
+    toClient: (options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        componentId,
+        baseOptions: context.toClient(componentId, baseOptions),
+      };
+    },
+  },
 });

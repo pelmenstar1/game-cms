@@ -1,7 +1,7 @@
 import {
+  EntityClientSchemaById,
   EntityId,
   EntityInternalOutDataById,
-  EntitySchemaById,
 } from '@game-cms/base-core';
 import { List } from '@game-cms/ui';
 
@@ -11,7 +11,7 @@ import { SelectableItem } from './SelectableItem/index.js';
 export type SelectableEntityListProps<Id extends EntityId> = {
   className?: string;
   items: EntityInternalOutDataById<Id, string>[];
-  schema: EntitySchemaById<Id>;
+  schema: EntityClientSchemaById<Id>;
 
   selectedItemId?: string;
   onItemSelected?: (id: string) => void;

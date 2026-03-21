@@ -9,7 +9,10 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 
-import { getRepeatableOptions, RepeatableArgs } from './internal/repeatable.js';
+import {
+  getRepeatableClientOptions,
+  RepeatableArgs,
+} from './internal/repeatable.js';
 import styles from './renderer.module.scss';
 
 const FontPreviewModal = namedLazy(
@@ -30,7 +33,7 @@ export const renderer: ComponentRenderer<'base::font'> = ({
   const Repeatable = api.getComponent('base::repeatable');
 
   const repeatableOptions = useMemo(
-    () => getRepeatableOptions(options),
+    () => getRepeatableClientOptions(options),
     [options]
   );
 

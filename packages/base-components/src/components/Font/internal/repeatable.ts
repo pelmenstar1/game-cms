@@ -1,10 +1,9 @@
-import { ComponentOptionsById, GetComponentSchemaArgs } from '@game-cms/core';
+import {
+  ComponentClientOptionsById,
+  ComponentOptionsById,
+  ComponentSchema,
+} from '@game-cms/core';
 
-import { compose } from '../../Compose/index.js';
-import { dropdown } from '../../Dropdown/index.js';
-import { file } from '../../File/index.js';
-import { number } from '../../Number/index.js';
-import { repeatable } from '../../Repeatable/index.js';
 import { FontFormat, fontFormats } from './format.js';
 
 type FileOptions = ComponentOptionsById<'base::file'>;
@@ -22,24 +21,58 @@ export function getFileOptions(options: FontOptions): FileOptions {
   };
 }
 
-function createRepeatableSchema(options: ComponentOptionsById<'base::font'>) {
-  return repeatable({
-    component: compose({
-      file: file(getFileOptions(options)),
-      weight: number({ min: 100, max: 900, integer: true }),
-      style: dropdown([
-        { key: 'normal', title: 'Normal' },
-        { key: 'italic', title: 'Italic' },
-      ]),
-    }),
-  });
-}
+export type RepeatableId = 'base::repeatable';
+
+export type RepeatableArgs = {
+  id: 'base::compose';
+  baseArgs: {
+    file: ComponentSchema<'base::file'>;
+    weight: ComponentSchema<'base::number'>;
+    style: ComponentSchema<
+      'base::dropdown',
+      {
+        key: 'normal' | 'italic';
+      }
+    >;
+  };
+};
 
 export function getRepeatableOptions(
   options: ComponentOptionsById<'base::font'>
-) {
-  return createRepeatableSchema(options).options;
+): ComponentOptionsById<RepeatableId, RepeatableArgs> {
+  return {
+    componentId: 'base::compose',
+    baseOptions: {
+      file: {
+        componentId: 'base::file',
+        options: getFileOptions(options),
+      },
+      weight: {
+        componentId: 'base::number',
+        options: {
+          min: 100,
+          max: 900,
+          integer: true,
+        },
+      },
+      style: {
+        componentId: 'base::dropdown',
+        options: {
+          items: [
+            { key: 'normal', title: 'Normal' },
+            { key: 'italic', title: 'Italic' },
+          ],
+        },
+      },
+    },
+  };
 }
 
-type RepeatableSchema = ReturnType<typeof createRepeatableSchema>;
-export type RepeatableArgs = GetComponentSchemaArgs<RepeatableSchema>;
+export function getRepeatableClientOptions(
+  options: ComponentOptionsById<'base::font'>
+): ComponentClientOptionsById<RepeatableId, RepeatableArgs> {
+  return getRepeatableOptions(options) as unknown as ComponentClientOptionsById<
+    RepeatableId,
+    RepeatableArgs
+  >;
+}

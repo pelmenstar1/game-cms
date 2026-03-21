@@ -1,5 +1,4 @@
 import { EntitySchema } from '@game-cms/base-core';
-import { ComponentBackContextMap } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 
 function assertMapObject(
@@ -52,15 +51,5 @@ export function validateEntityBackContext(
     throw new TypeError(
       `Invalid entity back context (${id}): expected an object`
     );
-  }
-}
-
-export function validateEntityBackContextMap(
-  value: unknown
-): asserts value is ComponentBackContextMap {
-  assertMapObject(value, 'back context');
-
-  for (const [id, schema] of Object.entries(value)) {
-    validateEntityBackContext(schema, id);
   }
 }

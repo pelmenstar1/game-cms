@@ -1,16 +1,13 @@
-import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import { getEntitySchema } from '@game-cms/base-api/client';
+import type { EntityClientSchemaById, EntityId } from '@game-cms/base-core';
 import { QueryResult } from '@game-cms/shared';
-import { useAbstractQueryResult } from '@game-cms/ui';
 
-import { useEntitySchemaContext } from './useEntitySchemaContext.js';
+import { useApiQuery } from './useApiQuery.js';
 
 export function useEntitySchema<T extends EntityId>(
   id: T
-): QueryResult<EntitySchemaById<T>> {
-  const { getEntitySchemaById } = useEntitySchemaContext();
+): QueryResult<EntityClientSchemaById<T>> {
+  const [schemaResult] = useApiQuery(getEntitySchema, [id]);
 
-  return useAbstractQueryResult(
-    () => getEntitySchemaById(id),
-    [getEntitySchemaById, id]
-  );
+  return schemaResult;
 }

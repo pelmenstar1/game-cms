@@ -5,10 +5,12 @@ import {
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
+import { ForeignComponentClientDataTransformerContext } from '@game-cms/core';
 import { MultipleDataLoader } from '@game-cms/ui';
 import { useMemo } from 'react';
 
 import { useApiQuery } from '../../hooks/useApiQuery.js';
+import { useClientTransformerContext } from '../../hooks/useClientTransformerContext.js';
 import { useEntitySchema } from '../../hooks/useEntitySchema.js';
 import {
   EntityComposeOptions,
@@ -24,11 +26,13 @@ export interface EntityPreviewLoaderProps {
 type RendererProps<Id extends EntityId> = {
   entitySchema: EntitySchemaById<Id>;
   document: EntityOutDataById<Id>;
+  clientTransformerContext: ForeignComponentClientDataTransformerContext;
 };
 
 function Renderer<Id extends EntityId>({
   entitySchema,
   document,
+  clientTransformerContext,
 }: RendererProps<Id>) {
   const api = useComponentApi();
   const Compose = api.getComponent('base::compose');
@@ -36,8 +40,13 @@ function Renderer<Id extends EntityId>({
   const composeOptions = entitySchema.components as EntityComposeOptions<Id>;
 
   const clientData = useMemo(
-    () => transformDataToClientData(api, document, composeOptions),
-    [api, document, composeOptions]
+    () =>
+      transformDataToClientData(
+        clientTransformerContext,
+        document,
+        composeOptions
+      ),
+    [clientTransformerContext, document, composeOptions]
   );
 
   return <Compose data={clientData} options={composeOptions} readonly />;
@@ -54,15 +63,27 @@ export function EntityPreviewLoader({
     'draft',
   ]);
 
+  const clientTransformerContextResult = useClientTransformerContext(entityId);
+
   const entitySchemaResult = useEntitySchema(entityId);
 
   return (
     <MultipleDataLoader
       className={className}
-      result={[documentResult, entitySchemaResult] as const}
+      result={
+        [
+          documentResult,
+          entitySchemaResult,
+          clientTransformerContextResult,
+        ] as const
+      }
     >
-      {([document, entitySchema]) => (
-        <Renderer entitySchema={entitySchema} document={document} />
+      {([document, entitySchema, clientTransformerContext]) => (
+        <Renderer
+          entitySchema={entitySchema}
+          document={document}
+          clientTransformerContext={clientTransformerContext}
+        />
       )}
     </MultipleDataLoader>
   );

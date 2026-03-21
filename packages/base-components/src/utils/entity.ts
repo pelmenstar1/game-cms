@@ -3,11 +3,11 @@ import {
   EntityId,
   EntityOutDataById,
 } from '@game-cms/base-core';
-import { ComponentApi } from '@game-cms/component-api';
 import {
   ComponentClientDataById,
+  ComponentClientOptionsById,
   ComponentErrorById,
-  ComponentOptionsById,
+  ForeignComponentClientDataTransformerContext,
 } from '@game-cms/core';
 
 export type EntityComposeData<Id extends EntityId> = ComponentClientDataById<
@@ -15,10 +15,8 @@ export type EntityComposeData<Id extends EntityId> = ComponentClientDataById<
   EntityComponents<Id>
 >;
 
-export type EntityComposeOptions<Id extends EntityId> = ComponentOptionsById<
-  'base::compose',
-  EntityComponents<Id>
->;
+export type EntityComposeOptions<Id extends EntityId> =
+  ComponentClientOptionsById<'base::compose', EntityComponents<Id>>;
 
 export type EntityComposeError<Id extends EntityId> = ComponentErrorById<
   'base::compose',
@@ -26,16 +24,18 @@ export type EntityComposeError<Id extends EntityId> = ComponentErrorById<
 >;
 
 export function transformDataToClientData<Id extends EntityId>(
-  api: ComponentApi,
+  clientTransformerContext: ForeignComponentClientDataTransformerContext,
   data: EntityOutDataById<Id> | undefined,
   options: EntityComposeOptions<Id>
-): EntityComposeData<Id> {
-  if (data) {
-    return api.clientTransformerContext.toClient<
-      'base::compose',
-      EntityComponents<Id>
-    >('base::compose', data as never, options);
-  }
+) {
+  const result =
+    data !== undefined
+      ? clientTransformerContext.toClient(
+          'base::compose',
+          data as never,
+          options
+        )
+      : clientTransformerContext.getDefaultData('base::compose', options);
 
-  return api.getDefaultData('base::compose', options) as EntityComposeData<Id>;
+  return result as EntityComposeData<Id>;
 }

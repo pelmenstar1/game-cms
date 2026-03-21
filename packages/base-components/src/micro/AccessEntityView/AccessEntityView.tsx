@@ -1,13 +1,15 @@
 import type {
+  EntityClientContext,
   EntityClientDataById,
+  EntityClientSchemaById,
   EntityComponents,
   EntityId,
   EntityInDataById,
   EntityInternalOutDataById,
-  EntitySchemaById,
   EntityVariant,
 } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
+import { ForeignComponentClientDataTransformerContext } from '@game-cms/core';
 import { classNames } from '@game-cms/ui';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -29,9 +31,12 @@ type ComposeId = typeof composeId;
 export interface AccessEntityViewProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  schema: EntitySchemaById<Id>;
+  schema: EntityClientSchemaById<Id>;
   initialId?: string;
   initialValue?: EntityInternalOutDataById<Id>;
+  clientContext?: EntityClientContext;
+  clientTransformerContext: ForeignComponentClientDataTransformerContext;
+
   onSave?: (value: EntityInDataById<Id>, variant: EntityVariant) => void;
   onDelete?: () => void;
   onUnpublish?: () => void;
@@ -43,6 +48,8 @@ export function AccessEntityView<Id extends EntityId>({
   entityId,
   initialId,
   initialValue,
+  clientContext,
+  clientTransformerContext,
   onSave,
   onDelete,
   onUnpublish,
@@ -55,7 +62,11 @@ export function AccessEntityView<Id extends EntityId>({
   const composeOptions = schema.components as EntityComposeOptions<Id>;
 
   const [clientData, setClientData] = useState(() =>
-    transformDataToClientData(api, initialValue?.components, composeOptions)
+    transformDataToClientData(
+      clientTransformerContext,
+      initialValue?.components,
+      composeOptions
+    )
   );
 
   const [selectedVariant, setSelectedVariant] =
@@ -64,12 +75,12 @@ export function AccessEntityView<Id extends EntityId>({
   const [previewEnabled, setPreviewEnabled] = useState(false);
 
   const data = useMemo(() => {
-    return api.clientTransformerContext.fromClient<ComposeId, Args>(
+    return clientTransformerContext.fromClient<ComposeId, Args>(
       composeId,
       clientData,
       composeOptions
     );
-  }, [api, clientData, composeOptions]);
+  }, [clientTransformerContext, clientData, composeOptions]);
 
   const onPublishTransformed = useCallback(() => {
     const rawData = data.result;
@@ -95,6 +106,7 @@ export function AccessEntityView<Id extends EntityId>({
         entityId={entityId}
         schema={schema}
         onDelete={onDelete}
+        hasPreview={clientContext?.preview !== undefined}
         previewEnabled={previewEnabled}
         onPreviewEnabledChanged={setPreviewEnabled}
       />
@@ -145,13 +157,14 @@ export function AccessEntityView<Id extends EntityId>({
           )}
         </div>
 
-        {previewEnabled && (
+        {clientContext?.preview && previewEnabled && (
           <PreviewPanel<Id>
             className={styles['preview-panel']}
             entityId={entityId}
             data={clientData as EntityClientDataById<Id>}
             schema={schema}
             documentId={initialId}
+            previewController={clientContext.preview}
           />
         )}
       </div>

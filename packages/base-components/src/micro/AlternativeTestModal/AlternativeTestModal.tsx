@@ -3,7 +3,10 @@ import {
   parseConditionalNotation,
   resolveConditionalData,
 } from '@game-cms/conditional';
-import { ComponentClientDataById, ComponentOptionsById } from '@game-cms/core';
+import {
+  ComponentClientDataById,
+  ComponentClientOptionsById,
+} from '@game-cms/core';
 import { ModalDialog, ModalProps } from '@game-cms/ui';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +17,7 @@ import styles from './AlternativeTestModal.module.scss';
 
 export interface AlternativeTestModalProps<Args> extends ModalProps {
   data: ComponentClientDataById<'base::alternative', Args>;
-  options: ComponentOptionsById<'base::alternative', Args>;
+  options: ComponentClientOptionsById<'base::alternative', Args>;
 }
 
 export function AlternativeTestModal<Args>({

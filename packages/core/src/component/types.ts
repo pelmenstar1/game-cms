@@ -46,13 +46,18 @@ type GetComponentSearchTypes<Types extends ComponentTypes> = {
   searchIndexData: GetPropertyOr<Types, 'searchIndexData', unknown>;
 };
 
+type GetComponentClientOptionsTypes<Types extends ComponentTypes> = {
+  clientOptions: GetPropertyOr<Types, 'clientOptions', Types['options']>;
+};
+
 type GetComponentTypes<Types extends ComponentTypes = ComponentTypes> = Pick<
   Types,
   keyof ComponentTypes
 > &
   GetComponentExtendedTypes<Types> &
   GetComponentPartialTypes<Types> &
-  GetComponentSearchTypes<Types>;
+  GetComponentSearchTypes<Types> &
+  GetComponentClientOptionsTypes<Types>;
 
 export type GetComponentTypesById<
   Id extends ComponentId,
@@ -63,11 +68,6 @@ export type ComponentOutDataById<
   T extends ComponentId,
   Args = unknown,
 > = GetComponentTypesById<T, Args>['outData'];
-
-// export type ComponentClientOutDataById<
-//   T extends ComponentId,
-//   Args = unknown,
-// > = GetComponentTypesById<T, Args>['clientOutData'];
 
 export type ComponentInDataById<
   T extends ComponentId,
@@ -83,6 +83,11 @@ export type ComponentOptionsById<
   T extends ComponentId,
   Args = unknown,
 > = GetComponentTypesById<T, Args>['options'];
+
+export type ComponentClientOptionsById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['clientOptions'];
 
 export type ComponentErrorById<
   T extends ComponentId,

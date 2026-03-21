@@ -18,12 +18,18 @@ export type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
 
 type ResolveArgs<Args> = IfExtends<Args, RepeatableArgs>;
 
+type BaseOptions<
+  Types extends GetComponentSchemaTypes,
+  OptKey extends keyof GetComponentSchemaTypes,
+> = {
+  componentId: Types['componentId'];
+  title?: TitleSpecById<Types['componentId'], Types['args']>;
+  baseOptions: Types[OptKey];
+};
+
 type BaseRepeatableEntry<Types extends GetComponentSchemaTypes> = {
-  options: {
-    componentId: Types['componentId'];
-    title?: TitleSpecById<Types['componentId'], Types['args']>;
-    baseOptions: Types['options'];
-  };
+  options: BaseOptions<Types, 'options'>;
+  clientOptions: BaseOptions<Types, 'clientOptions'>;
   error: {
     ownError?: 'INVALID_TYPE';
     items?: (Types['error'] | undefined)[];

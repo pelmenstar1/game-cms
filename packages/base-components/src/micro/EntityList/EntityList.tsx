@@ -1,4 +1,4 @@
-import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import type { EntityClientSchemaById, EntityId } from '@game-cms/base-core';
 import { List } from '@game-cms/ui';
 
 import styles from './EntityList.module.scss';
@@ -10,7 +10,7 @@ export interface EntityListProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
   items: EntityListItem<Id>[];
-  schema: EntitySchemaById<Id>;
+  schema: EntityClientSchemaById<Id>;
 }
 
 export function EntityList<Id extends EntityId>({

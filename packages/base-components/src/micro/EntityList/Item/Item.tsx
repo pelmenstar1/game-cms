@@ -1,4 +1,4 @@
-import type { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import type { EntityClientSchemaById, EntityId } from '@game-cms/base-core';
 import { Link } from '@game-cms/ui';
 
 import { BaseItem } from '../BaseItem/BaseItem.js';
@@ -7,7 +7,7 @@ import { EntityListItem } from '../types.js';
 export interface ItemProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  schema: EntitySchemaById<Id>;
+  schema: EntityClientSchemaById<Id>;
   value: EntityListItem<Id>;
 }
 

@@ -1,4 +1,5 @@
 import {
+  ComponentClientOptionsById,
   ComponentEntry,
   ComponentId,
   ComponentNestedPathShape,
@@ -82,11 +83,19 @@ type OptionsEntry<Options, Id extends ComponentId, Args> = {
 interface Options<
   Input extends DynamicZoneInputComponents,
 > extends SharedOptions {
-  minItems?: number;
-  maxItems?: number;
   options: {
     [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
       ? OptionsEntry<ComponentOptionsById<Id, Args>, Id, Args>
+      : OptionsEntry<ComponentOptions, ComponentId, unknown>;
+  };
+}
+
+interface ClientOptions<
+  Input extends DynamicZoneInputComponents,
+> extends SharedOptions {
+  options: {
+    [K in keyof Input]: Input[K] extends ComponentSchema<infer Id, infer Args>
+      ? OptionsEntry<ComponentClientOptionsById<Id, Args>, Id, Args>
       : OptionsEntry<ComponentOptions, ComponentId, unknown>;
   };
 }
@@ -102,6 +111,7 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
   outData: DynamicZoneArray<Input, 'outData'>;
   inData: DynamicZoneArray<Input, 'inData'>;
   options: Options<Input>;
+  clientOptions: ClientOptions<Input>;
   error: Error<Input>;
   resolvedData: DynamicZoneArray<Input, 'resolvedData'>;
   clientData: DynamicZoneArray<Input, 'clientData'>;

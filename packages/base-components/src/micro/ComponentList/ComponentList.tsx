@@ -1,10 +1,10 @@
 import { useComponentApi } from '@game-cms/component-api';
 import {
   ComponentClientDataById,
+  ComponentClientOptionsById,
   ComponentData,
   ComponentErrorById,
   ComponentId,
-  ComponentOptionsById,
 } from '@game-cms/core';
 import {
   Accordion,
@@ -31,7 +31,7 @@ export type ComponentListItem<
   componentId: Id;
   title?: TitleSpecById<Id, Args>;
   data: ComponentClientDataById<Id, Args>;
-  options: ComponentOptionsById<Id, Args>;
+  options: ComponentClientOptionsById<Id, Args>;
   error?: ComponentErrorById<Id, Args>;
 };
 

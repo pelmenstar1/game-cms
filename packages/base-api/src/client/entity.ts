@@ -4,8 +4,6 @@ import type {
   EntityInDataByIdWithId,
   EntityInternalOutDataById,
   EntityResolvedDataByIdWithId,
-  EntitySchema,
-  EntitySchemaById,
   EntityVariant,
 } from '@game-cms/base-core';
 import type { ComponentDataResolverArgs } from '@game-cms/core';
@@ -18,21 +16,6 @@ import {
 } from '@game-cms/core/api/client';
 import type { PageData, PagingOptions } from '@game-cms/shared';
 import qs from 'qs';
-
-export const getEntitySchemas = (context: RequestContext) =>
-  request(context, {
-    url: '/entitySchema/list',
-    response: json<EntitySchema[]>(),
-  });
-
-export const getEntitySchema = <T extends EntityId>(
-  context: RequestContext,
-  entityId: T
-) =>
-  request(context, {
-    url: `/entitySchema/byId/${entityId}`,
-    response: json<EntitySchemaById<T>>(),
-  });
 
 export const createEntity = <Id extends EntityId>(
   context: RequestContext,

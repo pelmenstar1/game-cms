@@ -3,12 +3,18 @@ import type {
   EntityInstanceComponents,
   EntityVariant,
 } from '@game-cms/base-core';
-import { DataLoader, useNotification, useTypedNavigate } from '@game-cms/ui';
+import {
+  MultipleDataLoader,
+  useNotification,
+  useTypedNavigate,
+} from '@game-cms/ui';
 import { useCallback } from 'react';
 
 import { useApiAction } from '../../../hooks/useApiAction.js';
 import { useCheckPermissions } from '../../../hooks/useCheckPermissions.js';
+import { useClientTransformerContext } from '../../../hooks/useClientTransformerContext.js';
 import { useEntitySchema } from '../../../hooks/useEntitySchema.js';
+import { useEntitySharedContext } from '../../../hooks/useEntitySharedContext.js';
 import { AccessEntityView } from '../../../micro/AccessEntityView/index.js';
 import styles from './route.module.scss';
 
@@ -16,6 +22,8 @@ export default function Page({ params }: { params: { name: string } }) {
   const { name } = params;
 
   const entitySchema = useEntitySchema(name);
+  const clientContext = useEntitySharedContext(name);
+  const clientTransformerContext = useClientTransformerContext(name);
 
   const notification = useNotification();
   const redirect = useTypedNavigate();
@@ -40,10 +48,19 @@ export default function Page({ params }: { params: { name: string } }) {
   );
 
   return (
-    <DataLoader className={styles.root} result={entitySchema}>
-      {(schema) => (
-        <AccessEntityView entityId={name} schema={schema} onSave={onSave} />
+    <MultipleDataLoader
+      className={styles.root}
+      result={[entitySchema, clientTransformerContext, clientContext] as const}
+    >
+      {([schema, clientTransformerContext, clientContext]) => (
+        <AccessEntityView
+          entityId={name}
+          schema={schema}
+          clientTransformerContext={clientTransformerContext}
+          clientContext={clientContext}
+          onSave={onSave}
+        />
       )}
-    </DataLoader>
+    </MultipleDataLoader>
   );
 }

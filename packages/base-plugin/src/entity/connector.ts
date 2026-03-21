@@ -2,30 +2,23 @@ import { pathToFileURL } from 'node:url';
 
 import { env } from '@game-cms/global';
 
-function emitDynamicPromise(filePath: string) {
-  return `() => import('${pathToFileURL(filePath)}')`;
-}
-
 export function emitEntityConnector(): string {
   const {
-    entity: { registry, registryFilePath },
+    entity: { schemaRegistry, clientContextRegistry },
   } = env();
 
+  const entityMetaMap = Object.entries(schemaRegistry.items)
+    .map(
+      ([id, { schema }]) =>
+        `${JSON.stringify(id)}: ${JSON.stringify({ title: schema.title })}`
+    )
+    .join(',');
+
+  const getClientContextRegistry = clientContextRegistry
+    ? `import('${pathToFileURL(clientContextRegistry.filePath)}')`
+    : 'Promise.resolve({})';
+
   return `
-export const registryImport = ${emitDynamicPromise(registryFilePath)};
-
-export const entityMap = {
-  ${Object.entries(registry)
-    .map(([id, entry]) => {
-      const filePath = entry.schema.filePath;
-      const { title } = entry.schema.value;
-
-      const schemaImport = filePath
-        ? `schema: ${emitDynamicPromise(filePath)}`
-        : '';
-
-      return `'${id}': { title: ${JSON.stringify(title)}, ${schemaImport} }`;
-    })
-    .join(',')}
-};`;
+export const getClientContextRegistry = () => ${getClientContextRegistry};
+export const entityMetaMap = {${entityMetaMap}};`;
 }

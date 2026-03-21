@@ -52,6 +52,10 @@ type BaseGraphEntry<Types extends GetComponentSchemaTypes> = {
     componentId: Types['componentId'];
     baseOptions: Types['options'];
   };
+  clientOptions: {
+    componentId: Types['componentId'];
+    baseOptions: Types['clientOptions'];
+  };
   error: {
     ownError?: 'INVALID_TYPE';
     base?: Record<string, Types['error']>;

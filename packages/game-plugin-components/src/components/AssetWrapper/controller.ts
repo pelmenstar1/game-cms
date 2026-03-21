@@ -1,23 +1,8 @@
-import {
-  ComponentBackContext,
-  defineComponentController,
-} from '@game-cms/core';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { defineComponentController } from '@game-cms/core';
 import { filterOutNullable } from '@game-cms/shared/collections';
 
 import core from './core.js';
-
-function getPipeline(
-  context: { backContext: ComponentBackContext },
-  pipelineId: string
-) {
-  const result = context.backContext.assetPipelines?.[pipelineId];
-
-  if (!result) {
-    throw new Error(`Pipeline with id ${pipelineId} not found in context`);
-  }
-
-  return result;
-}
 
 export default defineComponentController({
   core,
@@ -38,19 +23,6 @@ export default defineComponentController({
     const { componentId, baseOptions } = options;
 
     return context.resolveOutData(componentId, data, baseOptions, args);
-  },
-  mergeData: async (target, source, options, context) => {
-    const mergedBase = await context.merge(
-      options.componentId,
-      target.base,
-      source,
-      options.baseOptions
-    );
-
-    return {
-      base: mergedBase,
-      derived: target.derived,
-    };
   },
   search: {
     getScore: (query, target, options, context) => {
@@ -82,9 +54,8 @@ export default defineComponentController({
       };
     },
     fromStorage: async (data, options, context) => {
-      const { componentId, baseOptions } = options;
+      const { componentId, baseOptions, pipeline } = options;
 
-      const pipeline = getPipeline(context, options.pipelineId);
       const derivedEntries = await Promise.all(
         pipeline.map(async (step) => {
           const value = data.derived[step.id as keyof typeof data.derived];
@@ -101,9 +72,8 @@ export default defineComponentController({
       };
     },
     toStorage: async (data, options, context) => {
-      const { componentId, baseOptions } = options;
+      const { componentId, baseOptions, pipeline } = options;
 
-      const pipeline = getPipeline(context, options.pipelineId);
       const derivedEntries = await Promise.all(
         pipeline.map(async (step) => {
           const value = await step.apply(data, options, context);
@@ -115,6 +85,16 @@ export default defineComponentController({
       return {
         base: await context.toStorage(componentId, data, baseOptions),
         derived: Object.fromEntries(derivedEntries),
+      };
+    },
+  },
+  clientOptionsTransformer: {
+    toClient: (options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        componentId,
+        baseOptions: context.toClient(componentId, baseOptions),
       };
     },
   },

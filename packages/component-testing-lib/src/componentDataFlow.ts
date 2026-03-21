@@ -4,12 +4,12 @@ import path from 'node:path';
 import type {
   ComponentClientDataById,
   ComponentClientDataTransformer,
+  ComponentClientOptionsById,
   ComponentId,
   ComponentInDataById,
-  ComponentOptionsById,
   ComponentOutDataById,
   ComponentSchema,
-  ForeignComponentClientDataResolverContext,
+  ForeignComponentClientDataTransformerContext,
 } from '@game-cms/core';
 import { getComponentIdFromCoreFile } from '@game-cms/core/node';
 import { cms, env } from '@game-cms/global';
@@ -76,9 +76,10 @@ async function clientResolverContext() {
   const { foreignValidationContext, foreignDefaultContext } =
     cms().service('base::component');
 
-  const clientContext: ForeignComponentClientDataResolverContext = {
+  const clientContext: ForeignComponentClientDataTransformerContext = {
     idSource: incrementingIdSource,
     validation: foreignValidationContext,
+    sharedContext: {},
     getDefaultData: (id, options) => {
       return (clientComponents[id]?.getDefaultData(options, clientContext) ??
         foreignDefaultContext.getDefaultData(id, options)) as never;
@@ -86,7 +87,7 @@ async function clientResolverContext() {
     fromClient: <Id extends ComponentId, Args>(
       id: Id,
       clientData: ComponentClientDataById<Id, Args>,
-      options: ComponentOptionsById<Id, Args>
+      options: ComponentClientOptionsById<Id, Args>
     ) => {
       return (
         clientComponents[id]?.fromClient(
@@ -99,11 +100,11 @@ async function clientResolverContext() {
     toClient: <Id extends ComponentId, Args>(
       id: Id,
       data: ComponentOutDataById<Id, Args>,
-      options: ComponentOptionsById<Id>
+      options: ComponentClientOptionsById<Id, Args>
     ) => {
       return (
         clientComponents[id]?.toClient(data, options, clientContext) ??
-        (data as ComponentClientDataById<Id>)
+        (data as ComponentClientDataById<Id, Args>)
       );
     },
   };
@@ -118,18 +119,24 @@ export function componentDataFlowTests<Id extends ComponentId>(
   describe(`${id} data flow`, () => {
     test('out -> client -> out in -> storage -> out', async () => {
       const clientContext = await clientResolverContext();
-      const foreignStorageResolverContext = cms()
-        .service('base::component')
-        .createForeignStorageResolverContext({});
+      const {
+        foreignStorageResolverContext,
+        foreignClientOptionsTransformerContext,
+      } = cms().service('base::component');
 
       for (const { data: out, component } of resolveMaybeFactory(input).outs) {
         const { options } = component;
 
-        const client = clientContext.toClient(id, out, options);
+        const clientOptions = foreignClientOptionsTransformerContext.toClient(
+          id,
+          options
+        );
+
+        const client = clientContext.toClient(id, out, clientOptions);
         const { result: outIn, error: outInError } = clientContext.fromClient(
           id,
           client,
-          options
+          clientOptions
         );
 
         if (outIn === undefined) {

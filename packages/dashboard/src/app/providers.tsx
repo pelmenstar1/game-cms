@@ -4,16 +4,16 @@ import type { PropsWithChildren } from 'react';
 import { ApiClientProvider } from '@/context/ApiClientProvider';
 import { ClientConfigProvider } from '@/context/ClientConfigProvider';
 import { EntityCheckProvider } from '@/context/EntityCheckProvider';
+import { EntityHubProvider } from '@/context/EntityHubProvider';
 import { EntitySchemaProvider } from '@/context/EntitySchemaProvider';
 import { SessionProvider } from '@/context/SessionProvider';
-import { ComponentHubProvider } from '@/hooks/useComponentHub';
 
 export function Providers({ children }: PropsWithChildren) {
   return (
     <NotificationWrapper>
       <ApiClientProvider>
         <EntitySchemaProvider>
-          <ComponentHubProvider>
+          <EntityHubProvider>
             <ClientConfigProvider>
               <EntityCheckProvider>
                 <SessionProvider>
@@ -21,7 +21,7 @@ export function Providers({ children }: PropsWithChildren) {
                 </SessionProvider>
               </EntityCheckProvider>
             </ClientConfigProvider>
-          </ComponentHubProvider>
+          </EntityHubProvider>
         </EntitySchemaProvider>
       </ApiClientProvider>
     </NotificationWrapper>

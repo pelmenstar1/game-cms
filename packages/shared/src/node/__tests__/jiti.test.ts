@@ -8,7 +8,7 @@ describe('maybeJitiImport', () => {
   test('existing module', async () => {
     const jiti = createJiti(import.meta.url);
 
-    await expect(maybeJitiImport(jiti, './remoteTest.ts')).resolves.not.toBe(
+    await expect(maybeJitiImport(jiti, '../buffer.ts')).resolves.not.toBe(
       MODULE_NOT_FOUND_MARK
     );
   });

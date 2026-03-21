@@ -18,7 +18,9 @@ import { useCallback } from 'react';
 import { useApiAction } from '../../../hooks/useApiAction.js';
 import { useApiQuery } from '../../../hooks/useApiQuery.js';
 import { useCheckPermissions } from '../../../hooks/useCheckPermissions.js';
+import { useClientTransformerContext } from '../../../hooks/useClientTransformerContext.js';
 import { useEntitySchema } from '../../../hooks/useEntitySchema.js';
+import { useEntitySharedContext } from '../../../hooks/useEntitySharedContext.js';
 import { AccessEntityView } from '../../../micro/AccessEntityView/index.js';
 import styles from './route.module.scss';
 
@@ -34,6 +36,9 @@ export default function Page({
   const [entity] = useApiQuery(getRawEntityDocumentById, [name, id, 'draft'], {
     redirectOnNotFound: true,
   });
+
+  const clientContext = useEntitySharedContext(id);
+  const clientTransformerContext = useClientTransformerContext(name);
 
   const notification = useNotification();
   const redirect = useTypedNavigate();
@@ -86,17 +91,21 @@ export default function Page({
   return (
     <MultipleDataLoader
       className={styles.content}
-      result={[entitySchema, entity] as const}
+      result={
+        [entitySchema, entity, clientTransformerContext, clientContext] as const
+      }
     >
-      {([entitySchema, entity]) => (
+      {([entitySchema, entity, clientTransformerContext, clientContext]) => (
         <AccessEntityView
           entityId={name}
           schema={entitySchema}
           initialValue={entity}
           initialId={id}
+          clientTransformerContext={clientTransformerContext}
           onSave={onSave}
           onDelete={onDelete}
           onUnpublish={onUnpublish}
+          clientContext={clientContext}
         />
       )}
     </MultipleDataLoader>

@@ -1,6 +1,5 @@
 import { MaybePromise } from '@game-cms/shared';
 
-import { ComponentBackContext } from './backContext.js';
 import { ForeignComponentPathWalkerContext } from './pathWalker.js';
 import {
   ComponentId,
@@ -21,8 +20,6 @@ export type ComponentStoragePartialDataById<
 > = GetComponentTypesById<T, Args>['partialStorageData'];
 
 export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
-  backContext: ComponentBackContext;
-
   getDefaultData: <Id extends ComponentId, Args>(
     id: Id,
     options: ComponentOptionsById<Id, Args>

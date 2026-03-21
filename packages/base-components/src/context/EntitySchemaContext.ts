@@ -1,4 +1,4 @@
-import { EntityId, EntitySchemaById } from '@game-cms/base-core';
+import { EntityClientContext, EntityId } from '@game-cms/base-core';
 import { unimplemented } from '@game-cms/shared';
 import React from 'react';
 
@@ -7,15 +7,15 @@ export type EntitySchemaContextType = {
 
   getEntityTitle: (id: EntityId) => string;
 
-  getEntitySchemaById: <Id extends EntityId>(
-    id: Id
-  ) => Promise<EntitySchemaById<Id>>;
+  getEntitySharedContext: (
+    id: EntityId
+  ) => Promise<EntityClientContext | undefined>;
 };
 
 export const EntitySchemaContext = React.createContext<EntitySchemaContextType>(
   {
     entityIds: [],
     getEntityTitle: unimplemented('getEntityTitle'),
-    getEntitySchemaById: unimplemented.async('getEntitySchemaById'),
+    getEntitySharedContext: unimplemented.async('getEntitySharedContext'),
   }
 );

@@ -17,9 +17,9 @@ import {
   EntityVariantData,
 } from '@game-cms/base-core';
 import {
-  ComponentBackContext,
   ComponentDataResolverArgs,
   ComponentDataStructure,
+  ComponentSchema,
   searchScoreComposer,
 } from '@game-cms/core';
 import { service } from '@game-cms/core';
@@ -80,7 +80,6 @@ function idFilter<T>(id: ObjectId) {
 
 type ServiceEntityDescriptor<Id extends EntityId> = {
   schema: EntitySchemaById<Id>;
-  backContext: ComponentBackContext;
 };
 
 function getEntityDescriptor<T extends EntityId>(
@@ -91,7 +90,7 @@ function getEntityDescriptor<T extends EntityId>(
     throw new ApiError('Unknown entity', 'base::entity/notFound');
   }
 
-  return { schema: result.schema.value, backContext: result.backContext };
+  return { schema: result.schema };
 }
 
 async function fromStorageData<Id extends EntityId>(
@@ -101,11 +100,9 @@ async function fromStorageData<Id extends EntityId>(
 ): Promise<EntityInternalOutDataById<Id>> {
   const { components, meta, checks } = storageData;
 
-  const { schema, backContext } = getEntityDescriptor(entityId);
+  const { schema } = getEntityDescriptor(entityId);
 
-  const foreignStorageResolverContext = cms()
-    .service('base::component')
-    .createForeignStorageResolverContext(backContext);
+  const { foreignStorageResolverContext } = cms().service('base::component');
 
   const rawComponents = await asyncMapObject(components, (item, key) => {
     const { componentId, options } = schema.components[key];
@@ -174,10 +171,8 @@ async function toStorageData<Id extends EntityId>(
   entityId: Id,
   rawData: EntityInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
-  const { schema, backContext } = getEntityDescriptor(entityId);
-  const foreignStorageResolverContext = cms()
-    .service('base::component')
-    .createForeignStorageResolverContext(backContext);
+  const { schema } = getEntityDescriptor(entityId);
+  const { foreignStorageResolverContext } = cms().service('base::component');
 
   const { run: runEntityChecks } = cms().service('base::entityCheck');
 
@@ -210,10 +205,8 @@ async function toStoragePartialData<Id extends EntityId>(
   target: EntityStorageDataById<Id>,
   source: EntityPartialInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
-  const { schema, backContext } = getEntityDescriptor(entityId);
-  const foreignDataMergeContext = cms()
-    .service('base::component')
-    .createForeignDataMergeContext(backContext);
+  const { schema } = getEntityDescriptor(entityId);
+  const { foreignDataMergeContext } = cms().service('base::component');
 
   const sourceMerged = await asyncMapObject(source, (item, key) => {
     const { componentId, options } = schema.components[key];
@@ -249,12 +242,10 @@ function createEntityVariants<Id extends EntityId>(
 }
 
 function migrateEntity<Id extends EntityId>(
-  { schema, backContext }: ServiceEntityDescriptor<Id>,
+  { schema }: ServiceEntityDescriptor<Id>,
   oldValue: EntityVariantData
 ): EntityStorageDataById<Id> {
-  const foreignDataMigrationContext = cms()
-    .service('base::component')
-    .createForeignDataMigrationContext(backContext);
+  const { foreignDataMigrationContext } = cms().service('base::component');
 
   const newComponents = mapObject(schema.components, (prop, key) => {
     return foreignDataMigrationContext.migrate(
@@ -282,15 +273,17 @@ function validate<Id extends EntityId>(
 
   const { foreignValidationContext } = cms().service('base::component');
 
-  const entries = Object.entries(schema.components).map(([key, prop]) => {
-    const error = foreignValidationContext.validate(
-      prop.componentId,
-      value[key],
-      prop.options
-    );
+  const entries = Object.entries<ComponentSchema>(schema.components).map(
+    ([key, prop]) => {
+      const error = foreignValidationContext.validate(
+        prop.componentId,
+        value[key],
+        prop.options
+      );
 
-    return [key, error] as const;
-  });
+      return [key, error] as const;
+    }
+  );
 
   if (entries.some(([, value]) => value !== undefined)) {
     return {
@@ -381,11 +374,10 @@ export default service({
         );
 
         const serviceDescriptor = {
-          schema: descriptor.schema.value,
-          backContext: descriptor.backContext,
+          schema: descriptor.schema,
         };
 
-        const newStructure = getEntityDataStructure(descriptor.schema.value);
+        const newStructure = getEntityDataStructure(descriptor.schema);
 
         if (oldStructure === undefined) {
           await col.insertOne({ entityId: id, structure: newStructure });

@@ -147,4 +147,14 @@ export default defineComponentController({
       };
     },
   },
+  clientOptionsTransformer: {
+    toClient: (options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        componentId,
+        baseOptions: context.toClient(componentId, baseOptions),
+      };
+    },
+  },
 });

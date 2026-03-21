@@ -1,6 +1,6 @@
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
 import {
-  ComponentOptionsById,
+  ComponentClientOptionsById,
   ComponentOutDataById,
   ComponentRenderer,
 } from '@game-cms/core';
@@ -17,7 +17,7 @@ type ComposeGroup<Args> = ComponentGroup<ComponentOutDataById<Id, Args>>;
 
 function splitEntitySchemaComponentsToGroups<Args>(
   api: ComponentApi,
-  options: ComponentOptionsById<Id, Args>
+  options: ComponentClientOptionsById<Id, Args>
 ): ComposeGroup<Args>[] {
   const compactGroup: Partial<ComposeGroup<Args>> = {};
   let compactGroupNonEmpty = false;
