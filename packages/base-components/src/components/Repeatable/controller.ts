@@ -1,9 +1,15 @@
 import { defineComponentController, searchScoreComposer } from '@game-cms/core';
 
 import core from './core.js';
+import { validator } from './validator.js';
 
 export default defineComponentController({
   core,
+  validator: (data, options, context) => {
+    return validator(data, (element) =>
+      context.validate(options.componentId, element, options.baseOptions)
+    );
+  },
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
   atomWalker: (data, options, apply, context) => {

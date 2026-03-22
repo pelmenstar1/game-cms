@@ -4,11 +4,6 @@ import { ComposeArgs, getComposeOptions } from './internal/options.js';
 
 export default defineComponentCore({
   id: 'game::spritesheet',
-  meta: {
-    ui: {
-      compact: true,
-    },
-  },
   defaultOutData: (options, context) =>
     context.getDefaultData<'base::compose', ComposeArgs>(
       'base::compose',
@@ -23,10 +18,4 @@ export default defineComponentCore({
       apply
     );
   },
-  validator: (data, options, context) =>
-    context.validate<'base::compose', ComposeArgs>(
-      'base::compose',
-      data,
-      getComposeOptions(options)
-    ),
 });

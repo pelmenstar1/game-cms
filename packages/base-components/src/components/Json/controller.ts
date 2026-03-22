@@ -2,6 +2,7 @@ import { defineComponentController } from '@game-cms/core';
 import { uniqueArray } from '@game-cms/shared/collections';
 
 import core from './core.js';
+import { validator } from './validator.js';
 
 function baseSplitObjectToKeywords(value: unknown, output: string[]) {
   switch (typeof value) {
@@ -42,6 +43,7 @@ function splitObjectToKeywords(value: unknown) {
 
 export default defineComponentController({
   core,
+  validator,
   migrate: (data) => data,
   search: {
     getScore: (query, target) => {

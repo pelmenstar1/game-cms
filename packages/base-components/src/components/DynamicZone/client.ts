@@ -1,9 +1,23 @@
-import { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 
-export const clientTransformer: ComponentClientDataTransformer<'base::dynamic-zone'> =
-  {
-    ownValidation: true,
-    getDefaultData: () => [],
+import core from './core.js';
+import { validator } from './validator.js';
+
+export default defineComponentClientController({
+  core,
+  validator: (data, options, context) => {
+    return validator(
+      data,
+      (key, itemData) => {
+        const { componentId, options: baseOptions } = options.options[key];
+
+        return context.validate(componentId, itemData, baseOptions);
+      },
+      options
+    );
+  },
+  getDefaultData: () => [],
+  transformer: {
     toClient: (data, options, context) => {
       return data.map((dataItem) => {
         const { componentId, options: baseOptions } =
@@ -17,38 +31,15 @@ export const clientTransformer: ComponentClientDataTransformer<'base::dynamic-zo
       });
     },
     fromClient: (clientData, options, context) => {
-      const result = clientData.map((value) => {
-        const { componentId, options: baseOptions } =
-          options.options[value.key];
-
-        const client = context.fromClient(componentId, value.data, baseOptions);
+      return clientData.map((value) => {
+        const { key, data } = value;
+        const { componentId, options: baseOptions } = options.options[key];
 
         return {
-          client,
-          coreError:
-            client.result !== undefined
-              ? context.validation.validate(
-                  componentId,
-                  client.result,
-                  baseOptions
-                )
-              : undefined,
+          key,
+          data: context.fromClient(componentId, data, baseOptions),
         };
       });
-
-      const errors = result.map(
-        ({ client: { error }, coreError }) => error ?? coreError
-      );
-
-      if (errors.some((value) => value !== undefined)) {
-        return { error: { items: errors } };
-      }
-
-      return {
-        result: result.map((item, index) => ({
-          key: clientData[index].key,
-          data: item.client.result,
-        })),
-      };
     },
-  };
+  },
+});

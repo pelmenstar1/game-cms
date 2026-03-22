@@ -4,9 +4,11 @@ import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
 import core from './core.js';
+import { validator } from './validator.js';
 
 export default defineComponentController({
   core,
+  validator,
   migrate: (data) => {
     if (
       Array.isArray(data) &&

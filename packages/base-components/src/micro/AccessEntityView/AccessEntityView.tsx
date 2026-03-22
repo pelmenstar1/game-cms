@@ -10,10 +10,12 @@ import type {
 } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
 import { ForeignComponentClientDataTransformerContext } from '@game-cms/core';
+import { maybePromiseThen, Or } from '@game-cms/shared';
 import { classNames } from '@game-cms/ui';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import {
+  EntityComposeError,
   EntityComposeOptions,
   transformDataToClientData,
 } from '../../utils/entity.js';
@@ -41,6 +43,11 @@ export interface AccessEntityViewProps<Id extends EntityId> {
   onDelete?: () => void;
   onUnpublish?: () => void;
 }
+
+type InDataWithError<Id extends EntityId> = Or<
+  { data: EntityInDataById<Id> },
+  { error: EntityComposeError<Id> }
+>;
 
 export function AccessEntityView<Id extends EntityId>({
   className,
@@ -73,30 +80,47 @@ export function AccessEntityView<Id extends EntityId>({
     useState<EntityVariant>('draft');
 
   const [previewEnabled, setPreviewEnabled] = useState(false);
+  const [inData, setInData] = useState<InDataWithError<Id> | undefined>();
 
-  const data = useMemo(() => {
-    return clientTransformerContext.fromClient<ComposeId, Args>(
+  const error = inData?.error;
+
+  useEffect(() => {
+    const validationResult = api.validate<ComposeId, Args>(
       composeId,
       clientData,
       composeOptions
     );
-  }, [clientTransformerContext, clientData, composeOptions]);
+
+    void maybePromiseThen(validationResult, (error) => {
+      if (error !== undefined) {
+        setInData({ error });
+      } else {
+        const data = clientTransformerContext.fromClient(
+          composeId,
+          clientData,
+          composeOptions
+        );
+
+        setInData({ data: data as EntityInDataById<Id> });
+      }
+    });
+  }, [api, clientData, clientTransformerContext, composeOptions]);
 
   const onPublishTransformed = useCallback(() => {
-    const rawData = data.result;
+    const rawData = inData?.data;
 
     if (rawData !== undefined) {
-      onSave?.(rawData as EntityInDataById<Id>, 'published');
+      onSave?.(rawData, 'published');
     }
-  }, [data, onSave]);
+  }, [inData, onSave]);
 
   const onSaveTransformed = useCallback(() => {
-    const rawData = data.result;
+    const rawData = inData?.data;
 
     if (rawData !== undefined) {
       onSave?.(rawData as EntityInDataById<Id>, 'draft');
     }
-  }, [data, onSave]);
+  }, [inData, onSave]);
 
   return (
     <div className={classNames(styles.root, className)}>
@@ -120,7 +144,7 @@ export function AccessEntityView<Id extends EntityId>({
               selectedVariant={selectedVariant}
               options={composeOptions}
               draftData={clientData}
-              draftError={data.error}
+              draftError={error}
               onDraftDataChanged={setClientData}
               onSelectedVariantChanged={setSelectedVariant}
             />
@@ -128,7 +152,7 @@ export function AccessEntityView<Id extends EntityId>({
             <Compose
               data={clientData}
               options={composeOptions}
-              error={data.error}
+              error={error}
               onDataChanged={setClientData}
             />
           )}
@@ -136,7 +160,7 @@ export function AccessEntityView<Id extends EntityId>({
 
         <div className={styles['side-panel']}>
           <ActionBlock
-            disabled={data.error !== undefined}
+            disabled={error !== undefined}
             onPublish={
               selectedVariant !== 'published' ? onPublishTransformed : undefined
             }

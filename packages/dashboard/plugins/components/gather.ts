@@ -3,15 +3,14 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import type { ComponentId } from '@game-cms/core';
-import { getComponentIdFromCoreFile } from '@game-cms/core/node';
+import { getComponentIdFromClientFile } from '@game-cms/core/node';
 import { env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 
 export type ComponentClientChunkEntry = {
   paths: {
     renderer: string;
-    core: string;
-    client?: string;
+    client: string;
   };
 };
 
@@ -22,18 +21,13 @@ export type ComponentClientChunkMap = Record<
 
 async function gatherComponentClientChunk(dirPath: string) {
   const renderer = path.join(dirPath, 'renderer.js');
-  const core = path.join(dirPath, 'core.js');
   const client = path.join(dirPath, 'client.js');
 
-  if (fs.existsSync(renderer) && fs.existsSync(core)) {
-    const componentId = await getComponentIdFromCoreFile(core);
+  const componentId = await getComponentIdFromClientFile(client);
 
+  if (componentId !== null && fs.existsSync(renderer)) {
     const entry: ComponentClientChunkEntry = {
-      paths: {
-        renderer,
-        core,
-        client: fs.existsSync(client) ? client : undefined,
-      },
+      paths: { renderer, client },
     };
 
     return [componentId, entry] as const;

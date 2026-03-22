@@ -6,6 +6,14 @@ import core from './core.js';
 
 export default defineComponentController({
   core,
+  validator: (data, options, context, params) => {
+    return context.validate(
+      options.componentId,
+      data,
+      options.baseOptions,
+      params
+    );
+  },
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
   atomWalker: (data, options, apply, context) => {

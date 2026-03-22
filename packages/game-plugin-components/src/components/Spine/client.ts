@@ -1,18 +1,33 @@
-import type { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 
+import core from './core.js';
 import {
   type ComposeArgs,
   type ComposeId,
   composeOptions,
 } from './internal/constants';
 
-export const clientTransformer: ComponentClientDataTransformer<'game::spine'> =
-  {
-    getDefaultData: () => ({
-      images: [],
-      atlas: [],
-      skeleton: [],
-    }),
+export default defineComponentClientController({
+  core,
+  meta: {
+    ui: {
+      compact: true,
+    },
+  },
+  getDefaultData: () => ({
+    images: [],
+    atlas: [],
+    skeleton: [],
+  }),
+  validator: (data, _, context, params) => {
+    return context.validate<ComposeId, ComposeArgs>(
+      'base::compose',
+      data,
+      composeOptions,
+      params
+    );
+  },
+  transformer: {
     fromClient: (clientData, _, context) => {
       return context.fromClient<ComposeId, ComposeArgs>(
         'base::compose',
@@ -31,4 +46,5 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spine'> =
         composeOptions
       );
     },
-  };
+  },
+});

@@ -3,6 +3,7 @@ import type {
   ComponentMeta,
   ComponentRenderer,
   ForeignComponentClientDataTransformerContext,
+  ForeignComponentClientValidationContext,
   ForeignComponentPathWalkerContext,
 } from '@game-cms/core';
 import { IdSource } from '@game-cms/shared';
@@ -14,6 +15,7 @@ export type ComponentApi = {
   getComponent: <Id extends ComponentId>(id: Id) => ComponentRenderer<Id>;
 
   getDefaultData: ForeignComponentClientDataTransformerContext['getDefaultData'];
+  validate: ForeignComponentClientValidationContext['validate'];
   getMeta: (id: ComponentId) => ComponentMeta | undefined;
   applyAtPath: ForeignComponentPathWalkerContext['applyAtPath'];
 };

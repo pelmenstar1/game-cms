@@ -19,6 +19,12 @@ const shadowAtlasOrchestration = createShadowFileOrchestration({
 
 export default defineComponentController({
   core,
+  validator: (data, options, context) =>
+    context.validate<'base::compose', ComposeArgs>(
+      'base::compose',
+      data,
+      getComposeOptions(options)
+    ),
   structure: (options, context) =>
     context.getStructure<'base::compose', ComposeArgs>(
       'base::compose',

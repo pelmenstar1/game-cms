@@ -2,22 +2,35 @@ import {
   conditionalAstExpressionToString,
   parseConditionalNotation,
 } from '@game-cms/conditional';
-import { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 
-function parseCondition(text: string) {
-  try {
-    return { value: parseConditionalNotation(text) };
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : 'Unknown error' };
-  }
-}
+import core from './core.js';
+import { validator } from './validator.js';
 
-export const clientTransformer: ComponentClientDataTransformer<'base::alternative'> =
-  {
-    getDefaultData: (options, context) => ({
-      default: context.getDefaultData(options.componentId, options.baseOptions),
-      alternative: [],
-    }),
+export default defineComponentClientController({
+  core,
+  validator: (data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    return validator(
+      data,
+      (element) => context.validate(componentId, element, baseOptions),
+      (condition) => {
+        if (typeof condition !== 'string') return 'INVALID_CONDITION';
+
+        try {
+          parseConditionalNotation(condition);
+        } catch (error) {
+          return error instanceof Error ? error.message : 'Unknown error';
+        }
+      }
+    );
+  },
+  getDefaultData: (options, context) => ({
+    default: context.getDefaultData(options.componentId, options.baseOptions),
+    alternative: [],
+  }),
+  transformer: {
     toClient: (data, options, context) => {
       const { componentId, baseOptions } = options;
 
@@ -31,54 +44,14 @@ export const clientTransformer: ComponentClientDataTransformer<'base::alternativ
     },
     fromClient: (data, options, context) => {
       const { componentId, baseOptions } = options;
-      const defaultResult = context.fromClient(
-        componentId,
-        data.default,
-        baseOptions
-      );
-
-      const alternativeResult = data.alternative.map(
-        ({ value, condition: rawCondition }) => {
-          const condition = parseCondition(rawCondition);
-          const data = context.fromClient(componentId, value, baseOptions);
-
-          if (condition.error !== undefined || data.error !== undefined) {
-            return { error: { condition: condition.error, data: data.error } };
-          }
-
-          return { value: { condition: condition.value, data: data.result } };
-        }
-      );
-
-      if (
-        defaultResult.error !== undefined ||
-        alternativeResult.some((item) => item.error !== undefined)
-      ) {
-        return {
-          error: {
-            default: defaultResult.error,
-            alternative: alternativeResult.map(({ error }) => ({
-              data: error?.data,
-              condition: error?.condition,
-            })),
-          },
-        };
-      }
 
       return {
-        result: {
-          default: defaultResult.result as never,
-          alternative: alternativeResult.map(({ value }) => {
-            if (value === undefined) {
-              throw new Error('Value is undefined');
-            }
-
-            return {
-              condition: value.condition,
-              value: value.data as never,
-            };
-          }),
-        },
+        default: context.fromClient(componentId, data.default, baseOptions),
+        alternative: data.alternative.map(({ value, condition }) => ({
+          condition: parseConditionalNotation(condition),
+          value: context.fromClient(componentId, value, baseOptions),
+        })),
       };
     },
-  };
+  },
+});

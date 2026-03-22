@@ -2,8 +2,8 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import type {
+  ComponentClientController,
   ComponentClientDataById,
-  ComponentClientDataTransformer,
   ComponentClientOptionsById,
   ComponentId,
   ComponentInDataById,
@@ -11,7 +11,6 @@ import type {
   ComponentSchema,
   ForeignComponentClientDataTransformerContext,
 } from '@game-cms/core';
-import { getComponentIdFromCoreFile } from '@game-cms/core/node';
 import { cms, env } from '@game-cms/global';
 import {
   incrementingIdSource,
@@ -27,19 +26,16 @@ type TestInput<Id extends ComponentId> = {
 };
 
 async function gatherComponentClientChunk(dirPath: string) {
-  const corePath = path.join(dirPath, 'core.js');
   const clientPath = path.join(dirPath, 'client.js');
 
   const clientModule = await maybeImportFile<{
-    clientTransformer: ComponentClientDataTransformer;
+    default: ComponentClientController;
   }>(clientPath);
 
   if (clientModule !== MODULE_NOT_FOUND_MARK) {
-    const componentId = getComponentIdFromCoreFile(corePath);
+    const controller = clientModule.default;
 
-    const { clientTransformer } = clientModule;
-
-    return [componentId, clientTransformer] as const;
+    return [controller.core.id, controller] as const;
   }
 }
 
@@ -67,7 +63,7 @@ async function gatherComponents() {
   );
 
   return Object.fromEntries(result.flat()) as {
-    [Id in ComponentId]?: ComponentClientDataTransformer<Id>;
+    [Id in ComponentId]?: ComponentClientController<Id>;
   };
 }
 
@@ -81,7 +77,7 @@ async function clientResolverContext() {
     validation: foreignValidationContext,
     sharedContext: {},
     getDefaultData: (id, options) => {
-      return (clientComponents[id]?.getDefaultData(options, clientContext) ??
+      return (clientComponents[id]?.getDefaultData?.(options, clientContext) ??
         foreignDefaultContext.getDefaultData(id, options)) as never;
     },
     fromClient: <Id extends ComponentId, Args>(
@@ -89,13 +85,11 @@ async function clientResolverContext() {
       clientData: ComponentClientDataById<Id, Args>,
       options: ComponentClientOptionsById<Id, Args>
     ) => {
-      return (
-        clientComponents[id]?.fromClient(
-          clientData,
-          options,
-          clientContext
-        ) ?? { result: clientData as ComponentInDataById<Id, Args> }
-      );
+      return (clientComponents[id]?.transformer?.fromClient(
+        clientData,
+        options,
+        clientContext
+      ) ?? clientData) as ComponentInDataById<Id, Args>;
     },
     toClient: <Id extends ComponentId, Args>(
       id: Id,
@@ -103,8 +97,11 @@ async function clientResolverContext() {
       options: ComponentClientOptionsById<Id, Args>
     ) => {
       return (
-        clientComponents[id]?.toClient(data, options, clientContext) ??
-        (data as ComponentClientDataById<Id, Args>)
+        clientComponents[id]?.transformer?.toClient(
+          data,
+          options,
+          clientContext
+        ) ?? (data as ComponentClientDataById<Id, Args>)
       );
     },
   };
@@ -133,15 +130,7 @@ export function componentDataFlowTests<Id extends ComponentId>(
         );
 
         const client = clientContext.toClient(id, out, clientOptions);
-        const { result: outIn, error: outInError } = clientContext.fromClient(
-          id,
-          client,
-          clientOptions
-        );
-
-        if (outIn === undefined) {
-          expect.fail(`fromClient failed: ${outInError}`);
-        }
+        const outIn = clientContext.fromClient(id, client, clientOptions);
 
         const storage = await foreignStorageResolverContext.toStorage(
           id,

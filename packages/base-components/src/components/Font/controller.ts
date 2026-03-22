@@ -9,6 +9,13 @@ type Id = typeof id;
 
 export default defineComponentController({
   core,
+  validator: (data, options, context) => {
+    return context.validate<'base::repeatable', RepeatableArgs>(
+      'base::repeatable',
+      data,
+      getRepeatableOptions(options)
+    );
+  },
   structure: (options, context) =>
     context.getStructure<Id, RepeatableArgs>(id, getRepeatableOptions(options)),
   migrate: (data, options, context) => {

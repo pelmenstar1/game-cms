@@ -35,5 +35,6 @@ declare module '@game-cms/core/api' {
     'PUT /user/byId/:id': typeof import('./user/byId/update.js');
     'POST /user': typeof import('./user/create.js');
     'GET /user/list': typeof import('./user/list.js');
+    'POST /validator/check/:id': typeof import('./validator/check/post.js');
   }
 }

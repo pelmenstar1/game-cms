@@ -1,25 +1,33 @@
-import { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 
-export const clientTransformer: ComponentClientDataTransformer<'base::repeatable'> =
-  {
-    getDefaultData: () => [],
+import core from './core.js';
+import { validator } from './validator.js';
+
+export default defineComponentClientController({
+  core,
+  validator: (data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    return validator(data, (element) =>
+      context.validate(componentId, element, baseOptions)
+    );
+  },
+  getDefaultData: () => [],
+  transformer: {
     toClient: (data, options, context) => {
+      const { componentId, baseOptions } = options;
+
       return data.map((item) => ({
         clientKey: context.idSource(),
-        data: context.toClient(options.componentId, item, options.baseOptions),
+        data: context.toClient(componentId, item, baseOptions),
       }));
     },
     fromClient: (clientData, options, context) => {
-      const result = clientData.map((item) =>
-        context.fromClient(options.componentId, item.data, options.baseOptions)
+      const { componentId, baseOptions } = options;
+
+      return clientData.map((item) =>
+        context.fromClient(componentId, item.data, baseOptions)
       );
-
-      const errors = result.map(({ error }) => error);
-
-      if (errors.some((value) => value !== undefined)) {
-        return { error: { items: errors } };
-      }
-
-      return { result: result.map((item) => item.result as never) };
     },
-  };
+  },
+});

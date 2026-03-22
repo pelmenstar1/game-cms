@@ -16,28 +16,20 @@ function getComponent<Id extends ComponentId>(id: Id) {
   return result;
 }
 
-export function getComponentDefaultData<Id extends ComponentId>(
+export function getComponentDefaultOutData<Id extends ComponentId>(
   id: Id,
   options: ComponentOptionsById<Id>,
   context: ForeignComponentDefaultDataContext
 ) {
-  return getComponent(id).core.defaultOutData(options, context);
-}
-
-export function getComponentValidator<Id extends ComponentId>(id: Id) {
-  return getComponent(id).core.validator;
-}
-
-export function getComponentMeta(id: ComponentId) {
-  return getComponent(id).core.meta;
+  return getComponent(id).client.core.defaultOutData(options, context);
 }
 
 export function getComponentPathWalker<Id extends ComponentId>(id: Id) {
-  return getComponent(id).core.pathWalker;
+  return getComponent(id).client.core.pathWalker;
 }
 
-export function getComponentClientTransformer<Id extends ComponentId>(id: Id) {
-  return getComponent(id).client?.clientTransformer;
+export function getComponentClientController<Id extends ComponentId>(id: Id) {
+  return getComponent(id).client;
 }
 
 export function importComponent<Id extends ComponentId>(id: Id) {

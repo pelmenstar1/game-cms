@@ -5,6 +5,12 @@ import { ComposeArgs, getComposeOptions } from './internal/options.js';
 
 export default defineComponentController({
   core,
+  validator: (data, _, context) =>
+    context.validate<'base::compose', ComposeArgs>(
+      'base::compose',
+      data,
+      getComposeOptions()
+    ),
   structure: (_, context) =>
     context.getStructure<'base::compose', ComposeArgs>(
       'base::compose',

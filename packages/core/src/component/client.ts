@@ -1,7 +1,7 @@
 import { IdSource, ResultOrError } from '@game-cms/shared';
 import { Key, ReactNode } from 'react';
 
-import { ForeignComponentValidationContext } from './core.js';
+import { ComponentCore } from './core.js';
 import {
   ComponentClientOptionsById,
   ComponentErrorById,
@@ -11,6 +11,11 @@ import {
   ComponentOutDataById,
   GetComponentTypesById,
 } from './types.js';
+import { RequiredIfExists } from './typeutil.js';
+import {
+  ComponentDataValidatorParams,
+  ComponentDataValidatorResult,
+} from './validation.js';
 
 export type ComponentClientDataById<
   T extends ComponentId,
@@ -31,7 +36,7 @@ export type ComponentRenderer<Id extends ComponentId = ComponentId> = <
   props: ComponentProps<Id, Args>
 ) => ReactNode;
 
-export type ComponentClientModule<Id extends ComponentId = ComponentId> = {
+export type ComponentRendererModule<Id extends ComponentId = ComponentId> = {
   renderer: ComponentRenderer<Id>;
 };
 
@@ -49,7 +54,7 @@ export interface ForeignComponentClientDefaultDataContext {
 
 export interface ForeignComponentClientDataTransformerContext extends ForeignComponentClientDefaultDataContext {
   idSource: IdSource<Key>;
-  validation: ForeignComponentValidationContext;
+  validation: ForeignComponentClientValidationContext;
   sharedContext: ComponentClientContext | undefined;
 
   toClient: <Id extends ComponentId, Args>(
@@ -62,22 +67,12 @@ export interface ForeignComponentClientDataTransformerContext extends ForeignCom
     id: Id,
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentClientOptionsById<Id, Args>
-  ) => ComponentInDataOrError<Id, Args>;
+  ) => ComponentInDataById<Id, Args>;
 }
 
 export type ComponentClientDataTransformer<
   Id extends ComponentId = ComponentId,
 > = {
-  /**
-   * Determines whether fromClient will its own validation scheme.
-   */
-  ownValidation?: boolean;
-
-  getDefaultData: <Args>(
-    options: ComponentClientOptionsById<Id, Args>,
-    context: ForeignComponentClientDefaultDataContext
-  ) => ComponentClientDataById<Id, Args>;
-
   toClient: <Args>(
     data: ComponentOutDataById<Id, Args>,
     options: ComponentClientOptionsById<Id, Args>,
@@ -88,7 +83,37 @@ export type ComponentClientDataTransformer<
     clientData: ComponentClientDataById<Id, Args>,
     options: ComponentClientOptionsById<Id, Args>,
     context: ForeignComponentClientDataTransformerContext
-  ) => ComponentInDataOrError<Id, Args>;
+  ) => ComponentInDataById<Id, Args>;
+};
+
+export type ComponentMeta = {
+  ui?: {
+    compact?: boolean;
+  };
+};
+
+export type ForeignComponentClientValidationContext = {
+  validate: <Id extends ComponentId, Args>(
+    id: Id,
+    data: unknown, // ComponentClientDataById<Id, Args>
+    options: ComponentClientOptionsById<Id, Args>,
+    params?: ComponentDataValidatorParams
+  ) => ComponentDataValidatorResult<Id, Args>;
+};
+
+export type ComponentClientDataValidator<Id extends ComponentId> = <
+  Args = unknown,
+>(
+  data: unknown, // ComponentClientDataById<Id, Args>
+  options: ComponentClientOptionsById<Id, Args>,
+  context: ForeignComponentClientValidationContext,
+  params?: ComponentDataValidatorParams
+) => ComponentDataValidatorResult<Id, Args>;
+
+type BaseComponentClientController<Id extends ComponentId> = {
+  core: ComponentCore<Id>;
+  meta?: ComponentMeta;
+  validator: ComponentClientDataValidator<Id>;
 };
 
 export type ForeignComponentClientOptionsTransformerContext = {
@@ -107,11 +132,31 @@ export type ComponentClientOptionsTransformer<
   ) => ComponentClientOptionsById<Id, Args>;
 };
 
-// Contains values/functions that can be read/executed only on both client-side and server-side.
+export type ComponentClientController<Id extends ComponentId = ComponentId> =
+  BaseComponentClientController<Id> &
+    RequiredIfExists<
+      {
+        getDefaultData?: <Args>(
+          options: ComponentClientOptionsById<Id, Args>,
+          context: ForeignComponentClientDefaultDataContext
+        ) => ComponentClientDataById<Id, Args>;
 
+        transformer?: ComponentClientDataTransformer<Id>;
+      },
+      Id,
+      'clientData'
+    >;
+
+// Contains values/functions that can be read/executed only on both client-side and server-side.
 export interface ComponentClientContext {}
 
 export type ComponentClientContextMap<K extends PropertyKey = string> = Record<
   K,
   ComponentClientContext | undefined
 >;
+
+export function defineComponentClientController<Id extends ComponentId>(
+  value: ComponentClientController<Id>
+) {
+  return value;
+}

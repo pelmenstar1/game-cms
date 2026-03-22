@@ -15,11 +15,25 @@ import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { DataEntry } from './internal/types.js';
+import { validator } from './validator.js';
 
 type Id = (typeof core)['id'];
 
 export default defineComponentController({
   core,
+  validator: (data, options, context) => {
+    const { options: optionsMap } = options;
+
+    return validator(
+      data,
+      (key, itemData) => {
+        const { componentId, options: baseOptions } = optionsMap[key];
+
+        return context.validate(componentId, itemData, baseOptions);
+      },
+      options
+    );
+  },
   structure: ({ options }, context) => {
     return mapObject(options, (prop) =>
       context.getStructure(prop.componentId, prop.options)

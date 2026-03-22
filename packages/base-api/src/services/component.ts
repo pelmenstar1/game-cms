@@ -43,7 +43,7 @@ const foreignDefaultContext: ForeignComponentDefaultDataContext = {
 
 const foreignValidationContext: ForeignComponentValidationContext = {
   validate: (id, data, options) =>
-    getController(id).core.validator(data, options, foreignValidationContext),
+    getController(id).validator(data, options, foreignValidationContext),
 };
 
 const foreignResolverContext: ForeignComponentDataResolverContext = {

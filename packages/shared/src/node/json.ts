@@ -8,8 +8,8 @@ export async function readJson<T>(filePath: string) {
   return JSON.parse(content) as T;
 }
 
-export async function readJson5<T>(filePath: string): Promise<T> {
+export async function readJson5<T>(filePath: string) {
   const content = await fsp.readFile(filePath, 'utf8');
 
-  return json5.parse(content);
+  return json5.parse<T>(content);
 }

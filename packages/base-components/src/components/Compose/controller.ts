@@ -1,8 +1,10 @@
 import {
   ComponentClientOptionsById,
+  ComponentDataValidatorParams,
   ComponentOptionsById,
   defineComponentController,
   ForeignComponentClientOptionsTransformerContext,
+  ForeignComponentValidationContext,
   searchScoreComposer,
 } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
@@ -10,11 +12,29 @@ import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { ComposeOptionsEntry } from './types.js';
+import { validator } from './validator.js';
 
 type Id = (typeof core)['id'];
 
 export default defineComponentController({
   core,
+  validator: <Args>(
+    data: unknown,
+    options: ComponentOptionsById<'base::compose', Args>,
+    context: ForeignComponentValidationContext,
+    params?: ComponentDataValidatorParams
+  ) => {
+    return validator<Args>(
+      data,
+      Object.keys(options),
+      params,
+      (key, propValue) => {
+        const { componentId, options: baseOptions } = options[key];
+
+        return context.validate(componentId, propValue, baseOptions, params);
+      }
+    );
+  },
   structure: (options, context) => {
     return mapObject(options, (prop) =>
       context.getStructure(prop.componentId, prop.options)

@@ -1,13 +1,23 @@
 import path from 'node:path';
 
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
-import { getComponentIdFromCoreFile } from '../core.js';
+import { getComponentIdFromClientFile } from '../core.js';
 
-test('getComponentIdFromCoreFile', async () => {
-  const actual = await getComponentIdFromCoreFile(
-    path.join(import.meta.dirname, 'fixtures/testCore.js')
-  );
+describe('getComponentIdFromClientFile', () => {
+  test('file does not exist', async () => {
+    const actual = await getComponentIdFromClientFile(
+      path.join(import.meta.dirname, 'fixtures/nonExistentFile.js')
+    );
 
-  expect(actual).toBe('test-core');
+    expect(actual).toBeNull();
+  });
+
+  test('should return the correct component ID', async () => {
+    const actual = await getComponentIdFromClientFile(
+      path.join(import.meta.dirname, 'fixtures/testClient.js')
+    );
+
+    expect(actual).toBe('test-core');
+  });
 });

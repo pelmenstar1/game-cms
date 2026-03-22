@@ -3,9 +3,17 @@ import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { dataShape } from './internal/schema.js';
+import { validator } from './internal/validator.js';
 
 export default defineComponentController({
   core,
+  validator: (data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    return validator(data, (nodeValue) =>
+      context.validate(componentId, nodeValue, baseOptions)
+    );
+  },
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
   atomWalker: (data, options, apply, context) => {

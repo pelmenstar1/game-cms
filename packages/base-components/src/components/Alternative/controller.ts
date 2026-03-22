@@ -6,9 +6,17 @@ import { unknownConditionalData } from '@game-cms/conditional/schema';
 import { defineComponentController, searchScoreComposer } from '@game-cms/core';
 
 import core from './core.js';
+import { validator } from './validator.js';
 
 export default defineComponentController({
   core,
+  validator: (data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    return validator(data, (element) =>
+      context.validate(componentId, element, baseOptions)
+    );
+  },
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
   atomWalker: (data, options, apply, context) => {

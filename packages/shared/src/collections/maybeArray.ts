@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-array-callback-reference */
 export type MaybeArray<T> = T | T[];
 
 export function maybeArraySome<T>(

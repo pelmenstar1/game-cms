@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "types": ["@game-cms/base-api/types"],
     "allowJs": true
   },
   "include": ["./src"],

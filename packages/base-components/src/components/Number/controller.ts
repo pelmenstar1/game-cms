@@ -2,12 +2,14 @@ import { defineComponentController } from '@game-cms/core';
 import { safeParseFloat } from '@game-cms/shared/string';
 
 import core from './core.js';
+import { validator } from './validator.js';
 
 // Give 10% leeway of the data value.
 export const SEARCH_LEEWAY = 0.1;
 
 export default defineComponentController({
   core,
+  validator,
   migrate: (data) => {
     if (typeof data === 'string') {
       const result = safeParseFloat(data);

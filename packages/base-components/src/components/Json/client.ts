@@ -1,21 +1,37 @@
-import {
-  ComponentClientDataById,
-  ComponentClientDataTransformer,
-  ComponentInDataById,
-} from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 import { InvalidJson, parseJsonOptional } from '@game-cms/shared/json';
 
-export const clientTransformer: ComponentClientDataTransformer<'base::json'> = {
-  getDefaultData: ({ allowEmpty }) => (allowEmpty ? '' : '{}'),
-  toClient: (data) => JSON.stringify(data, null, 2),
-  fromClient: <Args>(data: ComponentClientDataById<'base::json', Args>) => {
-    const parsedData =
-      parseJsonOptional<ComponentInDataById<'base::json', Args>>(data);
+import core from './core.js';
+import { validator } from './validator.js';
 
-    if (parsedData === InvalidJson) {
-      return { error: 'INVALID_FORMAT' };
+export default defineComponentClientController<'base::json'>({
+  core,
+  validator: (data, options) => {
+    if (typeof data !== 'string') {
+      return 'INVALID_FORMAT';
     }
 
-    return { result: parsedData };
+    if (options.allowEmpty && data === '') {
+      return;
+    }
+
+    const parsed = parseJsonOptional(data);
+    if (parsed === InvalidJson) {
+      return 'INVALID_FORMAT';
+    }
+
+    return validator(parsed, options);
   },
-};
+  getDefaultData: ({ allowEmpty }) => (allowEmpty ? '' : '{}'),
+  transformer: {
+    toClient: (data) => JSON.stringify(data, null, 2),
+    fromClient: (data) => {
+      const parsed = parseJsonOptional(data);
+      if (parsed === InvalidJson) {
+        throw new Error('Invalid JSON format');
+      }
+
+      return parsed;
+    },
+  },
+});

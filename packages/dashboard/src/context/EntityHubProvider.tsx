@@ -12,20 +12,18 @@ import type {
   ComponentOutDataById,
   ForeignComponentClientDataTransformerContext,
   ForeignComponentClientDefaultDataContext,
+  ForeignComponentClientValidationContext,
   ForeignComponentDefaultDataContext,
   ForeignComponentPathWalkerContext,
-  ForeignComponentValidationContext,
 } from '@game-cms/core';
 import { createCachedFactory, incrementingIdSource } from '@game-cms/shared';
 import { type PropsWithChildren, useCallback, useMemo } from 'react';
 import React from 'react';
 
 import {
-  getComponentClientTransformer,
-  getComponentDefaultData,
-  getComponentMeta,
+  getComponentClientController,
+  getComponentDefaultOutData,
   getComponentPathWalker,
-  getComponentValidator,
   importComponent,
 } from '@/connector/component';
 import { getEntitySharedContext } from '@/connector/entity';
@@ -40,129 +38,113 @@ const getCachedComponent = createCachedFactory(
   }
 );
 
+const getComponentMeta = (id: ComponentId) => {
+  return getComponentClientController(id).meta;
+};
+
+const validationContext: ForeignComponentClientValidationContext = {
+  validate: (id, data, options) => {
+    const { validator } = getComponentClientController(id);
+
+    return validator(data, options, validationContext);
+  },
+};
+
+const pathWalkerContext: ForeignComponentPathWalkerContext = {
+  applyAtPath(id, data, options, path, apply) {
+    const pathWalker = getComponentPathWalker(id);
+
+    if (pathWalker !== undefined) {
+      pathWalker(data, options, path, apply, pathWalkerContext);
+    } else {
+      apply(data);
+    }
+  },
+};
+
+const defaultDataContext: ForeignComponentDefaultDataContext = {
+  getDefaultData: (id, options) => {
+    return getComponentDefaultOutData(id, options, defaultDataContext);
+  },
+};
+
+const clientDefaultDataContext: ForeignComponentClientDefaultDataContext = {
+  getDefaultData: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentClientOptionsById<Id, Args>
+  ) => {
+    const { getDefaultData } = getComponentClientController(id);
+
+    if (getDefaultData) {
+      return getDefaultData(options, clientDefaultDataContext);
+    }
+
+    return defaultDataContext.getDefaultData(
+      id,
+      options
+    ) as ComponentClientDataById<Id, Args>;
+  },
+};
+
 export function EntityHubProvider({ children }: PropsWithChildren) {
-  const validationContext = useMemo(
-    (): ForeignComponentValidationContext => ({
-      validate: (id, data, options) => {
-        const validator = getComponentValidator(id);
+  const getClientDataResolverContext = useCallback(async (id: EntityId) => {
+    const sharedContext = await getEntitySharedContext(id);
 
-        return validator(data, options, validationContext);
-      },
-    }),
-    []
-  );
+    const clientTransformerContext: ForeignComponentClientDataTransformerContext =
+      {
+        idSource: incrementingIdSource,
+        sharedContext,
+        validation: validationContext,
+        getDefaultData: clientDefaultDataContext.getDefaultData,
+        fromClient: <Id extends ComponentId, Args>(
+          id: Id,
+          clientData: ComponentClientDataById<Id, Args>,
+          options: ComponentClientOptionsById<Id, Args>
+        ) => {
+          const { transformer } = getComponentClientController(id);
 
-  const defaultDataContext = useMemo(
-    (): ForeignComponentDefaultDataContext => ({
-      getDefaultData: (id, options) => {
-        return getComponentDefaultData(id, options, defaultDataContext);
-      },
-    }),
-    []
-  );
+          if (transformer) {
+            return transformer.fromClient(
+              clientData,
+              options,
+              clientTransformerContext
+            );
+          }
 
-  const clientDefaultDataContext = useMemo(
-    (): ForeignComponentClientDefaultDataContext => ({
-      getDefaultData: <Id extends ComponentId, Args>(
-        id: Id,
-        options: ComponentClientOptionsById<Id, Args>
-      ) => {
-        const resolver = getComponentClientTransformer(id);
+          return clientData as ComponentInDataById<Id, Args>;
+        },
+        toClient: <Id extends ComponentId, Args>(
+          id: Id,
+          data: ComponentOutDataById<Id, Args>,
+          options: ComponentClientOptionsById<Id, Args>
+        ) => {
+          const { transformer } = getComponentClientController(id);
 
-        if (resolver) {
-          return resolver.getDefaultData(options, clientDefaultDataContext);
-        }
+          if (transformer) {
+            return transformer.toClient(
+              data,
+              options,
+              clientTransformerContext
+            );
+          }
 
-        return defaultDataContext.getDefaultData(
-          id,
-          options
-        ) as ComponentClientDataById<Id, Args>;
-      },
-    }),
-    [defaultDataContext]
-  );
+          return data as ComponentClientDataById<Id, Args>;
+        },
+      };
 
-  const getClientDataResolverContext = useCallback(
-    async (id: EntityId) => {
-      const sharedContext = await getEntitySharedContext(id);
-
-      const clientTransformerContext: ForeignComponentClientDataTransformerContext =
-        {
-          idSource: incrementingIdSource,
-          sharedContext,
-          validation: validationContext,
-          getDefaultData: clientDefaultDataContext.getDefaultData,
-          fromClient: <Id extends ComponentId, Args>(
-            id: Id,
-            clientData: ComponentClientDataById<Id, Args>,
-            options: ComponentClientOptionsById<Id, Args>
-          ) => {
-            const resolver = getComponentClientTransformer(id);
-
-            const response = resolver
-              ? resolver.fromClient(
-                  clientData,
-                  options,
-                  clientTransformerContext
-                )
-              : { result: clientData as ComponentInDataById<Id, Args> };
-
-            if (!resolver?.ownValidation && response.result !== undefined) {
-              const coreError = validationContext.validate(
-                id,
-                response.result,
-                options
-              );
-
-              if (coreError !== undefined) {
-                return { error: coreError };
-              }
-            }
-
-            return response;
-          },
-          toClient: <Id extends ComponentId, Args>(
-            id: Id,
-            data: ComponentOutDataById<Id, Args>,
-            options: ComponentClientOptionsById<Id, Args>
-          ) => {
-            const resolver = getComponentClientTransformer(id);
-
-            return resolver
-              ? resolver.toClient(data, options, clientTransformerContext)
-              : (data as ComponentClientDataById<Id, Args>);
-          },
-        };
-
-      return clientTransformerContext;
-    },
-    [validationContext, clientDefaultDataContext]
-  );
-
-  const pathWalkerContext = useMemo(
-    (): ForeignComponentPathWalkerContext => ({
-      applyAtPath(id, data, options, path, apply) {
-        const pathWalker = getComponentPathWalker(id);
-
-        if (pathWalker !== undefined) {
-          pathWalker(data, options, path, apply, pathWalkerContext);
-        } else {
-          apply(data);
-        }
-      },
-    }),
-    []
-  );
+    return clientTransformerContext;
+  }, []);
 
   const api = useMemo(
     (): ComponentApi => ({
       generateId: incrementingIdSource,
       getComponent: getCachedComponent,
-      getDefaultData: clientDefaultDataContext.getDefaultData,
       getMeta: getComponentMeta,
+      getDefaultData: clientDefaultDataContext.getDefaultData,
+      validate: validationContext.validate,
       applyAtPath: pathWalkerContext.applyAtPath,
     }),
-    [clientDefaultDataContext, pathWalkerContext]
+    []
   );
 
   const hub = useMemo(

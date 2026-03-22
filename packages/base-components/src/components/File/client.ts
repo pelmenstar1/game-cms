@@ -1,16 +1,28 @@
-import { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 
-export const clientTransformer: ComponentClientDataTransformer<'base::file'> = {
+import core from './core.js';
+import { validator } from './validator.js';
+
+export default defineComponentClientController({
+  core,
+  meta: {
+    ui: {
+      compact: true,
+    },
+  },
   getDefaultData: () => [],
-  toClient: (data) => {
-    return data.map((item) => ({
-      ...item,
-      id: item.id.toString(),
-      parent: item.parent?.toString(),
-      originFile: item.originFile?.toString(),
-    }));
+  validator,
+  transformer: {
+    toClient: (data) => {
+      return data.map((item) => ({
+        ...item,
+        id: item.id.toString(),
+        parent: item.parent?.toString(),
+        originFile: item.originFile?.toString(),
+      }));
+    },
+    fromClient: (clientData) => {
+      return clientData.map((item) => item.id);
+    },
   },
-  fromClient: (clientData) => {
-    return { result: clientData.map((item) => item.id) };
-  },
-};
+});

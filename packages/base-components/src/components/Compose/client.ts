@@ -1,68 +1,47 @@
 import {
-  ComponentClientDataById,
-  ComponentClientDataTransformer,
   ComponentClientOptionsById,
-  ComponentInDataOrError,
-  ComponentOutDataById,
-  ForeignComponentClientDataTransformerContext,
+  ComponentDataValidatorParams,
+  defineComponentClientController,
+  ForeignComponentClientValidationContext,
 } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
-import { ComposeEntry } from './types.js';
+import core from './core.js';
+import { validator } from './validator.js';
 
-type Id = 'base::compose';
+export default defineComponentClientController({
+  core,
+  validator: <Args>(
+    data: unknown,
+    options: ComponentClientOptionsById<'base::compose', Args>,
+    context: ForeignComponentClientValidationContext,
+    params?: ComponentDataValidatorParams
+  ) => {
+    return validator<Args>(
+      data,
+      Object.keys(options),
+      params,
+      (key, propValue) => {
+        const { componentId, options: baseOptions } = options[key];
 
-export const clientTransformer: ComponentClientDataTransformer<Id> = {
-  ownValidation: true,
+        return context.validate(componentId, propValue, baseOptions, params);
+      }
+    );
+  },
   getDefaultData: (options, context) =>
     mapObject(options, (item) =>
       context.getDefaultData(item.componentId, item.options)
     ),
-  toClient: <Args>(
-    data: ComponentOutDataById<Id, Args>,
-    options: ComponentClientOptionsById<Id, Args>,
-    context: ForeignComponentClientDataTransformerContext
-  ) => {
-    return mapObject(options, (prop, key) =>
-      context.toClient(prop.componentId, data[key], prop.options)
-    );
+  transformer: {
+    toClient: (data, options, context) => {
+      return mapObject(options, (prop, key) =>
+        context.toClient(prop.componentId, data[key], prop.options)
+      );
+    },
+    fromClient: (data, options, context) => {
+      return mapObject(options, (prop, key) =>
+        context.fromClient(prop.componentId, data[key], prop.options)
+      );
+    },
   },
-  fromClient: <Args>(
-    data: ComponentClientDataById<Id, Args>,
-    options: ComponentClientOptionsById<Id, Args>,
-    context: ForeignComponentClientDataTransformerContext
-  ) => {
-    type Options = ComposeEntry<Args>['clientOptions'];
-    type OptionsEntry = Options[keyof Options];
-
-    const result = Object.entries<OptionsEntry>(options).map(([key, prop]) => {
-      const { componentId, options } = prop;
-
-      const client = context.fromClient(componentId, data[key], options);
-
-      return {
-        key,
-        client,
-        coreError: context.validation.validate(
-          componentId,
-          client.result,
-          options
-        ),
-      };
-    });
-
-    const error = result.map(
-      ({ key, client, coreError }) => [key, client.error ?? coreError] as const
-    );
-
-    const resultOrError = error.some(([, error]) => error !== undefined)
-      ? { error: { properties: Object.fromEntries(error) } }
-      : {
-          result: Object.fromEntries(
-            result.map(({ key, client }) => [key, client.result] as const)
-          ),
-        };
-
-    return resultOrError as ComponentInDataOrError<Id, Args>;
-  },
-};
+});

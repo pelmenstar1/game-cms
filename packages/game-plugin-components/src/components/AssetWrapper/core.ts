@@ -7,14 +7,6 @@ export default defineComponentCore({
       base: context.getDefaultData(options.componentId, options.baseOptions),
     };
   },
-  validator: (data, options, context, params) => {
-    return context.validate(
-      options.componentId,
-      data,
-      options.baseOptions,
-      params
-    );
-  },
   pathWalker: (data, options, path, apply, context) => {
     context.applyAtPath(
       options.componentId,

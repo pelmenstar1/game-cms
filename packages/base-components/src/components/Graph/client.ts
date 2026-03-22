@@ -1,12 +1,23 @@
-import { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
-export const clientTransformer: ComponentClientDataTransformer<'base::graph'> =
-  {
-    getDefaultData: () => ({
-      edges: [],
-      nodes: {},
-    }),
+import core from './core.js';
+import { validator } from './internal/validator.js';
+
+export default defineComponentClientController<'base::graph'>({
+  core,
+  getDefaultData: () => ({
+    edges: [],
+    nodes: {},
+  }),
+  validator: (data, options, context) => {
+    const { componentId, baseOptions } = options;
+
+    return validator(data, (nodeValue) =>
+      context.validate(componentId, nodeValue, baseOptions)
+    );
+  },
+  transformer: {
     fromClient: (clientData, options, context) => {
       const { componentId, baseOptions } = options;
       const entries = Object.entries(clientData.nodes).map(
@@ -17,30 +28,11 @@ export const clientTransformer: ComponentClientDataTransformer<'base::graph'> =
         })
       );
 
-      if (entries.some(({ value }) => value.error !== undefined)) {
-        return {
-          error: {
-            base: Object.fromEntries(
-              entries.map(({ key, value }) => [key, value.error])
-            ),
-          },
-        };
-      }
-
       return {
-        result: {
-          nodes: Object.fromEntries(
-            entries.map(({ key, value, meta }) => [
-              key,
-              {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                value: value.result!,
-                meta,
-              },
-            ])
-          ),
-          edges: clientData.edges,
-        },
+        nodes: Object.fromEntries(
+          entries.map(({ key, value, meta }) => [key, { value, meta }])
+        ),
+        edges: clientData.edges,
       };
     },
     toClient: (data, options, context) => {
@@ -56,4 +48,5 @@ export const clientTransformer: ComponentClientDataTransformer<'base::graph'> =
         edges: data.edges,
       };
     },
-  };
+  },
+});

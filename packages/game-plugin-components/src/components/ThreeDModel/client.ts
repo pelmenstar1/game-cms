@@ -1,16 +1,28 @@
-import { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 
+import core from './core.js';
 import { ComposeArgs, getComposeOptions } from './internal/options.js';
 
-export const clientTransformer: ComponentClientDataTransformer<'game::three-d-model'> =
-  {
-    ownValidation: true,
-    getDefaultData: (_, context) => {
-      return context.getDefaultData<'base::compose', ComposeArgs>(
-        'base::compose',
-        getComposeOptions()
-      );
+export default defineComponentClientController({
+  core,
+  meta: {
+    ui: {
+      compact: true,
     },
+  },
+  validator: (data, _, context) =>
+    context.validate<'base::compose', ComposeArgs>(
+      'base::compose',
+      data,
+      getComposeOptions()
+    ),
+  getDefaultData: (_, context) => {
+    return context.getDefaultData<'base::compose', ComposeArgs>(
+      'base::compose',
+      getComposeOptions()
+    );
+  },
+  transformer: {
     fromClient: (clientData, _, context) => {
       return context.fromClient<'base::compose', ComposeArgs>(
         'base::compose',
@@ -25,4 +37,5 @@ export const clientTransformer: ComponentClientDataTransformer<'game::three-d-mo
         getComposeOptions()
       );
     },
-  };
+  },
+});

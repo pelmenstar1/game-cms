@@ -1,16 +1,28 @@
-import { ComponentClientDataTransformer } from '@game-cms/core';
+import { defineComponentClientController } from '@game-cms/core';
 
+import core from './core.js';
 import { ComposeArgs, getComposeOptions } from './internal/options.js';
 
-export const clientTransformer: ComponentClientDataTransformer<'game::spritesheet'> =
-  {
-    ownValidation: true,
-    getDefaultData: (options, context) => {
-      return context.getDefaultData<'base::compose', ComposeArgs>(
-        'base::compose',
-        getComposeOptions(options)
-      );
+export default defineComponentClientController({
+  core,
+  meta: {
+    ui: {
+      compact: true,
     },
+  },
+  validator: (data, options, context) =>
+    context.validate<'base::compose', ComposeArgs>(
+      'base::compose',
+      data,
+      getComposeOptions(options)
+    ),
+  getDefaultData: (options, context) => {
+    return context.getDefaultData<'base::compose', ComposeArgs>(
+      'base::compose',
+      getComposeOptions(options)
+    );
+  },
+  transformer: {
     fromClient: (clientData, options, context) => {
       return context.fromClient<'base::compose', ComposeArgs>(
         'base::compose',
@@ -28,4 +40,5 @@ export const clientTransformer: ComponentClientDataTransformer<'game::spriteshee
         getComposeOptions(options)
       );
     },
-  };
+  },
+});

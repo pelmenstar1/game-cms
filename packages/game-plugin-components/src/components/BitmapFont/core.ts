@@ -4,11 +4,6 @@ import { ComposeArgs, getComposeOptions } from './internal/options.js';
 
 export default defineComponentCore({
   id: 'game::bitmap-font',
-  meta: {
-    ui: {
-      compact: true,
-    },
-  },
   defaultOutData: (_, context) =>
     context.getDefaultData<'base::compose', ComposeArgs>(
       'base::compose',
@@ -23,10 +18,4 @@ export default defineComponentCore({
       apply
     );
   },
-  validator: (data, _, context) =>
-    context.validate<'base::compose', ComposeArgs>(
-      'base::compose',
-      data,
-      getComposeOptions()
-    ),
 });

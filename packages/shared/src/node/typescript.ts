@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { type CompilerOptions, ModuleResolutionKind } from 'typescript';
 
-import { readJson5 } from './file.js';
+import { readJson5 } from './json.js';
 
 export type TsConfig = {
   extends?: string;

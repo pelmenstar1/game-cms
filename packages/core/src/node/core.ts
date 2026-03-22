@@ -1,21 +1,26 @@
 import { isNonNullObject } from '@game-cms/shared';
-import { importFile } from '@game-cms/shared/node';
+import { maybeImportFile, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
 
-export async function getComponentIdFromCoreFile(filePath: string) {
+export async function getComponentIdFromClientFile(filePath: string) {
   function expected(message: string): never {
-    throw new Error(`Expected ${message} in component core file: ${filePath}`);
+    throw new Error(
+      `Expected ${message} in component client file: ${filePath}`
+    );
   }
 
-  const moduleValue = await importFile(filePath);
+  const moduleValue = await maybeImportFile(filePath);
+  if (moduleValue === MODULE_NOT_FOUND_MARK) {
+    return null;
+  }
 
   if (isNonNullObject(moduleValue)) {
     const defaultExport = moduleValue.default;
 
     if (isNonNullObject(defaultExport)) {
-      const { id } = defaultExport;
+      const { core } = defaultExport;
 
-      if (typeof id === 'string') {
-        return id;
+      if (isNonNullObject(core) && typeof core.id === 'string') {
+        return core.id;
       }
 
       expected("a string 'id' property");
