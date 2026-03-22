@@ -517,6 +517,9 @@ importers:
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../shared
+      jiti:
+        specifier: ^2.6.1
+        version: 2.6.1
     devDependencies:
       typescript:
         specifier: 'catalog:'
@@ -883,6 +886,9 @@ importers:
       '@game-cms/codegen':
         specifier: workspace:*
         version: link:../codegen
+      '@game-cms/component-testing-lib':
+        specifier: workspace:*
+        version: link:../component-testing-lib
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core

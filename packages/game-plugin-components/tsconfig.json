@@ -20,6 +20,7 @@
     { "path": "../base-core" },
     { "path": "../codegen" },
     { "path": "../component-api" },
+    { "path": "../component-testing-lib" },
     { "path": "../core" },
     { "path": "../game-plugin-core" },
     { "path": "../global" },

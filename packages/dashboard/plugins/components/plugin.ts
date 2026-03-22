@@ -1,7 +1,10 @@
+import {
+  ComponentClientChunkMap,
+  emitComponentConnector,
+  gatherComponents,
+} from '@game-cms/core/node';
+import { env } from '@game-cms/global';
 import type { Plugin } from 'vite';
-
-import { emitComponentConnector } from './connector.js';
-import { type ComponentClientChunkMap, gatherComponents } from './gather.js';
 
 const COMPONENT_RENDERER_PROTOCOL = 'component-renderer:';
 const CONNECTOR_ID = 'virtual:dashboard/componentConnectorData';
@@ -12,7 +15,7 @@ export function dashboardComponentsPlugin(): Plugin {
   return {
     name: 'game-cms:dashboard-components',
     async buildStart() {
-      components = await gatherComponents();
+      components = await gatherComponents(env());
     },
     resolveId(source) {
       if (source === CONNECTOR_ID) {

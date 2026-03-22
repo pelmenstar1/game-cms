@@ -4,7 +4,6 @@ import path from 'node:path';
 
 import type { ComponentId } from '@game-cms/core';
 import { getComponentIdFromClientFile } from '@game-cms/core/node';
-import { env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 
 export type ComponentClientChunkEntry = {
@@ -48,11 +47,15 @@ async function gatherComponentsForDistribution(distPath: string) {
   return filterOutNullable(result);
 }
 
-export async function gatherComponents(): Promise<ComponentClientChunkMap> {
-  const { components } = env();
-
+export async function gatherComponents(env: {
+  components: {
+    distributions: {
+      directoryPath: string;
+    }[];
+  };
+}): Promise<ComponentClientChunkMap> {
   const result = await Promise.all(
-    components.distributions.map(({ directoryPath }) =>
+    env.components.distributions.map(({ directoryPath }) =>
       gatherComponentsForDistribution(directoryPath)
     )
   );

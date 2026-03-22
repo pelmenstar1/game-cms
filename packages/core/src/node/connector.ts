@@ -22,11 +22,11 @@ const clientImports: EmitStep = (info, context) => {
 };
 
 const componentInfoMap: EmitStep = (info, context) => {
-  const mapEntries = Object.keys(info)
+  const mapEntries = Object.entries(info)
     .map(
-      (componentId) =>
+      ([componentId, chunkEntry]) =>
         `${JSON.stringify(componentId)}: {
-  renderer: () => import(${JSON.stringify(`component-renderer:${componentId}`)}),
+  renderer: () => import('${pathToFileURL(chunkEntry.paths.renderer)}'),
   client: ${context.vars.client[componentId]}
 }`
     )
@@ -39,6 +39,7 @@ const steps = [clientImports, componentInfoMap];
 
 export function emitComponentConnector(info: ComponentClientChunkMap) {
   const nameGen = nameGenerator();
+
   const context: EmitContext = {
     vars: {
       client: Object.fromEntries(
