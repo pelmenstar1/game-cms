@@ -7,7 +7,7 @@ import type {
   ComponentSchema,
   GetComponentSchemaTypes,
 } from '@game-cms/core';
-import { ObjectId } from 'mongodb';
+import { Long, ObjectId } from 'mongodb';
 import type z from 'zod';
 
 import type { entityVariant } from '../schema/entity.js';
@@ -79,6 +79,7 @@ export type EntityVariantData<
   Components = EntityInstanceComponents,
   Search = unknown,
 > = {
+  variantId: number | Long;
   components: Components;
   meta: EntityMeta;
   search: Search;
@@ -149,7 +150,7 @@ export type EntityErrorById<Id extends EntityId> = {
 
 export type EntityInternalOutDataById<T extends EntityId, Id = ObjectId> = Omit<
   EntityOutDataWithChecksById<T>,
-  'search' | 'checks'
+  'search' | 'checks' | 'variantId'
 > & {
   id: Id;
   checks: EntityCheckClientDataMap;

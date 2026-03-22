@@ -27,13 +27,14 @@ import { service } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
 import { cms, log } from '@game-cms/global';
 import { isNonNullObject, PagingOptions } from '@game-cms/shared';
+import { maybeLongAdd } from '@game-cms/shared/mongo';
 import {
   asyncMapObject,
   deepEquals,
   mapObject,
   UnknownObject,
 } from '@game-cms/shared/object';
-import { Filter, ObjectId } from 'mongodb';
+import { Long, ObjectId } from 'mongodb';
 
 import { getPage } from '../utils/paging.js';
 
@@ -74,14 +75,6 @@ const SEARCH_THRESHOLD = 0.8;
 function collection<T extends EntityId>(id: T) {
   return cms().service('base::database').entityCollection(id);
 }
-
-function idFilter<T>(id: ObjectId) {
-  return { _id: id } as Filter<T>;
-}
-
-type ServiceEntityDescriptor<Id extends EntityId> = {
-  schema: EntitySchemaById<Id>;
-};
 
 function getEntitySchema<Id extends EntityId>(entityId: Id) {
   const result = cms().service('base::entitySchema').getSchemaById(entityId);
@@ -131,10 +124,13 @@ async function getRawById<Id extends EntityId>(
   variant: EntityVariant = 'published',
   options?: AbortOptions
 ): Promise<EntityInternalOutDataById<Id> | null> {
-  const result = await collection(entityId).findOne(idFilter(id), {
-    projection: { [variant]: 1 },
-    signal: options?.signal,
-  });
+  const result = await collection(entityId).findOne(
+    { _id: id },
+    {
+      projection: { [variant]: 1 },
+      signal: options?.signal,
+    }
+  );
 
   if (result === null) {
     return null;
@@ -166,7 +162,7 @@ function createSearchIndex<Id extends EntityId>(
   });
 }
 
-async function toStorageData<Id extends EntityId>(
+async function createStorageData<Id extends EntityId>(
   entityId: Id,
   rawData: EntityInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
@@ -192,6 +188,7 @@ async function toStorageData<Id extends EntityId>(
   });
 
   return {
+    variantId: Long.ZERO,
     components,
     meta: entityMeta,
     search: createSearchIndex(components, schema),
@@ -220,6 +217,7 @@ async function toStoragePartialData<Id extends EntityId>(
 
   return {
     ...target,
+    variantId: maybeLongAdd(target.variantId, 1),
     components: {
       ...target.components,
       ...sourceMerged,
@@ -241,7 +239,7 @@ function createEntityVariants<Id extends EntityId>(
 }
 
 function migrateEntity<Id extends EntityId>(
-  { schema }: ServiceEntityDescriptor<Id>,
+  schema: EntitySchemaById<Id>,
   oldValue: EntityVariantData
 ): EntityStorageDataById<Id> {
   const { foreignDataMigrationContext } = cms().service('base::component');
@@ -249,16 +247,17 @@ function migrateEntity<Id extends EntityId>(
   const newComponents = mapObject(schema.components, (prop, key) => {
     return foreignDataMigrationContext.migrate(
       prop.componentId,
-      (oldValue as UnknownObject)[key],
+      (oldValue.components as UnknownObject)[key],
       prop.options
     );
   });
 
   return {
-    components: newComponents,
-    search: createSearchIndex(newComponents, schema),
+    variantId: maybeLongAdd(oldValue.variantId, 1),
     meta: oldValue.meta,
     checks: oldValue.checks,
+    components: newComponents,
+    search: createSearchIndex(newComponents, schema),
   };
 }
 
@@ -295,16 +294,16 @@ function validate<Id extends EntityId>(
 
 async function migrateEntityCollection<Id extends EntityId>(
   id: Id,
-  descriptor: ServiceEntityDescriptor<Id>
+  schema: EntitySchemaById<Id>
 ) {
   const col = collection(id);
 
   for await (const oldValue of col.find()) {
     // Only migrate if old value is no longer valid.
-    if (validate(oldValue, descriptor.schema) !== undefined) {
-      const newDraft = migrateEntity(descriptor, oldValue.draft);
+    if (validate(oldValue, schema) !== undefined) {
+      const newDraft = migrateEntity(schema, oldValue.draft);
       const newPublished = oldValue.published
-        ? migrateEntity(descriptor, oldValue.published)
+        ? migrateEntity(schema, oldValue.published)
         : undefined;
 
       await col.updateOne(
@@ -333,8 +332,7 @@ async function disposeEntity<Id extends EntityId>(
   data: EntityStorageDataById<Id>,
   params?: ComponentStorageDisposeDataParams
 ) {
-  const { foreignStorageResolverContext, foreignDataMergeContext } =
-    cms().service('base::component');
+  const { foreignStorageResolverContext } = cms().service('base::component');
 
   const schema = getEntitySchema(entityId);
 
@@ -342,19 +340,29 @@ async function disposeEntity<Id extends EntityId>(
     Object.entries<ComponentSchema>(schema.components).map(([key, item]) => {
       const { componentId, options } = item;
 
-      if (
-        !params?.afterUpdate ||
-        !foreignDataMergeContext.isMergeHandlerImplemented(componentId)
-      ) {
-        return foreignStorageResolverContext.disposeData(
-          componentId,
-          data.components[key],
-          options,
-          params
-        );
-      }
+      return foreignStorageResolverContext.disposeData(
+        componentId,
+        data.components[key],
+        options,
+        params
+      );
     })
   );
+}
+
+async function disposePersistentDocument<Id extends EntityId>(
+  entityId: Id,
+  document: EntityPersistentDocumentById<Id>,
+  params?: ComponentStorageDisposeDataParams
+) {
+  const { draft, published } = document;
+  const promises: Promise<void>[] = [disposeEntity(entityId, draft, params)];
+
+  if (published && published.variantId !== draft.variantId) {
+    promises.push(disposeEntity(entityId, published, params));
+  }
+
+  await Promise.all(promises);
 }
 
 function getEntitySearchScore<Id extends EntityId>(
@@ -401,10 +409,6 @@ export default service({
           ({ entityId }) => entityId === id
         );
 
-        const serviceDescriptor = {
-          schema: descriptor.schema,
-        };
-
         const newStructure = getEntityDataStructure(descriptor.schema);
 
         if (oldStructure === undefined) {
@@ -412,7 +416,7 @@ export default service({
         } else if (!deepEquals(oldStructure.structure, newStructure)) {
           log().child({ service: 'base::entity' }).info('Migrating %s', id);
 
-          await migrateEntityCollection(id, serviceDescriptor);
+          await migrateEntityCollection(id, descriptor.schema);
 
           await col.updateOne(
             { entityId: id },
@@ -428,7 +432,7 @@ export default service({
     data: EntityInDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
-    const storageData = await toStorageData(id, data);
+    const storageData = await createStorageData(id, data);
 
     const { insertedId } = await collection(id).insertOne(
       createEntityVariants(storageData, variant)
@@ -462,17 +466,14 @@ export default service({
       data
     );
 
-    const disposeParams = { afterUpdate: true };
+    await disposePersistentDocument(entityId, target, { afterUpdate: true });
 
-    await Promise.all([
-      disposeEntity(entityId, target.draft, disposeParams),
-      target.published &&
-        disposeEntity(entityId, target.published, disposeParams),
-    ]);
-
-    await col.updateOne(idFilter(id), {
-      $set: createEntityVariants(storageData, variant),
-    });
+    await col.updateOne(
+      { _id: id },
+      {
+        $set: createEntityVariants(storageData, variant),
+      }
+    );
 
     cms().service('base::appEvents').emit('base::entity::updated', {
       entityId,
@@ -484,9 +485,9 @@ export default service({
     return true;
   },
   deleteById: async (entityId: string, id: ObjectId) => {
-    const deletedDocument = await collection(entityId).findOneAndDelete(
-      idFilter(id)
-    );
+    const deletedDocument = await collection(entityId).findOneAndDelete({
+      _id: id,
+    });
 
     if (deletedDocument !== null) {
       const { draft, published } = deletedDocument;
