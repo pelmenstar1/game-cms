@@ -65,6 +65,7 @@ export default defineConfig(
       'unicorn/prefer-event-target': 'off',
       'unicorn/no-magic-array-flat-depth': 'off',
       'unicorn/no-array-callback-reference': 'off',
+      'unicorn/prefer-query-selector': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/await-thenable': 'off',

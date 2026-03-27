@@ -1,6 +1,7 @@
 packages:
   - demo-app
   - roundtrip-server
+  - demo-platformer
   - packages/*
 
 catalog:
