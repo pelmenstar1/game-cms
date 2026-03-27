@@ -66,6 +66,8 @@ export default defineConfig(
       'unicorn/no-magic-array-flat-depth': 'off',
       'unicorn/no-array-callback-reference': 'off',
       'unicorn/prefer-query-selector': 'off',
+      'unicorn/numeric-separators-style': 'off',
+      'unicorn/prefer-dom-node-remove': 'off',
 
       '@typescript-eslint/restrict-template-expressions': 'off',
       '@typescript-eslint/await-thenable': 'off',
