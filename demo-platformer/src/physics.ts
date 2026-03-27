@@ -12,9 +12,9 @@ export function applyGravity(
 
 /** Check if tile at (col, row) is solid in the layout grid. */
 function isSolid(layout: number[][], col: number, row: number): boolean {
-  if (row < 0 || row >= layout.length) return false;
+  if (row < 0 || row >= layout.length) return true;
   const rowData = layout[row];
-  if (col < 0 || col >= rowData.length) return false;
+  if (col < 0 || col >= rowData.length) return true;
   return rowData[col] > 0;
 }
 

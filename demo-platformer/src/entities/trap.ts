@@ -59,6 +59,10 @@ export class Trap {
     return this.def.damage;
   }
 
+  get bounceForce(): number {
+    return this.def.bounceForce ?? 0;
+  }
+
   update(dt: number): void {
     switch (this.def.behavior) {
       case 'static': {

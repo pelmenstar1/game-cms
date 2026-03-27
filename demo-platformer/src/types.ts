@@ -66,6 +66,8 @@ export interface TrapDef {
   behavior: TrapBehavior;
   moveRange: number;
   moveSpeed: number;
+  /** If > 0, this trap bounces the hero upward instead of dealing damage. */
+  bounceForce?: number;
 }
 
 // ---- Item ----

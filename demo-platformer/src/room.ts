@@ -99,21 +99,27 @@ export class Room {
     damage: number;
     reachedEnd: boolean;
     checkpointPosition: { x: number; y: number } | null;
+    bounceForce: number;
   } {
     let score = 0;
     let damage = 0;
     let reachedEnd = false;
     let checkpointPosition: { x: number; y: number } | null = null;
+    let bounceForce = 0;
 
     // Update hero
     this.hero.update(dt, this.layout);
 
-    // Update traps and check for damage
+    // Update traps and check for damage / bounce
     const heroHitbox = this.hero.getWorldHitbox();
     for (const trap of this.traps) {
       trap.update(dt);
       if (this.hero.alive && checkOverlap(heroHitbox, trap.getWorldHitbox())) {
-        damage += trap.damage;
+        if (trap.bounceForce > 0 && this.hero.velocity.y >= 0) {
+          bounceForce = Math.max(bounceForce, trap.bounceForce);
+        } else if (trap.damage > 0) {
+          damage += trap.damage;
+        }
       }
     }
 
@@ -150,6 +156,6 @@ export class Room {
       }
     }
 
-    return { score, damage, reachedEnd, checkpointPosition };
+    return { score, damage, reachedEnd, checkpointPosition, bounceForce };
   }
 }

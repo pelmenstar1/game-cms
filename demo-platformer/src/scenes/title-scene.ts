@@ -17,13 +17,16 @@ export class TitleScene implements Scene {
   readonly container = new Container();
 
   private onStart: () => void;
+  private onChallenge: () => void;
 
   constructor(
     private screenWidth: number,
     private screenHeight: number,
-    onStart: () => void
+    onStart: () => void,
+    onChallenge: () => void
   ) {
     this.onStart = onStart;
+    this.onChallenge = onChallenge;
   }
 
   enter(): void {
@@ -68,10 +71,11 @@ export class TitleScene implements Scene {
     const promptStyle = new TextStyle({
       fontFamily: 'monospace',
       fontSize: 18,
+      stroke: { color: 0x000000, width: 5 },
       fill: 0xcccccc,
     });
     const prompt = new Text({
-      text: 'Press ENTER to play',
+      text: 'ENTER — Adventure    SPACE — Challenge',
       style: promptStyle,
     });
     prompt.anchor.set(0.5);
@@ -83,6 +87,9 @@ export class TitleScene implements Scene {
   update(_dt: number): void {
     if (justPressed(KEYS.ENTER)) {
       this.onStart();
+    }
+    if (justPressed(KEYS.JUMP)) {
+      this.onChallenge();
     }
   }
 
