@@ -5,7 +5,7 @@
   "scripts": {
     "build": "game-cms build",
     "dev": "game-cms dev",
-    "test-build": "tsc && game-cms build"
+    "test:build": "tsc && game-cms build"
   },
   "dependencies": {
     "@game-cms/game-plugin": "workspace:*",

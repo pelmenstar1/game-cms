@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "test-build": "vite build"
+    "test:build": "vite build"
   },
   "dependencies": {
     "pixi.js": "catalog:"

@@ -19,4 +19,4 @@ COPY --from=deps --parents /app/packages/*/node_modules /app/../
 
 RUN corepack enable && npm run prebuild
 
-CMD ["pnpm", "test:e2e"]
+CMD ["pnpm", "e2e:test"]
