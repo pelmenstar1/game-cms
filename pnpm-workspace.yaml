@@ -1,12 +1,14 @@
 packages:
   - demo-app
   - roundtrip-server
-  - demo-platformer
+  - demo-platformer/frontend
+  - demo-platformer/backend
   - packages/*
 
 catalog:
   '@fastify/multipart': ^9.4.0
   '@fastify/send': ^4.1.0
+  '@fastify/static': ^9.0.0
   '@react-router/dev': 7.13.1
   '@react-router/node': 7.13.1
   '@storybook/addon-a11y': 10.3.1

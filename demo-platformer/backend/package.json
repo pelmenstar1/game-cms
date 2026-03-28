@@ -1,0 +1,19 @@
+{
+  "name": "@demo-platformer/backend",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/main.js",
+    "dev": "tsx --watch ./src/main.ts"
+  },
+  "dependencies": {
+    "@demo-platformer/frontend": "workspace:*",
+    "@fastify/static": "catalog:",
+    "fastify": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}

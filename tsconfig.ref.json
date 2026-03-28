@@ -29,7 +29,9 @@
     { "path": "./packages/e2e" },
     { "path": "./packages/storage-addons" },
     { "path": "./packages/entity-checks" },
-    { "path": "./packages/entity-previews" }
+    { "path": "./packages/entity-previews" },
+    { "path": "./demo-platformer/frontend" },
+    { "path": "./demo-platformer/backend" }
   ],
   "include": []
 }

@@ -1,5 +1,5 @@
 {
-  "name": "demo-platformer",
+  "name": "@demo-platformer/frontend",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -14,5 +14,10 @@
     "sass-embedded": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
+  },
+  "exports": {
+    "./package.json": {
+      "import": "./package.json"
+    }
   }
 }
