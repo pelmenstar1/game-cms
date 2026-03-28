@@ -1,0 +1,23 @@
+{
+  "name": "@demo-platformer/frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "test-build": "vite build"
+  },
+  "dependencies": {
+    "pixi.js": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "sass-embedded": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "exports": {
+    "./package.json": {
+      "import": "./package.json"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@demo-platformer/cms",
+  "type": "module",
+  "scripts": {
+    "dev": "game-cms dev",
+    "build": "game-cms build",
+    "start": "game-cms start"
+  },
+  "dependencies": {
+    "game-cms": "workspace:*",
+    "@game-cms/storage-provider-local": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

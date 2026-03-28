@@ -1,0 +1,13 @@
+{
+  "extends": "../../configs/tsconfig.lib.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "target": "esnext"
+  },
+  "include": ["./src"],
+  "references": [
+    { "path": "../../packages/game-cms" },
+    { "path": "../../packages/storage-provider-local" }
+  ]
+}

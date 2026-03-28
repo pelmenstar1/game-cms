@@ -8,6 +8,7 @@ export default {
     '**/dist/**',
     'packages/dashboard/build/**',
     'demo-app/build/**',
+    'demo-platformer/cms/build/**',
     'packages/base-components/dist/**',
     'packages/ui/dist/**',
     'packages/**/storybook-static',

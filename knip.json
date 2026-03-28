@@ -87,7 +87,7 @@
       "project": "src/**/*.{ts,tsx}",
       "ignoreDependencies": ["sass-embedded"]
     },
-    "demo-app": {
+    "(demo-app|demo-platformer/cms)": {
       "entry": ["src/cms.config.ts", "src/entities/**/*.ts"]
     },
     "packages/e2e": {

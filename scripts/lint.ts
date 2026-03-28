@@ -1,7 +1,7 @@
 import { pnpm } from './process';
 
 const STYLELINT_PATTERN = '**/*.{css,scss}';
-const PRETTIER_PATTERN = '**.{ts,tsx,js,mjs,mts,json,css,scss,md,yml}';
+const PRETTIER_PATTERN = '**.{ts,tsx,js,mjs,mts,json,css,scss,md,yml,html}';
 const ESLINT_COMMAND = 'eslint --cache --cache-location .eslintcache';
 
 async function phase(name: string, command: string) {

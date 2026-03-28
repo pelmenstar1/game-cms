@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
@@ -19,6 +20,10 @@ async function initLocalIndexFile(app: FastifyInstance, dashboardPath: string) {
 
 async function initLocalDashboard(app: FastifyInstance) {
   const dashboardPath = getLocalDashboardBuildPath();
+
+  if (!fs.existsSync(dashboardPath)) {
+    throw new Error('Dashboard build does not exist');
+  }
 
   await staticPlugin(app, { root: dashboardPath, wildcard: false });
   await initLocalIndexFile(app, dashboardPath);
