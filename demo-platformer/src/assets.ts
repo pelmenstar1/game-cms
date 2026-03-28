@@ -1,4 +1,4 @@
-import { Assets, Rectangle, Texture } from 'pixi.js';
+import { Assets, ProgressCallback, Rectangle, Texture } from 'pixi.js';
 
 import { TERRAIN_COLS, TILE_SIZE } from './constants';
 import type { AnimationSet, SpriteStripDef } from './types';
@@ -237,7 +237,9 @@ function buildAssetManifest(): string[] {
 }
 
 /** Load all game assets. Call once at startup. */
-export async function loadAllAssets(): Promise<void> {
+export async function loadAllAssets(
+  onProgress?: ProgressCallback
+): Promise<void> {
   const manifest = buildAssetManifest();
 
   // Register all assets with their path as alias
@@ -245,5 +247,5 @@ export async function loadAllAssets(): Promise<void> {
     Assets.add({ alias: path, src: path });
   }
 
-  await Assets.load(manifest);
+  await Assets.load(manifest, onProgress);
 }

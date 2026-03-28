@@ -1,4 +1,4 @@
-import { Application } from 'pixi.js';
+import { Application, ProgressCallback } from 'pixi.js';
 
 import { loadAllAssets } from './assets';
 import { GAME_SCALE } from './constants';
@@ -346,10 +346,14 @@ function observeResize(app: Application, container: HTMLElement) {
     const bounds = container.getBoundingClientRect();
     app.renderer.resize(bounds.width, bounds.height);
   });
+
   observer.observe(container);
 }
 
-export async function launchApp(container: HTMLElement) {
+export async function launchApp(
+  container: HTMLElement,
+  onProgress?: ProgressCallback
+) {
   const app = new Application();
 
   await app.init({
@@ -365,7 +369,7 @@ export async function launchApp(container: HTMLElement) {
   app.stage.scale.set(GAME_SCALE);
 
   // Load all assets
-  await loadAllAssets();
+  await loadAllAssets(onProgress);
 
   // Initialize input
   initInput();

@@ -10,7 +10,8 @@
     "pixi.js": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "catalog:",
+    "sass-embedded": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }
