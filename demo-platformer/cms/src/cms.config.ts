@@ -11,10 +11,10 @@ export default config((env) => ({
   },
   database: {
     mongo: {
-      url: 'mongodb://localhost:27017',
+      url: env('MONGO_CONNECTION_URL', 'mongodb://localhost:27017'),
       auth: {
-        username: 'admin',
-        password: 'password',
+        username: env('MONGO_USERNAME', 'admin'),
+        password: env('MONGO_PASSWORD', 'password'),
       },
     },
   },

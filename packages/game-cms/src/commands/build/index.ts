@@ -2,6 +2,7 @@ import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import { build as dashboardBuild } from '@game-cms/dashboard';
+import { deleteFileIfExists } from '@game-cms/shared/node';
 import { writeDashboardBuildMeta } from '@game-cms/ignition';
 
 import {
@@ -12,7 +13,7 @@ import {
 async function copyDashboardOutput(dashboardPath: string) {
   const localDashboardPath = getLocalDashboardBuildPath();
 
-  await fsp.rm(localDashboardPath, { recursive: true });
+  await deleteFileIfExists(localDashboardPath, { recursive: true });
   await fsp.cp(path.join(dashboardPath, 'build/client'), localDashboardPath, {
     recursive: true,
   });
