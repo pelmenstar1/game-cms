@@ -3,6 +3,7 @@ packages:
   - roundtrip-server
   - demo-platformer/frontend
   - demo-platformer/backend
+  - demo-platformer/cms
   - packages/*
 
 catalog:

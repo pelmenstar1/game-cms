@@ -282,6 +282,22 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  demo-platformer/cms:
+    dependencies:
+      '@game-cms/storage-provider-local':
+        specifier: workspace:*
+        version: link:../../packages/storage-provider-local
+      game-cms:
+        specifier: workspace:*
+        version: link:../../packages/game-cms
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   demo-platformer/frontend:
     dependencies:
       pixi.js:

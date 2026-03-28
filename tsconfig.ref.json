@@ -31,7 +31,8 @@
     { "path": "./packages/entity-checks" },
     { "path": "./packages/entity-previews" },
     { "path": "./demo-platformer/frontend" },
-    { "path": "./demo-platformer/backend" }
+    { "path": "./demo-platformer/backend" },
+    { "path": "./demo-platformer/cms" }
   ],
   "include": []
 }
