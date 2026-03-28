@@ -4,7 +4,5 @@ build
 !packages/build
 .react-router
 *.tsbuildinfo
-.eslintcache
-.stylelintcache
 .env*
 .game-cms-storage
