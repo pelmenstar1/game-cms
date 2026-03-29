@@ -1,0 +1,29 @@
+{
+  "name": "@demo-platformer/shared",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@game-cms/core": "workspace:*",
+    "mongodb": "catalog:",
+    "typescript": "catalog:"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./schema": {
+      "import": "./dist/schema/index.js",
+      "types": "./dist/schema/index.d.ts"
+    },
+    "./package.json": {
+      "import": "./package.json"
+    }
+  }
+}

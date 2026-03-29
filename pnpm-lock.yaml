@@ -265,9 +265,15 @@ importers:
       '@demo-platformer/frontend':
         specifier: workspace:*
         version: link:../frontend
+      '@demo-platformer/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@fastify/static':
         specifier: 'catalog:'
         version: 9.0.0
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       fastify:
         specifier: 'catalog:'
         version: 5.6.2
@@ -284,6 +290,9 @@ importers:
 
   demo-platformer/cms:
     dependencies:
+      '@demo-platformer/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@game-cms/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -331,6 +340,25 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
+
+  demo-platformer/shared:
+    dependencies:
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
+    devDependencies:
+      '@game-cms/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.0
+      mongodb:
+        specifier: 'catalog:'
+        version: 7.0.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
   packages/base-api:
     dependencies:
@@ -6503,9 +6531,6 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@4.3.5:
-    resolution: {integrity: sha512-k7Nwx6vuWx1IJ9Bjuf4Zt1PEllcwe7cls3VNzm4CQ1/hgtFUK2bRNG3rvnpPUhFjmqJKAKtjV576KnUkHocg/g==}
-
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
 
@@ -9804,8 +9829,8 @@ snapshots:
       '@babel/parser': 7.28.5
       eslint: 9.39.2(jiti@2.6.1)
       hermes-parser: 0.25.1
-      zod: 4.3.5
-      zod-validation-error: 4.0.2(zod@4.3.5)
+      zod: 4.3.6
+      zod-validation-error: 4.0.2(zod@4.3.6)
     transitivePeerDependencies:
       - supports-color
 
@@ -12262,11 +12287,9 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  zod-validation-error@4.0.2(zod@4.3.5):
+  zod-validation-error@4.0.2(zod@4.3.6):
     dependencies:
-      zod: 4.3.5
-
-  zod@4.3.5: {}
+      zod: 4.3.6
 
   zod@4.3.6: {}
 

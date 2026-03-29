@@ -1,3 +1,4 @@
+import { GameData } from '@demo-platformer/shared';
 import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
@@ -8,7 +9,7 @@ const route = apiRoute({
   config: {
     id: 'cms$game-data',
   },
-  handler: async () => {
+  handler: async (): Promise<GameData> => {
     const entity = cms().service('base::entity');
 
     const config = await entity.getResolvedSingleton(
@@ -158,8 +159,6 @@ const route = apiRoute({
       level: {
         name: level.name,
         rooms: rooms.map((room) => {
-          const roomTraps = room.traps;
-          const roomItems = room.items;
           return {
             name: room.name,
             background: room.background,
@@ -167,12 +166,12 @@ const route = apiRoute({
             height: room.height,
             layout: room.layout,
             checkpoints: room.checkpoints,
-            traps: roomTraps.map((entry) => ({
+            traps: room.traps.map((entry) => ({
               x: entry.x,
               y: entry.y,
               trap: entry.trap ? (trapsMap[entry.trap] ?? null) : null,
             })),
-            items: roomItems.map((entry) => ({
+            items: room.items.map((entry) => ({
               x: entry.x,
               y: entry.y,
               item: entry.item ? (itemsMap[entry.item] ?? null) : null,

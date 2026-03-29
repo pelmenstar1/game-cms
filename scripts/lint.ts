@@ -31,6 +31,8 @@ async function main() {
       await phase('eslint', `${ESLINT_COMMAND} --fix`);
       await phase('stylelint', `${STYLELINT_COMMAND} --fix`);
       await phase('prettier', `${PRETTIER_COMMAND} --write`);
+
+      return;
     } else {
       const result = await Promise.allSettled([
         phase('eslint', ESLINT_COMMAND),

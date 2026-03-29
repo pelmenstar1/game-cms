@@ -2,6 +2,12 @@ import type { Replace } from './typeutil.js';
 
 export type RequestInitWithBody = Replace<RequestInit, { body: unknown }>;
 
+export type RequestInitWithErrorHandling = RequestInit & {
+  errorHandling?: {
+    action?: string;
+  };
+};
+
 export function safeGetText(response: Response) {
   return response.text().catch(() => null);
 }
@@ -26,4 +32,19 @@ export async function handleResponseError(response: Response, action: string) {
   throw new Error(
     `${action} ${response.url} (${response.status}): ${errorText ?? '<cannot fetch response>'}`
   );
+}
+
+export async function safeFetch(
+  url: string | URL,
+  init?: RequestInitWithErrorHandling
+) {
+  const response = await fetch(url, init);
+  if (!response.ok) {
+    await handleResponseError(
+      response,
+      init?.errorHandling?.action ?? 'Cannot fetch'
+    );
+  }
+
+  return response;
 }

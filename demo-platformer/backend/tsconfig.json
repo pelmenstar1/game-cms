@@ -5,5 +5,10 @@
     "outDir": "./dist",
     "target": "esnext"
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "references": [
+    {
+      "path": "../../packages/shared"
+    }
+  ]
 }

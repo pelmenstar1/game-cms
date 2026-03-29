@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@demo-platformer/frontend": "workspace:*",
+    "@demo-platformer/shared": "workspace:*",
+    "@game-cms/shared": "workspace:*",
     "@fastify/static": "catalog:",
     "fastify": "catalog:"
   },

@@ -32,7 +32,8 @@
     { "path": "./packages/entity-previews" },
     { "path": "./demo-platformer/frontend" },
     { "path": "./demo-platformer/backend" },
-    { "path": "./demo-platformer/cms" }
+    { "path": "./demo-platformer/cms" },
+    { "path": "./demo-platformer/shared" }
   ],
   "include": []
 }
