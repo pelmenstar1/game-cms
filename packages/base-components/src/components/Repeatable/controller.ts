@@ -12,6 +12,8 @@ export default defineComponentController({
   },
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),
+  innerDependencies: (options, context) =>
+    context.getDependencies(options.componentId, options.baseOptions),
   atomWalker: (data, options, apply, context) => {
     const { componentId, baseOptions } = options;
 

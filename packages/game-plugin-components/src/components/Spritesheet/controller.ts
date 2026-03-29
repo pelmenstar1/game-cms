@@ -30,6 +30,11 @@ export default defineComponentController({
       'base::compose',
       getComposeOptions(options)
     ),
+  innerDependencies: (options, context) =>
+    context.getDependencies<'base::compose', ComposeArgs>(
+      'base::compose',
+      getComposeOptions(options)
+    ),
   atomWalker: (data, options, apply, context) => {
     context.walk('base::compose', data, getComposeOptions(options), apply);
   },

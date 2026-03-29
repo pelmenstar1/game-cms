@@ -32,12 +32,27 @@ export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
   params?: ComponentDataValidatorParams
 ) => ComponentDataValidatorResult<Id, Args>;
 
+export interface ForeignComponentDependencySourceContext {
+  getDependencies: <Id extends ComponentId, Args>(
+    id: Id,
+    options: ComponentOptionsById<Id, Args>
+  ) => ComponentId[];
+}
+
+export type ComponentDependencySource<Id extends ComponentId = ComponentId> =
+  | ComponentId[]
+  | (<Args>(
+      options: ComponentOptionsById<Id, Args>,
+      context: ForeignComponentDependencySourceContext
+    ) => ComponentId[]);
+
 interface BaseComponentController<Id extends ComponentId = ComponentId> {
   core: ComponentCore<Id>;
   validator: ComponentDataValidator<Id>;
   structure?: ComponentDataStructureSource<Id>;
   migrate?: ComponentDataMigration<Id>;
   atomWalker?: ComponentAtomWalker<Id>;
+  innerDependencies?: ComponentDependencySource<Id>;
 }
 
 export type ComponentController<Id extends ComponentId = ComponentId> =

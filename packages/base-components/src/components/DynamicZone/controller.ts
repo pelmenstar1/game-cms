@@ -39,6 +39,12 @@ export default defineComponentController({
       context.getStructure(prop.componentId, prop.options)
     ) as ComponentDataStructure;
   },
+  innerDependencies: (options, context) => {
+    return Object.values(options.options).flatMap(
+      ({ componentId, options: baseOptions }) =>
+        context.getDependencies(componentId, baseOptions)
+    );
+  },
   atomWalker: (data, options, apply, context) => {
     const { options: optionsMap } = options;
 

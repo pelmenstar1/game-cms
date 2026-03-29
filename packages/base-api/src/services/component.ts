@@ -17,6 +17,7 @@ import type {
   ForeignComponentDataSearchContext,
   ForeignComponentDataStructureContext,
   ForeignComponentDefaultDataContext,
+  ForeignComponentDependencySourceContext,
   ForeignComponentStorageDataResolverContext,
   ForeignComponentValidationContext,
 } from '@game-cms/core';
@@ -243,6 +244,23 @@ const foreignClientOptionsTransformerContext: ForeignComponentClientOptionsTrans
     },
   };
 
+const foreignDependencySourceContext: ForeignComponentDependencySourceContext =
+  {
+    getDependencies: (id, options) => {
+      const { innerDependencies } = getController(id);
+
+      if (innerDependencies) {
+        if (Array.isArray(innerDependencies)) {
+          return innerDependencies;
+        }
+
+        return innerDependencies(options, foreignDependencySourceContext);
+      }
+
+      return [];
+    },
+  };
+
 export default service({
   id: 'base::component',
   foreignDefaultContext,
@@ -255,5 +273,6 @@ export default service({
   foreignDataSearchContext,
   foreignAtomWalkerContext,
   foreignClientOptionsTransformerContext,
+  foreignDependencySourceContext,
   getController,
 });

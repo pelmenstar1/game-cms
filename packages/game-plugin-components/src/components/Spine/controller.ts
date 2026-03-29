@@ -45,11 +45,16 @@ export default defineComponentController({
       'base::compose',
       composeOptions
     ),
+  innerDependencies: (_, context) =>
+    context.getDependencies<ComposeId, ComposeArgs>(
+      'base::compose',
+      composeOptions
+    ),
   atomWalker: (data, _, apply, context) => {
     context.walk('base::compose', data, composeOptions, apply);
   },
   mergeData: async (target, source, _, context) => {
-    const result = await context.merge<'base::compose', ComposeArgs>(
+    const result = await context.merge<ComposeId, ComposeArgs>(
       'base::compose',
       target,
       source,

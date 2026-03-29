@@ -4,7 +4,7 @@ import { ApiErrorStatusMap } from '@game-cms/core/api';
 
 import type { EntityId, EntitySchemaById } from './entity/core.js';
 
-export interface EntityDescriptor<Id extends EntityId> {
+export interface EntityDescriptor<Id extends EntityId = EntityId> {
   schema: EntitySchemaById<Id>;
 }
 
