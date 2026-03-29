@@ -145,6 +145,52 @@ async function getRawById<Id extends EntityId>(
   return fromStorageData(entityId, _id, data);
 }
 
+function resolveRawEntity<Id extends EntityId>(
+  entityId: Id,
+  result: EntityInternalOutDataById<Id>,
+  args: ComponentDataResolverArgs
+): EntityResolvedDataById<Id> {
+  const schema = getEntitySchema(entityId);
+  const { foreignResolverContext } = cms().service('base::component');
+
+  return mapObject(result.components, (item, key) => {
+    const { componentId, options: baseOptions } = schema.components[key];
+
+    return foreignResolverContext.resolveOutData(
+      componentId,
+      item,
+      baseOptions,
+      args
+    );
+  });
+}
+
+async function getRawSingleton<Id extends EntityId>(
+  entityId: Id,
+  variant: EntityVariant = 'published',
+  options?: AbortOptions
+): Promise<EntityInternalOutDataById<Id> | null> {
+  const result = await collection(entityId).findOne(
+    { [variant]: { $exists: true } },
+    {
+      projection: { [variant]: 1 },
+      signal: options?.signal,
+    }
+  );
+
+  if (result === null) {
+    return null;
+  }
+
+  const { _id, [variant]: data } = result;
+
+  if (data === undefined) {
+    return null;
+  }
+
+  return fromStorageData(entityId, _id, data);
+}
+
 function createSearchIndex<Id extends EntityId>(
   storageData: BaseEntityStorageDataById<Id>,
   schema: EntitySchemaById<Id>
@@ -522,6 +568,21 @@ export default service({
     };
   },
   getRawById,
+  getRawSingleton,
+  getResolvedSingleton: async <Id extends EntityId>(
+    entityId: Id,
+    args: ComponentDataResolverArgs,
+    variant: EntityVariant = 'published',
+    options?: AbortOptions
+  ): Promise<EntityResolvedDataById<Id> | null> => {
+    const result = await getRawSingleton(entityId, variant, options);
+
+    if (result === null) {
+      return null;
+    }
+
+    return resolveRawEntity(entityId, result, args);
+  },
   getResolvedById: async <Id extends EntityId>(
     entityId: Id,
     id: ObjectId,
@@ -529,25 +590,13 @@ export default service({
     variant: EntityVariant = 'published',
     options?: AbortOptions
   ): Promise<EntityResolvedDataById<Id> | null> => {
-    const schema = getEntitySchema(entityId);
-    const { foreignResolverContext } = cms().service('base::component');
-
     const result = await getRawById(entityId, id, variant, options);
 
     if (result === null) {
       return null;
     }
 
-    return mapObject(result.components, (item, key) => {
-      const { componentId, options: baseOptions } = schema.components[key];
-
-      return foreignResolverContext.resolveOutData(
-        componentId,
-        item,
-        baseOptions,
-        args
-      );
-    });
+    return resolveRawEntity(entityId, result, args);
   },
   unpublish: async (entityId: EntityId, id: ObjectId) => {
     const { matchedCount } = await collection(entityId).updateOne(

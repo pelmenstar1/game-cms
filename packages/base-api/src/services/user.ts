@@ -9,6 +9,7 @@ import { ApiError, type ApiRouteId } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import type { PagingOptions } from '@game-cms/shared';
 import { isDuplicateKeyError } from '@game-cms/shared/mongo';
+import { emailRegex } from '@game-cms/shared/string';
 import type {
   Abortable,
   ClientSession,
@@ -99,6 +100,10 @@ async function createUser(
     isAdmin?: true;
   }
 ) {
+  if (!emailRegex.test(payload.email)) {
+    throw new ApiError('Invalid email format', 'base::schema/validation');
+  }
+
   try {
     const passwordHash = await hashPassword(payload.password);
 

@@ -43,11 +43,11 @@ async function gatherComponentsForDistribution(distPath: string) {
   const entries = await fsp.readdir(distPath, { withFileTypes: true });
 
   const result = await Promise.all(
-    entries.map(async (entry) => {
-      if (entry.isDirectory()) {
-        return gatherComponentClientChunk(path.join(distPath, entry.name));
-      }
-    })
+    entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) =>
+        gatherComponentClientChunk(path.join(distPath, entry.name))
+      )
   );
 
   return filterOutNullable(result);

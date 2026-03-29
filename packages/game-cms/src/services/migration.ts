@@ -1,9 +1,8 @@
-import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import { cms } from '@game-cms/global';
 import type { MaybePromise } from '@game-cms/shared';
-import { removeExtension } from '@game-cms/shared/node';
+import { readDirectoryIfExists, removeExtension } from '@game-cms/shared/node';
 import { createJiti, type Jiti } from 'jiti';
 
 type MigrationEntry = { name: string };
@@ -19,7 +18,7 @@ declare module '@game-cms/base-core' {
 export const MIGRATIONS_DIRECTORY_PATH = './src/migrations';
 
 async function listMigrations() {
-  const result = await fsp.readdir(MIGRATIONS_DIRECTORY_PATH);
+  const result = await readDirectoryIfExists(MIGRATIONS_DIRECTORY_PATH);
 
   return result
     .filter((value) => value.endsWith('.ts'))

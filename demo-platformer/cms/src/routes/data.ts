@@ -1,0 +1,187 @@
+import { ApiError, apiRoute } from '@game-cms/core/api';
+import { cms } from '@game-cms/global';
+import { ObjectId } from 'mongodb';
+
+const route = apiRoute({
+  url: '/game-data',
+  method: 'GET',
+  config: {
+    id: 'cms$game-data',
+  },
+  handler: async () => {
+    const entity = cms().service('base::entity');
+
+    const config = await entity.getResolvedSingleton(
+      'game-config',
+      {},
+      'published'
+    );
+
+    if (!config) {
+      throw new ApiError('No published game-config found', {
+        api: 'base::entity/notFound',
+      });
+    }
+
+    // 2. Resolve hero
+    if (!config.hero) {
+      throw new ApiError('No hero configured', {
+        api: 'base::entity/notFound',
+      });
+    }
+
+    const hero = await entity.getResolvedById(
+      'hero',
+      new ObjectId(config.hero),
+      {},
+      'published'
+    );
+    if (!hero) {
+      throw new ApiError('hero not found', {
+        api: 'base::entity/notFound',
+      });
+    }
+
+    // 3. Resolve level
+    if (!config.startingLevel) {
+      throw new ApiError('No starting level configured', {
+        api: 'base::entity/notFound',
+        http: 404,
+      });
+    }
+
+    const level = await entity.getResolvedById(
+      'level',
+      new ObjectId(config.startingLevel),
+      {},
+      'published'
+    );
+    if (!level) {
+      throw new ApiError('level not found', {
+        api: 'base::entity/notFound',
+      });
+    }
+
+    // 4. Resolve all rooms
+    const roomRefs = level.rooms;
+    const roomIds = roomRefs.filter((id): id is string => id !== null);
+
+    const rooms = await Promise.all(
+      roomIds.map(async (id) => {
+        const result = await entity.getResolvedById(
+          'room',
+          new ObjectId(id),
+          {},
+          'published'
+        );
+        if (!result) {
+          throw new ApiError(`room not found: ${id}`, {
+            api: 'base::entity/notFound',
+          });
+        }
+        return result;
+      })
+    );
+
+    // 5. Collect unique trap and item IDs across all rooms
+    const trapIdSet = new Set<string>();
+    const itemIdSet = new Set<string>();
+
+    for (const room of rooms) {
+      const traps = room.traps;
+      const items = room.items;
+
+      for (const entry of traps) {
+        if (entry.trap) trapIdSet.add(entry.trap);
+      }
+      for (const entry of items) {
+        if (entry.item) itemIdSet.add(entry.item);
+      }
+    }
+
+    // 6. Resolve all unique traps and items in parallel
+    const [trapEntries, itemEntries] = await Promise.all([
+      Promise.all(
+        [...trapIdSet].map(async (id) => {
+          const result = await entity.getResolvedById(
+            'trap',
+            new ObjectId(id),
+            {},
+            'published'
+          );
+          if (!result) {
+            throw new ApiError(`trap not found: ${id}`, {
+              api: 'base::entity/notFound',
+            });
+          }
+          return [id, result] as const;
+        })
+      ),
+      Promise.all(
+        [...itemIdSet].map(async (id) => {
+          const result = await entity.getResolvedById(
+            'item',
+            new ObjectId(id),
+            {},
+            'published'
+          );
+          if (!result) {
+            throw new ApiError(`item not found: ${id}`, {
+              api: 'base::entity/notFound',
+            });
+          }
+          return [id, result] as const;
+        })
+      ),
+    ]);
+
+    const trapsMap = Object.fromEntries(trapEntries);
+    const itemsMap = Object.fromEntries(itemEntries);
+
+    // 7. Build denormalized response
+    return {
+      config: {
+        title: config.title,
+        gravity: config.gravity,
+        defaultLives: config.defaultLives,
+      },
+      hero: {
+        name: hero.name,
+        folder: hero.folder,
+        frameWidth: hero.frameWidth,
+        frameHeight: hero.frameHeight,
+        hp: hero.hp,
+        speed: hero.speed,
+        jumpForce: hero.jumpForce,
+        animations: hero.animations,
+      },
+      level: {
+        name: level.name,
+        rooms: rooms.map((room) => {
+          const roomTraps = room.traps;
+          const roomItems = room.items;
+          return {
+            name: room.name,
+            background: room.background,
+            width: room.width,
+            height: room.height,
+            layout: room.layout,
+            checkpoints: room.checkpoints,
+            traps: roomTraps.map((entry) => ({
+              x: entry.x,
+              y: entry.y,
+              trap: entry.trap ? (trapsMap[entry.trap] ?? null) : null,
+            })),
+            items: roomItems.map((entry) => ({
+              x: entry.x,
+              y: entry.y,
+              item: entry.item ? (itemsMap[entry.item] ?? null) : null,
+            })),
+          };
+        }),
+      },
+    };
+  },
+});
+
+export default route;

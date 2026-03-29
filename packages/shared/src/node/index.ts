@@ -9,6 +9,7 @@ export * from './import.js';
 export * from './jiti.js';
 export * from './json.js';
 export * from './module.js';
+export * from './moduleImporter.js';
 export * from './package.js';
 export * from './path.js';
 export * from './process.js';

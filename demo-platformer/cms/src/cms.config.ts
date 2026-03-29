@@ -1,10 +1,12 @@
 import { localStorageProvider } from '@game-cms/storage-provider-local';
 import { config } from 'game-cms';
 
+import { cmsPlugin } from './plugin.js';
+
 export default config((env) => ({
   auth: {
     admin: {
-      email: 'admin',
+      email: 'admin@demo.app',
       password: 'admin',
     },
     jwtSignKey: env('JWT_SECRET_KEY'),
@@ -24,4 +26,5 @@ export default config((env) => ({
   storage: {
     provider: localStorageProvider(),
   },
+  plugins: [cmsPlugin],
 }));

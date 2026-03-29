@@ -284,12 +284,27 @@ importers:
 
   demo-platformer/cms:
     dependencies:
+      '@game-cms/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@game-cms/global':
+        specifier: workspace:*
+        version: link:../../packages/global
+      '@game-cms/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@game-cms/storage-provider-local':
         specifier: workspace:*
         version: link:../../packages/storage-provider-local
+      fastify:
+        specifier: 'catalog:'
+        version: 5.6.2
       game-cms:
         specifier: workspace:*
         version: link:../../packages/game-cms
+      mongodb:
+        specifier: 'catalog:'
+        version: 7.0.0
     devDependencies:
       '@types/node':
         specifier: 'catalog:'

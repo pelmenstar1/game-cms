@@ -3,12 +3,13 @@ import path from 'node:path';
 import multipart from '@fastify/multipart';
 import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
 import { UnknownApiRoute } from '@game-cms/core/api';
+import { scanDirectorySource } from '@game-cms/core/node';
 import { combineAsyncFactories } from '@game-cms/shared';
+import { jsDefaultModuleImporter } from '@game-cms/shared/node';
 
 import { errorStatuses } from './errors.js';
 import { abortablePlugin } from './plugins/abortable.js';
 import { initAuth } from './plugins/auth.js';
-import { scanDirectorySource } from './scan.js';
 import * as services from './services/index.js';
 import { errorHandler, ErrorResponseBody } from './utils/errorHandler.js';
 
@@ -21,7 +22,10 @@ export const apiConfig: PluginApiConfig = {
   routes: {
     urlPrefix: '/api',
     source: combineAsyncFactories(
-      scanDirectorySource(path.join(import.meta.dirname, '../dist/routes')),
+      scanDirectorySource(
+        path.join(import.meta.dirname, '../dist/routes'),
+        jsDefaultModuleImporter
+      ),
       ({ config }) => config.storage.provider.routes ?? [],
       ({ config }) =>
         config.entity?.checks?.flatMap(

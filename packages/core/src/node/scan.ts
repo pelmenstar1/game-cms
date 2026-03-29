@@ -1,18 +1,15 @@
 import type { PluginValueSource } from '@game-cms/core';
-import { importFile, scanDirectory } from '@game-cms/shared/node';
+import { ModuleImporter, scanDirectory } from '@game-cms/shared/node';
 
 export function scanDirectorySource<T>(
-  directoryPath: string
+  directoryPath: string,
+  importer: ModuleImporter
 ): PluginValueSource<T[]> {
   return () => {
     return scanDirectory(directoryPath, async (filePath) => {
-      if (filePath.endsWith('.js')) {
+      if (importer.accept(filePath)) {
         try {
-          const { default: defaultExport } = await importFile<{ default?: T }>(
-            filePath
-          );
-
-          return defaultExport;
+          return await importer.import<T>(filePath);
         } catch (error: unknown) {
           console.error(error);
         }
