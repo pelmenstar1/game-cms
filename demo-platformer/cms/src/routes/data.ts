@@ -164,7 +164,7 @@ const route = apiRoute({
             background: room.background,
             width: room.width,
             height: room.height,
-            layout: room.layout,
+            layout: room.layout as number[][],
             checkpoints: room.checkpoints,
             traps: room.traps.map((entry) => ({
               x: entry.x,

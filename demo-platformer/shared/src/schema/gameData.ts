@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import z from 'zod';
+import { z } from 'zod';
 
 const objectIdOrString = z.union([z.instanceof(ObjectId), z.string()]);
 
@@ -74,7 +74,7 @@ const room = z.object({
   ]),
   width: z.number(),
   height: z.number(),
-  layout: z.unknown(),
+  layout: z.array(z.array(z.number())),
   checkpoints: z.array(checkpoint),
   traps: z.array(
     z.object({

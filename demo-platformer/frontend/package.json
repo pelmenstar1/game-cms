@@ -7,6 +7,7 @@
     "test:build": "vite build"
   },
   "dependencies": {
+    "@demo-platformer/shared": "workspace:*",
     "pixi.js": "catalog:"
   },
   "devDependencies": {

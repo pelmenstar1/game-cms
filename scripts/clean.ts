@@ -6,6 +6,8 @@ const patterns = [
   '*.tsbuildinfo',
   './packages/*/*.tsbuildinfo',
   './packages/*/dist',
+  './demo-platformer/*/*.tsbuildinfo',
+  './demo-platformer/*/dist',
   './node_modules/prettier/.prettier-cache',
   './node_modules/.stylelintcache',
   './node_modules/.eslintcache',

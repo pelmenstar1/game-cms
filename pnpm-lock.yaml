@@ -327,6 +327,9 @@ importers:
 
   demo-platformer/frontend:
     dependencies:
+      '@demo-platformer/shared':
+        specifier: workspace:*
+        version: link:../shared
       pixi.js:
         specifier: 'catalog:'
         version: 8.17.1
@@ -6519,11 +6522,6 @@ packages:
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
-  yaml@2.8.2:
-    resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
-    engines: {node: '>= 14.6'}
-    hasBin: true
-
   yaml@2.8.3:
     resolution: {integrity: sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==}
     engines: {node: '>= 14.6'}
@@ -7538,7 +7536,7 @@ snapshots:
       json-schema-resolver: 3.0.0
       openapi-types: 12.1.3
       rfdc: 1.4.1
-      yaml: 2.8.2
+      yaml: 2.8.3
     transitivePeerDependencies:
       - supports-color
 
@@ -12290,8 +12288,6 @@ snapshots:
       is-wsl: 3.1.0
 
   yallist@3.1.1: {}
-
-  yaml@2.8.2: {}
 
   yaml@2.8.3: {}
 
