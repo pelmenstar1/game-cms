@@ -13,5 +13,13 @@
     "composite": true
   },
   "include": ["./src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "references": [
+    { "path": "../packages/core" },
+    { "path": "../packages/entity-checks" },
+    { "path": "../packages/entity-previews" },
+    { "path": "../packages/game-cms" },
+    { "path": "../packages/storage-addons" },
+    { "path": "../packages/storage-provider-s3" }
+  ]
 }

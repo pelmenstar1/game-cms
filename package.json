@@ -53,6 +53,7 @@
     "vitest-browser-react": "2.1.0"
   },
   "dependencies": {
-    "glob": "catalog:"
+    "glob": "catalog:",
+    "yaml": "^2.8.3"
   }
 }

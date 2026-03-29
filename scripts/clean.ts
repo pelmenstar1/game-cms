@@ -6,8 +6,9 @@ const patterns = [
   '*.tsbuildinfo',
   './packages/*/*.tsbuildinfo',
   './packages/*/dist',
-  './.stylelintcache',
-  './.eslintcache',
+  './node_modules/prettier/.prettier-cache',
+  './node_modules/.stylelintcache',
+  './node_modules/.eslintcache',
 ];
 
 async function main() {
@@ -15,11 +16,7 @@ async function main() {
     ignore: ['**/node_modules/**'],
   });
 
-  await Promise.all(
-    files.map(async (file) => {
-      await fsp.rm(file, { recursive: true });
-    })
-  );
+  await Promise.all(files.map((file) => fsp.rm(file, { recursive: true })));
 }
 
 void main();

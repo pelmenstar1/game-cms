@@ -7,8 +7,11 @@
   },
   "include": ["./src"],
   "references": [
+    { "path": "../../packages/core" },
     { "path": "../../packages/game-cms" },
     { "path": "../../packages/storage-provider-local" },
+    { "path": "../../packages/global" },
+    { "path": "../../packages/shared" },
     { "path": "../shared" }
   ]
 }

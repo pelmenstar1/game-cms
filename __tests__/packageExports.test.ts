@@ -1,10 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { glob } from 'glob';
 import { expect, test } from 'vitest';
 
-import { PackageInfo, readJson } from '../packages/shared/src/node';
+import { PackageInfo, readPackageInfo } from '../packages/shared/src/node';
+import { getWorkspacePackages } from '../shared/workspace';
 
 function getPackageInfoReferencedExports(
   baseDir: string,
@@ -12,50 +12,33 @@ function getPackageInfoReferencedExports(
 ) {
   const { exports, main, types } = packageInfo;
 
-  const result = new Set<string>();
-
-  if (main) {
-    result.add(main);
-  }
-
-  if (types) {
-    result.add(types);
-  }
+  const result = new Set<string | undefined>([main, types]);
 
   if (exports) {
     for (const { import: importPath, types } of Object.values(exports)) {
-      if (importPath) {
-        result.add(importPath);
-      }
-
-      if (types) {
-        result.add(types);
-      }
+      result.add(importPath);
+      result.add(types);
     }
   }
 
-  return [...result].map((relPath) => path.join(baseDir, relPath));
+  return [...result]
+    .filter((item) => item !== undefined)
+    .map((relPath) => path.join(baseDir, relPath));
+}
+
+async function checkPackage(dirPath: string) {
+  const packageInfo = await readPackageInfo(dirPath);
+  const referencedFiles = getPackageInfoReferencedExports(dirPath, packageInfo);
+
+  const unknownFiles = referencedFiles.filter(
+    (filePath) => !fs.existsSync(filePath)
+  );
+
+  expect(unknownFiles, `package: ${dirPath}`).toEqual([]);
 }
 
 test('Packages export should reference existing files', async () => {
-  const packageFiles = await glob('packages/*/package.json', {
-    cwd: path.join(import.meta.dirname, '..'),
-    absolute: true,
-  });
+  const packageDirs = await getWorkspacePackages();
 
-  await Promise.all(
-    packageFiles.map(async (packageFile) => {
-      const packageInfo = await readJson<PackageInfo>(packageFile);
-      const referencedFiles = getPackageInfoReferencedExports(
-        path.dirname(packageFile),
-        packageInfo
-      );
-
-      const unknownFiles = referencedFiles.filter(
-        (filePath) => !fs.existsSync(filePath)
-      );
-
-      expect(unknownFiles, `package: ${packageFile}`).toEqual([]);
-    })
-  );
+  await Promise.all(packageDirs.map((dirPath) => checkPackage(dirPath)));
 });

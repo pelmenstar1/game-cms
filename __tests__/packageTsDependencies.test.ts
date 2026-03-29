@@ -1,4 +1,3 @@
-import fsp from 'node:fs/promises';
 import path from 'node:path';
 
 import { expect, test } from 'vitest';
@@ -9,16 +8,23 @@ import {
   readTsConfig,
   TsConfig,
 } from '../packages/shared/src/node';
-import { packagesDir, tsConfigImplicitDependencies } from '../shared/constants';
+import { tsConfigImplicitDependencies } from '../shared/constants';
+import { getWorkspacePackages } from '../shared/workspace';
 
 type PackageRegistry = Awaited<ReturnType<typeof createPackageRegistry>>;
 
-const exceptions = new Set(['dashboard']);
+const ignoredPackages: Record<string, string[]> = {
+  'demo-app': ['@game-cms/game-plugin'],
+};
 
-function getWorkspaceDependencies(info: PackageInfo) {
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+function getWorkspaceDependencies(
+  info: PackageInfo,
+  registry: PackageRegistry
+) {
   function worker(deps: Record<string, string>) {
-    return Object.keys(deps).filter((name) => name.startsWith('@game-cms/'));
+    return Object.keys(deps).filter((name) =>
+      registry.isWorkspacePackage(name)
+    );
   }
 
   return [
@@ -28,26 +34,48 @@ function getWorkspaceDependencies(info: PackageInfo) {
 }
 
 async function createPackageRegistry() {
-  const packages = await fsp.readdir(packagesDir);
+  const packageDirs = await getWorkspacePackages();
+
   const packagesInfos = await Promise.all(
-    packages.map(async (name) => {
+    packageDirs.map(async (directoryPath) => {
       try {
         return {
-          directoryName: name,
-          info: await readPackageInfo(path.join(packagesDir, name)),
+          directoryPath,
+          info: await readPackageInfo(directoryPath),
         };
       } catch (error) {
-        throw new Error(`Invalid package.json in ${name}`, { cause: error });
+        throw new Error(`Invalid package.json in ${directoryPath}`, {
+          cause: error,
+        });
       }
     })
   );
 
+  const tsConfigs = await Promise.all(
+    packageDirs.map(async (dirPath) => {
+      return {
+        directoryPath: dirPath,
+        config: await readTsConfig(dirPath),
+      };
+    })
+  );
+
   return {
-    packages,
+    packages: packageDirs,
+    isWorkspacePackage: (packageName: string) => {
+      return packagesInfos.some(({ info }) => info.name === packageName);
+    },
     getPackageDirectory: (packageName: string) => {
       const info = packagesInfos.find(({ info }) => info.name === packageName);
 
-      return info?.directoryName;
+      return info?.directoryPath;
+    },
+    hasNoEmit: (dirPath: string) => {
+      const tsConfig = tsConfigs.find(
+        ({ directoryPath }) => directoryPath === dirPath
+      )?.config;
+
+      return tsConfig?.compilerOptions?.noEmit ?? false;
     },
   };
 }
@@ -62,17 +90,35 @@ function getActualReferences(rootDir: string, tsConfig: TsConfig) {
   return new Set(result);
 }
 
+function isExpectedReference(
+  dirPath: string | undefined,
+  registry: PackageRegistry
+) {
+  if (dirPath === undefined) {
+    return false;
+  }
+
+  if (registry.hasNoEmit(dirPath)) {
+    return false;
+  }
+
+  return true;
+}
+
 async function checkPackage(rootDir: string, registry: PackageRegistry) {
   const [packageInfo, tsConfig] = await Promise.all([
     readPackageInfo(rootDir),
     readTsConfig(rootDir),
   ]);
 
-  const workspaceDeps = getWorkspaceDependencies(packageInfo);
+  const ignored = ignoredPackages[packageInfo.name] ?? [];
+  const workspaceDeps = getWorkspaceDependencies(packageInfo, registry);
+
   const expectedReferences = workspaceDeps
+    .filter((name) => !ignored.includes(name))
     .map((name) => registry.getPackageDirectory(name))
-    .filter((name) => name !== undefined && !exceptions.has(name))
-    .map((name) => `../${name}`);
+    .filter((name): name is string => isExpectedReference(name, registry))
+    .map((name) => path.relative(rootDir, name).replaceAll('\\', '/'));
 
   const actualReferences = getActualReferences(rootDir, tsConfig);
 
@@ -83,8 +129,6 @@ test('check typescript dependencies', async () => {
   const registry = await createPackageRegistry();
 
   await Promise.all(
-    registry.packages.map((name) =>
-      checkPackage(path.join(packagesDir, name), registry)
-    )
+    registry.packages.map((dirPath) => checkPackage(dirPath, registry))
   );
 });

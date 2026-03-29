@@ -5,6 +5,7 @@
   "references": [
     { "path": "../game-plugin" },
     { "path": "../ignition" },
+    { "path": "../game-cms" },
     { "path": "../storage-provider-local" }
   ]
 }
