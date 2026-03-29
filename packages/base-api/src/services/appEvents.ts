@@ -46,7 +46,7 @@ function addHook<T extends keyof AppEventsRegistry>(
 }
 
 export default service({
-  id: 'base::appEvents',
+  lifecycle: {},
   emit,
   addHook,
 });

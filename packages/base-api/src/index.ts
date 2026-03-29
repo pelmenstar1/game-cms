@@ -13,7 +13,7 @@ import { initAuth } from './plugins/auth.js';
 import * as services from './services/index.js';
 import { errorHandler, ErrorResponseBody } from './utils/errorHandler.js';
 
-export const serviceSource: ServiceSource = Object.values(services);
+export const serviceSource: ServiceSource = services;
 
 export const apiConfig: PluginApiConfig = {
   error: {

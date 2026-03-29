@@ -1,20 +1,42 @@
-import type { DefaultExport, MaybePromise } from '@game-cms/shared';
+import type { GetPropertyOr, MaybePromise } from '@game-cms/shared';
+import { MaybeArray } from '@game-cms/shared/collections';
 
-import type { IdArrayToMap } from './typeutil.js';
+type BaseServiceLifecycleHook = () => MaybePromise<void>;
+type ServiceLifecycleHook =
+  | BaseServiceLifecycleHook
+  | {
+      dependsOn: MaybeArray<ServiceId>;
+      action: BaseServiceLifecycleHook;
+    };
 
-export interface Service<Id extends string = string> {
-  id: Id;
+export interface Service {
   lifecycle?: {
-    onInit?: () => MaybePromise<void>;
+    onInit?: ServiceLifecycleHook;
   };
 }
 
-export interface ServiceMap {}
+export interface ServiceTypeMeta {
+  // Expected shape:
+  // id: string; -> should be equal to keyof ServiceTypeMap;
+  //                It's a way to circumvent the limitation that Typescript doesn't allow the type to describe itself.
+  //                Otherwise we wouldn't be able to reference service ids inside services.
+}
 
-export type ResolveServices<T extends DefaultExport<Service>[]> =
-  IdArrayToMap<T>;
+export interface ServiceTypeMap {}
+
+export type ServiceId = GetPropertyOr<ServiceTypeMeta, 'id', string>;
+
+export type ServiceById<K extends ServiceId> = GetPropertyOr<
+  ServiceTypeMap,
+  K,
+  never
+>;
+
+export type ServiceMap<K extends string = ServiceId> = {
+  [P in K]: ServiceById<P>;
+};
 
 /*@__NO_SIDE_EFFECTS__*/
-export function service<const T extends Service>(value: T): T {
+export function service<T extends Service>(value: T): T {
   return value;
 }

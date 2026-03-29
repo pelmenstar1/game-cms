@@ -66,10 +66,9 @@ export default async function dev() {
 
     void dashboardDev();
 
-    await executeRemainingMigrations();
-
     devManifest = await messageServer.waitUntilViteUp();
   }
 
   await startServer({ dashboard: devManifest.address });
+  await executeRemainingMigrations();
 }

@@ -44,10 +44,12 @@ const opaqueProjection = { name: 1, expirationDate: 1, permissions: 1 };
 const opaqueProjectionWithId = { _id: 1, ...opaqueProjection };
 
 export default service({
-  id: 'base::auth::apiToken',
   lifecycle: {
-    onInit: async () => {
-      await collection().createIndex({ token: 1 }, { unique: true });
+    onInit: {
+      dependsOn: 'base::database',
+      action: async () => {
+        await collection().createIndex({ token: 1 }, { unique: true });
+      },
     },
   },
   getByToken: (token: string, options?: AbortOptions) => {

@@ -58,6 +58,10 @@
       "import": "./dist/vite/index.js",
       "types": "./dist/vite/index.d.ts"
     },
+    "./graph": {
+      "import": "./dist/graph/index.js",
+      "types": "./dist/graph/index.d.ts"
+    },
     "./types": {
       "types": "./dist/types.d.ts"
     }

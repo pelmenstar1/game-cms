@@ -180,7 +180,7 @@ function validateActionPayload<
 }
 
 export default service({
-  id: 'base::entityCheck',
+  lifecycle: {},
   getAll,
   run: runEntityChecks,
   invokeAction,

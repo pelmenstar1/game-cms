@@ -1,5 +1,5 @@
-import type { ServiceMap } from './service.js';
+import type { ServiceById, ServiceId } from './service.js';
 
 export interface GameCmsController {
-  service<K extends keyof ServiceMap>(name: K): ServiceMap[K];
+  service<K extends ServiceId>(name: K): ServiceById<K>;
 }

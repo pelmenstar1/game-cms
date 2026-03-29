@@ -441,35 +441,38 @@ function getEntitySearchScore<Id extends EntityId>(
 export default service({
   id: 'base::entity',
   lifecycle: {
-    onInit: async () => {
-      const schemas = cms().service('base::entitySchema').getAll();
+    onInit: {
+      dependsOn: ['base::entitySchema', 'base::database'],
+      action: async () => {
+        const schemas = cms().service('base::entitySchema').getAll();
 
-      const col = cms()
-        .service('base::database')
-        .collection('base::entityStructure');
+        const col = cms()
+          .service('base::database')
+          .collection('base::entityStructure');
 
-      const oldStructures = await col.find().toArray();
+        const oldStructures = await col.find().toArray();
 
-      for (const [id, descriptor] of Object.entries(schemas)) {
-        const oldStructure = oldStructures.find(
-          ({ entityId }) => entityId === id
-        );
-
-        const newStructure = getEntityDataStructure(descriptor.schema);
-
-        if (oldStructure === undefined) {
-          await col.insertOne({ entityId: id, structure: newStructure });
-        } else if (!deepEquals(oldStructure.structure, newStructure)) {
-          log().child({ service: 'base::entity' }).info('Migrating %s', id);
-
-          await migrateEntityCollection(id, descriptor.schema);
-
-          await col.updateOne(
-            { entityId: id },
-            { $set: { structure: newStructure } }
+        for (const [id, descriptor] of Object.entries(schemas)) {
+          const oldStructure = oldStructures.find(
+            ({ entityId }) => entityId === id
           );
+
+          const newStructure = getEntityDataStructure(descriptor.schema);
+
+          if (oldStructure === undefined) {
+            await col.insertOne({ entityId: id, structure: newStructure });
+          } else if (!deepEquals(oldStructure.structure, newStructure)) {
+            log().child({ service: 'base::entity' }).info('Migrating %s', id);
+
+            await migrateEntityCollection(id, descriptor.schema);
+
+            await col.updateOne(
+              { entityId: id },
+              { $set: { structure: newStructure } }
+            );
+          }
         }
-      }
+      },
     },
   },
   storageDataToOut: fromStorageData,

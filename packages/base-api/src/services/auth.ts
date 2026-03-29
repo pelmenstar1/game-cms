@@ -153,7 +153,7 @@ function isValidPermissions(permissions: string[]) {
 }
 
 export default service({
-  id: 'base::auth',
+  lifecycle: {},
   getAllPermissions,
   isValidPermissions,
   signUserIn: async (payload: SignInPayload, options?: AbortOptions) => {

@@ -151,9 +151,12 @@ async function addAdminUser() {
 export default service({
   id: 'base::user',
   lifecycle: {
-    onInit: async () => {
-      await createIndices();
-      await addAdminUser();
+    onInit: {
+      dependsOn: 'base::database',
+      action: async () => {
+        await createIndices();
+        await addAdminUser();
+      },
     },
   },
   getBy: getByFilter,

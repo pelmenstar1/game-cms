@@ -1,7 +1,7 @@
 import type {
   ComponentControllerMap,
   ResolvedCmsConfig,
-  Service,
+  ServiceMap,
 } from '@game-cms/core';
 import type { ApiRoute } from '@game-cms/core/api';
 
@@ -23,7 +23,7 @@ export type BaseCmsEnvironment = {
   config: ResolvedCmsConfig;
   components: ComponentEnv;
   api: ApiEnvironment;
-  services: Service[];
+  services: ServiceMap;
 };
 
 export interface CmsEnvironment extends BaseCmsEnvironment {}

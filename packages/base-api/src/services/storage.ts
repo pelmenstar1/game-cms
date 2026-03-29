@@ -205,8 +205,10 @@ function enhanceMime(name: string, mime: string) {
 
 export default service({
   id: 'base::storage',
-  init: async () => {
-    await storageProvider().init?.();
+  lifecycle: {
+    onInit: async () => {
+      await storageProvider().init?.();
+    },
   },
   collection,
   uploadFile: async (payload: UploadFilePayload) => {

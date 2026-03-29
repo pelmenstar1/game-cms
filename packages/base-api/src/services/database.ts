@@ -5,7 +5,7 @@ import type {
   EntityPersistentDocumentById,
 } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
-import { cms, env } from '@game-cms/global';
+import { cms, env, log } from '@game-cms/global';
 import {
   ClientSession,
   CommandFailedEvent,
@@ -38,8 +38,15 @@ function client(): MongoClient {
 export default service({
   id: 'base::database',
   lifecycle: {
-    onInit: () => {
+    onInit: async () => {
       const appEvents = cms().service('base::appEvents');
+
+      log().info('Connecting to database');
+      await client().connect();
+
+      client().on('connectionCreated', (info) => {
+        log().child({ info }).info('Connected to database');
+      });
 
       client().on('commandStarted', (event) => {
         appEvents.emit('base::database::commandStarted', event);

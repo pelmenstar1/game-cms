@@ -53,9 +53,6 @@ export const basePlugin: Plugin<{
       distributionPath: path.join(rootDir, 'components'),
     };
   },
-  setup: async (config) => {
-    await config.storage.provider.init?.();
-  },
   env: {
     entity: resolveEntityEnvConfig,
   },

@@ -4,10 +4,14 @@ type ServiceExport = typeof import('./index.js');
 
 type BaseServicesMap = FromEntries<
   {
-    [K in keyof ServiceExport]: [ServiceExport[K]['id'], ServiceExport[K]];
+    [K in keyof ServiceExport]: [K, ServiceExport[K]];
   }[keyof ServiceExport]
 >;
 
 declare module '@game-cms/core' {
-  interface ServiceMap extends BaseServicesMap {}
+  interface ServiceTypeMeta {
+    id: keyof ServiceExport;
+  }
+
+  interface ServiceTypeMap extends BaseServicesMap {}
 }

@@ -10,7 +10,7 @@
     "prebuild:watch": "pnpm run -r --parallel prebuild && tsc --build tsconfig.packages.json --declaration --watch",
     "test": "vitest run --project unit",
     "test:outer-loop": "vitest run --project outer-loop",
-    "test:build": "pnpm run -r --parallel test:build",
+    "test:build": "pnpm run -r test:build",
     "e2e:test": "vitest run --project e2e",
     "e2e:launch": "docker compose -f docker-compose-e2e.yml build && docker compose -f docker-compose-e2e.yml up --abort-on-container-exit",
     "gen:type": "pnpm run -r --parallel gen:type",

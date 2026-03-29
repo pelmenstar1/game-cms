@@ -107,7 +107,7 @@ async function traceFileInEntityCollection<Id extends EntityId>(
 }
 
 export default service({
-  id: 'base::storage::trace',
+  lifecycle: {},
   traceFile: async (fileId: ObjectId) => {
     await checkFile(fileId);
 

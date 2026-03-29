@@ -262,7 +262,7 @@ const foreignDependencySourceContext: ForeignComponentDependencySourceContext =
   };
 
 export default service({
-  id: 'base::component',
+  lifecycle: {},
   foreignDefaultContext,
   foreignValidationContext,
   foreignResolverContext,

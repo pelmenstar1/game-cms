@@ -2,6 +2,7 @@ import type {
   AnyPlugin,
   PluginValueSource,
   PluginValueSourceContext,
+  ServiceMap,
 } from '@game-cms/core';
 import type { ApiEnvironment } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
@@ -46,7 +47,20 @@ function getErrorStatusCodes(context: PluginValueSourceContext) {
 }
 
 export async function getAllServices(context: PluginValueSourceContext) {
-  return resolvePluginValueSource(context, (plugin) => plugin.services);
+  const { plugins } = context.config;
+  const allServices: Partial<ServiceMap> = {};
+
+  for (const plugin of plugins) {
+    const servicesSource = plugin.services;
+
+    if (servicesSource) {
+      const services = await resolveAsyncMaybeFactory(servicesSource, context);
+
+      Object.assign(allServices, services);
+    }
+  }
+
+  return allServices as ServiceMap;
 }
 
 export async function getApiConfig(

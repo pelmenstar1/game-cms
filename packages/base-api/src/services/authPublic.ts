@@ -21,7 +21,7 @@ async function getPermissions() {
 }
 
 export default service({
-  id: 'base::auth::public',
+  lifecycle: {},
   getPermissions,
   isPublicRoute: async (id: ApiRouteId) => {
     const permissions = await getPermissions();

@@ -10,7 +10,7 @@ import { ApiErrorStatusMap } from './api/error.js';
 import type { CmsFastifyInstance } from './api/fastify.js';
 import type { ApiRoute } from './api/route.js';
 import type { ResolvedCmsConfig } from './config.js';
-import type { Service } from './service.js';
+import type { ServiceMap } from './service.js';
 
 export interface PluginValueSourceContext {
   config: ResolvedCmsConfig;
@@ -23,7 +23,7 @@ export type PluginValueSource<T> = MaybeAsyncFactory<T, PluginValueSourceArgs>;
 
 export type ApiRouteSource = PluginValueSource<ApiRoute[]>;
 export type ComponentSource = PluginValueSource<{ distributionPath: string }>;
-export type ServiceSource = PluginValueSource<Service[]>;
+export type ServiceSource = PluginValueSource<ServiceMap>;
 
 export type EnvResolver<Env> = ObjectResolver<Env, PluginValueSourceArgs>;
 

@@ -45,7 +45,7 @@ function getAll() {
 }
 
 export default service({
-  id: 'base::entitySchema',
+  lifecycle: {},
   getEntry,
   getSchemaById,
   getAll,
