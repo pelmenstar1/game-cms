@@ -2,7 +2,6 @@ import { Readable } from 'node:stream';
 
 import { GetObjectCommand, NoSuchKey, S3Client } from '@aws-sdk/client-s3';
 import { ApiError, apiRoute } from '@game-cms/core/api';
-import { stripUndefined } from '@game-cms/shared/object';
 import z from 'zod';
 
 import { S3StorageProviderConfig } from '../types.js';
@@ -31,23 +30,27 @@ export function getFileRoute(
           new GetObjectCommand({ Bucket: config.bucket, Key: key })
         );
 
-        res.raw.writeHead(
-          200,
-          stripUndefined({
-            'content-length': object.ContentLength?.toString(),
-            'content-type': object.ContentType,
-            'content-disposition': object.ContentDisposition,
-            'content-encoding': object.ContentEncoding,
-            'content-language': object.ContentLanguage,
-            'cache-control': object.CacheControl,
-            etag: object.ETag,
-            expires: object.ExpiresString,
-          })
-        );
+        res.headers({
+          'content-length': object.ContentLength?.toString(),
+          'content-type': object.ContentType,
+          'content-disposition': object.ContentDisposition,
+          'content-encoding': object.ContentEncoding,
+          'content-language': object.ContentLanguage,
+          'cache-control': object.CacheControl,
+          etag: object.ETag,
+          expires: object.ExpiresString,
+        });
 
-        if (object.Body instanceof Readable) {
-          object.Body.pipe(res.raw);
+        const body = object.Body;
+
+        if (!body) {
+          return;
         }
+
+        const target =
+          body instanceof Readable ? body : body.transformToWebStream();
+
+        return await res.send(target);
       } catch (error) {
         if (error instanceof NoSuchKey) {
           throw new ApiError('File not found', 'base::entity/notFound');
