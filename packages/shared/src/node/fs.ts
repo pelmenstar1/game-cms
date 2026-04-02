@@ -1,3 +1,4 @@
+import type { WriteStream } from 'node:fs';
 import fsp from 'node:fs/promises';
 
 import type { AnyAsyncFunction } from '../typeutil.js';
@@ -32,3 +33,10 @@ function ifExistsFn<F extends AnyAsyncFunction>(
 
 export const deleteFileIfExists = ifExistsFn(fsp.rm);
 export const readDirectoryIfExists = ifExistsFn(fsp.readdir, []);
+
+export function waitUntilWriteStreamOpens(stream: WriteStream) {
+  return new Promise<number>((resolve, reject) => {
+    stream.on('open', resolve);
+    stream.on('error', reject);
+  });
+}

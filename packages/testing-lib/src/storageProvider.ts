@@ -2,12 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Readable } from 'node:stream';
 
-import {
-  AnyStorageProvider,
-  FileSource,
-  StorageProvider,
-} from '@game-cms/base-core';
+import { AnyStorageProvider, StorageProvider } from '@game-cms/base-core';
 import { MaybePromise } from '@game-cms/shared';
+import { FileSource } from '@game-cms/shared/node';
 import { describe, expect, test } from 'vitest';
 
 interface StorageProviderResult<

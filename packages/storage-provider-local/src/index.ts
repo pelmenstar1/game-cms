@@ -9,11 +9,13 @@ import type {
 } from '@game-cms/base-core';
 import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
-import { isFileNotFoundError } from '@game-cms/shared/node';
-import { inferFileExtensionFromMime } from '@game-cms/shared/node';
+import {
+  inferFileExtensionFromMime,
+  isFileNotFoundError,
+  writeFileSourceToFile,
+  writeFileSourceToNewFile,
+} from '@game-cms/shared/node';
 import z from 'zod';
-
-import { writeFileSourceToFile } from './utils.js';
 
 export type LocalStorageProviderConfig = {
   isPublic?: boolean;
@@ -105,32 +107,14 @@ export function localStorageProvider(
       getUrl: ({ fileName }) => encodeURI(`/api${GET_ROUTE}/${fileName}`),
       upload: async ({ name, mime, content }, options) => {
         const extension = inferFileExtensionFromMime(mime, name);
-        let outputName: string;
 
-        let size: number = 0;
+        const { filePath, size } = await writeFileSourceToNewFile(
+          content,
+          () => path.join(storagePath, `${randomUUID()}${extension}`),
+          { signal: options?.signal }
+        );
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        while (true) {
-          const uuid = randomUUID();
-          outputName = `${uuid}${extension}`;
-
-          const filePath = path.join(storagePath, outputName);
-
-          try {
-            size = await writeFileSourceToFile(content, filePath, {
-              flag: 'wx',
-              signal: options?.signal,
-            });
-
-            break;
-          } catch (error: unknown) {
-            if (!isFileNotFoundError(error)) {
-              throw error;
-            }
-          }
-        }
-
-        return { extra: { fileName: outputName }, size };
+        return { extra: { fileName: path.basename(filePath) }, size };
       },
       patchContent: async (info, options) => {
         const filePath = getFilePath(storagePath, info.extra);

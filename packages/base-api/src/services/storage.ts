@@ -4,7 +4,6 @@ import { buffer } from 'node:stream/consumers';
 
 import type {
   AbortOptions,
-  FileSource,
   StorageAddon,
   StorageAddonContext,
   StorageProviderUploadResult,
@@ -25,6 +24,7 @@ import {
 import { service } from '@game-cms/core';
 import { cms, env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
+import { FileSource } from '@game-cms/shared/node';
 import { asyncMapObject } from '@game-cms/shared/object';
 import type {
   ClientSession,

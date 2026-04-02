@@ -1,9 +1,9 @@
-import { FileSource } from '@game-cms/base-core';
 import { uploadFileMeta, uploadFileResponse } from '@game-cms/base-core/schema';
 import { ApiError } from '@game-cms/core/api';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { parseJsonOptional } from '@game-cms/shared/json';
+import { FileSource } from '@game-cms/shared/node';
 
 import { apiValidateValue } from '../../../utils/validate.js';
 

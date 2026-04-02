@@ -1,10 +1,10 @@
 import { PassThrough, Readable } from 'node:stream';
 
-type ReadableSource = Uint8Array | Readable;
+import type { FileSource } from './fileSource.js';
 
 export type MeteredStream = ReturnType<typeof meteredStream>;
 
-export function meteredStream(source: ReadableSource) {
+export function meteredStream(source: FileSource) {
   if (source instanceof Readable) {
     let size = 0;
     const pass = new PassThrough();
