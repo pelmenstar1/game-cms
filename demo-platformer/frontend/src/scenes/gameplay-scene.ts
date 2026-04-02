@@ -1,11 +1,12 @@
 import { Container } from 'pixi.js';
 
-import { DEFAULT_HP, DEFAULT_LIVES, TILE_SIZE } from '../constants';
+import { TILE_SIZE } from '../constants';
 import { Hero } from '../entities/hero';
 import { HUD } from '../hud';
 import { Level } from '../level';
 import { Room } from '../room';
 import type {
+  GameConfig,
   GameState,
   HeroDef,
   ItemDef,
@@ -28,6 +29,7 @@ export class GameplayScene implements Scene {
   private heroDef: HeroDef;
   private trapDefs: Record<string, TrapDef>;
   private itemDefs: Record<string, ItemDef>;
+  private gravity: number;
 
   private screenWidth: number;
   private screenHeight: number;
@@ -40,6 +42,7 @@ export class GameplayScene implements Scene {
     heroDef: HeroDef,
     trapDefs: Record<string, TrapDef>,
     itemDefs: Record<string, ItemDef>,
+    config: GameConfig,
     onGameOver: (state: GameState) => void
   ) {
     this.screenWidth = screenWidth;
@@ -47,15 +50,16 @@ export class GameplayScene implements Scene {
     this.heroDef = heroDef;
     this.trapDefs = trapDefs;
     this.itemDefs = itemDefs;
+    this.gravity = config.gravity;
     this.onGameOver = onGameOver;
 
     this.level = new Level(levelDef);
 
     this.state = {
       score: 0,
-      hp: heroDef.hp || DEFAULT_HP,
-      maxHp: heroDef.hp || DEFAULT_HP,
-      lives: DEFAULT_LIVES,
+      hp: heroDef.hp,
+      maxHp: heroDef.hp,
+      lives: config.defaultLives,
       currentRoomIndex: 0,
       checkpointPosition: null,
     };
@@ -77,6 +81,11 @@ export class GameplayScene implements Scene {
     // Apply score
     if (result.score > 0) {
       this.state.score += result.score;
+    }
+
+    // Apply trampoline bounce
+    if (result.bounceForce > 0 && this.hero.alive) {
+      this.hero.velocity.y = -result.bounceForce;
     }
 
     // Apply damage
@@ -134,7 +143,7 @@ export class GameplayScene implements Scene {
     const roomDef = this.level.getCurrentRoom();
     const startPos = this.findStartPositionFromDef(roomDef);
 
-    this.hero = new Hero(this.heroDef, startPos.x, startPos.y);
+    this.hero = new Hero(this.heroDef, startPos.x, startPos.y, this.gravity);
     this.room = new Room(roomDef, this.hero, this.trapDefs, this.itemDefs);
     this.worldContainer.addChild(this.room.container);
   }

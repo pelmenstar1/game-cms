@@ -19,10 +19,15 @@ program
   .description('Builds configs for the CMS')
   .action(build);
 
-program.command('dev').description('Dev mode').action(dev);
+program
+  .command('dev')
+  .option('-p, --port [PORT]', 'Port to run the server on')
+  .description('Dev mode')
+  .action(dev);
 
 program
   .command('start')
+  .option('-p, --port [PORT]', 'Port to run the server on')
   .option('-d, --dashboard [DASHBOARD]', 'Dashboard URL')
   .description('Starts CMS server')
   .action(start);

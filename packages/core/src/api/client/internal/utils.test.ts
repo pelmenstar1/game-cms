@@ -7,6 +7,7 @@ test.each<[string, string, string]>([
   ['123', 'https://a.com', 'https://a.com/123'],
   ['123', 'https://a.com/', 'https://a.com/123'],
   ['/123', 'https://a.com/', 'https://a.com/123'],
+  ['/123', 'https://a.com/a/', 'https://a.com/a/123'],
 
   ['/123', '/api', '/api/123'],
   ['123', '/api', '/api/123'],
@@ -15,5 +16,5 @@ test.each<[string, string, string]>([
 ])('createFullUrl', (input, base, expected) => {
   const actual = createFullUrl(input, base);
 
-  expect(actual.toString()).toEqual(expected);
+  expect(actual).toEqual(expected);
 });

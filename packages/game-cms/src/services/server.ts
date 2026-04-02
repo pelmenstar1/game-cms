@@ -25,14 +25,18 @@ const apiPlugin: FastifyPluginAsync<
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
+  await initPlugins(app);
+
   for (const route of routes) {
     app.route(route);
   }
-
-  await initPlugins(app);
 };
 
-export async function startServer(options: DashboardPluginOptions = {}) {
+export interface StartServerOptions extends DashboardPluginOptions {
+  port?: number;
+}
+
+export async function startServer(options: StartServerOptions = {}) {
   const {
     config: { server },
     api: { routes },
@@ -47,5 +51,5 @@ export async function startServer(options: DashboardPluginOptions = {}) {
 
   await initServices();
 
-  await app.listen({ port: server.port });
+  await app.listen({ port: options.port ?? server.port });
 }

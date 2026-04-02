@@ -3,13 +3,8 @@ import type { EnvAccessor } from '@game-cms/shared/node';
 
 import type { AnyPlugin } from './plugin.js';
 
-export type ServerConfig = {
-  port: number;
-};
-
 export interface UnresolvedCmsConfig {
   plugins?: AnyPlugin[];
-  server: ServerConfig;
 }
 
 export type ResolvedCmsConfig = RequiredProperty<

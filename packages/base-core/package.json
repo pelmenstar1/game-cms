@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
+    "@fastify/cors": "catalog:",
     "@game-cms/core": "workspace:*",
     "@react-router/dev": "catalog:",
     "fastify": "catalog:"

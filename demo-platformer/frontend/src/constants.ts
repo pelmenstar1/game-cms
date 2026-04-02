@@ -4,15 +4,12 @@ export const CHAR_FRAME_SIZE = 32;
 export const TERRAIN_COLS = 22;
 export const TERRAIN_ROWS = 11;
 
-// ---- Physics ----
-export const GRAVITY = 800; // px/s²
+// ---- Physics fallbacks (used when CMS values are missing) ----
 export const DEFAULT_JUMP_FORCE = 350; // px/s (applied upward)
 export const DEFAULT_SPEED = 160; // px/s
 export const MAX_FALL_SPEED = 600; // px/s
 
 // ---- Hero defaults ----
-export const DEFAULT_HP = 3;
-export const DEFAULT_LIVES = 3;
 export const INVINCIBILITY_DURATION = 1; // seconds after taking damage
 
 // ---- Animation ----

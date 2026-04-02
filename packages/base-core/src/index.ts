@@ -8,6 +8,7 @@ export * from './entity/index.js';
 export * from './env.js';
 export * from './i18n.js';
 export * from './plugin.js';
+export * from './server/index.js';
 export * from './storage/index.js';
 export * from './types.js';
 export * from './user.js';

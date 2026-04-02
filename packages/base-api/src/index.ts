@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
 import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
 import { UnknownApiRoute } from '@game-cms/core/api';
@@ -34,7 +35,7 @@ export const apiConfig: PluginApiConfig = {
     ),
   },
   fastify: {
-    setup: (app) => {
+    setup: (app, config) => {
       initAuth(app);
 
       app.register(multipart, {
@@ -45,6 +46,11 @@ export const apiConfig: PluginApiConfig = {
         },
       });
       app.register(abortablePlugin);
+
+      if (config.server.cors) {
+        app.register(cors, config.server.cors);
+      }
+
       app.setErrorHandler(errorHandler());
 
       app.route({

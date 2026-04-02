@@ -6,5 +6,10 @@
     "target": "esnext"
   },
   "include": ["./src"],
-  "references": [{ "path": "../../packages/shared" }, { "path": "../shared" }]
+  "references": [
+    { "path": "../../packages/base-api" },
+    { "path": "../../packages/core" },
+    { "path": "../../packages/shared" },
+    { "path": "../shared" }
+  ]
 }

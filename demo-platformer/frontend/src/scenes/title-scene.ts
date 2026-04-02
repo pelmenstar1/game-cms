@@ -1,4 +1,5 @@
 import {
+  AnimatedSprite,
   Assets,
   Container,
   Text,
@@ -6,9 +7,7 @@ import {
   Texture,
   TilingSprite,
 } from 'pixi.js';
-import { AnimatedSprite } from 'pixi.js';
 
-import { sliceSpriteStrip } from '../assets';
 import { ANIMATION_SPEED, KEYS } from '../constants';
 import { justPressed } from '../input';
 import type { Scene } from '../types';
@@ -17,16 +16,15 @@ export class TitleScene implements Scene {
   readonly container = new Container();
 
   private onStart: () => void;
-  private onChallenge: () => void;
 
   constructor(
     private screenWidth: number,
     private screenHeight: number,
-    onStart: () => void,
-    onChallenge: () => void
+    private title: string,
+    private heroIdleFrames: Texture[],
+    onStart: () => void
   ) {
     this.onStart = onStart;
-    this.onChallenge = onChallenge;
   }
 
   enter(): void {
@@ -39,7 +37,7 @@ export class TitleScene implements Scene {
     });
     this.container.addChild(bg);
 
-    // Title text
+    // Title text (from CMS config)
     const titleStyle = new TextStyle({
       fontFamily: 'monospace',
       fontSize: 48,
@@ -47,25 +45,23 @@ export class TitleScene implements Scene {
       stroke: { color: 0x000000, width: 5 },
       fontWeight: 'bold',
     });
-    const title = new Text({ text: 'Pixel Dash', style: titleStyle });
-    title.anchor.set(0.5);
-    title.x = this.screenWidth / 2;
-    title.y = this.screenHeight / 3;
-    this.container.addChild(title);
+    const titleText = new Text({ text: this.title, style: titleStyle });
+    titleText.anchor.set(0.5);
+    titleText.x = this.screenWidth / 2;
+    titleText.y = this.screenHeight / 3;
+    this.container.addChild(titleText);
 
-    // Idle hero animation
-    const idleTexture = Assets.get<Texture>(
-      'pack/Main Characters/Ninja Frog/Idle (32x32).png'
-    );
-    const idleFrames = sliceSpriteStrip(idleTexture, 32, 32);
-    const heroSprite = new AnimatedSprite(idleFrames);
-    heroSprite.animationSpeed = ANIMATION_SPEED;
-    heroSprite.anchor.set(0.5);
-    heroSprite.scale.set(4);
-    heroSprite.x = this.screenWidth / 2;
-    heroSprite.y = this.screenHeight / 2 + 20;
-    heroSprite.play();
-    this.container.addChild(heroSprite);
+    // Idle hero animation (from CMS hero data)
+    if (this.heroIdleFrames.length > 0) {
+      const heroSprite = new AnimatedSprite(this.heroIdleFrames);
+      heroSprite.animationSpeed = ANIMATION_SPEED;
+      heroSprite.anchor.set(0.5);
+      heroSprite.scale.set(4);
+      heroSprite.x = this.screenWidth / 2;
+      heroSprite.y = this.screenHeight / 2 + 20;
+      heroSprite.play();
+      this.container.addChild(heroSprite);
+    }
 
     // Prompt text
     const promptStyle = new TextStyle({
@@ -75,7 +71,7 @@ export class TitleScene implements Scene {
       fill: 0xcccccc,
     });
     const prompt = new Text({
-      text: 'ENTER — Adventure    SPACE — Challenge',
+      text: 'Press ENTER to start',
       style: promptStyle,
     });
     prompt.anchor.set(0.5);
@@ -87,9 +83,6 @@ export class TitleScene implements Scene {
   update(_dt: number): void {
     if (justPressed(KEYS.ENTER)) {
       this.onStart();
-    }
-    if (justPressed(KEYS.JUMP)) {
-      this.onChallenge();
     }
   }
 

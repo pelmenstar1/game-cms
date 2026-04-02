@@ -8,6 +8,9 @@ packages:
   - packages/*
 
 catalog:
+  commander: 14.0.2
+  '@fastify/http-proxy': ^11.4.2
+  '@fastify/cors': ^11.0.0
   '@fastify/multipart': ^9.4.0
   '@fastify/send': ^4.1.0
   '@fastify/static': ^9.0.0

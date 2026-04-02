@@ -26,9 +26,13 @@ export class Item {
       def.sprite.frameHeight
     );
 
-    // Also prepare the "Collected" effect
+    // Prepare the "Collected" effect (static engine asset)
     const collectedTex = Assets.get<Texture>('pack/Items/Fruits/Collected.png');
-    this.collectedFrames = sliceSpriteStrip(collectedTex, 32, 32);
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    this.collectedFrames = collectedTex
+      ? sliceSpriteStrip(collectedTex, 32, 32)
+      : frames.slice(0, 1);
 
     this.sprite = new AnimatedSprite(frames);
     this.sprite.animationSpeed = ANIMATION_SPEED;

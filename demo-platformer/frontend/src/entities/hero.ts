@@ -1,11 +1,10 @@
 import { AnimatedSprite, Container } from 'pixi.js';
 
-import { buildAnimationSet, getCharacterStripDefs } from '../assets';
+import { buildAnimationSet } from '../assets';
 import {
   ANIMATION_SPEED,
   DEFAULT_JUMP_FORCE,
   DEFAULT_SPEED,
-  GRAVITY,
   INVINCIBILITY_DURATION,
   KEYS,
 } from '../constants';
@@ -44,20 +43,23 @@ export class Hero {
 
   private speed: number;
   private jumpForce: number;
+  private gravity: number;
 
-  constructor(def: HeroDef, spawnX: number, spawnY: number) {
+  constructor(def: HeroDef, spawnX: number, spawnY: number, gravity: number) {
     this.position = { x: spawnX, y: spawnY };
     this.hp = def.hp;
     this.maxHp = def.hp;
     this.speed = def.speed || DEFAULT_SPEED;
     this.jumpForce = def.jumpForce || DEFAULT_JUMP_FORCE;
+    this.gravity = gravity;
 
-    // Build animation textures from character sprite strips
-    const stripDefs = getCharacterStripDefs(def.folder);
-    this.animations = buildAnimationSet(stripDefs);
+    // Build animation textures from CMS-provided sprite strip URLs
+    this.animations = buildAnimationSet(def.animations);
 
     // Create initial AnimatedSprite with idle animation
-    this.sprite = new AnimatedSprite(this.animations['idle']);
+    const idleFrames =
+      this.animations['idle'] ?? Object.values(this.animations)[0];
+    this.sprite = new AnimatedSprite(idleFrames);
     this.sprite.animationSpeed = ANIMATION_SPEED;
     this.sprite.anchor.set(0.5, 0.5);
     this.sprite.play();
@@ -89,7 +91,7 @@ export class Hero {
     // If in hit state, wait for animation to finish
     if (this.state === 'hit') {
       this.velocity.x = 0;
-      applyGravity(this.velocity, GRAVITY, dt);
+      applyGravity(this.velocity, this.gravity, dt);
       moveAndCollide(this.position, this.velocity, this.hitbox, layout, dt);
       this.syncSprite();
       return;
@@ -161,7 +163,7 @@ export class Hero {
   }
 
   private applyPhysics(dt: number, layout: number[][]): void {
-    applyGravity(this.velocity, GRAVITY, dt);
+    applyGravity(this.velocity, this.gravity, dt);
 
     const collision: CollisionResult = moveAndCollide(
       this.position,

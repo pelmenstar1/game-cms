@@ -3,13 +3,17 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node ./dist/main.js",
-    "dev": "tsx --watch ./src/main.ts"
+    "start": "node ./dist/main.js start",
+    "dev": "tsx --watch ./src/main.ts dev -f http://localhost:5174"
   },
   "dependencies": {
     "@demo-platformer/frontend": "workspace:*",
     "@demo-platformer/shared": "workspace:*",
     "@game-cms/shared": "workspace:*",
+    "@game-cms/core": "workspace:*",
+    "@game-cms/base-api": "workspace:*",
+    "@fastify/http-proxy": "catalog:",
+    "commander": "catalog:",
     "@fastify/static": "catalog:",
     "fastify": "catalog:"
   },

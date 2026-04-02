@@ -17,6 +17,7 @@ export type RequestFn<Args extends unknown[], R> = (
 ) => Promise<R>;
 
 export interface ApiClient {
+  setAuthorizationHeader(header: string): void;
   makeRequest(options: RequestOptions): Promise<Response>;
   makeRequest<T>(options: RequestOptionsWithResult<T>): Promise<T>;
 }

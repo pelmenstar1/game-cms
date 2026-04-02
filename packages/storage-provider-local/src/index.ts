@@ -16,6 +16,7 @@ import z from 'zod';
 import { writeFileSourceToFile } from './utils.js';
 
 export type LocalStorageProviderConfig = {
+  isPublic?: boolean;
   storagePath?: string;
 };
 
@@ -31,13 +32,18 @@ function collection() {
   return cms().service('base::storage').collection();
 }
 
-function getFileRoute(storagePath: string) {
+function getFileRoute(
+  storagePath: string,
+  config?: LocalStorageProviderConfig
+) {
   return apiRoute({
     url: `${GET_ROUTE}/:fileName`,
     method: 'GET',
-    config: {
-      id: 'storage/file$get',
-    },
+    config: config?.isPublic
+      ? {}
+      : {
+          id: 'storage/file$get',
+        },
     schema: {
       params: z.object({
         fileName: z.string(),
@@ -59,6 +65,7 @@ function getFileRoute(storagePath: string) {
 
       const { headers, statusCode, stream } = await send(req.raw, fileName, {
         root: storagePath,
+        acceptRanges: true,
         contentType: false,
       });
 
@@ -66,11 +73,11 @@ function getFileRoute(storagePath: string) {
         throwFileNotFound();
       }
 
-      res.raw.writeHead(statusCode, {
-        ...headers,
-        'content-type': (storageInfo as StorageFilePersistentItem).mime,
-      });
-      stream.pipe(res.raw);
+      await res
+        .status(statusCode)
+        .headers(headers)
+        .type((storageInfo as StorageFilePersistentItem).mime)
+        .send(stream);
     },
   });
 }
@@ -93,7 +100,7 @@ export function localStorageProvider(
     meta: {
       deterministicUrls: true,
     },
-    routes: [getFileRoute(storagePath)],
+    routes: [getFileRoute(storagePath, config)],
     protocol: {
       getUrl: ({ fileName }) => encodeURI(`/api${GET_ROUTE}/${fileName}`),
       upload: async ({ name, mime, content }, options) => {

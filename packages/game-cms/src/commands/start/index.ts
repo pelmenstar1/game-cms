@@ -1,9 +1,8 @@
 import { initEnvFromConfigs } from '@game-cms/ignition';
 
-import type { DashboardPluginOptions } from '../../services/dashboard/index.js';
-import { startServer } from '../../services/server.js';
+import { startServer, StartServerOptions } from '../../services/server.js';
 
-export default async function start(options: DashboardPluginOptions) {
+export default async function start(options: StartServerOptions) {
   await initEnvFromConfigs();
   await startServer(options);
 }

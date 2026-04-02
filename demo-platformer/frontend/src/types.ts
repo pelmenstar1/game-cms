@@ -46,12 +46,17 @@ export type HeroState =
 
 export interface HeroDef {
   name: string;
-  folder: string; // e.g. "Main Characters/Ninja Frog"
-  frameWidth: number;
-  frameHeight: number;
+  /** Animation strips keyed by state (e.g. "idle", "run", "jump") — URLs from CMS */
+  animations: Record<string, SpriteStripDef>;
   hp: number;
   speed: number;
   jumpForce: number;
+}
+
+export interface GameConfig {
+  title: string;
+  gravity: number;
+  defaultLives: number;
 }
 
 // ---- Trap ----
@@ -60,7 +65,6 @@ export type TrapBehavior = 'static' | 'moving' | 'triggered';
 
 export interface TrapDef {
   name: string;
-  folder: string; // e.g. "Traps/Saw"
   animations: Record<string, SpriteStripDef>;
   damage: number;
   behavior: TrapBehavior;

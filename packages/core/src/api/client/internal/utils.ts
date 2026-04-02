@@ -1,15 +1,15 @@
 export function createFullUrl(url: string, base: string | URL) {
-  if (typeof base === 'string' && base.startsWith('/')) {
-    if (url.startsWith('/') && base.endsWith('/')) {
-      return `${base.slice(0, -1)}${url}`;
-    }
-
-    if (url.startsWith('/') || base.endsWith('/')) {
-      return `${base}${url}`;
-    }
-
-    return `${base}/${url}`;
+  if (base instanceof URL) {
+    base = base.toString();
   }
 
-  return new URL(url, base);
+  if (!base.endsWith('/')) {
+    base += '/';
+  }
+
+  if (url.startsWith('/')) {
+    url = url.slice(1);
+  }
+
+  return `${base}${url}`;
 }

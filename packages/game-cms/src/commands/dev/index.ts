@@ -33,7 +33,7 @@ async function startMessageServer() {
   return {
     tunnel,
     waitUntilViteUp: () =>
-      new Promise<DevServerManifest>((resolve) => {
+      new Promise<DevServerManifest>((resolve, reject) => {
         server.on('connection', (socket) => {
           socket.on('data', (data) => {
             if (typeof data !== 'string') {
@@ -45,7 +45,11 @@ async function startMessageServer() {
 
             resolve(manifest);
           });
+
+          socket.on('error', reject);
         });
+
+        server.on('error', reject);
       }),
     [Symbol.dispose]: () => {
       server.close();
@@ -53,22 +57,25 @@ async function startMessageServer() {
   };
 }
 
-export default async function dev() {
+async function getDevManifest(dashboardPath: string) {
+  using messageServer = await startMessageServer();
+
+  await writeDashboardBuildMeta(dashboardPath, messageServer.tunnel);
+  await initEnvFromConfigs();
+
+  void dashboardDev();
+
+  return await messageServer.waitUntilViteUp();
+}
+
+export type DevOptions = {
+  port?: number;
+};
+
+export default async function dev(options?: DevOptions) {
   const dashboardPath = getDashboardPackagePath();
+  const devManifest = await getDevManifest(dashboardPath);
 
-  let devManifest: DevServerManifest;
-
-  {
-    using messageServer = await startMessageServer();
-
-    await writeDashboardBuildMeta(dashboardPath, messageServer.tunnel);
-    await initEnvFromConfigs();
-
-    void dashboardDev();
-
-    devManifest = await messageServer.waitUntilViteUp();
-  }
-
-  await startServer({ dashboard: devManifest.address });
+  await startServer({ dashboard: devManifest.address, port: options?.port });
   await executeRemainingMigrations();
 }

@@ -36,7 +36,10 @@ type MaybeWithUrlPrefix<T> =
 
 export type PluginApiFastifyConfig = {
   plugins?: (FastifyPluginCallback | FastifyPluginAsync)[];
-  setup?: (instance: CmsFastifyInstance) => MaybePromise<void>;
+  setup?: (
+    instance: CmsFastifyInstance,
+    config: ResolvedCmsConfig
+  ) => MaybePromise<void>;
 };
 
 export interface PluginApiConfig {

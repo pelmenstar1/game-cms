@@ -6,6 +6,12 @@ settings:
 
 catalogs:
   default:
+    '@fastify/cors':
+      specifier: ^11.0.0
+      version: 11.2.0
+    '@fastify/http-proxy':
+      specifier: ^11.4.2
+      version: 11.4.2
     '@fastify/multipart':
       specifier: ^9.4.0
       version: 9.4.0
@@ -51,6 +57,9 @@ catalogs:
     '@vitejs/plugin-react':
       specifier: 5.1.2
       version: 5.1.2
+    commander:
+      specifier: 14.0.2
+      version: 14.0.2
     fastify:
       specifier: 5.6.2
       version: 5.6.2
@@ -271,12 +280,24 @@ importers:
       '@demo-platformer/shared':
         specifier: workspace:*
         version: link:../shared
+      '@fastify/http-proxy':
+        specifier: 'catalog:'
+        version: 11.4.2
       '@fastify/static':
         specifier: 'catalog:'
         version: 9.0.0
+      '@game-cms/base-api':
+        specifier: workspace:*
+        version: link:../../packages/base-api
+      '@game-cms/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@game-cms/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      commander:
+        specifier: 'catalog:'
+        version: 14.0.2
       fastify:
         specifier: 'catalog:'
         version: 5.6.2
@@ -368,6 +389,9 @@ importers:
 
   packages/base-api:
     dependencies:
+      '@fastify/cors':
+        specifier: 'catalog:'
+        version: 11.2.0
       '@fastify/multipart':
         specifier: 'catalog:'
         version: 9.4.0
@@ -536,6 +560,9 @@ importers:
         specifier: 'catalog:'
         version: 4.3.6
     devDependencies:
+      '@fastify/cors':
+        specifier: 'catalog:'
+        version: 11.2.0
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
@@ -1410,7 +1437,7 @@ importers:
   roundtrip-server:
     dependencies:
       '@fastify/cors':
-        specifier: ^11.2.0
+        specifier: 'catalog:'
         version: 11.2.0
       fastify:
         specifier: 'catalog:'
@@ -3658,6 +3685,7 @@ packages:
   '@xmldom/xmldom@0.8.11':
     resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xyflow/react@12.10.1':
     resolution: {integrity: sha512-5eSWtIK/+rkldOuFbOOz44CRgQRjtS9v5nufk77DV+XBnfCGL9HAQ8PG00o2ZYKqkEU/Ak6wrKC95Tu+2zuK3Q==}

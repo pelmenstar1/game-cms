@@ -1,14 +1,19 @@
-import type { AnyPlugin, PluginApiFastifyConfig } from '@game-cms/core';
+import type {
+  AnyPlugin,
+  PluginApiFastifyConfig,
+  ResolvedCmsConfig,
+} from '@game-cms/core';
 import type { CmsFastifyInstance } from '@game-cms/core/api';
 import { env } from '@game-cms/global';
 
 async function initPluginFastify(
-  config: PluginApiFastifyConfig,
+  config: ResolvedCmsConfig,
+  apiConfig: PluginApiFastifyConfig,
   app: CmsFastifyInstance
 ) {
-  const { plugins } = config;
+  const { plugins } = apiConfig;
 
-  await config.setup?.(app);
+  await apiConfig.setup?.(app, config);
 
   if (plugins) {
     for (const plugin of plugins) {
@@ -17,19 +22,22 @@ async function initPluginFastify(
   }
 }
 
-async function initPlugin(plugin: AnyPlugin, app: CmsFastifyInstance) {
-  const { config } = env();
-
+async function initPlugin(
+  config: ResolvedCmsConfig,
+  app: CmsFastifyInstance,
+  plugin: AnyPlugin
+) {
   await plugin.setup?.(config);
 
   const fastifyConfig = plugin.config?.api?.fastify;
   if (fastifyConfig !== undefined) {
-    await initPluginFastify(fastifyConfig, app);
+    await initPluginFastify(config, fastifyConfig, app);
   }
 }
 
 export async function initPlugins(app: CmsFastifyInstance) {
-  const { plugins } = env().config;
+  const { config } = env();
+  const { plugins } = config;
 
-  await Promise.all(plugins.map((plugin) => initPlugin(plugin, app)));
+  await Promise.all(plugins.map((plugin) => initPlugin(config, app, plugin)));
 }

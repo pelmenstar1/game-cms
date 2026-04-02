@@ -1,34 +1,37 @@
 import { handleResponseError } from './internal/errors.js';
 import { createFullUrl } from './internal/utils.js';
+import { RequestInitWithHeaders } from './requestInitializer.js';
 import { ResponseParser } from './responseParser.js';
-import { ApiClient, InitBodyRequestOptions, RequestOptions } from './types.js';
+import { ApiClient, RequestOptions } from './types.js';
 
 export type StandardClientOptions = {
   baseUrl: string | URL;
 };
 
-function isBodyOptions(
-  options: RequestOptions
-): options is InitBodyRequestOptions {
-  return 'body' in options && typeof options.body === 'function';
-}
-
-function createStandardRequestInit(options: RequestOptions): RequestInit {
-  if (isBodyOptions(options)) {
-    const { body, headers, ...rest } = options;
-
-    const init = { ...rest, headers: new Headers(headers) };
-    body(init);
-
-    return init;
-  }
-
-  return options;
-}
-
 export function createStandardClient({
   baseUrl,
 }: StandardClientOptions): ApiClient {
+  let authorizationHeader: string | undefined;
+
+  function createStandardRequestInit(options: RequestOptions) {
+    const { body, headers, ...rest } = options;
+
+    const headersObject = new Headers(headers);
+    const result: RequestInit = { ...rest, headers: headersObject };
+
+    if (authorizationHeader !== undefined) {
+      headersObject.set('Authorization', authorizationHeader);
+    }
+
+    if (typeof body === 'function') {
+      body(result as RequestInitWithHeaders);
+    } else {
+      result.body = body;
+    }
+
+    return result;
+  }
+
   async function makeRequest<T>(
     options: RequestOptions & { response?: ResponseParser<T> }
   ) {
@@ -45,7 +48,12 @@ export function createStandardClient({
     return responseParser ? responseParser(response) : response;
   }
 
+  function setAuthorizationHeader(header: string) {
+    authorizationHeader = header;
+  }
+
   return {
     makeRequest,
+    setAuthorizationHeader,
   };
 }

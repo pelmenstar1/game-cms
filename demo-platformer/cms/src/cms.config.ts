@@ -22,9 +22,14 @@ export default config((env) => ({
   },
   server: {
     port: 3000,
+    cors: {
+      origin: '*',
+    },
   },
   storage: {
-    provider: localStorageProvider(),
+    provider: localStorageProvider({
+      isPublic: true,
+    }),
   },
   plugins: [cmsPlugin],
 }));

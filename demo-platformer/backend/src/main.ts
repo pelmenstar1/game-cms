@@ -1,24 +1,18 @@
-import staticPlugin from '@fastify/static';
-import { loadEnvFileIfExists } from '@game-cms/shared/node';
-import fastify from 'fastify';
+import { Command } from 'commander';
 
-import { getFrontendDistributionPath } from './frontendConnector.js';
-import gameDataRoute from './routes/game-data/route.js';
+import { startServer } from './start.js';
 
-const PORT = 3000;
+const program = new Command();
 
-async function main() {
-  await loadEnvFileIfExists();
+program
+  .command('start')
+  .description('Start the server serving built frontend')
+  .action(() => startServer());
 
-  const app = fastify();
-  await app.register(staticPlugin, { root: getFrontendDistributionPath() });
+program
+  .command('dev')
+  .description('Start the server proxying to a frontend dev server')
+  .requiredOption('-f, --frontend <url>', 'Frontend dev server URL')
+  .action((options: { frontend: string }) => startServer(options.frontend));
 
-  app.route(gameDataRoute);
-
-  const url = await app.listen({ port: PORT });
-
-  // eslint-disable-next-line no-console
-  console.log(`Server is running on ${url}`);
-}
-
-void main();
+void program.parseAsync();

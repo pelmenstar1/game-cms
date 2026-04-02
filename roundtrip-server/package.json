@@ -7,7 +7,7 @@
     "start": "tsx ./src/main.ts"
   },
   "dependencies": {
-    "@fastify/cors": "^11.2.0",
+    "@fastify/cors": "catalog:",
     "fastify": "catalog:",
     "qs": "catalog:"
   },
