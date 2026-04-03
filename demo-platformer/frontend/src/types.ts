@@ -1,18 +1,6 @@
-import type { Container, Texture } from 'pixi.js';
+import type { Container, PointData, Texture } from 'pixi.js';
 
 // ---- Geometry ----
-
-export interface Vec2 {
-  x: number;
-  y: number;
-}
-
-export interface AABB {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
 
 export interface CollisionResult {
   top: boolean;
@@ -89,6 +77,7 @@ export interface ItemDef {
   sprite: SpriteStripDef;
   effect: ItemEffect;
   value: number;
+  collectedAlias: string;
 }
 
 // ---- Placement (in a room) ----
@@ -105,16 +94,25 @@ export interface ItemPlacement {
   y: number;
 }
 
+export interface CheckpointImageDef {
+  path: string;
+  width: number;
+  height: number;
+}
+
 export interface CheckpointPlacement {
   type: 'start' | 'mid' | 'end';
   x: number;
   y: number;
+  idle: CheckpointImageDef;
+  active: CheckpointImageDef;
 }
 
 // ---- Room ----
 
 export interface RoomDef {
   name: string;
+  terrainAlias: string;
   backgroundAlias: string;
   /** 2D grid of tile indices. 0 = empty, >0 = solid tile index in terrain atlas */
   layout: number[][];
@@ -140,7 +138,7 @@ export interface GameState {
   maxHp: number;
   lives: number;
   currentRoomIndex: number;
-  checkpointPosition: Vec2 | null;
+  checkpointPosition: PointData | null;
 }
 
 // ---- Scene ----

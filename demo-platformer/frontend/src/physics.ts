@@ -1,9 +1,11 @@
+import type { PointData, RectangleLike } from 'pixi.js';
+
 import { MAX_FALL_SPEED, TILE_SIZE } from './constants';
-import type { AABB, CollisionResult, Vec2 } from './types';
+import type { CollisionResult } from './types';
 
 /** Apply gravity to velocity. Mutates velocity in place. */
 export function applyGravity(
-  velocity: Vec2,
+  velocity: PointData,
   gravity: number,
   dt: number
 ): void {
@@ -24,9 +26,9 @@ function isSolid(layout: number[][], col: number, row: number): boolean {
  * Mutates position and velocity in place. Returns which sides collided.
  */
 export function moveAndCollide(
-  position: Vec2,
-  velocity: Vec2,
-  hitbox: AABB,
+  position: PointData,
+  velocity: PointData,
+  hitbox: RectangleLike,
   layout: number[][],
   dt: number
 ): CollisionResult {
@@ -49,9 +51,9 @@ export function moveAndCollide(
 }
 
 function resolveX(
-  position: Vec2,
-  velocity: Vec2,
-  hitbox: AABB,
+  position: PointData,
+  velocity: PointData,
+  hitbox: RectangleLike,
   layout: number[][],
   result: CollisionResult
 ): void {
@@ -87,9 +89,9 @@ function resolveX(
 }
 
 function resolveY(
-  position: Vec2,
-  velocity: Vec2,
-  hitbox: AABB,
+  position: PointData,
+  velocity: PointData,
+  hitbox: RectangleLike,
   layout: number[][],
   result: CollisionResult
 ): void {
@@ -124,8 +126,8 @@ function resolveY(
   }
 }
 
-/** Simple AABB overlap test for entity-entity collision. */
-export function checkOverlap(a: AABB, b: AABB): boolean {
+/** Simple RectangleLike overlap test for entity-entity collision. */
+export function checkOverlap(a: RectangleLike, b: RectangleLike): boolean {
   return (
     a.x < b.x + b.width &&
     a.x + a.width > b.x &&

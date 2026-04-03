@@ -1,7 +1,7 @@
 import type { ClientGameData } from '@demo-platformer/shared';
 import { Application, Assets, ProgressCallback } from 'pixi.js';
 
-import { buildAnimationSet, loadStaticAssets } from './assets';
+import { buildAnimationSet } from './assets';
 import { GAME_SCALE } from './constants';
 import { initInput, updateInput } from './input';
 import { GameplayScene } from './scenes/gameplay-scene';
@@ -82,7 +82,7 @@ async function fetchGameData(): Promise<GameDataResult> {
   const itemDefMap = new Map<string, ItemDef>();
 
   for (const room of data.level.rooms) {
-    cmsAssetUrls.push(room.background.url);
+    cmsAssetUrls.push(room.background.url, room.terrain.url);
 
     for (const entry of room.traps) {
       if (!entry.trap) continue;
@@ -126,10 +126,12 @@ async function fetchGameData(): Promise<GameDataResult> {
             frameWidth: entry.item.sprite.frameWidth,
             frameHeight: entry.item.sprite.frameHeight,
           },
+          collectedAlias: entry.item.collected.url,
           effect: entry.item.effect,
           value: entry.item.value,
         });
-        cmsAssetUrls.push(url);
+
+        cmsAssetUrls.push(url, entry.item.collected.url);
       }
     }
   }
@@ -142,10 +144,29 @@ async function fetchGameData(): Promise<GameDataResult> {
     rooms: data.level.rooms.map((room) => ({
       name: room.name,
       backgroundAlias: room.background.url,
+      terrainAlias: room.terrain.url,
       width: room.width,
       height: room.height,
       layout: room.layout,
-      checkpoints: room.checkpoints,
+      checkpoints: room.checkpoints.map((cp) => {
+        const images = room.checkpointImages[cp.type];
+        cmsAssetUrls.push(images.idle.file.url, images.moving.file.url);
+        return {
+          type: cp.type,
+          x: cp.x,
+          y: cp.y,
+          idle: {
+            path: images.idle.file.url,
+            width: images.idle.width,
+            height: images.idle.height,
+          },
+          active: {
+            path: images.moving.file.url,
+            width: images.moving.width,
+            height: images.moving.height,
+          },
+        };
+      }),
       traps: room.traps.flatMap((e) =>
         e.trap ? [{ defName: toKey(e.trap.name), x: e.x, y: e.y }] : []
       ),
@@ -204,15 +225,12 @@ export async function launchApp(
   // Pixel-art rendering: disable texture smoothing
   app.stage.scale.set(GAME_SCALE);
 
-  // Load static engine assets (terrain, checkpoints, backgrounds used by rooms + scenes)
-  await loadStaticAssets(onProgress);
-
   // Load CMS-served sprite assets (hero, trap, and item images from CMS file storage)
   if (cmsAssetUrls.length > 0) {
     for (const url of cmsAssetUrls) {
       Assets.add({ alias: url, src: url });
     }
-    await Assets.load(cmsAssetUrls);
+    await Assets.load(cmsAssetUrls, onProgress);
   }
 
   // Pre-build hero idle frames for the title screen

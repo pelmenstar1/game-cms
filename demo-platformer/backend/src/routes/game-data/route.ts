@@ -1,7 +1,8 @@
 import { GameData } from '@demo-platformer/shared';
 import { gameData } from '@demo-platformer/shared/schema';
 import { createStandardClientWithApiToken } from '@game-cms/base-api/client';
-import { request } from '@game-cms/core/api/client';
+import { json, request } from '@game-cms/core/api/client';
+import { zodJsonValidator } from '@game-cms/core/node';
 import { RouteOptions } from 'fastify';
 
 import { cmsApiToken, cmsUrl } from '../../env.js';
@@ -26,10 +27,16 @@ function resolveFileUrls(data: GameData, baseUrl: string) {
 
   for (const room of data.level.rooms) {
     resolveFileUrl(room.background, baseUrl);
+    resolveFileUrl(room.terrain, baseUrl);
 
-    for (const trapEntry of room.traps) {
-      if (trapEntry.trap) {
-        for (const animation of trapEntry.trap.animations) {
+    for (const checkpointImage of Object.values(room.checkpointImages)) {
+      resolveFileUrl(checkpointImage.idle.file, baseUrl);
+      resolveFileUrl(checkpointImage.moving.file, baseUrl);
+    }
+
+    for (const { trap } of room.traps) {
+      if (trap) {
+        for (const animation of trap.animations) {
           for (const file of animation.sprite.image) {
             resolveFileUrl(file, baseUrl);
           }
@@ -37,9 +44,11 @@ function resolveFileUrls(data: GameData, baseUrl: string) {
       }
     }
 
-    for (const itemEntry of room.items) {
-      if (itemEntry.item) {
-        for (const file of itemEntry.item.sprite.image) {
+    for (const { item } of room.items) {
+      if (item) {
+        resolveFileUrl(item.collected, baseUrl);
+
+        for (const file of item.sprite.image) {
           resolveFileUrl(file, baseUrl);
         }
       }
@@ -57,16 +66,17 @@ export default {
       apiToken: cmsApiToken(),
     });
 
-    const response = await request(
+    const data = await request(
       { client },
-      { url: '/game-data' as never, method: 'GET' }
+      {
+        url: '/game-data' as never,
+        method: 'GET',
+        response: json({ validator: zodJsonValidator(gameData) }),
+      }
     );
 
-    const data: unknown = await response.json();
-    const parsed = gameData.parse(data);
+    resolveFileUrls(data, baseUrl);
 
-    resolveFileUrls(parsed, baseUrl);
-
-    return parsed;
+    return data;
   },
 } satisfies RouteOptions;

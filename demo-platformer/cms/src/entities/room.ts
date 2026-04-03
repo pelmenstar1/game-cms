@@ -10,6 +10,17 @@ import {
   text,
 } from 'game-cms/components';
 
+const checkpointImageVariant = compose({
+  file: file({ supportedMimeTypes: ['image/png'], maxItems: 1 }),
+  width: number({ integer: true, min: 1 }),
+  height: number({ integer: true, min: 1 }),
+});
+
+const checkpointImage = compose({
+  idle: checkpointImageVariant,
+  moving: checkpointImageVariant,
+});
+
 export default entity({
   title: 'Room',
   components: {
@@ -18,6 +29,7 @@ export default entity({
     width: number({ integer: true, min: 1 }),
     height: number({ integer: true, min: 1 }),
     layout: json(),
+    terrain: file({ supportedMimeTypes: ['image/png'] }),
     traps: repeatable({
       component: compose({
         trap: entityReference({ entityId: 'trap' }),
@@ -31,6 +43,11 @@ export default entity({
         x: number(),
         y: number(),
       }),
+    }),
+    checkpointImages: compose({
+      start: checkpointImage,
+      mid: checkpointImage,
+      end: checkpointImage,
     }),
     checkpoints: repeatable({
       component: compose({

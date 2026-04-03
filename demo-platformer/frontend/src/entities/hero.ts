@@ -1,4 +1,9 @@
-import { AnimatedSprite, Container } from 'pixi.js';
+import {
+  AnimatedSprite,
+  Container,
+  type PointData,
+  type RectangleLike,
+} from 'pixi.js';
 
 import { buildAnimationSet } from '../assets';
 import {
@@ -11,21 +16,19 @@ import {
 import { isDown, justPressed } from '../input';
 import { applyGravity, moveAndCollide } from '../physics';
 import type {
-  AABB,
   AnimationSet,
   CollisionResult,
   HeroDef,
   HeroState,
-  Vec2,
 } from '../types';
 
 export class Hero {
   readonly container = new Container();
-  readonly position: Vec2;
-  readonly velocity: Vec2 = { x: 0, y: 0 };
+  readonly position: PointData;
+  readonly velocity: PointData = { x: 0, y: 0 };
 
   /** Hitbox relative to position (smaller than the full 32x32 frame) */
-  readonly hitbox: AABB = { x: 6, y: 4, width: 20, height: 28 };
+  readonly hitbox: RectangleLike = { x: 6, y: 4, width: 20, height: 28 };
 
   hp: number;
   maxHp: number;
@@ -67,7 +70,7 @@ export class Hero {
   }
 
   /** Get world-space hitbox for collision checks. */
-  getWorldHitbox(): AABB {
+  getWorldHitbox(): RectangleLike {
     return {
       x: this.position.x + this.hitbox.x,
       y: this.position.y + this.hitbox.y,

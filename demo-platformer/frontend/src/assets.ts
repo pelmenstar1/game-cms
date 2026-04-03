@@ -75,35 +75,3 @@ export function buildAnimationSet(
 
   return set;
 }
-
-// ---- Static engine assets (not managed by CMS) ----
-
-const CHECKPOINT_ASSETS = [
-  'pack/Items/Checkpoints/Start/Start (Idle).png',
-  'pack/Items/Checkpoints/Start/Start (Moving) (64x64).png',
-  'pack/Items/Checkpoints/End/End (Idle).png',
-  'pack/Items/Checkpoints/End/End (Pressed) (64x64).png',
-  'pack/Items/Checkpoints/Checkpoint/Checkpoint (No Flag).png',
-  'pack/Items/Checkpoints/Checkpoint/Checkpoint (Flag Out) (64x64).png',
-  'pack/Items/Checkpoints/Checkpoint/Checkpoint (Flag Idle)(64x64).png',
-];
-
-/**
- * Load only the static engine assets required by the current CMS data.
- * Backgrounds are loaded based on which colors the rooms actually reference.
- */
-export async function loadStaticAssets(
-  onProgress?: (progress: number) => void
-): Promise<void> {
-  const paths: string[] = [
-    'pack/Terrain/Terrain (16x16).png',
-    'pack/Items/Fruits/Collected.png',
-    ...CHECKPOINT_ASSETS,
-  ];
-
-  for (const path of paths) {
-    Assets.add({ alias: path, src: path });
-  }
-
-  await Assets.load(paths, onProgress);
-}

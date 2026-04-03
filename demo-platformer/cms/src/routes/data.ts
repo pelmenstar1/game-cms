@@ -1,6 +1,7 @@
 import { GameData } from '@demo-platformer/shared';
 import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
+import { mapObject } from '@game-cms/shared/object';
 import { ObjectId } from 'mongodb';
 
 const route = apiRoute({
@@ -131,7 +132,7 @@ const route = apiRoute({
               api: 'base::entity/notFound',
             });
           }
-          return [id, result] as const;
+          return [id, { ...result, collected: result.collected[0] }] as const;
         })
       ),
     ]);
@@ -170,7 +171,20 @@ const route = apiRoute({
             background: room.background[0],
             width: room.width,
             height: room.height,
+            terrain: room.terrain[0],
             layout: room.layout as number[][],
+            checkpointImages: mapObject(room.checkpointImages, (value) => ({
+              idle: {
+                file: value.idle.file[0],
+                width: value.idle.width,
+                height: value.idle.height,
+              },
+              moving: {
+                file: value.moving.file[0],
+                width: value.moving.width,
+                height: value.moving.height,
+              },
+            })),
             checkpoints: room.checkpoints,
             traps: room.traps.map((entry) => ({
               x: entry.x,

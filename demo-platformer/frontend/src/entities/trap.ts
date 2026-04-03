@@ -1,13 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { AnimatedSprite, Container } from 'pixi.js';
+import {
+  AnimatedSprite,
+  Container,
+  type PointData,
+  type RectangleLike,
+} from 'pixi.js';
 
 import { buildAnimationSet } from '../assets';
 import { ANIMATION_SPEED } from '../constants';
-import type { AABB, AnimationSet, TrapDef, Vec2 } from '../types';
+import type { AnimationSet, TrapDef } from '../types';
 
 export class Trap {
   readonly container = new Container();
-  readonly position: Vec2;
+  readonly position: PointData;
 
   private sprite: AnimatedSprite;
   private animations: AnimationSet;
@@ -42,7 +47,7 @@ export class Trap {
   }
 
   /** Get world-space hitbox for damage collision. */
-  getWorldHitbox(): AABB {
+  getWorldHitbox(): RectangleLike {
     const frames = this.sprite.textures;
     const frame = frames[0];
     const w = 'width' in frame ? frame.width : this.sprite.width;

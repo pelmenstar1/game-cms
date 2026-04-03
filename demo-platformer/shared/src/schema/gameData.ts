@@ -53,6 +53,18 @@ const item = z.object({
   sprite: itemSprite,
   effect: z.enum(['score', 'heal', 'speed_boost', 'destroy']),
   value: z.number(),
+  collected: fileItem,
+});
+
+const checkpointImageVariant = z.object({
+  file: fileItem,
+  width: z.number(),
+  height: z.number(),
+});
+
+const checkpointImage = z.object({
+  idle: checkpointImageVariant,
+  moving: checkpointImageVariant,
 });
 
 const checkpoint = z.object({
@@ -67,6 +79,12 @@ const room = z.object({
   width: z.number(),
   height: z.number(),
   layout: z.array(z.array(z.number())),
+  terrain: fileItem,
+  checkpointImages: z.object({
+    start: checkpointImage,
+    mid: checkpointImage,
+    end: checkpointImage,
+  }),
   checkpoints: z.array(checkpoint),
   traps: z.array(
     z.object({
