@@ -21,6 +21,7 @@
   },
   "peerDependencies": {
     "@types/react": "*",
+    "fastify": "catalog:",
     "mongodb": "catalog:"
   },
   "exports": {

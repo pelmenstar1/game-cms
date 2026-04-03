@@ -2,18 +2,26 @@ import fsp from 'node:fs/promises';
 
 import { glob } from 'glob';
 
-const patterns = [
+import { getWorkspacePackages } from '../shared/workspace';
+
+const STATIC_PATTERNS = [
   '*.tsbuildinfo',
-  './packages/*/*.tsbuildinfo',
-  './packages/*/dist',
-  './demo-platformer/*/*.tsbuildinfo',
-  './demo-platformer/*/dist',
   './node_modules/prettier/.prettier-cache',
   './node_modules/.stylelintcache',
   './node_modules/.eslintcache',
 ];
 
 async function main() {
+  const workspacePackages = await getWorkspacePackages();
+
+  const patterns = [
+    ...STATIC_PATTERNS,
+    ...workspacePackages.flatMap((dirPath) => [
+      `${dirPath}/dist`,
+      `${dirPath}/*.tsbuildinfo`,
+    ]),
+  ];
+
   const files = await glob(patterns, {
     ignore: ['**/node_modules/**'],
   });

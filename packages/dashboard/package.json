@@ -19,8 +19,7 @@
     "sass-embedded": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-tsconfig-paths": "catalog:"
+    "vite": "catalog:"
   },
   "dependencies": {
     "@game-cms/base-components": "workspace:*",

@@ -29,6 +29,6 @@
   },
   "peerDependencies": {
     "@react-router/dev": "catalog:",
-    "vite": "^7.0.0"
+    "vite": "8.x"
   }
 }

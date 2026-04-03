@@ -11,7 +11,8 @@
     "@types/node": "catalog:",
     "@types/qs": "catalog:",
     "tsx": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "fastify": "catalog:"
   },
   "dependencies": {
     "@fastify/cors": "catalog:",
@@ -29,7 +30,7 @@
     "zod": "catalog:"
   },
   "peerDependencies": {
-    "fastify": "*"
+    "fastify": "catalog:"
   },
   "exports": {
     ".": {

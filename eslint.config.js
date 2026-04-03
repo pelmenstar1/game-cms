@@ -81,6 +81,7 @@ export default defineConfig(
         'error',
         { allowInterfaces: 'always' },
       ],
+      '@typescript-eslint/no-unnecessary-type-arguments': 'off',
 
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',

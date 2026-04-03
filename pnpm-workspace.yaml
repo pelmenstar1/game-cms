@@ -14,39 +14,38 @@ catalog:
   '@fastify/multipart': ^9.4.0
   '@fastify/send': ^4.1.0
   '@fastify/static': ^9.0.0
-  '@react-router/dev': 7.13.1
-  '@react-router/node': 7.13.1
-  '@storybook/addon-a11y': 10.3.1
-  '@storybook/addon-links': 10.3.1
-  '@storybook/react': 10.3.1
-  '@storybook/react-vite': 10.3.1
+  '@react-router/dev': 7.14.0
+  '@react-router/node': 7.14.0
+  '@storybook/addon-a11y': 10.3.4
+  '@storybook/addon-links': 10.3.4
+  '@storybook/react': 10.3.4
+  '@storybook/react-vite': 10.3.4
   '@types/mime-types': ^3.0.1
   '@types/node': 25.5.0
   '@types/react': 19.2.14
   '@types/react-dom': 19.2.3
   '@types/qs': ^6.14.0
-  '@vitejs/plugin-react': 5.1.2
-  fastify: 5.6.2
+  '@vitejs/plugin-react': 6.0.1
+  fastify: 5.8.4
   fastify-type-provider-zod: 6.1.0
   glob: 13.0.0
-  i18next: 25.10.1
+  i18next: 26.0.3
   jiti: ^2.6.1
   mime-types: ^3.0.2
   mongodb: 7.0.0
-  pino: 10.1.1
+  pino: 10.3.1
   pixi.js: ^8.17.1
   qs: 6.15.0
   react: 19.2.4
   react-dom: 19.2.4
-  react-i18next: ^16.5.2
-  react-router: ^7.13.1
-  sass-embedded: 1.98.0
+  react-i18next: ^17.0.2
+  react-router: ^7.14.0
+  sass-embedded: 1.99.0
   sharp: ^0.34.5
-  storybook: 10.3.1
+  storybook: 10.3.4
   tsx: 4.21.0
   typescript: 5.9.3
-  vite: 7.3.1
-  vite-tsconfig-paths: ^6.1.1
-  vitest: ^4.1.0
+  vite: 8.0.3
+  vitest: ^4.1.2
   zod: ^4.3.6
   uuid: ^13.0.0
