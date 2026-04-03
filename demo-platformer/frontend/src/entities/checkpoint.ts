@@ -1,8 +1,15 @@
-import { AnimatedSprite, Assets, Container, Texture } from 'pixi.js';
+import {
+  AnimatedSprite,
+  Assets,
+  Container,
+  type PointData,
+  type RectangleLike,
+  Texture,
+} from 'pixi.js';
 
 import { sliceSpriteStrip } from '../assets';
 import { ANIMATION_SPEED } from '../constants';
-import type { AABB, Vec2 } from '../types';
+import type { CheckpointImageDef } from '../types';
 
 type CheckpointType = 'start' | 'mid' | 'end';
 
@@ -11,66 +18,27 @@ interface CheckpointAssets {
   active: Texture[];
 }
 
-function loadCheckpointAssets(type: CheckpointType): CheckpointAssets {
-  switch (type) {
-    case 'start': {
-      return {
-        idle: sliceSpriteStrip(
-          Assets.get<Texture>('pack/Items/Checkpoints/Start/Start (Idle).png'),
-          64,
-          64
-        ),
-        active: sliceSpriteStrip(
-          Assets.get<Texture>(
-            'pack/Items/Checkpoints/Start/Start (Moving) (64x64).png'
-          ),
-          64,
-          64
-        ),
-      };
-    }
-
-    case 'mid': {
-      return {
-        idle: sliceSpriteStrip(
-          Assets.get<Texture>(
-            'pack/Items/Checkpoints/Checkpoint/Checkpoint (No Flag).png'
-          ),
-          64,
-          64
-        ),
-        active: sliceSpriteStrip(
-          Assets.get<Texture>(
-            'pack/Items/Checkpoints/Checkpoint/Checkpoint (Flag Idle)(64x64).png'
-          ),
-          64,
-          64
-        ),
-      };
-    }
-
-    case 'end': {
-      return {
-        idle: sliceSpriteStrip(
-          Assets.get<Texture>('pack/Items/Checkpoints/End/End (Idle).png'),
-          64,
-          64
-        ),
-        active: sliceSpriteStrip(
-          Assets.get<Texture>(
-            'pack/Items/Checkpoints/End/End (Pressed) (64x64).png'
-          ),
-          64,
-          64
-        ),
-      };
-    }
-  }
+function loadCheckpointAssets(
+  idle: CheckpointImageDef,
+  active: CheckpointImageDef
+): CheckpointAssets {
+  return {
+    idle: sliceSpriteStrip(
+      Assets.get<Texture>(idle.path),
+      idle.width,
+      idle.height
+    ),
+    active: sliceSpriteStrip(
+      Assets.get<Texture>(active.path),
+      active.width,
+      active.height
+    ),
+  };
 }
 
 export class Checkpoint {
   readonly container = new Container();
-  readonly position: Vec2;
+  readonly position: PointData;
   readonly type: CheckpointType;
 
   activated = false;
@@ -78,10 +46,16 @@ export class Checkpoint {
   private sprite: AnimatedSprite;
   private assets: CheckpointAssets;
 
-  constructor(type: CheckpointType, x: number, y: number) {
+  constructor(
+    type: CheckpointType,
+    x: number,
+    y: number,
+    idle: CheckpointImageDef,
+    active: CheckpointImageDef
+  ) {
     this.type = type;
     this.position = { x, y };
-    this.assets = loadCheckpointAssets(type);
+    this.assets = loadCheckpointAssets(idle, active);
 
     this.sprite = new AnimatedSprite(this.assets.idle);
     this.sprite.animationSpeed = ANIMATION_SPEED;
@@ -92,7 +66,7 @@ export class Checkpoint {
     this.syncSprite();
   }
 
-  getWorldHitbox(): AABB {
+  getWorldHitbox(): RectangleLike {
     return {
       x: this.position.x - 16,
       y: this.position.y - 64,

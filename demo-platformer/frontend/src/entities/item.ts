@@ -1,12 +1,19 @@
-import { AnimatedSprite, Assets, Container, Texture } from 'pixi.js';
+import {
+  AnimatedSprite,
+  Assets,
+  Container,
+  type PointData,
+  type RectangleLike,
+  Texture,
+} from 'pixi.js';
 
 import { sliceSpriteStrip } from '../assets';
 import { ANIMATION_SPEED } from '../constants';
-import type { AABB, ItemDef, Vec2 } from '../types';
+import type { ItemDef } from '../types';
 
 export class Item {
   readonly container = new Container();
-  readonly position: Vec2;
+  readonly position: PointData;
 
   collected = false;
 
@@ -26,8 +33,7 @@ export class Item {
       def.sprite.frameHeight
     );
 
-    // Prepare the "Collected" effect (static engine asset)
-    const collectedTex = Assets.get<Texture>('pack/Items/Fruits/Collected.png');
+    const collectedTex = Assets.get<Texture>(def.collectedAlias);
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     this.collectedFrames = collectedTex
@@ -44,7 +50,7 @@ export class Item {
   }
 
   /** Get world-space hitbox for collection detection. */
-  getWorldHitbox(): AABB {
+  getWorldHitbox(): RectangleLike {
     return {
       x: this.position.x,
       y: this.position.y,

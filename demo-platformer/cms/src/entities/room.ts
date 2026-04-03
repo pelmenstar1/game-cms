@@ -3,28 +3,33 @@ import {
   compose,
   dropdown,
   entityReference,
+  file,
   json,
   number,
   repeatable,
   text,
 } from 'game-cms/components';
 
+const checkpointImageVariant = compose({
+  file: file({ supportedMimeTypes: ['image/png'], maxItems: 1 }),
+  width: number({ integer: true, min: 1 }),
+  height: number({ integer: true, min: 1 }),
+});
+
+const checkpointImage = compose({
+  idle: checkpointImageVariant,
+  moving: checkpointImageVariant,
+});
+
 export default entity({
   title: 'Room',
   components: {
     name: text(),
-    background: dropdown([
-      { key: 'Blue', title: 'Blue' },
-      { key: 'Brown', title: 'Brown' },
-      { key: 'Gray', title: 'Gray' },
-      { key: 'Green', title: 'Green' },
-      { key: 'Pink', title: 'Pink' },
-      { key: 'Purple', title: 'Purple' },
-      { key: 'Yellow', title: 'Yellow' },
-    ]),
+    background: file({ supportedMimeTypes: ['image/png'] }),
     width: number({ integer: true, min: 1 }),
     height: number({ integer: true, min: 1 }),
     layout: json(),
+    terrain: file({ supportedMimeTypes: ['image/png'] }),
     traps: repeatable({
       component: compose({
         trap: entityReference({ entityId: 'trap' }),
@@ -38,6 +43,11 @@ export default entity({
         x: number(),
         y: number(),
       }),
+    }),
+    checkpointImages: compose({
+      start: checkpointImage,
+      mid: checkpointImage,
+      end: checkpointImage,
     }),
     checkpoints: repeatable({
       component: compose({

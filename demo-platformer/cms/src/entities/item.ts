@@ -17,5 +17,6 @@ export default entity({
       { key: 'destroy', title: 'Destroy' },
     ]),
     value: number(),
+    collected: file({ supportedMimeTypes: ['image/png'], maxItems: 1 }),
   },
 });

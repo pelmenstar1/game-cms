@@ -7,6 +7,11 @@ import { validator } from './validator.js';
 export default defineComponentController({
   core,
   validator,
+  migrate: (data) => {
+    if (data instanceof ObjectId) {
+      return data;
+    }
+  },
   storageTransformer: {
     getDefaultData: () => null,
     toStorage: (data) => (data ? new ObjectId(data) : null),

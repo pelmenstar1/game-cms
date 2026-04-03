@@ -7,6 +7,11 @@ import { validator } from './validator.js';
 
 export default defineComponentController({
   core,
+  migrate: (data) => {
+    if (data instanceof Date) {
+      return data;
+    }
+  },
   validator: (data, options) => {
     if (typeof data === 'string') {
       const date = new Date(data);

@@ -6,9 +6,12 @@ import { validator } from './validator.js';
 export default defineComponentController({
   core,
   validator: (data, options, context) => {
-    return validator(data, (element) =>
-      context.validate(options.componentId, element, options.baseOptions)
-    );
+    const { componentId, baseOptions } = options;
+
+    return validator(data, {
+      validateItem: (element) =>
+        context.validate(componentId, element, baseOptions),
+    });
   },
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),

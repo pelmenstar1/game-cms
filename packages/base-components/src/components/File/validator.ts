@@ -2,9 +2,10 @@ import { ComponentOptionsById } from '@game-cms/core';
 
 export function validator(
   data: unknown,
-  options: ComponentOptionsById<'base::file'>
+  options: ComponentOptionsById<'base::file'>,
+  isValidItem: (item: unknown) => boolean
 ) {
-  if (!Array.isArray(data) || data.some((item) => typeof item !== 'string')) {
+  if (!Array.isArray(data) || !data.every(isValidItem)) {
     return 'INVALID_TYPE';
   }
 

@@ -36,9 +36,7 @@ export class Room {
     this.hero = hero;
 
     // Background
-    const bgTexture = Assets.get<Texture>(
-      `pack/Background/${def.background}.png`
-    );
+    const bgTexture = Assets.get<Texture>(def.backgroundAlias);
     this.background = new TilingSprite({
       texture: bgTexture,
       width: this.widthPx,
@@ -47,9 +45,8 @@ export class Room {
     this.container.addChild(this.background);
 
     // Terrain tiles
-    const terrainTexture = Assets.get<Texture>(
-      'pack/Terrain/Terrain (16x16).png'
-    );
+    const terrainTexture = Assets.get<Texture>(def.terrainAlias);
+
     for (let row = 0; row < def.layout.length; row++) {
       for (let col = 0; col < def.layout[row].length; col++) {
         const tileIndex = def.layout[row][col];
@@ -83,7 +80,13 @@ export class Room {
 
     // Checkpoints
     for (const cp of def.checkpoints) {
-      const checkpoint = new Checkpoint(cp.type, cp.x, cp.y);
+      const checkpoint = new Checkpoint(
+        cp.type,
+        cp.x,
+        cp.y,
+        cp.idle,
+        cp.active
+      );
       this.checkpoints.push(checkpoint);
       this.entityContainer.addChild(checkpoint.container);
     }

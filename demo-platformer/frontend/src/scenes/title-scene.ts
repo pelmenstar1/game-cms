@@ -21,6 +21,7 @@ export class TitleScene implements Scene {
     private screenWidth: number,
     private screenHeight: number,
     private title: string,
+    private backgroundAlias: string,
     private heroIdleFrames: Texture[],
     onStart: () => void
   ) {
@@ -29,7 +30,7 @@ export class TitleScene implements Scene {
 
   enter(): void {
     // Tiling background
-    const bgTexture = Assets.get<Texture>('pack/Background/Blue.png');
+    const bgTexture = Assets.get<Texture>(this.backgroundAlias);
     const bg = new TilingSprite({
       texture: bgTexture,
       width: this.screenWidth,

@@ -1,7 +1,7 @@
 import type { ClientGameData } from '@demo-platformer/shared';
 import { Application, Assets, ProgressCallback } from 'pixi.js';
 
-import { buildAnimationSet, loadStaticAssets } from './assets';
+import { buildAnimationSet } from './assets';
 import { GAME_SCALE } from './constants';
 import { initInput, updateInput } from './input';
 import { GameplayScene } from './scenes/gameplay-scene';
@@ -29,7 +29,6 @@ type GameDataResult = {
   itemDefs: Record<string, ItemDef>;
   levelDef: LevelDef;
   cmsAssetUrls: string[];
-  backgroundColors: string[];
 };
 
 async function fetchGameData(): Promise<GameDataResult> {
@@ -41,14 +40,23 @@ async function fetchGameData(): Promise<GameDataResult> {
   }
   const data = (await response.json()) as unknown as ClientGameData;
 
+  const cmsAssetUrls: string[] = [
+    data.config.titleScene.background.url,
+    data.config.scoreScene.background.url,
+  ];
+
   const gameConfig: GameConfig = {
     title: data.config.title,
+    titleScene: {
+      backgroundAlias: data.config.titleScene.background.url,
+    },
+    scoreScene: {
+      backgroundAlias: data.config.scoreScene.background.url,
+    },
     gravity: data.config.gravity,
     defaultLives: data.config.defaultLives,
   };
 
-  // Build hero animations from CMS file URLs
-  const cmsAssetUrls: string[] = [];
   const heroAnimations: Record<string, SpriteStripDef> = {};
   for (const anim of data.hero.animations) {
     const url = anim.sprite[0]?.url;
@@ -74,6 +82,8 @@ async function fetchGameData(): Promise<GameDataResult> {
   const itemDefMap = new Map<string, ItemDef>();
 
   for (const room of data.level.rooms) {
+    cmsAssetUrls.push(room.background.url, room.terrain.url);
+
     for (const entry of room.traps) {
       if (!entry.trap) continue;
       const key = toKey(entry.trap.name);
@@ -116,10 +126,12 @@ async function fetchGameData(): Promise<GameDataResult> {
             frameWidth: entry.item.sprite.frameWidth,
             frameHeight: entry.item.sprite.frameHeight,
           },
+          collectedAlias: entry.item.collected.url,
           effect: entry.item.effect,
           value: entry.item.value,
         });
-        cmsAssetUrls.push(url);
+
+        cmsAssetUrls.push(url, entry.item.collected.url);
       }
     }
   }
@@ -127,17 +139,34 @@ async function fetchGameData(): Promise<GameDataResult> {
   const trapDefs = Object.fromEntries(trapDefMap);
   const itemDefs = Object.fromEntries(itemDefMap);
 
-  const backgroundColors = data.level.rooms.map((room) => room.background);
-
   const levelDef: LevelDef = {
     name: data.level.name,
     rooms: data.level.rooms.map((room) => ({
       name: room.name,
-      background: room.background,
+      backgroundAlias: room.background.url,
+      terrainAlias: room.terrain.url,
       width: room.width,
       height: room.height,
       layout: room.layout,
-      checkpoints: room.checkpoints,
+      checkpoints: room.checkpoints.map((cp) => {
+        const images = room.checkpointImages[cp.type];
+        cmsAssetUrls.push(images.idle.file.url, images.moving.file.url);
+        return {
+          type: cp.type,
+          x: cp.x,
+          y: cp.y,
+          idle: {
+            path: images.idle.file.url,
+            width: images.idle.width,
+            height: images.idle.height,
+          },
+          active: {
+            path: images.moving.file.url,
+            width: images.moving.width,
+            height: images.moving.height,
+          },
+        };
+      }),
       traps: room.traps.flatMap((e) =>
         e.trap ? [{ defName: toKey(e.trap.name), x: e.x, y: e.y }] : []
       ),
@@ -154,7 +183,6 @@ async function fetchGameData(): Promise<GameDataResult> {
     itemDefs,
     levelDef,
     cmsAssetUrls,
-    backgroundColors,
   };
 }
 
@@ -174,15 +202,8 @@ export async function launchApp(
   onProgress?: ProgressCallback
 ) {
   // Fetch game data from CMS before initializing the app
-  const {
-    gameConfig,
-    heroDef,
-    trapDefs,
-    itemDefs,
-    levelDef,
-    cmsAssetUrls,
-    backgroundColors,
-  } = await fetchGameData();
+  const { gameConfig, heroDef, trapDefs, itemDefs, levelDef, cmsAssetUrls } =
+    await fetchGameData();
 
   const app = new Application();
 
@@ -204,15 +225,12 @@ export async function launchApp(
   // Pixel-art rendering: disable texture smoothing
   app.stage.scale.set(GAME_SCALE);
 
-  // Load static engine assets (terrain, checkpoints, backgrounds used by rooms + title/score)
-  await loadStaticAssets([...backgroundColors, 'Blue', 'Purple'], onProgress);
-
   // Load CMS-served sprite assets (hero, trap, and item images from CMS file storage)
   if (cmsAssetUrls.length > 0) {
     for (const url of cmsAssetUrls) {
       Assets.add({ alias: url, src: url });
     }
-    await Assets.load(cmsAssetUrls);
+    await Assets.load(cmsAssetUrls, onProgress);
   }
 
   // Pre-build hero idle frames for the title screen
@@ -234,6 +252,7 @@ export async function launchApp(
         screenWidth,
         screenHeight,
         gameConfig.title,
+        gameConfig.titleScene.backgroundAlias,
         heroIdleFrames,
         () => {
           startGame();
@@ -261,9 +280,15 @@ export async function launchApp(
 
   function showScore(state: GameState) {
     sceneManager.setScene(
-      new ScoreScene(screenWidth, screenHeight, state, () => {
-        showTitle();
-      })
+      new ScoreScene(
+        screenWidth,
+        screenHeight,
+        gameConfig.titleScene.backgroundAlias,
+        state,
+        () => {
+          showTitle();
+        }
+      )
     );
   }
 
