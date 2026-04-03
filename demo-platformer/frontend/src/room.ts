@@ -36,9 +36,7 @@ export class Room {
     this.hero = hero;
 
     // Background
-    const bgTexture = Assets.get<Texture>(
-      `pack/Background/${def.background}.png`
-    );
+    const bgTexture = Assets.get<Texture>(def.backgroundAlias);
     this.background = new TilingSprite({
       texture: bgTexture,
       width: this.widthPx,

@@ -53,8 +53,14 @@ export interface HeroDef {
   jumpForce: number;
 }
 
+export interface SceneDef {
+  backgroundAlias: string;
+}
+
 export interface GameConfig {
   title: string;
+  titleScene: SceneDef;
+  scoreScene: SceneDef;
   gravity: number;
   defaultLives: number;
 }
@@ -107,18 +113,9 @@ export interface CheckpointPlacement {
 
 // ---- Room ----
 
-export type BackgroundColor =
-  | 'Blue'
-  | 'Brown'
-  | 'Gray'
-  | 'Green'
-  | 'Pink'
-  | 'Purple'
-  | 'Yellow';
-
 export interface RoomDef {
   name: string;
-  background: BackgroundColor;
+  backgroundAlias: string;
   /** 2D grid of tile indices. 0 = empty, >0 = solid tile index in terrain atlas */
   layout: number[][];
   traps: TrapPlacement[];

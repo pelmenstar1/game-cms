@@ -17,13 +17,14 @@ export class ScoreScene implements Scene {
   constructor(
     private screenWidth: number,
     private screenHeight: number,
+    private backgroundAlias: string,
     private state: GameState,
     private onRestart: () => void
   ) {}
 
   enter(): void {
     // Background
-    const bgTexture = Assets.get<Texture>('pack/Background/Purple.png');
+    const bgTexture = Assets.get<Texture>(this.backgroundAlias);
     const bg = new TilingSprite({
       texture: bgTexture,
       width: this.screenWidth,

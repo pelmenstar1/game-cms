@@ -1,7 +1,7 @@
 import { getRawEntityDocumentById } from '@game-cms/base-api/client';
 import {
   EntityId,
-  EntityOutDataById,
+  EntityInternalOutDataById,
   EntitySchemaById,
 } from '@game-cms/base-core';
 import { useComponentApi } from '@game-cms/component-api';
@@ -25,7 +25,7 @@ export interface EntityPreviewLoaderProps {
 
 type RendererProps<Id extends EntityId> = {
   entitySchema: EntitySchemaById<Id>;
-  document: EntityOutDataById<Id>;
+  document: EntityInternalOutDataById<Id>;
   clientTransformerContext: ForeignComponentClientDataTransformerContext;
 };
 
@@ -43,7 +43,7 @@ function Renderer<Id extends EntityId>({
     () =>
       transformDataToClientData(
         clientTransformerContext,
-        document,
+        document.components,
         composeOptions
       ),
     [clientTransformerContext, document, composeOptions]

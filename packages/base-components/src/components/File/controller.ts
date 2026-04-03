@@ -8,7 +8,8 @@ import { validator } from './validator.js';
 
 export default defineComponentController({
   core,
-  validator,
+  validator: (data, options) =>
+    validator(data, options, (item) => typeof item === 'string'),
   migrate: (data) => {
     if (
       Array.isArray(data) &&

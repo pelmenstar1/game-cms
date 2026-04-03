@@ -63,15 +63,7 @@ const checkpoint = z.object({
 
 const room = z.object({
   name: z.string(),
-  background: z.enum([
-    'Blue',
-    'Brown',
-    'Gray',
-    'Green',
-    'Pink',
-    'Purple',
-    'Yellow',
-  ]),
+  background: fileItem,
   width: z.number(),
   height: z.number(),
   layout: z.array(z.array(z.number())),
@@ -92,9 +84,15 @@ const room = z.object({
   ),
 });
 
+const scene = z.object({
+  background: fileItem,
+});
+
 export const gameData = z.object({
   config: z.object({
     title: z.string(),
+    titleScene: scene,
+    scoreScene: scene,
     gravity: z.number(),
     defaultLives: z.number(),
   }),

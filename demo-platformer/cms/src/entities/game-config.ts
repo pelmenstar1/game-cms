@@ -1,5 +1,15 @@
 import { entity } from 'game-cms';
-import { entityReference, number, text } from 'game-cms/components';
+import {
+  compose,
+  entityReference,
+  file,
+  number,
+  text,
+} from 'game-cms/components';
+
+const scene = compose({
+  background: file({ supportedMimeTypes: ['image/png'] }),
+});
 
 export default entity({
   title: 'Game Config',
@@ -9,5 +19,7 @@ export default entity({
     startingLevel: entityReference({ entityId: 'level' }),
     gravity: number({ min: 0 }),
     defaultLives: number({ integer: true, min: 1 }),
+    titleScene: scene,
+    scoreScene: scene,
   },
 });

@@ -1,4 +1,5 @@
 import { defineComponentClientController } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 
 import core from './core.js';
 import { validator } from './validator.js';
@@ -11,7 +12,7 @@ export default defineComponentClientController({
     },
   },
   getDefaultData: () => [],
-  validator,
+  validator: (data, options) => validator(data, options, isNonNullObject),
   transformer: {
     toClient: (data) => {
       return data.map((item) => ({

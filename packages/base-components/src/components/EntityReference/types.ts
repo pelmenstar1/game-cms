@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 type EntityComponentEntry = {
   outData: string | null;
-  inData: string;
+  inData: string | null;
   options: {
     entityId: EntityId;
   };

@@ -143,6 +143,12 @@ const route = apiRoute({
     return {
       config: {
         title: config.title,
+        titleScene: {
+          background: config.titleScene.background[0],
+        },
+        scoreScene: {
+          background: config.scoreScene.background[0],
+        },
         gravity: config.gravity,
         defaultLives: config.defaultLives,
       },
@@ -161,7 +167,7 @@ const route = apiRoute({
         rooms: rooms.map((room) => {
           return {
             name: room.name,
-            background: room.background,
+            background: room.background[0],
             width: room.width,
             height: room.height,
             layout: room.layout as number[][],

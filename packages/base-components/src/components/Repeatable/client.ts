@@ -1,4 +1,5 @@
 import { defineComponentClientController } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 
 import core from './core.js';
 import { validator } from './validator.js';
@@ -8,9 +9,17 @@ export default defineComponentClientController({
   validator: (data, options, context) => {
     const { componentId, baseOptions } = options;
 
-    return validator(data, (element) =>
-      context.validate(componentId, element, baseOptions)
-    );
+    return validator<{ data: unknown }>(data, {
+      validateItem: (element) => {
+        return context.validate(componentId, element.data, baseOptions);
+      },
+      validateStructure: (data) => {
+        return data.every(
+          (item): item is { data: unknown } =>
+            isNonNullObject(item) && 'data' in item
+        );
+      },
+    });
   },
   getDefaultData: () => [],
   transformer: {

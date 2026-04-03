@@ -15,6 +15,9 @@ function resolveFileUrl(file: FileItem, baseUrl: string) {
 }
 
 function resolveFileUrls(data: GameData, baseUrl: string) {
+  resolveFileUrl(data.config.titleScene.background, baseUrl);
+  resolveFileUrl(data.config.scoreScene.background, baseUrl);
+
   for (const animation of data.hero.animations) {
     for (const file of animation.sprite) {
       resolveFileUrl(file, baseUrl);
@@ -22,6 +25,8 @@ function resolveFileUrls(data: GameData, baseUrl: string) {
   }
 
   for (const room of data.level.rooms) {
+    resolveFileUrl(room.background, baseUrl);
+
     for (const trapEntry of room.traps) {
       if (trapEntry.trap) {
         for (const animation of trapEntry.trap.animations) {

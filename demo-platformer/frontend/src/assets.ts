@@ -93,7 +93,6 @@ const CHECKPOINT_ASSETS = [
  * Backgrounds are loaded based on which colors the rooms actually reference.
  */
 export async function loadStaticAssets(
-  backgroundColors: string[],
   onProgress?: (progress: number) => void
 ): Promise<void> {
   const paths: string[] = [
@@ -101,11 +100,6 @@ export async function loadStaticAssets(
     'pack/Items/Fruits/Collected.png',
     ...CHECKPOINT_ASSETS,
   ];
-
-  const uniqueBgs = [...new Set(backgroundColors)];
-  for (const bg of uniqueBgs) {
-    paths.push(`pack/Background/${bg}.png`);
-  }
 
   for (const path of paths) {
     Assets.add({ alias: path, src: path });
