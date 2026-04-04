@@ -4,7 +4,9 @@ import path from 'node:path';
 import { isFileNotFoundError, readJson } from '@game-cms/shared/node';
 import z from 'zod';
 
-export const DASHBOARD_BUILD_META_FILE_PATH = './.game-cms/meta.json';
+import { dashboardInternalPath } from './constants.js';
+
+export const BUILD_META_FILE_PATH = dashboardInternalPath('meta.json');
 
 const devMessageTunnel = z.object({
   address: z.string(),
@@ -30,7 +32,7 @@ export async function writeDashboardBuildMeta(
   };
 
   await fsp.writeFile(
-    path.join(dashboardPath, DASHBOARD_BUILD_META_FILE_PATH),
+    path.join(dashboardPath, BUILD_META_FILE_PATH),
     JSON.stringify(meta),
     'utf8'
   );
@@ -38,7 +40,7 @@ export async function writeDashboardBuildMeta(
 
 async function tryReadRawBuildMeta() {
   try {
-    return await readJson(DASHBOARD_BUILD_META_FILE_PATH);
+    return await readJson(BUILD_META_FILE_PATH);
   } catch (error: unknown) {
     if (isFileNotFoundError(error)) {
       return null;

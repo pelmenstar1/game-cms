@@ -5,7 +5,7 @@
   "dependencies": {
     "@game-cms/shared": "workspace:*",
     "chai": "^6.2.2",
-    "chalk": "^5.6.2",
+    "chalk": "catalog:",
     "glob": "catalog:",
     "jiti": "catalog:"
   },

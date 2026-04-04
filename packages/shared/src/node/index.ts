@@ -2,6 +2,7 @@ export * from './buffer.js';
 export * from './env.js';
 export * from './envAccessor.js';
 export * from './error.js';
+export * from './fileLock.js';
 export * from './filePortal.js';
 export * from './fileSource.js';
 export * from './fs.js';

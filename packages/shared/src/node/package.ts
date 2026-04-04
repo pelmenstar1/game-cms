@@ -14,6 +14,7 @@ export type PackageInfo = {
   name: string;
   main?: string;
   types?: string;
+  scripts?: Record<string, string>;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   bin?: string | Record<string, string>;

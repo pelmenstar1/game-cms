@@ -1,3 +1,6 @@
+import chalk from 'chalk';
+
+import { printError, printInfo } from './print';
 import { pnpm } from './process';
 
 const STYLELINT_COMMAND =
@@ -13,10 +16,9 @@ async function phase(name: string, command: string) {
   try {
     await pnpm(command);
 
-    // eslint-disable-next-line no-console
-    console.log(`> ${name} finished`);
+    printInfo(`${chalk.green(name)} finished`);
   } catch (error: unknown) {
-    console.error(`> ${name}`);
+    printError(name);
     console.error(error instanceof Error ? error.message : error);
 
     throw error;

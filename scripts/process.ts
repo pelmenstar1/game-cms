@@ -2,8 +2,8 @@ import { spawn } from 'node:child_process';
 
 import { waitForProcessExit } from '../packages/shared/src/node';
 
-export async function pnpm(command: string) {
-  const p = spawn(`pnpm ${command}`, { shell: true });
+export async function pnpm(command: string, cwd?: string) {
+  const p = spawn(`pnpm ${command}`, { shell: true, cwd });
 
   let result: string = '';
 

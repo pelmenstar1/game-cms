@@ -11,7 +11,7 @@
     "test": "vitest run --project unit",
     "test:outer-loop": "vitest run --project outer-loop",
     "test:browser": "vitest run --project browser",
-    "test:build": "pnpm run -r test:build",
+    "test:build": "tsx ./scripts/testBuild.ts",
     "e2e:test": "pnpm run --filter @game-cms/e2e-runner start",
     "e2e:launch": "tsx ./scripts/e2e.ts",
     "gen:type": "pnpm run -r --parallel gen:type",
@@ -53,6 +53,7 @@
     "vitest-browser-react": "2.1.0"
   },
   "dependencies": {
+    "chalk": "catalog:",
     "glob": "catalog:",
     "yaml": "^2.8.3"
   }

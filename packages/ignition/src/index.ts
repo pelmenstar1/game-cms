@@ -1,3 +1,4 @@
+export * from './buildLock.js';
 export * from './buildMeta.js';
 export { getAllComponentDistributions as getAllComponents } from './components.js';
 export * from './controller.js';

@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import { build as dashboardBuild } from '@game-cms/dashboard';
 import { deleteFileIfExists } from '@game-cms/shared/node';
-import { writeDashboardBuildMeta } from '@game-cms/ignition';
+import { createDashboardBuildLock, writeDashboardBuildMeta } from '@game-cms/ignition';
 
 import {
   getDashboardPackagePath,
@@ -21,6 +21,8 @@ async function copyDashboardOutput(dashboardPath: string) {
 
 export default async function build() {
   const dashboardPath = getDashboardPackagePath();
+
+  await using _ = await createDashboardBuildLock(dashboardPath);
 
   await writeDashboardBuildMeta(dashboardPath);
   await dashboardBuild();
