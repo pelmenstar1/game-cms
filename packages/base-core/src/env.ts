@@ -13,7 +13,7 @@ export type EntityDescriptorMap = {
 };
 
 export type EntityEnvConfig = {
-  schemaRegistry: {
+  schemaRegistry?: {
     filePath: string;
     items: EntityDescriptorMap;
   };

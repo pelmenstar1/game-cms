@@ -1,15 +1,18 @@
 import type { GameCmsController } from '@game-cms/core';
 
-let _cms: GameCmsController = {
+const store = globalThis as unknown as Record<string, unknown>;
+const KEY = '__game_cms_controller__';
+
+const _default: GameCmsController = {
   service: () => {
     throw new Error('CMS Controller is not initialized');
   },
 };
 
-export function cms() {
-  return _cms;
+export function cms(): GameCmsController {
+  return (store[KEY] as GameCmsController | undefined) ?? _default;
 }
 
 export function setCmsController(value: GameCmsController) {
-  _cms = value;
+  store[KEY] = value;
 }

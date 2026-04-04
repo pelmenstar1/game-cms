@@ -5,24 +5,27 @@ import {
 } from 'node:child_process';
 import process from 'node:process';
 
-export function spawnProcessAsync(
+export function waitForProcessExit(
+  process: ChildProcessWithoutNullStreams
+): Promise<number | null> {
+  return new Promise((resolve) => {
+    process.on('exit', resolve);
+  });
+}
+
+export async function spawnProcessAsync(
   command: string,
   options: SpawnOptionsWithoutStdio | undefined,
   setup?: (p: ChildProcessWithoutNullStreams) => void
 ) {
-  return new Promise((resolve, reject) => {
-    const spawnedProcess = spawn(command, options);
+  const spawnedProcess = spawn(command, options);
+  setup?.(spawnedProcess);
 
-    setup?.(spawnedProcess);
+  const code = await waitForProcessExit(spawnedProcess);
 
-    spawnedProcess.on('exit', (code) => {
-      if (code === 0) {
-        resolve(undefined);
-      } else {
-        reject(new Error(`Process failed with code ${code}`));
-      }
-    });
-  });
+  if (code !== 0) {
+    throw new Error(`Process failed with code ${code}`);
+  }
 }
 
 export function redirectProcess(

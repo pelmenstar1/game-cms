@@ -9,6 +9,7 @@
   "references": [
     { "path": "../base-api" },
     { "path": "../core" },
+    { "path": "../e2e" },
     { "path": "../global" },
     { "path": "../shared" }
   ]

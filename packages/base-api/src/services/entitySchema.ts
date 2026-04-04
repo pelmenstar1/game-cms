@@ -12,7 +12,7 @@ import { cms, env } from '@game-cms/global';
 import { mapObject } from '@game-cms/shared/object';
 
 function getEntry<Id extends EntityId>(id: Id) {
-  return env().entity.schemaRegistry.items[id] as unknown as
+  return env().entity.schemaRegistry?.items[id] as unknown as
     | EntityDescriptor<Id>
     | undefined;
 }
@@ -41,7 +41,7 @@ function toClientSchema<Id extends EntityId>(
 }
 
 function getAll() {
-  return env().entity.schemaRegistry.items;
+  return env().entity.schemaRegistry?.items ?? {};
 }
 
 export default service({

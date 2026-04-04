@@ -1,7 +1,7 @@
 import type { ApiRouteId } from '@game-cms/core/api';
 import { ApiError } from '@game-cms/core/api';
+import { describe, expect, it } from '@game-cms/e2e';
 import { cms, env } from '@game-cms/global';
-import { describe, expect, it } from 'vitest';
 
 describe('signUserIn', () => {
   it('should successfully login with valid credentials', async () => {
@@ -255,7 +255,8 @@ describe('getSessionPermissions', () => {
 
     const { session } = await authService.signUserIn({ email, password });
 
-    const sessionPermissions = await authService.getSessionInfo(session.token);
+    const { permissions: sessionPermissions } =
+      await authService.getSessionInfo(session.token);
 
     expect(sessionPermissions).toEqual(permissions);
 

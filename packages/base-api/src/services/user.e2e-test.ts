@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { type CreateUserPayload } from '@game-cms/base-core';
 import { ApiError, type ApiRouteId } from '@game-cms/core/api';
+import { describe, expect, it } from '@game-cms/e2e';
 import { cms, env } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
-import { describe, expect, it } from 'vitest';
 
 function service() {
   return cms().service('base::user');

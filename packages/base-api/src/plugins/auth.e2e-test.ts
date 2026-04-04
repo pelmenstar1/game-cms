@@ -1,8 +1,8 @@
 import { type CmsFastifyInstance } from '@game-cms/core/api';
+import { describe, expect, test } from '@game-cms/e2e';
 import { cms, env } from '@game-cms/global';
 import { makeRequest } from '@game-cms/testing-lib';
 import type { FastifyContextConfig } from 'fastify';
-import { describe, expect, test } from 'vitest';
 
 import { initAuth } from './auth.js';
 

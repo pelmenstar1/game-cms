@@ -1,8 +1,8 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import { beforeAll, describe, expect, test } from 'vitest';
 
-import { getTestConfig, loadTestEnv } from './testUtils.js';
-import { createFileKey, getFileUrl } from './utils.js';
+import { createFileKey, getFileUrl } from '../../internal/utils.js';
+import { getTestConfig, loadTestEnv } from './utils.js';
 
 describe('createFileKey', () => {
   test('known mime', () => {

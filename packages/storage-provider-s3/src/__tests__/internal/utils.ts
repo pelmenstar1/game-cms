@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { loadEnvFileIfExists } from '@game-cms/shared/node';
 
-import { S3StorageProviderConfig } from '../types.js';
+import { S3StorageProviderConfig } from '../../types.js';
 
 export function getTestConfig(): S3StorageProviderConfig {
   return {

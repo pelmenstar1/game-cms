@@ -4,6 +4,8 @@ import path from 'node:path';
 import { glob } from 'glob';
 import yaml from 'yaml';
 
+import { readPackageInfo } from '../packages/shared/src/node';
+
 type PnpmWorkspaceInfo = {
   packages: string[];
 };
@@ -19,4 +21,17 @@ export async function getWorkspacePackages() {
   const info = yaml.parse(infoContent) as PnpmWorkspaceInfo;
 
   return glob(info.packages, { cwd, absolute: true });
+}
+
+export async function getWorkspacePackageNames() {
+  const workspacePaths = await getWorkspacePackages();
+
+  const names = await Promise.all(
+    workspacePaths.map(async (p) => {
+      const info = await readPackageInfo(p);
+      return info.name;
+    })
+  );
+
+  return new Set(names);
 }

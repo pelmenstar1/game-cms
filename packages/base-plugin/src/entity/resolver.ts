@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 import { EntityEnvConfig } from '@game-cms/base-core';
 import type { PluginValueSourceContext } from '@game-cms/core';
+import { maybeJitiImport, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
 import { mapObject } from '@game-cms/shared/object';
 import { createJiti } from 'jiti';
 
@@ -14,23 +15,32 @@ function getClientContextRegistryPath(context: PluginValueSourceContext) {
   const filePath = context.compiledFilePath(CLIENT_CONTEXT_REGISTRY_PATH);
 
   if (fs.existsSync(filePath)) {
-    return {
-      filePath,
-    };
+    return { filePath };
   }
+}
+
+async function resolveSchemaRegistry(schemaRegistryFilePath: string) {
+  const jiti = createJiti(import.meta.url);
+  const schemaRegistry = await maybeJitiImport(jiti, schemaRegistryFilePath);
+
+  if (schemaRegistry == MODULE_NOT_FOUND_MARK) {
+    return;
+  }
+
+  validateEntitySchemaMap(schemaRegistry);
+
+  return schemaRegistry;
 }
 
 export async function resolveEntityEnvConfig(
   context: PluginValueSourceContext
 ): Promise<EntityEnvConfig> {
-  const jiti = createJiti(import.meta.url);
-
   const schemaRegistryFilePath = context.compiledFilePath(SCHEMA_REGISTRY_PATH);
-  const schemaRegistry = await jiti.import(schemaRegistryFilePath);
-  validateEntitySchemaMap(schemaRegistry);
+
+  const schemaRegistry = await resolveSchemaRegistry(schemaRegistryFilePath);
 
   return {
-    schemaRegistry: {
+    schemaRegistry: schemaRegistry && {
       filePath: schemaRegistryFilePath,
       items: mapObject(schemaRegistry, (schema) => ({
         schema,

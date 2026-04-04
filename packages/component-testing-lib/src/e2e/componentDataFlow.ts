@@ -11,6 +11,7 @@ import type {
   ComponentSchema,
   ForeignComponentClientDataTransformerContext,
 } from '@game-cms/core';
+import { describe, expect, test } from '@game-cms/e2e';
 import { cms, env } from '@game-cms/global';
 import {
   incrementingIdSource,
@@ -19,7 +20,6 @@ import {
 } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { maybeImportFile, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
-import { describe, expect, test } from 'vitest';
 
 type TestInput<Id extends ComponentId> = {
   outs: { data: ComponentOutDataById<Id>; component: ComponentSchema<Id> }[];

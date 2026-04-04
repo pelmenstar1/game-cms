@@ -28,20 +28,22 @@ export type BaseCmsEnvironment = {
 
 export interface CmsEnvironment extends BaseCmsEnvironment {}
 
-let _env: CmsEnvironment | undefined;
+const store = globalThis as unknown as Record<string, unknown>;
+const KEY = '__game_cms_env__';
 
 export function setEnvironment(value: CmsEnvironment) {
-  _env = value;
+  store[KEY] = value;
 }
 
 export function env(): CmsEnvironment {
-  if (_env === undefined) {
+  const value = store[KEY] as CmsEnvironment | undefined;
+  if (value === undefined) {
     throw new Error('Environment is not initialized');
   }
 
-  return _env;
+  return value;
 }
 
 export function isEnvInitialized(): boolean {
-  return _env !== undefined;
+  return store[KEY] !== undefined;
 }

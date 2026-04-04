@@ -1,5 +1,6 @@
 import { StorageItemType } from '@game-cms/base-core';
 import { ApiError } from '@game-cms/core/api';
+import { describe, expect, test } from '@game-cms/e2e';
 import { cms } from '@game-cms/global';
 import { temporalDirectory } from '@game-cms/shared/node';
 import { fastify, type RouteOptions } from 'fastify';
@@ -7,7 +8,6 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
-import { describe, expect, test } from 'vitest';
 
 import { localStorageProvider } from './index.js';
 

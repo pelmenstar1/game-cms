@@ -1,4 +1,4 @@
-import { componentDataFlowTests } from '@game-cms/component-testing-lib';
+import { componentDataFlowTests } from '@game-cms/component-testing-lib/e2e';
 
 import { text } from '../Text/index.js';
 import { alternative } from './index.js';

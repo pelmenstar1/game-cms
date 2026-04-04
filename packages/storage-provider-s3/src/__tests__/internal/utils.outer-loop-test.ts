@@ -1,9 +1,9 @@
 import { S3Client } from '@aws-sdk/client-s3';
 import { beforeAll, describe, expect, test } from 'vitest';
 
-import { S3StorageProviderConfig } from '../types.js';
-import { getTestConfig, loadTestEnv } from './testUtils.js';
-import { baseUpload, createFileKey, getFileUrl } from './utils.js';
+import { baseUpload, createFileKey, getFileUrl } from '../../internal/utils.js';
+import { S3StorageProviderConfig } from '../../types.js';
+import { getTestConfig, loadTestEnv } from './utils.js';
 
 describe('getFileUrl', () => {
   beforeAll(async () => {

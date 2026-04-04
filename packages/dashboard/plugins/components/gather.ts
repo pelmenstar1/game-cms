@@ -29,7 +29,7 @@ function getEntityComponentDependencies(
 
 export async function gatherRequiredComponents() {
   const allComponents = await gatherComponents(env());
-  const descriptors = Object.values(env().entity.schemaRegistry.items);
+  const descriptors = Object.values(env().entity.schemaRegistry?.items ?? {});
 
   const requiredComponents = new Set<ComponentId>();
 

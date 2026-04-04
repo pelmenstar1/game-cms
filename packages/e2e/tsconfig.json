@@ -1,11 +1,10 @@
 {
   "extends": "../../configs/tsconfig.lib.json",
-  "compilerOptions": { "rootDir": "./src", "outDir": "./dist", "noEmit": true },
-  "include": ["./src", "./globalSetup.ts"],
-  "references": [
-    { "path": "../game-plugin" },
-    { "path": "../ignition" },
-    { "path": "../game-cms" },
-    { "path": "../storage-provider-local" }
-  ]
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "types": ["node"]
+  },
+  "include": ["./src"],
+  "references": [{ "path": "../shared" }]
 }

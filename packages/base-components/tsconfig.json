@@ -19,6 +19,7 @@
     { "path": "../component-testing-lib" },
     { "path": "../conditional" },
     { "path": "../core" },
+    { "path": "../e2e" },
     { "path": "../global" },
     { "path": "../shared" },
     { "path": "../storybook-config" },

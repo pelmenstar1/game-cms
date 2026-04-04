@@ -5,14 +5,13 @@ import { format, resolveConfig } from 'prettier';
 
 import { readJson5, readPackageInfo } from '../packages/shared/src/node';
 import { packagesDir, tsConfigImplicitDependencies } from '../shared/constants';
+import { getWorkspacePackageNames } from '../shared/workspace';
 
 type TsConfig = {
   references?: {
     path: string;
   }[];
 };
-
-const WORKSPACE_PREFIX = '@game-cms/';
 
 const exceptions = new Set(['@game-cms/dashboard']);
 
@@ -28,7 +27,10 @@ async function prettierApi() {
   };
 }
 
-async function getWorkspaceDependencies(baseDir: string) {
+async function getWorkspaceDependencies(
+  baseDir: string,
+  workspacePackageNames: Set<string>
+) {
   const packageInfo = await readPackageInfo(baseDir);
 
   const keys = [
@@ -37,19 +39,16 @@ async function getWorkspaceDependencies(baseDir: string) {
   ];
 
   return keys
-    .filter(
-      (name) => name.startsWith(WORKSPACE_PREFIX) && !exceptions.has(name)
-    )
-    .map((name) => {
-      const [, actualName] = name.split(WORKSPACE_PREFIX);
-
-      return actualName;
-    })
+    .filter((name) => workspacePackageNames.has(name) && !exceptions.has(name))
+    .map((name) => path.basename(name))
     .toSorted();
 }
 
-async function getTsConfigReferences(baseDir: string) {
-  const deps = await getWorkspaceDependencies(baseDir);
+async function getTsConfigReferences(
+  baseDir: string,
+  workspacePackageNames: Set<string>
+) {
+  const deps = await getWorkspaceDependencies(baseDir, workspacePackageNames);
 
   const name = path.basename(baseDir);
   const refs = deps.map((name) => ({ path: `../${name}` }));
@@ -61,11 +60,15 @@ async function getTsConfigReferences(baseDir: string) {
   return [...refs, ...implicitRefs];
 }
 
-async function processPackage(baseDir: string, prettier: PrettierApi) {
+async function processPackage(
+  baseDir: string,
+  prettier: PrettierApi,
+  workspacePackageNames: Set<string>
+) {
   const configPath = path.join(baseDir, 'tsconfig.json');
   const config = await readJson5<TsConfig>(configPath);
 
-  const refs = await getTsConfigReferences(baseDir);
+  const refs = await getTsConfigReferences(baseDir, workspacePackageNames);
   config.references = refs.length > 0 ? refs : undefined;
 
   const output = await prettier.format(JSON.stringify(config));
@@ -76,6 +79,8 @@ async function processPackage(baseDir: string, prettier: PrettierApi) {
 async function main() {
   const prettier = await prettierApi();
 
+  const workspacePackageNames = await getWorkspacePackageNames();
+
   const packageEntries = await fsp.readdir(packagesDir, {
     withFileTypes: true,
   });
@@ -84,7 +89,11 @@ async function main() {
     packageEntries
       .filter((entry) => entry.isDirectory())
       .map((entry) =>
-        processPackage(path.join(packagesDir, entry.name), prettier)
+        processPackage(
+          path.join(packagesDir, entry.name),
+          prettier,
+          workspacePackageNames
+        )
       )
   );
 }

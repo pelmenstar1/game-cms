@@ -4,14 +4,6 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "devDependencies": {
-    "@game-cms/base-api": "workspace:*",
-    "@game-cms/testing-lib": "workspace:*",
-    "@types/node": "catalog:",
-    "fastify-type-provider-zod": "catalog:",
-    "fastify": "catalog:",
-    "typescript": "catalog:"
-  },
   "dependencies": {
     "@fastify/send": "catalog:",
     "@game-cms/base-core": "workspace:*",
@@ -19,5 +11,14 @@
     "@game-cms/global": "workspace:*",
     "@game-cms/core": "workspace:*",
     "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@game-cms/base-api": "workspace:*",
+    "@game-cms/testing-lib": "workspace:*",
+    "@game-cms/e2e": "workspace:*",
+    "@types/node": "catalog:",
+    "fastify-type-provider-zod": "catalog:",
+    "fastify": "catalog:",
+    "typescript": "catalog:"
   }
 }

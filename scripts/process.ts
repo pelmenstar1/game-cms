@@ -1,24 +1,22 @@
 import { spawn } from 'node:child_process';
 
-export function pnpm(command: string) {
-  return new Promise<void>((resolve, reject) => {
-    const p = spawn(`pnpm ${command}`, { shell: true });
+import { waitForProcessExit } from '../packages/shared/src/node';
 
-    let result: string = '';
+export async function pnpm(command: string) {
+  const p = spawn(`pnpm ${command}`, { shell: true });
 
-    const pushToResult = (chunk: string) => {
-      result += chunk;
-    };
+  let result: string = '';
 
-    p.stdout.on('data', pushToResult);
-    p.stderr.on('data', pushToResult);
+  const pushToResult = (chunk: string) => {
+    result += chunk;
+  };
 
-    p.on('exit', (code) => {
-      if (code === 0) {
-        resolve(undefined);
-      } else {
-        reject(new Error(result));
-      }
-    });
-  });
+  p.stdout.on('data', pushToResult);
+  p.stderr.on('data', pushToResult);
+
+  const code = await waitForProcessExit(p);
+
+  if (code !== 0) {
+    throw new Error(result);
+  }
 }

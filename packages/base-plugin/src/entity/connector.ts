@@ -7,7 +7,7 @@ export function emitEntityConnector(): string {
     entity: { schemaRegistry, clientContextRegistry },
   } = env();
 
-  const entityMetaMap = Object.entries(schemaRegistry.items)
+  const entityMetaMap = Object.entries(schemaRegistry?.items ?? {})
     .map(
       ([id, { schema }]) =>
         `${JSON.stringify(id)}: ${JSON.stringify({ title: schema.title })}`

@@ -26,6 +26,7 @@
     { "path": "./packages/storage-addons" },
     { "path": "./packages/entity-checks" },
     { "path": "./packages/entity-previews" },
+    { "path": "./packages/e2e" },
     { "path": "./packages/dashboard/tsconfig.lib.json" },
     { "path": "./demo-platformer/shared" }
   ],

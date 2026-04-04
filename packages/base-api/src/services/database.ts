@@ -90,6 +90,19 @@ export default service({
       await session.endSession();
     }
   },
+  isDatabaseEmpty: async () => {
+    const cursor = client().db().listCollections(
+      {},
+      {
+        nameOnly: true,
+      }
+    );
+
+    return !(await cursor.hasNext());
+  },
+  dropDatabase: async () => {
+    await client().db().dropDatabase();
+  },
   close: async () => {
     await client().close();
   },

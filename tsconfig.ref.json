@@ -26,6 +26,7 @@
     { "path": "./packages/storybook-config" },
     { "path": "./packages/ignition" },
     { "path": "./packages/component-testing-lib" },
+    { "path": "./packages/e2e-runner" },
     { "path": "./packages/e2e" },
     { "path": "./packages/storage-addons" },
     { "path": "./packages/entity-checks" },

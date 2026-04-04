@@ -11,6 +11,7 @@
     { "path": "../base-api" },
     { "path": "../base-core" },
     { "path": "../core" },
+    { "path": "../e2e" },
     { "path": "../global" },
     { "path": "../shared" },
     { "path": "../testing-lib" }

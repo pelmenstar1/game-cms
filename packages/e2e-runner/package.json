@@ -1,0 +1,20 @@
+{
+  "name": "@game-cms/e2e-runner",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "tsx ./src/main.ts"
+  },
+  "dependencies": {
+    "game-cms": "workspace:*",
+    "@game-cms/ignition": "workspace:*",
+    "@game-cms/game-plugin": "workspace:*",
+    "@game-cms/storage-provider-local": "workspace:*",
+    "@game-cms/global": "workspace:*",
+    "@game-cms/e2e": "workspace:*",
+    "pino": "catalog:"
+  },
+  "devDependencies": {
+    "tsx": "catalog:"
+  }
+}

@@ -5,6 +5,12 @@ import test2Entity from './fixtures/two-entities/entities/test2.js';
 import { getEntityEnvConfigSetup } from './utils.js';
 
 describe('resolveEntitySchemas', () => {
+  test('no schema registry', async () => {
+    const actual = await getEntityEnvConfigSetup('no-entity-registry');
+
+    expect(actual.schemaRegistry).toBeUndefined();
+  });
+
   test('two entities', async () => {
     const actual = await getEntityEnvConfigSetup('two-entities');
 

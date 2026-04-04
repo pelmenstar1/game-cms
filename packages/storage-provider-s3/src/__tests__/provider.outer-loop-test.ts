@@ -10,10 +10,10 @@ import {
 } from 'fastify-type-provider-zod';
 import { describe, expect, test } from 'vitest';
 
-import { GET_ROUTE } from './internal/constants.js';
-import { getTestConfig, loadTestEnv } from './internal/testUtils.js';
-import { s3StorageProvider } from './provider.js';
-import type { S3StorageProviderConfig } from './types.js';
+import { GET_ROUTE } from '../internal/constants.js';
+import { s3StorageProvider } from '../provider.js';
+import { S3StorageProviderConfig } from '../types.js';
+import { getTestConfig, loadTestEnv } from './internal/utils.js';
 
 await loadTestEnv();
 

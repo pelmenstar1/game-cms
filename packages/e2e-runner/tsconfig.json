@@ -1,0 +1,13 @@
+{
+  "extends": "../../configs/tsconfig.lib.json",
+  "compilerOptions": { "rootDir": "./src", "outDir": "./dist", "noEmit": true },
+  "include": ["./src", "./globalSetup.ts"],
+  "references": [
+    { "path": "../e2e" },
+    { "path": "../game-cms" },
+    { "path": "../game-plugin" },
+    { "path": "../global" },
+    { "path": "../ignition" },
+    { "path": "../storage-provider-local" }
+  ]
+}

@@ -7,6 +7,7 @@
     "@game-cms/core": "workspace:*",
     "@game-cms/global": "workspace:*",
     "@game-cms/shared": "workspace:*",
+    "@game-cms/e2e": "workspace:*",
     "jiti": "^2.6.1"
   },
   "devDependencies": {
@@ -16,6 +17,10 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./e2e": {
+      "import": "./dist/e2e/index.js",
+      "types": "./dist/e2e/index.d.ts"
     }
   }
 }

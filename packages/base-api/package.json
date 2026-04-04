@@ -5,15 +5,6 @@
   "scripts": {
     "gen:type": "tsx ./scripts/generateTypes.ts"
   },
-  "devDependencies": {
-    "@game-cms/codegen": "workspace:*",
-    "@game-cms/testing-lib": "workspace:*",
-    "@types/node": "catalog:",
-    "@types/qs": "catalog:",
-    "tsx": "catalog:",
-    "typescript": "catalog:",
-    "fastify": "catalog:"
-  },
   "dependencies": {
     "@fastify/cors": "catalog:",
     "@fastify/multipart": "catalog:",
@@ -28,6 +19,16 @@
     "mongodb": "catalog:",
     "qs": "catalog:",
     "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@game-cms/codegen": "workspace:*",
+    "@game-cms/testing-lib": "workspace:*",
+    "@game-cms/e2e": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/qs": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "fastify": "catalog:"
   },
   "peerDependencies": {
     "fastify": "catalog:"

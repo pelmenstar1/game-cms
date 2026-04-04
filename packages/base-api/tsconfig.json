@@ -10,6 +10,7 @@
     { "path": "../base-core" },
     { "path": "../codegen" },
     { "path": "../core" },
+    { "path": "../e2e" },
     { "path": "../global" },
     { "path": "../shared" },
     { "path": "../testing-lib" }

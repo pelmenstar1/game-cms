@@ -1,6 +1,6 @@
 import type { ApiRouteId } from '@game-cms/core/api';
+import { expect, test } from '@game-cms/e2e';
 import { cms } from '@game-cms/global';
-import { expect, test } from 'vitest';
 
 test('token flow', async () => {
   const service = cms().service('base::auth::apiToken');

@@ -6,6 +6,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
+    networks:
+      - mongo_net
 
   test-runner:
     build:
@@ -16,5 +18,9 @@ services:
       MONGO_CONNECTION_URL: mongodb://mongodb:27017
     depends_on:
       - mongodb
-    links:
-      - mongodb
+    networks:
+      - mongo_net
+
+networks:
+  mongo_net:
+    driver: bridge

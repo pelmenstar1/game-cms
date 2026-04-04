@@ -1,7 +1,7 @@
 import { StorageFileItemWithId, StorageItemType } from '@game-cms/base-core';
-import { componentDataFlowTests } from '@game-cms/component-testing-lib';
+import { componentDataFlowTests } from '@game-cms/component-testing-lib/e2e';
+import { beforeAll, describe } from '@game-cms/e2e';
 import { cms } from '@game-cms/global';
-import { beforeAll, describe } from 'vitest';
 
 import { file } from './index.js';
 

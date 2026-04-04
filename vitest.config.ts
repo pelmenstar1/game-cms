@@ -48,6 +48,12 @@ export default defineConfig({
           setupFiles: ['packages/e2e/src/globalSetup.ts'],
           name: 'e2e',
           environment: 'node',
+          pool: 'forks',
+          maxWorkers: 1,
+          sequence: {
+            concurrent: false,
+          },
+          isolate: false,
         },
       },
     ],
