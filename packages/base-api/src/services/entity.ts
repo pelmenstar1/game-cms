@@ -1,6 +1,7 @@
 import {
   AbortOptions,
   BaseEntityStorageDataById,
+  EntityCheckStorageData,
   EntityErrorById,
   EntityId,
   EntityInDataById,
@@ -250,16 +251,28 @@ async function toStoragePartialData<Id extends EntityId>(
   const schema = getEntitySchema(entityId);
   const { foreignDataMergeContext } = cms().service('base::component');
 
-  const sourceMerged = await asyncMapObject(source, (item, key) => {
-    const { componentId, options } = schema.components[key];
+  const sourceMergedEntries = await Promise.all(
+    Object.entries<unknown>(source).map(async ([key, item]) => {
+      if (item === undefined) {
+        return;
+      }
 
-    return foreignDataMergeContext.merge(
-      componentId,
-      target.components[key],
-      item,
-      options
-    );
-  });
+      const { componentId, options } = schema.components[key];
+
+      const result = await foreignDataMergeContext.merge(
+        componentId,
+        target.components[key],
+        item as never,
+        options
+      );
+
+      return [key, result] as const;
+    })
+  );
+
+  const sourceMerged = Object.fromEntries(
+    sourceMergedEntries.filter(Boolean) as [string, unknown][]
+  ) as Partial<EntityCheckStorageData<Id>>;
 
   return {
     ...target,

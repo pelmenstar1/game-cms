@@ -9,16 +9,17 @@
   "dependencies": {
     "@demo-platformer/frontend": "workspace:*",
     "@demo-platformer/shared": "workspace:*",
-    "@game-cms/shared": "workspace:*",
-    "@game-cms/core": "workspace:*",
-    "@game-cms/base-api": "workspace:*",
     "@fastify/http-proxy": "catalog:",
-    "commander": "catalog:",
     "@fastify/static": "catalog:",
+    "@game-cms/base-api": "workspace:*",
+    "@game-cms/core": "workspace:*",
+    "@game-cms/shared": "workspace:*",
+    "commander": "catalog:",
     "fastify": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "pino-pretty": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }

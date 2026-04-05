@@ -15,20 +15,24 @@
       border-radius: 100%;
 
       &,
-      a {
+      * {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
       }
 
-      a {
+      a,
+      button {
         width: 100%;
         height: 100%;
+
+        &:hover {
+          background: none;
+        }
       }
 
-      a,
-      p {
+      * {
         color: var(--color-text-on-background);
         text-decoration: none;
 

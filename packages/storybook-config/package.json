@@ -6,9 +6,10 @@
   "type": "module",
   "dependencies": {
     "@storybook/react-vite": "catalog:",
-    "storybook": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "vite": "catalog:"
+    "storybook": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "devDependencies": {
     "typescript": "catalog:"

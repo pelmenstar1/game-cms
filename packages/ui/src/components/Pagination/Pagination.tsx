@@ -33,10 +33,10 @@ type InteractionButtonProps = (ComponentProps<'button'> &
 function InteractionButton({
   interaction,
   page,
-  children,
+  ...rest
 }: InteractionButtonProps) {
   if ('getLink' in interaction) {
-    return <Link to={interaction.getLink(page)}>{children}</Link>;
+    return <Link to={interaction.getLink(page)} {...rest} />;
   }
 
   return (
@@ -44,9 +44,8 @@ function InteractionButton({
       onClick={() => {
         interaction.onButtonClick(page);
       }}
-    >
-      {children}
-    </Button>
+      {...rest}
+    />
   );
 }
 

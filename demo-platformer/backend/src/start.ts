@@ -9,9 +9,23 @@ const PORT = 3000;
 export async function startServer(frontendUrl?: string) {
   await loadEnvFileIfExists();
 
+  const logger =
+    process.env.NODE_ENV === 'production'
+      ? true
+      : {
+          transport: {
+            target: 'pino-pretty',
+            options: {
+              translateTime: 'HH:MM:ss Z',
+              ignore: 'pid,hostname',
+            },
+          },
+        };
+
   const app = fastify({
-    logger: true,
+    logger,
   });
+
   await registerFrontend(app, frontendUrl);
 
   app.route(gameDataRoute);

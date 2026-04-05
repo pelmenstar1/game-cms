@@ -12,6 +12,7 @@ import {
   ConfirmationDialog,
   DataLoader,
   namedLazy,
+  PagePresenter,
   useAsyncCallback,
   useModal,
   useNotification,
@@ -42,6 +43,8 @@ const UploadFileDialog = namedLazy(
 
 type FolderId = string | undefined;
 
+const PAGE_SIZE = 20;
+
 export interface FileExplorerProps {
   className?: string;
   visibleMimeTypes?: string[];
@@ -62,9 +65,15 @@ export function FileExplorer({
   const showModal = useModal();
   const notification = useNotification();
 
+  const [page, setPage] = useState(1);
+
   const listOptions = useMemo(
-    () => ({ size: 20, parent: folderId }),
-    [folderId]
+    () => ({
+      size: PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
+      parent: folderId,
+    }),
+    [folderId, page]
   );
 
   const [selectedItemIds, setSelectedItems] = useState<string[]>([]);
@@ -80,6 +89,10 @@ export function FileExplorer({
   const doUploadFile = useApiAction(uploadFile);
   const doDeleteItem = useApiAction(deleteStorageItemById);
   const doCreateFolder = useApiAction(createFolder);
+
+  useEffect(() => {
+    setPage(1);
+  }, [folderId]);
 
   const onUpload = useAsyncCallback(async () => {
     try {
@@ -187,7 +200,7 @@ export function FileExplorer({
       className={classNames(styles.root, className)}
       result={itemsResult}
     >
-      {({ items }) => (
+      {({ items, meta }) => (
         <>
           <FileControlHeader
             isDeleteEnabled={selectedItemIds.length > 0}
@@ -199,14 +212,22 @@ export function FileExplorer({
             onGoToParent={onGoToParent}
             items={items}
           />
-          <FileGrid
-            className={styles.grid}
-            multiple={multiple}
-            items={transformItems(items, visibleMimeTypes)}
-            selectedItemIds={selectedItemIds}
-            onItemsSelected={setSelectedItems}
-            onItemDoubleClick={onItemDoubleClick}
-          />
+          <PagePresenter
+            page={page}
+            pageSize={PAGE_SIZE}
+            totalItems={meta.totalCount}
+            onButtonClick={setPage}
+            className={styles['page-presenter']}
+          >
+            <FileGrid
+              className={styles.grid}
+              multiple={multiple}
+              items={transformItems(items, visibleMimeTypes)}
+              selectedItemIds={selectedItemIds}
+              onItemsSelected={setSelectedItems}
+              onItemDoubleClick={onItemDoubleClick}
+            />
+          </PagePresenter>
         </>
       )}
     </DataLoader>

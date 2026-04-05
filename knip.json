@@ -97,6 +97,11 @@
     },
     "packages/e2e": {
       "entry": ["src/cms.config.ts", "src/globalSetup.ts"]
+    },
+    "demo-platformer/backend": {
+      "entry": ["src/main.ts"],
+      "project": "src/**/*.{ts,tsx}",
+      "ignoreDependencies": ["pino-pretty"]
     }
   }
 }

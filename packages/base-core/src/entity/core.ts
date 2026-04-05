@@ -112,9 +112,9 @@ export type EntityInDataById<Id extends EntityId> = ComponentsToData<
   'inData'
 >;
 
-export type EntityPartialInDataById<Id extends EntityId> = ComponentsToData<
-  EntityComponents<Id>,
-  'partialInData'
+// As entity is basically a 'base::compose' component, it supports partial in data.
+export type EntityPartialInDataById<Id extends EntityId> = Partial<
+  ComponentsToData<EntityComponents<Id>, 'partialInData'>
 >;
 
 export type EntityResolvedDataById<Id extends EntityId> = ComponentsToData<
