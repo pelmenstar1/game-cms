@@ -14,7 +14,7 @@
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@fastify/http-proxy": "^11.4.2",
+    "@fastify/http-proxy": "catalog:",
     "@fastify/static": "catalog:",
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-core": "workspace:*",
@@ -24,7 +24,7 @@
     "@game-cms/global": "workspace:*",
     "@game-cms/ignition": "workspace:*",
     "@game-cms/shared": "workspace:*",
-    "commander": "14.0.2",
+    "commander": "catalog:",
     "fastify": "catalog:",
     "jiti": "catalog:",
     "pino": "catalog:",

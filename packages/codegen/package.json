@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "glob": "catalog:",
-    "json5": "^2.2.3"
+    "json5": "catalog:"
   },
   "exports": {
     "./apiRequestTypes": {
