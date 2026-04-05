@@ -1,44 +1,40 @@
-/* eslint-disable no-console */
 import { spawn } from 'node:child_process';
 
 import { waitForProcessExit } from '../packages/shared/src/node';
 
-const compose = (args: string) =>
-  spawn(`docker compose -f docker-compose-e2e.yml ${args}`, {
+const TEST_RUNNER_SERVICE = 'test-runner';
+
+const compose = (args: string) => {
+  const child = spawn(`docker compose -f docker-compose-e2e.yml ${args}`, {
     shell: true,
     stdio: 'pipe',
   });
 
-async function run() {
-  // Build first
-  const build = compose('build');
-  build.stdout.pipe(process.stdout);
-  build.stderr.pipe(process.stderr);
+  child.stdout.pipe(process.stdout);
+  child.stderr.pipe(process.stderr);
 
-  const buildCode = await waitForProcessExit(build);
+  return child;
+};
+
+async function run() {
+  const buildCode = await waitForProcessExit(compose('build'));
 
   if (buildCode !== 0) {
     console.error('Docker compose build failed');
     process.exit(buildCode ?? 1);
   }
 
-  // Start services
-  const up = compose('up --abort-on-container-exit');
+  await waitForProcessExit(compose('up -d'));
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
-  const onData = (chunk: Buffer) => {
-    const lines = chunk.toString().split('\n');
-    for (const line of lines) {
-      if (line.trim() && !line.includes('mongodb')) {
-        console.log(line);
-      }
-    }
-  };
+  const logs = compose(`logs -f ${TEST_RUNNER_SERVICE}`);
 
-  up.stdout.on('data', onData);
-  up.stderr.on('data', onData);
+  const testCode = await waitForProcessExit(
+    compose(`wait ${TEST_RUNNER_SERVICE} --down-project`)
+  );
 
-  await waitForProcessExit(up);
+  logs.kill();
+
+  process.exit(testCode ?? 1);
 }
 
 await run();
