@@ -1,5 +1,5 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentRenderer } from '@game-cms/core';
+import { ComponentDefaultRenderer } from '@game-cms/core';
 import { IconButton, PlusIcon } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { ComponentList } from '../../micro/ComponentList/ComponentList.js';
 import styles from './renderer.module.scss';
 
-export const renderer: ComponentRenderer<'base::repeatable'> = ({
+export const renderer: ComponentDefaultRenderer<'base::repeatable'> = ({
   options,
   data,
   error,

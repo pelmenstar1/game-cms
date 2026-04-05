@@ -1,5 +1,8 @@
 import { ComponentEntry } from '@game-cms/core';
 
+export const id = 'base::number' as const;
+export type Id = typeof id;
+
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ComponentTypeMap<_Args> {

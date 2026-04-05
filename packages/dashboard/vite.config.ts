@@ -4,6 +4,9 @@ import { libraryWatcherPlugin } from '@game-cms/vite-plugins';
 import { ignitePlugin } from './plugins/ignite/plugin';
 
 export default defineConfig(() => ({
+  resolve: {
+    tsconfigPaths: true,
+  },
   plugins: [
     reactRouter(),
     libraryWatcherPlugin([

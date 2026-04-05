@@ -1,14 +1,19 @@
-import type { EntityClientSchemaById, EntityId } from '@game-cms/base-core';
+import {
+  EntityClientSchemaById,
+  EntityDisplayKeyById,
+  EntityId,
+} from '@game-cms/base-core';
 import { Link } from '@game-cms/ui';
 
 import { BaseItem } from '../BaseItem/BaseItem.js';
-import { EntityListItem } from '../types.js';
+import { EntityListItemInfo } from '../types.js';
 
 export interface ItemProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
   schema: EntityClientSchemaById<Id>;
-  value: EntityListItem<Id>;
+  value: EntityListItemInfo<Id>;
+  displayKeys: EntityDisplayKeyById<Id>[];
 }
 
 export function Item<Id extends EntityId>({
@@ -16,14 +21,18 @@ export function Item<Id extends EntityId>({
   schema,
   entityId,
   value,
+  displayKeys,
 }: ItemProps<Id>) {
   return (
     <BaseItem
       className={className}
-      wrapper={Link}
       schema={schema}
       value={value}
-      to={`/entities/${entityId}/edit/${value.id}`}
+      displayKeys={displayKeys}
+      wrapper={Link}
+      wrapperProps={{
+        to: `/entities/${entityId}/edit/${value.id}`,
+      }}
     />
   );
 }

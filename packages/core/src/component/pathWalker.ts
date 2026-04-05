@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { ComponentClientDataById } from './client.js';
+import { ComponentClientDataById } from './client/types.js';
 import {
   ComponentId,
   ComponentInDataById,
@@ -105,7 +105,11 @@ export type ForeignComponentPathWalkerContext = {
   ) => void;
 };
 
-export type ComponentPathWalkerApplyFn = (value: unknown) => void;
+export type ComponentPathWalkerApplyFn = <Id extends ComponentId, Args>(
+  value: unknown,
+  id: Id,
+  options: ComponentOptionsById<Id, Args>
+) => void;
 
 export type ComponentPathWalker<Id extends ComponentId> = <Args>(
   data: ComponentNestedPathShape<Id, Args>,

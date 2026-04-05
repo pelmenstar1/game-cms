@@ -65,7 +65,7 @@ export function AccessEntityView<Id extends EntityId>({
 
   const api = useComponentApi();
 
-  const Compose = api.getComponent(composeId);
+  const Compose = api.getDefaultRenderer(composeId);
   const composeOptions = schema.components as EntityComposeOptions<Id>;
 
   const [clientData, setClientData] = useState(() =>

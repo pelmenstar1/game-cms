@@ -46,7 +46,7 @@
     },
     "packages/{base,game-plugin}-components": {
       "entry": [
-        "src/components/*/{client,controller,core,renderer,types}.{ts,tsx}",
+        "src/components/*/{client,controller,core,renderer,types,renderer.listPreview}.{ts,tsx}",
         "src/**/route.tsx",
         "src/i18n/types.ts"
       ],
@@ -60,7 +60,8 @@
         "lib/index.ts",
         ".storybook/preview.tsx"
       ],
-      "project": "src/**/*.{ts,tsx}"
+      "project": "src/**/*.{ts,tsx}",
+      "ignoreDependencies": ["@game-cms/ignition"]
     },
     "packages/base-api": {
       "entry": ["src/index.ts", "src/types.ts", "src/routes/**/*.ts"],

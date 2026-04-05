@@ -31,16 +31,14 @@ export function dashboardComponentsPlugin(): Plugin {
           throw new Error(`Unknown component: ${componentId}`);
         }
 
-        return entry.paths.renderer;
+        return entry.paths.renderers.default;
       }
 
       return null;
     },
     load(id) {
       if (id === CONNECTOR_ID) {
-        const code = emitComponentConnector(components);
-
-        return { code };
+        return emitComponentConnector(components);
       }
     },
   };

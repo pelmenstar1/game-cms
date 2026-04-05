@@ -34,7 +34,7 @@ export function EntityVariantTabs<T extends EntityId>({
   onSelectedVariantChanged,
 }: EntityVariantTabsProps<T>) {
   const api = useComponentApi();
-  const Compose = api.getComponent('base::compose');
+  const Compose = api.getDefaultRenderer('base::compose');
 
   const [isPublished, setPublished] = useState(true);
 

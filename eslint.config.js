@@ -16,6 +16,7 @@ export default defineConfig(
       '*/**/build/',
       '*/**/vite.config.ts',
       '**/.react-router',
+      '**/storybook-static',
       'node_modules',
       'packages/*/vite.storybook.config.ts',
       'packages/*/scripts/*',

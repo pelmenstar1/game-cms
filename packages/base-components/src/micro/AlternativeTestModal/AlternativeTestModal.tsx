@@ -31,7 +31,7 @@ export function AlternativeTestModal<Args>({
 
   const api = useComponentApi();
 
-  const BaseComponent = api.getComponent(componentId);
+  const BaseComponent = api.getDefaultRenderer(componentId);
 
   const [args, setArgs] = useState<ArgItem[]>([]);
 

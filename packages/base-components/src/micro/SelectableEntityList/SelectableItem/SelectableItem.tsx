@@ -1,4 +1,5 @@
 import {
+  EntityDisplayKeyById,
   EntityId,
   EntityInternalOutDataById,
   EntitySchemaById,
@@ -12,6 +13,7 @@ export type SelectableItemProps<Id extends EntityId> = {
   className?: string;
   schema: EntitySchemaById<Id>;
   value: EntityInternalOutDataById<Id, string>;
+  displayKeys: EntityDisplayKeyById<Id>[];
   isSelected?: boolean;
   onSelected: () => void;
 };
@@ -20,6 +22,7 @@ export function SelectableItem<Id extends EntityId>({
   className,
   schema,
   value,
+  displayKeys,
   isSelected,
   onSelected,
 }: SelectableItemProps<Id>) {
@@ -32,8 +35,11 @@ export function SelectableItem<Id extends EntityId>({
       )}
       schema={schema}
       value={value}
+      displayKeys={displayKeys}
       wrapper="div"
-      onClick={onSelected}
+      wrapperProps={{
+        onClick: onSelected,
+      }}
     />
   );
 }

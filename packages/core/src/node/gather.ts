@@ -2,13 +2,16 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import type { ComponentId } from '@game-cms/core';
+import type { ComponentId, ComponentRendererVariant } from '@game-cms/core';
 import { getComponentIdFromClientFile } from '@game-cms/core/node';
 import { filterOutNullable } from '@game-cms/shared/collections';
+import { glob } from 'glob';
+
+import { getRendererVariantFromFilePath } from './internal/gather.js';
 
 export type ComponentClientChunkEntry = {
   paths: {
-    renderer: string;
+    renderers: Record<ComponentRendererVariant, string>;
     client: string;
   };
 };
@@ -18,15 +21,44 @@ export type ComponentClientChunkMap = Record<
   ComponentClientChunkEntry
 >;
 
+async function gatherRenderers(dirPath: string) {
+  const otherRendererFiles = await glob('renderer.*.js', {
+    cwd: dirPath,
+    absolute: true,
+    nodir: true,
+  });
+
+  const defaultRenderer = path.join(dirPath, 'renderer.js');
+  if (!fs.existsSync(defaultRenderer)) {
+    return;
+  }
+
+  const result: Record<ComponentRendererVariant, string> = {
+    default: defaultRenderer,
+  };
+
+  for (const filePath of otherRendererFiles) {
+    const variant = getRendererVariantFromFilePath(filePath);
+
+    if (variant) {
+      result[variant] = filePath;
+    }
+  }
+
+  return result;
+}
+
 async function gatherComponentClientChunk(dirPath: string) {
-  const renderer = path.join(dirPath, 'renderer.js');
   const client = path.join(dirPath, 'client.js');
 
-  const componentId = await getComponentIdFromClientFile(client);
+  const [renderers, componentId] = await Promise.all([
+    gatherRenderers(dirPath),
+    getComponentIdFromClientFile(client),
+  ]);
 
-  if (componentId !== null && fs.existsSync(renderer)) {
+  if (componentId !== null && renderers) {
     const entry: ComponentClientChunkEntry = {
-      paths: { renderer, client },
+      paths: { renderers, client },
     };
 
     return [componentId, entry] as const;

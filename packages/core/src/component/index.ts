@@ -1,5 +1,6 @@
 export * from './atomWalker.js';
-export * from './client.js';
+export * from './build.js';
+export * from './client/index.js';
 export * from './controller.js';
 export * from './core.js';
 export * from './merge.js';

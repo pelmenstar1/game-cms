@@ -32,7 +32,7 @@ export default defineComponentCore({
         if (suffix !== undefined) {
           context.applyAtPath(componentId, data, baseOptions, suffix, apply);
         } else {
-          apply(data);
+          apply(data, componentId, baseOptions);
         }
       }
     }

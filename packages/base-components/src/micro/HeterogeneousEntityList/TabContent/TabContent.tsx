@@ -2,12 +2,12 @@ import { EntityId } from '@game-cms/base-core';
 import { DataLoader } from '@game-cms/ui';
 
 import { EntityList, useEntitySchema } from '../../../shared.js';
-import { EntityListItem } from '../../EntityList/types.js';
+import { EntityListItemInfo } from '../../EntityList/types.js';
 
 export interface TabContentProps<Id extends EntityId> {
   className?: string;
   entityId: Id;
-  items: EntityListItem<Id>[];
+  items: EntityListItemInfo<Id>[];
 }
 
 export function TabContent<Id extends EntityId>({

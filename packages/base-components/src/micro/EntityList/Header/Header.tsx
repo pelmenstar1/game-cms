@@ -1,23 +1,19 @@
-import { EntityClientSchema } from '@game-cms/base-core';
 import { classNames, Typography } from '@game-cms/ui';
 
-import { getEntityDisplayKeys } from '../../../internal/entity.js';
 import styles from './Header.module.scss';
 
 export interface HeaderProps {
   className?: string;
-  schema: EntityClientSchema;
+  displayKeys: string[];
 }
 
-export function Header({ className, schema }: HeaderProps) {
-  const keys = getEntityDisplayKeys(schema);
-
+export function Header({ className, displayKeys }: HeaderProps) {
   return (
     <div
       className={classNames(styles['root'], className)}
-      style={{ '--children-count': keys.length }}
+      style={{ '--children-count': displayKeys.length }}
     >
-      {keys.map((key) => (
+      {displayKeys.map((key) => (
         <Typography key={key} variant="caption">
           {key}
         </Typography>

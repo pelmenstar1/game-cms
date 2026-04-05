@@ -1,5 +1,8 @@
 import { ComponentEntry } from '@game-cms/core';
 
+export const id = 'base::text' as const;
+export type Id = typeof id;
+
 export type TextOptions = {
   minLength?: number;
   maxLength?: number;

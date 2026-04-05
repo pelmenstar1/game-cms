@@ -1,5 +1,8 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentClientDataById, ComponentProps } from '@game-cms/core';
+import {
+  ComponentClientDataById,
+  ComponentDefaultRendererProps,
+} from '@game-cms/core';
 import { removeIndex } from '@game-cms/shared/collections';
 import {
   DraggableList,
@@ -29,7 +32,7 @@ export const renderer = <Args,>({
   error,
   readonly,
   onDataChanged,
-}: ComponentProps<Id, Args>) => {
+}: ComponentDefaultRendererProps<Id, Args>) => {
   type ItemData = ComponentClientDataById<Id, Args>['default'];
 
   const { t } = useTranslation('base', {
@@ -40,7 +43,7 @@ export const renderer = <Args,>({
   const showModal = useModal();
 
   const { baseOptions, componentId } = options;
-  const BaseComponent = api.getComponent(componentId);
+  const BaseComponent = api.getDefaultRenderer(componentId);
 
   const alternativeItems = data.alternative.map((choice, i) => ({
     key: i,

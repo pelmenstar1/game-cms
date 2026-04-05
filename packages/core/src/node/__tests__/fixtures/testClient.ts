@@ -1,4 +1,4 @@
-import { defineComponentClientController } from '../../../component/client.js';
+import { defineComponentClientController } from '../../../component/client/controller.js';
 
 export default defineComponentClientController({
   core: {

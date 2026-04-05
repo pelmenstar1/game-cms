@@ -5,7 +5,8 @@
   "scripts": {
     "prebuild": "tsx ./scripts/copyStyles.ts",
     "new-component": "tsx ./scripts/newComponent.ts",
-    "storybook:start": "storybook dev --port 6006"
+    "storybook:start": "storybook dev --port 6006",
+    "test:build": "storybook build"
   },
   "dependencies": {
     "@esotericsoftware/spine-pixi-v8": "^4.2.107",

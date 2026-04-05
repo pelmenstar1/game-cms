@@ -20,7 +20,9 @@ export default defineComponentCore({
 
       context.applyAtPath(componentId, value, baseOptions, suffix, apply);
     } else {
-      apply(data[path]);
+      const { componentId, options: baseOptions } = options[path];
+
+      apply(data[path], componentId, baseOptions);
     }
   },
 });

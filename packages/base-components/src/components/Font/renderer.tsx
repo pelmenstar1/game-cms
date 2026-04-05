@@ -1,5 +1,5 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentRenderer } from '@game-cms/core';
+import { ComponentDefaultRenderer } from '@game-cms/core';
 import {
   IconButton,
   namedLazy,
@@ -20,7 +20,7 @@ const FontPreviewModal = namedLazy(
   'FontPreviewModal'
 );
 
-export const renderer: ComponentRenderer<'base::font'> = ({
+export const renderer: ComponentDefaultRenderer<'base::font'> = ({
   data,
   options,
   error,
@@ -30,7 +30,7 @@ export const renderer: ComponentRenderer<'base::font'> = ({
   const api = useComponentApi();
   const showModal = useModal();
 
-  const Repeatable = api.getComponent('base::repeatable');
+  const Repeatable = api.getDefaultRenderer('base::repeatable');
 
   const repeatableOptions = useMemo(
     () => getRepeatableClientOptions(options),

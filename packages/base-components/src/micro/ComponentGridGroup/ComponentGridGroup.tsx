@@ -43,7 +43,7 @@ export function ComponentGridGroup<
       )}
     >
       {entries.map(([key, schemaEntry]) => {
-        const Component = api.getComponent(schemaEntry.componentId);
+        const Component = api.getDefaultRenderer(schemaEntry.componentId);
         const onDataChanged = (newData: ComponentData) => {
           onValueChanged?.({
             ...data,

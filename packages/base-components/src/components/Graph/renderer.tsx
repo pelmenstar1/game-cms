@@ -1,7 +1,7 @@
 import '@xyflow/react/dist/style.css';
 
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentProps } from '@game-cms/core';
+import { ComponentDefaultRendererProps } from '@game-cms/core';
 import { findNewKey } from '@game-cms/shared/collections';
 import { filterObject } from '@game-cms/shared/object';
 import { Button, PlusIcon, Toolbar } from '@game-cms/ui';
@@ -36,7 +36,7 @@ export const renderer = <Args,>({
   error,
   readonly,
   onDataChanged,
-}: ComponentProps<'base::graph', Args>) => {
+}: ComponentDefaultRendererProps<'base::graph', Args>) => {
   type ResArgs = ResolveGraphArgs<Args>;
   type Id = ResArgs['id'];
   type BaseArgs = ResArgs['baseArgs'];

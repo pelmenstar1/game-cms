@@ -117,7 +117,7 @@ const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext 
       if (pathWalker) {
         pathWalker(data, options, path, apply, foreignStorageResolverContext);
       } else {
-        apply(data);
+        apply(data, id, options);
       }
     },
     disposeData: async (id, data, options, params) => {

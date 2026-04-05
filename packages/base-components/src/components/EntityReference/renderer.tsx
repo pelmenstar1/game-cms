@@ -1,4 +1,4 @@
-import { ComponentRenderer } from '@game-cms/core';
+import { ComponentDefaultRenderer } from '@game-cms/core';
 import {
   Button,
   DeleteIcon,
@@ -23,7 +23,7 @@ const EntityPreviewModal = namedLazy(
   'EntityPreviewModal'
 );
 
-export const renderer: ComponentRenderer<'base::entity-reference'> = ({
+export const renderer: ComponentDefaultRenderer<'base::entity-reference'> = ({
   data,
   options: { entityId },
   onDataChanged,

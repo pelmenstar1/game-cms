@@ -31,7 +31,7 @@ export function GraphCustomNode<Id extends ComponentId, Args>({
   selected,
 }: GraphCustomNodeProps<Id, Args>) {
   const api = useComponentApi();
-  const BaseComponent = api.getComponent(data.componentId);
+  const BaseComponent = api.getDefaultRenderer(data.componentId);
 
   return (
     <div

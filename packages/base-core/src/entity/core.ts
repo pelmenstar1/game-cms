@@ -1,6 +1,5 @@
 import type {
-  ComponentClientDataById,
-  ComponentClientDataByIdPathExtends,
+  ComponentClientDataByIdPath,
   ComponentClientSchema,
   ComponentData,
   ComponentId,
@@ -170,20 +169,20 @@ export type EntityResolvedDataByIdWithId<
   id: Id;
 };
 
-type BaseEntityDisplayKey<Components, U> = {
+type BaseEntityDisplayKey<Components> = {
   [K in keyof Components & string]: Components[K] extends ComponentSchema<
     infer CId,
     infer Args
   >
-    ?
-        | (ComponentClientDataById<CId, Args> extends U ? K : never)
-        | `${K}.${ComponentClientDataByIdPathExtends<U, CId, Args>}`
+    ? K | `${K}.${ComponentClientDataByIdPath<CId, Args>}`
     : never;
 }[keyof Components & string];
 
 type EntityDisplayKey<Components> =
   | 'id'
-  | BaseEntityDisplayKey<Components, string | number>;
+  | (BaseEntityDisplayKey<Components> extends never
+      ? string
+      : BaseEntityDisplayKey<Components>);
 
 export type EntityDisplayKeyById<Id extends EntityId> = EntityDisplayKey<
   EntityComponents<Id>

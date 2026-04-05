@@ -45,7 +45,7 @@ export function EntityComponentChoice<Id extends ComponentId>({
   onDelete,
 }: EntityComponentChoiceProps<Id>) {
   const api = useComponentApi();
-  const Component = api.getComponent(componentId);
+  const Component = api.getDefaultRenderer(componentId);
 
   const { t } = useTranslation('base', {
     keyPrefix: 'micro.EntityComponentChoice',

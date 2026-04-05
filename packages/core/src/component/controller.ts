@@ -1,5 +1,5 @@
 import { ComponentAtomWalker } from './atomWalker.js';
-import { ComponentClientOptionsTransformer } from './client.js';
+import { ComponentClientOptionsTransformer } from './client/controller.js';
 import { ComponentCore } from './core.js';
 import { ComponentDataMergeHandler } from './merge.js';
 import {

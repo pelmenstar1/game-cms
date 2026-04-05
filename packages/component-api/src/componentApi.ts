@@ -1,7 +1,9 @@
 import type {
+  ComponentDefaultRenderer,
   ComponentId,
   ComponentMeta,
-  ComponentRenderer,
+  ComponentRendererByVariant,
+  ComponentRendererVariant,
   ForeignComponentClientDataTransformerContext,
   ForeignComponentClientValidationContext,
   ForeignComponentPathWalkerContext,
@@ -9,10 +11,34 @@ import type {
 import { IdSource } from '@game-cms/shared';
 import React, { type Key } from 'react';
 
+type BaseImportRendererModuleResult<T> =
+  | Promise<T>
+  | (T extends undefined ? undefined : never);
+
+type ImportRendererModuleResult<
+  Id extends ComponentId,
+  Variant extends ComponentRendererVariant,
+> = BaseImportRendererModuleResult<ComponentRendererByVariant<Variant, Id>>;
+
 export type ComponentApi = {
   generateId: IdSource<Key>;
 
-  getComponent: <Id extends ComponentId>(id: Id) => ComponentRenderer<Id>;
+  getDefaultRenderer: <Id extends ComponentId>(
+    id: Id
+  ) => ComponentDefaultRenderer<Id>;
+
+  getRendererByVariant: <
+    Id extends ComponentId,
+    Variant extends ComponentRendererVariant,
+  >(
+    id: Id,
+    variant: Variant
+  ) => ImportRendererModuleResult<Id, Variant>;
+
+  hasRendererByVariant: (
+    id: ComponentId,
+    variant: ComponentRendererVariant
+  ) => boolean;
 
   getDefaultData: ForeignComponentClientDataTransformerContext['getDefaultData'];
   validate: ForeignComponentClientValidationContext['validate'];

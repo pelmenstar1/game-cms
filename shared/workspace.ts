@@ -4,11 +4,18 @@ import path from 'node:path';
 import { glob } from 'glob';
 import yaml from 'yaml';
 
-import { readPackageInfo } from '../packages/shared/src/node';
-
 type PnpmWorkspaceInfo = {
   packages: string[];
 };
+
+async function readPackageInfo(dirPath: string) {
+  const content = await fsp.readFile(
+    path.join(dirPath, 'package.json'),
+    'utf8'
+  );
+
+  return JSON.parse(content) as { name: string };
+}
 
 export async function getWorkspacePackages() {
   const cwd = path.join(import.meta.dirname, '../');

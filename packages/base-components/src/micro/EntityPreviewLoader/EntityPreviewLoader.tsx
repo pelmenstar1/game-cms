@@ -35,7 +35,7 @@ function Renderer<Id extends EntityId>({
   clientTransformerContext,
 }: RendererProps<Id>) {
   const api = useComponentApi();
-  const Compose = api.getComponent('base::compose');
+  const Compose = api.getDefaultRenderer('base::compose');
 
   const composeOptions = entitySchema.components as EntityComposeOptions<Id>;
 

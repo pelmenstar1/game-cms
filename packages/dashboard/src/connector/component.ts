@@ -1,9 +1,20 @@
 import type {
   ComponentId,
   ComponentOptionsById,
+  ComponentRendererByVariant,
+  ComponentRendererVariant,
   ForeignComponentDefaultDataContext,
 } from '@game-cms/core';
 import data from 'virtual:dashboard/componentConnectorData';
+
+type BaseImportRendererModuleResult<T> =
+  | Promise<T>
+  | (T extends undefined ? undefined : never);
+
+type ImportRendererModuleResult<
+  Id extends ComponentId,
+  Variant extends ComponentRendererVariant,
+> = BaseImportRendererModuleResult<ComponentRendererByVariant<Variant, Id>>;
 
 function getComponent<Id extends ComponentId>(id: Id) {
   const result = data[id];
@@ -32,6 +43,18 @@ export function getComponentClientController<Id extends ComponentId>(id: Id) {
   return getComponent(id).client;
 }
 
-export function importComponent<Id extends ComponentId>(id: Id) {
-  return getComponent(id).renderer();
+export function importRendererModule<
+  Id extends ComponentId,
+  Variant extends ComponentRendererVariant,
+>(id: Id, variant: Variant) {
+  const result = getComponent(id).renderers[variant]?.();
+
+  return result as ImportRendererModuleResult<Id, Variant>;
+}
+
+export function hasComponentRenderer(
+  id: ComponentId,
+  variant: ComponentRendererVariant
+) {
+  return getComponent(id).meta.renderers.includes(variant);
 }

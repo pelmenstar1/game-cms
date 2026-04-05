@@ -1,5 +1,5 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentRenderer } from '@game-cms/core';
+import { ComponentDefaultRenderer } from '@game-cms/core';
 import {
   IconButton,
   namedLazy,
@@ -17,7 +17,7 @@ const ThreeDModelPreviewModal = namedLazy(
   'ThreeDModelPreviewModal'
 );
 
-export const renderer: ComponentRenderer<'game::three-d-model'> = ({
+export const renderer: ComponentDefaultRenderer<'game::three-d-model'> = ({
   data,
   error,
   onDataChanged,
@@ -28,7 +28,7 @@ export const renderer: ComponentRenderer<'game::three-d-model'> = ({
   const { t } = useTranslation('game');
 
   const api = useComponentApi();
-  const Compose = api.getComponent('base::compose');
+  const Compose = api.getDefaultRenderer('base::compose');
 
   const showModal = useModal();
 

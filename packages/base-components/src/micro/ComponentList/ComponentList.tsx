@@ -65,7 +65,7 @@ export function ComponentList<
       onItemsChanged={onItemsChanged}
     >
       {(item, index, handleRef) => {
-        const BaseComponent = api.getComponent(item.componentId);
+        const BaseComponent = api.getDefaultRenderer(item.componentId);
 
         const title = item.title
           ? resolveTitleSpec<object>(

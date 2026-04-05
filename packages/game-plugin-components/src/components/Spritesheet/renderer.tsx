@@ -1,11 +1,11 @@
 import { useComponentApi } from '@game-cms/component-api';
-import { ComponentRenderer } from '@game-cms/core';
+import { ComponentDefaultRenderer } from '@game-cms/core';
 import { IconButton, PreviewIcon, Toolbar } from '@game-cms/ui';
 
 import { useSpritesheetPreviewModal } from '../../hooks/useSpritesheetPreviewModal';
 import { getComposeOptions } from './internal/options';
 
-export const renderer: ComponentRenderer<'game::spritesheet'> = ({
+export const renderer: ComponentDefaultRenderer<'game::spritesheet'> = ({
   data,
   options,
   error,
@@ -13,7 +13,7 @@ export const renderer: ComponentRenderer<'game::spritesheet'> = ({
   readonly,
 }) => {
   const api = useComponentApi();
-  const Compose = api.getComponent('base::compose');
+  const Compose = api.getDefaultRenderer('base::compose');
 
   const showSpritesheetPreview = useSpritesheetPreviewModal();
 

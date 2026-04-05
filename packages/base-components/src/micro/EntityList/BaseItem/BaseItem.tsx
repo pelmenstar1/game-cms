@@ -1,54 +1,82 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   EntityClientSchemaById,
   EntityDisplayKeyById,
   EntityId,
 } from '@game-cms/base-core';
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
+import {
+  ComponentId,
+  ComponentOptionsById,
+  ComponentOutDataById,
+} from '@game-cms/core';
 import { classNames, Typography } from '@game-cms/ui';
-import { ComponentProps, FC, JSX, useMemo } from 'react';
+import { ComponentProps, ElementType, useMemo } from 'react';
 
-import { getEntityDisplayKeys } from '../../../internal/entity.js';
-import { EntityListItem } from '../types.js';
+import { getComponentListPreviewComponent } from '../../../internal/entity.js';
+import { EntityListItemInfo } from '../types.js';
 import styles from './BaseItem.module.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type WrapperComponent = keyof JSX.IntrinsicElements | FC<any>;
+type WrapperComponent = ElementType<any>;
 
 export type BaseItemProps<
   Id extends EntityId,
   Wrapper extends WrapperComponent,
-> = ComponentProps<Wrapper> & {
+> = {
   className?: string;
   schema: EntityClientSchemaById<Id>;
-  value: EntityListItem<Id>;
+  value: EntityListItemInfo<Id>;
+  displayKeys: EntityDisplayKeyById<Id>[];
   wrapper: Wrapper;
+  wrapperProps: ComponentProps<Wrapper>;
 };
 
 function getSingleValueAtPath<Id extends EntityId>(
   api: ComponentApi,
-  value: EntityListItem<Id>,
+  value: EntityListItemInfo<Id>,
   schema: EntityClientSchemaById<Id>,
   path: EntityDisplayKeyById<Id>
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (path === 'id') {
     return value.id;
   }
 
-  let returnValue: unknown;
+  let returnValue:
+    | { data: unknown; id: ComponentId; options: unknown }
+    | undefined;
 
   api.applyAtPath(
     'base::compose',
     value.components,
     schema.components,
     path,
-    (result) => {
-      returnValue ??= result;
+    (data, id, options) => {
+      returnValue ??= { data, id, options };
     }
   );
 
-  return String(returnValue);
+  return returnValue;
+}
+
+type BaseItemPartProps<Id extends ComponentId, Args> = {
+  componentId: Id;
+  componentApi: ComponentApi;
+  data: ComponentOutDataById<Id, Args>;
+  options: ComponentOptionsById<Id, Args>;
+};
+
+function BaseItemPart<Id extends ComponentId, Args>({
+  componentId,
+  componentApi,
+  data,
+  options,
+}: BaseItemPartProps<Id, Args>) {
+  const Component = useMemo(
+    () => getComponentListPreviewComponent(componentId, componentApi),
+    [componentId, componentApi]
+  );
+
+  return <Component data={data} options={options} />;
 }
 
 export function BaseItem<
@@ -58,12 +86,15 @@ export function BaseItem<
   className,
   schema,
   value,
+  displayKeys,
   wrapper: Wrapper,
-  ...wrapperProps
+  wrapperProps,
 }: BaseItemProps<Id, Wrapper>) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Tag = Wrapper as ElementType<any>;
+
   const api = useComponentApi();
 
-  const displayKeys = useMemo(() => getEntityDisplayKeys(schema), [schema]);
   const displayValues = useMemo(
     () =>
       displayKeys.map((key) => getSingleValueAtPath(api, value, schema, key)),
@@ -71,14 +102,32 @@ export function BaseItem<
   );
 
   return (
-    <Wrapper
+    <Tag
       className={classNames(styles.root, className)}
       style={{ '--children-count': displayKeys.length }}
-      {...(wrapperProps as unknown as ComponentProps<Wrapper>)}
+      {...wrapperProps}
     >
-      {displayValues.map((displayValue, i) => (
-        <Typography key={displayKeys[i]}>{displayValue}</Typography>
-      ))}
-    </Wrapper>
+      {displayValues.map((value, i) => {
+        const displayKey = displayKeys[i];
+
+        if (typeof value === 'string') {
+          return <Typography key={displayKey}>{value}</Typography>;
+        }
+
+        if (value === undefined) {
+          return <span key={displayKey}></span>;
+        }
+
+        return (
+          <BaseItemPart
+            key={displayKey}
+            componentApi={api}
+            componentId={value.id}
+            data={value.data}
+            options={value.options}
+          />
+        );
+      })}
+    </Tag>
   );
 }

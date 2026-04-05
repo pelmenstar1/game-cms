@@ -4,18 +4,11 @@ import { glob } from 'glob';
 
 import { getWorkspacePackages } from '../shared/workspace';
 
-const STATIC_PATTERNS = [
-  '*.tsbuildinfo',
-  './node_modules/prettier/.prettier-cache',
-  './node_modules/.stylelintcache',
-  './node_modules/.eslintcache',
-];
-
-async function main() {
+async function findFiles() {
   const workspacePackages = await getWorkspacePackages();
 
   const patterns = [
-    ...STATIC_PATTERNS,
+    '*.tsbuildinfo',
     ...workspacePackages.flatMap((dirPath) => [
       `${dirPath}/dist`,
       `${dirPath}/*.tsbuildinfo`,
@@ -26,7 +19,20 @@ async function main() {
     ignore: ['**/node_modules/**'],
   });
 
-  await Promise.all(files.map((file) => fsp.rm(file, { recursive: true })));
+  return [
+    ...files,
+    './node_modules/.cache/prettier/.prettier-cache',
+    './node_modules/.cache/.stylelintcache',
+    './node_modules/.cache/.eslintcache',
+  ];
+}
+
+async function main() {
+  const files = await findFiles();
+
+  await Promise.all(
+    files.map((file) => fsp.rm(file, { recursive: true, force: true }))
+  );
 }
 
 void main();

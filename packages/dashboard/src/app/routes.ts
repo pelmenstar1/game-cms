@@ -1,6 +1,4 @@
-import { CustomDashboardRoute } from '@game-cms/base-core';
 import { env, isEnvInitialized } from '@game-cms/global';
-import { initEnvFromConfigs, readDashboardBuildMeta } from '@game-cms/ignition';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { index, layout, route, RouteConfig } from '@react-router/dev/routes';
@@ -21,17 +19,7 @@ async function resolveCustomRoutes() {
   return filterOutNullable(result.flat());
 }
 
-let customRoutes: CustomDashboardRoute[] = [];
-
-if (!isEnvInitialized()) {
-  const meta = await readDashboardBuildMeta();
-
-  if (meta) {
-    await initEnvFromConfigs(meta.basePath);
-
-    customRoutes = await resolveCustomRoutes();
-  }
-}
+const customRoutes = isEnvInitialized() ? await resolveCustomRoutes() : [];
 
 const baseConfig: RouteConfig = [
   route('signin', 'routes/signin/route.tsx'),

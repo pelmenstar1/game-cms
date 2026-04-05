@@ -11,8 +11,8 @@ export default {
     'demo-platformer/cms/build/**',
     'packages/base-components/dist/**',
     'packages/ui/dist/**',
-    'packages/**/storybook-static',
     'coverage/**',
+    '**/storybook-static/**',
   ],
   rules: {
     'selector-class-pattern': null,

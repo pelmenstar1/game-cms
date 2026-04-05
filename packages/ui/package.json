@@ -9,7 +9,8 @@
     "new-component": "tsx ./scripts/newComponent.ts",
     "new-google-icon": "tsx ./scripts/newGoogleIcon.ts",
     "copy-styles": "tsx ./scripts/copyStyles.ts",
-    "generate-reexports": "tsx ./scripts/generateReExports.ts"
+    "generate-reexports": "tsx ./scripts/generateReExports.ts",
+    "test:build": "storybook build"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "1.7.9",

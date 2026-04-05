@@ -6,7 +6,8 @@
     "prebuild": "tsx ./scripts/copyStyles.ts",
     "new-component": "tsx ./scripts/newComponent.ts",
     "build": "tsc",
-    "storybook:start": "storybook dev --port 6006"
+    "storybook:start": "storybook dev --port 6006",
+    "test:build": "storybook build"
   },
   "dependencies": {
     "@game-cms/base-core": "workspace:*",

@@ -1,17 +1,13 @@
 import { pathToFileURL } from 'node:url';
 
-import {
-  ComponentClientController,
-  ComponentId,
-  ComponentRendererModule,
-} from '@game-cms/core';
+import { ComponentClientController, ComponentId } from '@game-cms/core';
 import { emitComponentConnector, gatherComponents } from '@game-cms/core/node';
 import { createJiti } from 'jiti';
 import { expect } from 'vitest';
 
 type ConnectorMap = {
   [Id in ComponentId]: {
-    renderer: () => Promise<ComponentRendererModule<Id>>;
+    renderers: Record<string, () => Promise<unknown>>;
     client: ComponentClientController<Id>;
   };
 };
@@ -31,8 +27,8 @@ export async function componentDistributionTest(directoryPath: string) {
     filename: pathToFileURL('./connector.js').href,
   }) as { default: ConnectorMap };
 
-  for (const { renderer, client } of Object.values(moduleValue.default)) {
+  for (const { renderers, client } of Object.values(moduleValue.default)) {
     expect(client).toBeDefined();
-    expect(renderer).toBeInstanceOf(Function);
+    expect(renderers.default).toBeInstanceOf(Function);
   }
 }

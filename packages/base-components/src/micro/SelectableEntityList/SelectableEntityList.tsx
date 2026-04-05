@@ -3,8 +3,11 @@ import {
   EntityId,
   EntityInternalOutDataById,
 } from '@game-cms/base-core';
+import { useComponentApi } from '@game-cms/component-api';
 import { List } from '@game-cms/ui';
+import { useMemo } from 'react';
 
+import { getEntityDisplayKeys } from '../../internal/entity.js';
 import { Header } from '../EntityList/Header/index.js';
 import { SelectableItem } from './SelectableItem/index.js';
 
@@ -24,9 +27,15 @@ export function SelectableEntityList<Id extends EntityId>({
   onItemSelected,
   schema,
 }: SelectableEntityListProps<Id>) {
+  const api = useComponentApi();
+  const displayKeys = useMemo(
+    () => getEntityDisplayKeys(schema, api),
+    [schema, api]
+  );
+
   return (
     <List className={className}>
-      <Header schema={schema} />
+      <Header displayKeys={displayKeys} />
 
       {items.map((item) => (
         <SelectableItem
@@ -34,6 +43,7 @@ export function SelectableEntityList<Id extends EntityId>({
           value={item}
           schema={schema}
           isSelected={item.id === selectedItemId}
+          displayKeys={displayKeys}
           onSelected={() => {
             onItemSelected?.(item.id);
           }}

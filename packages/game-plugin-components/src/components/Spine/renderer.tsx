@@ -1,7 +1,7 @@
 import { useComponentApi } from '@game-cms/component-api';
 import type {
   ComponentClientDataById,
-  ComponentRenderer,
+  ComponentDefaultRenderer,
 } from '@game-cms/core';
 import {
   IconButton,
@@ -28,7 +28,7 @@ const SpineModal = namedLazy(
   'SpineModal'
 );
 
-export const renderer: ComponentRenderer<'game::spine'> = ({
+export const renderer: ComponentDefaultRenderer<'game::spine'> = ({
   data,
   error,
   onDataChanged,
@@ -37,7 +37,7 @@ export const renderer: ComponentRenderer<'game::spine'> = ({
   const api = useComponentApi();
   const { t } = useTranslation('game');
 
-  const FileComponent = api.getComponent('base::file');
+  const FileComponent = api.getDefaultRenderer('base::file');
 
   const previewEnabled =
     data.atlas.length > 0 && data.skeleton.length > 0 && data.images.length > 0;

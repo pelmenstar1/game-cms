@@ -1,8 +1,8 @@
 import { useComponentApi } from '@game-cms/component-api';
 import {
   ComponentClientDataById,
+  ComponentDefaultRendererProps,
   ComponentOptionsById,
-  ComponentProps,
 } from '@game-cms/core';
 import { classNames, Typography } from '@game-cms/ui';
 import { useCallback, useMemo } from 'react';
@@ -20,7 +20,7 @@ export const renderer = <Args,>({
   error,
   readonly,
   onDataChanged,
-}: ComponentProps<Id, Args>) => {
+}: ComponentDefaultRendererProps<Id, Args>) => {
   type Data = ComponentClientDataById<Id, Args>;
   type Options = ComponentOptionsById<Id, Args>['options'];
 

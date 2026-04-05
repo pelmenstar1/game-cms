@@ -1,4 +1,4 @@
-import { ComponentRenderer } from '@game-cms/core';
+import { ComponentDefaultRenderer } from '@game-cms/core';
 import {
   classNames,
   IconButton,
@@ -20,7 +20,7 @@ const FileExplorerModal = namedLazy(
   'FileExplorerModal'
 );
 
-export const renderer: ComponentRenderer<'base::file'> = ({
+export const renderer: ComponentDefaultRenderer<'base::file'> = ({
   data: items,
   options: { supportedMimeTypes, maxItems },
   error,

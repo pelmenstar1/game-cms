@@ -1,8 +1,8 @@
 import { ComponentApi, useComponentApi } from '@game-cms/component-api';
 import {
   ComponentClientOptionsById,
+  ComponentDefaultRenderer,
   ComponentOutDataById,
-  ComponentRenderer,
 } from '@game-cms/core';
 import { useMemo } from 'react';
 
@@ -45,7 +45,7 @@ function splitEntitySchemaComponentsToGroups<Args>(
   return groups as ComposeGroup<Args>[];
 }
 
-export const renderer: ComponentRenderer<Id> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   error,

@@ -38,7 +38,7 @@ export function PublishedEntityView<T extends EntityId>({
   const api = useComponentApi();
   const clientTransformerContextResult = useClientTransformerContext(entityId);
 
-  const Compose = api.getComponent('base::compose');
+  const Compose = api.getDefaultRenderer('base::compose');
 
   useEffect(() => {
     if (dataResult.status === 'success' && dataResult.value === null) {

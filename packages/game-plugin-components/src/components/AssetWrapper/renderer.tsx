@@ -1,5 +1,8 @@
 import { useComponentApi } from '@game-cms/component-api';
-import type { ComponentClientDataById, ComponentProps } from '@game-cms/core';
+import type {
+  ComponentClientDataById,
+  ComponentDefaultRendererProps,
+} from '@game-cms/core';
 import { IconButton, PreviewIcon, Toolbar } from '@game-cms/ui';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +16,7 @@ export const renderer = <Args,>({
   options,
   error,
   onDataChanged,
-}: ComponentProps<'game::asset-wrapper', Args>) => {
+}: ComponentDefaultRendererProps<'game::asset-wrapper', Args>) => {
   type Id = ResolveAssetWrapperArgs<Args>['id'];
   type BaseArgs = ResolveAssetWrapperArgs<Args>['baseArgs'];
 
@@ -24,7 +27,7 @@ export const renderer = <Args,>({
   const { base: baseData, derived } = data;
   const spritesheets = derived?.spritesheet;
 
-  const BaseComponent = api.getComponent(options.componentId);
+  const BaseComponent = api.getDefaultRenderer(options.componentId);
 
   const onPreview = useCallback(() => {
     if (spritesheets) {

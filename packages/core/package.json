@@ -7,17 +7,18 @@
   "scripts": {
     "build": "tsc"
   },
+  "dependencies": {
+    "@game-cms/shared": "workspace:*",
+    "fastify-type-provider-zod": "catalog:",
+    "glob": "catalog:",
+    "zod": "catalog:"
+  },
   "devDependencies": {
     "@types/node": "catalog:",
     "fastify": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "pino": "catalog:"
-  },
-  "dependencies": {
-    "@game-cms/shared": "workspace:*",
-    "fastify-type-provider-zod": "catalog:",
-    "zod": "catalog:"
   },
   "peerDependencies": {
     "@types/react": "*",

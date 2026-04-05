@@ -1,9 +1,8 @@
 import { ComponentOptionsById } from '@game-cms/core';
 
-export function validator(
-  value: unknown,
-  options: ComponentOptionsById<'base::number'>
-) {
+import { Id } from './types.js';
+
+export function validator(value: unknown, options: ComponentOptionsById<Id>) {
   if (typeof value !== 'number') {
     return 'INVALID_TYPE';
   }

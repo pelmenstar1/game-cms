@@ -17,21 +17,22 @@ import type {
   ForeignComponentPathWalkerContext,
 } from '@game-cms/core';
 import { createCachedFactory, incrementingIdSource } from '@game-cms/shared';
-import { type PropsWithChildren, useCallback, useMemo } from 'react';
+import type { PropsWithChildren } from 'react';
 import React from 'react';
 
 import {
   getComponentClientController,
   getComponentDefaultOutData,
   getComponentPathWalker,
-  importComponent,
+  hasComponentRenderer,
+  importRendererModule,
 } from '@/connector/component';
 import { getEntitySharedContext } from '@/connector/entity';
 
 const getCachedComponent = createCachedFactory(
   <Id extends ComponentId>(id: Id) => {
     return React.lazy(async () => {
-      const module = await importComponent(id);
+      const module = await importRendererModule(id, 'default');
 
       return { default: module.renderer };
     });
@@ -57,7 +58,7 @@ const pathWalkerContext: ForeignComponentPathWalkerContext = {
     if (pathWalker !== undefined) {
       pathWalker(data, options, path, apply, pathWalkerContext);
     } else {
-      apply(data);
+      apply(data, id, options);
     }
   },
 };
@@ -86,74 +87,66 @@ const clientDefaultDataContext: ForeignComponentClientDefaultDataContext = {
   },
 };
 
-export function EntityHubProvider({ children }: PropsWithChildren) {
-  const getClientDataResolverContext = useCallback(async (id: EntityId) => {
-    const sharedContext = await getEntitySharedContext(id);
+const getClientDataResolverContext = async (id: EntityId) => {
+  const sharedContext = await getEntitySharedContext(id);
 
-    const clientTransformerContext: ForeignComponentClientDataTransformerContext =
-      {
-        idSource: incrementingIdSource,
-        sharedContext,
-        validation: validationContext,
-        getDefaultData: clientDefaultDataContext.getDefaultData,
-        fromClient: <Id extends ComponentId, Args>(
-          id: Id,
-          clientData: ComponentClientDataById<Id, Args>,
-          options: ComponentClientOptionsById<Id, Args>
-        ) => {
-          const { transformer } = getComponentClientController(id);
-
-          if (transformer) {
-            return transformer.fromClient(
-              clientData,
-              options,
-              clientTransformerContext
-            );
-          }
-
-          return clientData as ComponentInDataById<Id, Args>;
-        },
-        toClient: <Id extends ComponentId, Args>(
-          id: Id,
-          data: ComponentOutDataById<Id, Args>,
-          options: ComponentClientOptionsById<Id, Args>
-        ) => {
-          const { transformer } = getComponentClientController(id);
-
-          if (transformer) {
-            return transformer.toClient(
-              data,
-              options,
-              clientTransformerContext
-            );
-          }
-
-          return data as ComponentClientDataById<Id, Args>;
-        },
-      };
-
-    return clientTransformerContext;
-  }, []);
-
-  const api = useMemo(
-    (): ComponentApi => ({
-      generateId: incrementingIdSource,
-      getComponent: getCachedComponent,
-      getMeta: getComponentMeta,
+  const clientTransformerContext: ForeignComponentClientDataTransformerContext =
+    {
+      idSource: incrementingIdSource,
+      sharedContext,
+      validation: validationContext,
       getDefaultData: clientDefaultDataContext.getDefaultData,
-      validate: validationContext.validate,
-      applyAtPath: pathWalkerContext.applyAtPath,
-    }),
-    []
-  );
+      fromClient: <Id extends ComponentId, Args>(
+        id: Id,
+        clientData: ComponentClientDataById<Id, Args>,
+        options: ComponentClientOptionsById<Id, Args>
+      ) => {
+        const { transformer } = getComponentClientController(id);
 
-  const hub = useMemo(
-    (): EntityHub => ({
-      getClientDataResolverContext,
-    }),
-    [getClientDataResolverContext]
-  );
+        if (transformer) {
+          return transformer.fromClient(
+            clientData,
+            options,
+            clientTransformerContext
+          );
+        }
 
+        return clientData as ComponentInDataById<Id, Args>;
+      },
+      toClient: <Id extends ComponentId, Args>(
+        id: Id,
+        data: ComponentOutDataById<Id, Args>,
+        options: ComponentClientOptionsById<Id, Args>
+      ) => {
+        const { transformer } = getComponentClientController(id);
+
+        if (transformer) {
+          return transformer.toClient(data, options, clientTransformerContext);
+        }
+
+        return data as ComponentClientDataById<Id, Args>;
+      },
+    };
+
+  return clientTransformerContext;
+};
+
+const api: ComponentApi = {
+  generateId: incrementingIdSource,
+  getDefaultRenderer: getCachedComponent,
+  getMeta: getComponentMeta,
+  getRendererByVariant: importRendererModule,
+  hasRendererByVariant: hasComponentRenderer,
+  getDefaultData: clientDefaultDataContext.getDefaultData,
+  validate: validationContext.validate,
+  applyAtPath: pathWalkerContext.applyAtPath,
+};
+
+const hub: EntityHub = {
+  getClientDataResolverContext,
+};
+
+export function EntityHubProvider({ children }: PropsWithChildren) {
   return (
     <ComponentApiContext.Provider value={api}>
       <EntityHubContext.Provider value={hub}>
