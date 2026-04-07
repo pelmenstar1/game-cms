@@ -27,7 +27,7 @@ export const renderer: ComponentDefaultRenderer<'base::entity-reference'> = ({
   data,
   options: { entityId },
   onDataChanged,
-  readonly,
+  readOnly,
 }) => {
   const { t } = useTranslation('base');
   const showModal = useModal();
@@ -56,7 +56,7 @@ export const renderer: ComponentDefaultRenderer<'base::entity-reference'> = ({
         <Button
           className={styles['add-button']}
           onClick={onAddEntity}
-          disabled={readonly}
+          disabled={readOnly}
         >
           <PlusIcon />
         </Button>
@@ -73,7 +73,7 @@ export const renderer: ComponentDefaultRenderer<'base::entity-reference'> = ({
           <IconButton
             title={t('common.delete')}
             onClick={onDeleteEntity}
-            disabled={readonly}
+            disabled={readOnly}
           >
             <DeleteIcon />
           </IconButton>

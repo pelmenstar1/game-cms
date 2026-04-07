@@ -1,7 +1,9 @@
 import { defineComponentCore } from '@game-cms/core';
 
+import { id } from './types.js';
+
 export default defineComponentCore({
-  id: 'game::asset-wrapper',
+  id,
   defaultOutData: (options, context) => {
     return {
       base: context.getDefaultData(options.componentId, options.baseOptions),

@@ -18,8 +18,9 @@ import {
   ATLAS_OPTIONS,
   IMAGES_OPTIONS,
   SKELETON_OPTIONS,
-} from './internal/constants';
+} from './internal/constants.js';
 import styles from './renderer.module.scss';
+import { Id } from './types';
 
 type FileData = ComponentClientDataById<'base::file'>[number];
 
@@ -28,7 +29,7 @@ const SpineModal = namedLazy(
   'SpineModal'
 );
 
-export const renderer: ComponentDefaultRenderer<'game::spine'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   error,
   onDataChanged,

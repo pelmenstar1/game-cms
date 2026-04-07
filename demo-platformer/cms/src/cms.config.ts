@@ -1,3 +1,4 @@
+import { gamePlugin } from '@game-cms/game-plugin';
 import { localStorageProvider } from '@game-cms/storage-provider-local';
 import { config } from 'game-cms';
 
@@ -31,5 +32,5 @@ export default config((env) => ({
       isPublic: true,
     }),
   },
-  plugins: [cmsPlugin],
+  plugins: [cmsPlugin, gamePlugin],
 }));

@@ -16,7 +16,7 @@ export type GraphCustomNodeData<Id extends ComponentId, Args> = {
   options: ComponentClientOptionsById<Id, Args>;
   onDataChanged?: (data: ComponentClientDataById<Id, Args>) => void;
   error?: ComponentErrorById<Id, Args>;
-  readonly?: boolean;
+  readOnly?: boolean;
 };
 
 export interface GraphCustomNodeProps<
@@ -41,7 +41,7 @@ export function GraphCustomNode<Id extends ComponentId, Args>({
         data={data.data}
         options={data.options}
         error={data.error}
-        readonly={data.readonly}
+        readOnly={data.readOnly}
         onDataChanged={data.onDataChanged}
       />
 

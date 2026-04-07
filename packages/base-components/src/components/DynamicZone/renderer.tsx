@@ -18,7 +18,7 @@ export const renderer = <Args,>({
   data,
   options: { maxItems, options },
   error,
-  readonly,
+  readOnly,
   onDataChanged,
 }: ComponentDefaultRendererProps<Id, Args>) => {
   type Data = ComponentClientDataById<Id, Args>;
@@ -31,7 +31,7 @@ export const renderer = <Args,>({
   });
 
   const canAddItems =
-    !readonly && (maxItems === undefined || data.length < maxItems);
+    !readOnly && (maxItems === undefined || data.length < maxItems);
 
   const errorText = error?.ownError ? t(`errors.${error.ownError}`) : '';
 
@@ -96,7 +96,7 @@ export const renderer = <Args,>({
       >
         <ComponentList
           items={items}
-          readonly={readonly}
+          readOnly={readOnly}
           onItemsChanged={onItemsChanged}
         />
 

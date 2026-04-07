@@ -28,4 +28,12 @@ describe('maybeJitiImport', () => {
       maybeJitiImport(jiti, './fixtures/nonExistentModule.js')
     ).resolves.toBe(MODULE_NOT_FOUND_MARK);
   });
+
+  test('module importing non-existent file', async () => {
+    const jiti = createJiti(import.meta.url);
+
+    await expect(
+      maybeJitiImport(jiti, './fixtures/importNonExistentFile.js')
+    ).rejects.toBeInstanceOf(Error);
+  });
 });

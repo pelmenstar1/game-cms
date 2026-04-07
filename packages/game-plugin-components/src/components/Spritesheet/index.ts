@@ -1,3 +1,5 @@
 import { componentAccessor } from '@game-cms/core';
 
-export const spritesheet = componentAccessor('game::spritesheet');
+import { id } from './types.js';
+
+export const spritesheet = componentAccessor(id);

@@ -9,14 +9,14 @@ import { useTranslation } from 'react-i18next';
 
 import { useSpritesheetPreviewModal } from '../../hooks/useSpritesheetPreviewModal';
 import styles from './renderer.module.scss';
-import type { ResolveAssetWrapperArgs } from './types';
+import type { Id, ResolveAssetWrapperArgs } from './types';
 
 export const renderer = <Args,>({
   data,
   options,
   error,
   onDataChanged,
-}: ComponentDefaultRendererProps<'game::asset-wrapper', Args>) => {
+}: ComponentDefaultRendererProps<Id, Args>) => {
   type Id = ResolveAssetWrapperArgs<Args>['id'];
   type BaseArgs = ResolveAssetWrapperArgs<Args>['baseArgs'];
 

@@ -332,6 +332,9 @@ importers:
       '@game-cms/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@game-cms/game-plugin':
+        specifier: workspace:*
+        version: link:../../packages/game-plugin
       '@game-cms/global':
         specifier: workspace:*
         version: link:../../packages/global

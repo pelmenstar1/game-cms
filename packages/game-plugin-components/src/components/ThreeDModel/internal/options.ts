@@ -1,6 +1,8 @@
 import { compose, file } from '@game-cms/base-components';
 import { ComponentOptionsById, GetComponentSchemaArgs } from '@game-cms/core';
 
+import { ComposeId } from '../../../types/compose.js';
+
 function createComposeSchema() {
   return compose({
     file: file({
@@ -15,7 +17,7 @@ type ComposeSchema = ReturnType<typeof createComposeSchema>;
 export type ComposeArgs = GetComponentSchemaArgs<ComposeSchema>;
 
 export function getComposeOptions(): ComponentOptionsById<
-  'base::compose',
+  ComposeId,
   ComposeArgs
 > {
   return createComposeSchema().options;

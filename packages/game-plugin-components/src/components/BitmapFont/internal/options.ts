@@ -1,6 +1,7 @@
 import { compose, file } from '@game-cms/base-components';
 import { ComponentOptionsById, GetComponentSchemaArgs } from '@game-cms/core';
 
+import { ComposeId } from '../../../types/compose.js';
 import { ATLAS_MIME_TYPE } from './constants.js';
 
 function createComposeSchema() {
@@ -21,7 +22,7 @@ type ComposeSchema = ReturnType<typeof createComposeSchema>;
 export type ComposeArgs = GetComponentSchemaArgs<ComposeSchema>;
 
 export function getComposeOptions(): ComponentOptionsById<
-  'base::compose',
+  ComposeId,
   ComposeArgs
 > {
   return createComposeSchema().options;

@@ -20,6 +20,9 @@ import {
 } from '@game-cms/game-plugin-core';
 import { IfExtends } from '@game-cms/shared';
 
+export const id = 'game::asset-wrapper';
+export type Id = typeof id;
+
 export type AssetWrapperArgs<
   Id extends ComponentId = ComponentId,
   Args = unknown,

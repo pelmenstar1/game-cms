@@ -8,21 +8,23 @@ import {
   useModal,
 } from '@game-cms/ui';
 
+import { composeId } from '../../types/compose';
 import { getComposeOptions } from './internal/options';
+import { Id } from './types';
 
 const BitmapFontPreviewModal = namedLazy(
   () => import('../../micro/BitmapFontPreviewModal'),
   'BitmapFontPreviewModal'
 );
 
-export const renderer: ComponentDefaultRenderer<'game::bitmap-font'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   error,
   onDataChanged,
-  readonly,
+  readOnly,
 }) => {
   const api = useComponentApi();
-  const Compose = api.getDefaultRenderer('base::compose');
+  const Compose = api.getDefaultRenderer(composeId);
   const showModal = useModal();
 
   const onPreview = () => {
@@ -35,7 +37,7 @@ export const renderer: ComponentDefaultRenderer<'game::bitmap-font'> = ({
   return (
     <div>
       <Toolbar>
-        <IconButton disabled={readonly} title="Preview" onClick={onPreview}>
+        <IconButton disabled={readOnly} title="Preview" onClick={onPreview}>
           <PreviewIcon />
         </IconButton>
       </Toolbar>
@@ -45,7 +47,7 @@ export const renderer: ComponentDefaultRenderer<'game::bitmap-font'> = ({
         options={getComposeOptions()}
         error={error}
         onDataChanged={onDataChanged}
-        readonly={readonly}
+        readOnly={readOnly}
       />
     </div>
   );

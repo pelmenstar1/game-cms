@@ -23,7 +23,7 @@ export type ComponentDefaultRendererProps<Id extends ComponentId, Args> = {
   data: ComponentClientDataById<Id, Args>;
   options: ComponentClientOptionsById<Id, Args>;
   error?: ComponentErrorById<Id, Args>;
-  readonly?: boolean;
+  readOnly?: boolean;
   onDataChanged?: (data: ComponentClientDataById<Id, Args>) => void;
 };
 

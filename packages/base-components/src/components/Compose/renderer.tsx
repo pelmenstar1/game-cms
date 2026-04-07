@@ -49,7 +49,7 @@ export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   error,
-  readonly,
+  readOnly,
   onDataChanged,
 }) => {
   const api = useComponentApi();
@@ -66,7 +66,7 @@ export const renderer: ComponentDefaultRenderer<Id> = ({
           key={i}
           group={group}
           data={data}
-          readonly={readonly}
+          readOnly={readOnly}
           error={error?.properties}
           onValueChanged={onDataChanged}
         />

@@ -1,0 +1,14 @@
+.root {
+  border: 2px solid var(--color-background-dark-variant);
+  border-radius: 0.25em;
+  aspect-ratio: auto 1/1;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: var(--color-text-on-background-dark);
+  }
+
+  &-selected {
+    border-color: var(--color-text-on-background);
+  }
+}

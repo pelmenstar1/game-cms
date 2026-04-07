@@ -1,11 +1,8 @@
 import { defineComponentClientController } from '@game-cms/core';
 
+import { ComposeId, composeId } from '../../types/compose.js';
 import core from './core.js';
-import {
-  type ComposeArgs,
-  type ComposeId,
-  composeOptions,
-} from './internal/constants';
+import { type ComposeArgs, composeOptions } from './internal/constants.js';
 
 export default defineComponentClientController({
   core,
@@ -21,7 +18,7 @@ export default defineComponentClientController({
   }),
   validator: (data, _, context, params) => {
     return context.validate<ComposeId, ComposeArgs>(
-      'base::compose',
+      composeId,
       data,
       composeOptions,
       params
@@ -30,14 +27,14 @@ export default defineComponentClientController({
   transformer: {
     fromClient: (clientData, _, context) => {
       return context.fromClient<ComposeId, ComposeArgs>(
-        'base::compose',
+        composeId,
         clientData,
         composeOptions
       );
     },
     toClient: (data, _, context) => {
       return context.toClient<ComposeId, ComposeArgs>(
-        'base::compose',
+        composeId,
         {
           images: data.images,
           skeleton: data.skeleton,

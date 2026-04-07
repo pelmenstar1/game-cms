@@ -4,7 +4,7 @@ import { Select } from '@game-cms/ui';
 export const renderer: ComponentDefaultRenderer<'base::dropdown'> = ({
   data,
   options,
-  readonly,
+  readOnly,
   onDataChanged,
 }) => {
   return (
@@ -12,7 +12,7 @@ export const renderer: ComponentDefaultRenderer<'base::dropdown'> = ({
       items={options.items}
       selectedItem={data}
       onItemSelected={onDataChanged}
-      openDisabled={readonly}
+      openDisabled={readOnly}
       placeholder=""
     />
   );

@@ -8,9 +8,11 @@ import {
   ComponentStorageDataById,
 } from '@game-cms/core';
 
+import { ComposeId } from '../../types/compose';
 import { ComposeArgs } from './internal/options';
 
-type ComposeId = 'base::compose';
+export const id = 'game::spritesheet' as const;
+export type Id = typeof id;
 
 type SpritesheetEntry = {
   outData: ComponentOutDataById<ComposeId, ComposeArgs> & {

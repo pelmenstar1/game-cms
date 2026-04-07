@@ -60,7 +60,7 @@ export function PublishedEntityView<T extends EntityId>({
               options
             )}
             options={options}
-            readonly
+            readOnly
           />
         ) : (
           <Typography weight="bold" variant="bodyLarge">

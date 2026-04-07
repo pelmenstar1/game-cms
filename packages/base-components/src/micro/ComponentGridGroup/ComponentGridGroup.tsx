@@ -16,7 +16,7 @@ export interface ComponentGridGroupProps<
   group: ComponentGroup<T>;
   data: T;
   error?: Record<K, unknown>;
-  readonly?: boolean;
+  readOnly?: boolean;
   onValueChanged?: (value: T) => void;
 }
 
@@ -28,7 +28,7 @@ export function ComponentGridGroup<
   group,
   data,
   error,
-  readonly,
+  readOnly,
   onValueChanged,
 }: ComponentGridGroupProps<K, T>) {
   const api = useComponentApi();
@@ -57,7 +57,7 @@ export function ComponentGridGroup<
               options={schemaEntry.options}
               data={data[key as K]}
               error={error?.[key as K]}
-              readonly={readonly}
+              readOnly={readOnly}
               onDataChanged={onDataChanged}
             />
           </Labeled>

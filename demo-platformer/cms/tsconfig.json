@@ -9,6 +9,7 @@
   "references": [
     { "path": "../../packages/core" },
     { "path": "../../packages/game-cms" },
+    { "path": "../../packages/game-plugin" },
     { "path": "../../packages/storage-provider-local" },
     { "path": "../../packages/global" },
     { "path": "../../packages/shared" },

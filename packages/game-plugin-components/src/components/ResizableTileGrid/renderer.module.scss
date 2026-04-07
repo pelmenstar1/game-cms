@@ -1,0 +1,10 @@
+.info-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.input {
+  width: 100%;
+}

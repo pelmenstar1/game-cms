@@ -42,7 +42,7 @@ export type ComponentListProps<
 > = {
   className?: string;
   items: T[];
-  readonly?: boolean;
+  readOnly?: boolean;
   onItemsChanged: (items: T[]) => void;
 };
 
@@ -53,7 +53,7 @@ export function ComponentList<
 >({
   className,
   items,
-  readonly,
+  readOnly,
   onItemsChanged,
 }: ComponentListProps<Id, Args, T>) {
   const api = useComponentApi();
@@ -107,14 +107,14 @@ export function ComponentList<
             key={item.key}
             title={title}
             className={styles['item-container']}
-            headerContent={readonly ? undefined : header}
+            headerContent={readOnly ? undefined : header}
             initiallyOpened={index === items.length - 1}
           >
             <BaseComponent
               data={item.data}
               options={item.options}
               error={item.error}
-              readonly={readonly}
+              readOnly={readOnly}
               onDataChanged={onItemDataChanged}
             />
           </Accordion>

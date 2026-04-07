@@ -24,7 +24,7 @@ export const renderer: ComponentDefaultRenderer<'base::file'> = ({
   data: items,
   options: { supportedMimeTypes, maxItems },
   error,
-  readonly,
+  readOnly,
   onDataChanged,
 }) => {
   const { t } = useTranslation('base', {
@@ -65,12 +65,12 @@ export const renderer: ComponentDefaultRenderer<'base::file'> = ({
             className={styles['preview-list']}
             items={items}
             maxItems={maxItems}
-            readonly={readonly}
+            readOnly={readOnly}
             onItemsChanged={onItemsChanged}
             onAddFile={onAddFile}
           />
         ) : (
-          !readonly && (
+          !readOnly && (
             <IconButton
               title={t('addFile')}
               onClick={onAddFile}

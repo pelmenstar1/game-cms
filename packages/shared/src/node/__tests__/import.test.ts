@@ -9,7 +9,7 @@ function fixture(name: string) {
   return path.join(import.meta.dirname, 'fixtures', name);
 }
 
-describe('maybeJitiImport', () => {
+describe('maybeImportFile', () => {
   test('existing module', async () => {
     await expect(maybeImportFile(fixture('target.js'))).resolves.not.toBe(
       MODULE_NOT_FOUND_MARK
@@ -26,5 +26,11 @@ describe('maybeJitiImport', () => {
     await expect(
       maybeImportFile(fixture('nonExistentModule.js'))
     ).resolves.toBe(MODULE_NOT_FOUND_MARK);
+  });
+
+  test('module importing non-existent file', async () => {
+    await expect(
+      maybeImportFile(fixture('importNonExistentFile.js'))
+    ).rejects.toBeInstanceOf(Error);
   });
 });

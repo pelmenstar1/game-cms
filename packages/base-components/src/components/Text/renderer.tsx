@@ -8,7 +8,7 @@ import { Id } from './types.js';
 export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   error,
-  readonly,
+  readOnly,
   onDataChanged,
 }) => {
   const { t } = useTranslation('base');
@@ -20,7 +20,7 @@ export const renderer: ComponentDefaultRenderer<Id> = ({
       className={styles.root}
       value={data}
       error={errorMessage}
-      readOnly={readonly}
+      readOnly={readOnly}
       onTextChanged={onDataChanged}
     />
   );

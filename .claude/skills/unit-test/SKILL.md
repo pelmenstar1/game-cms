@@ -35,7 +35,7 @@ import { describe, expect, test } from 'vitest';
 import { myFunction } from './myModule.js';
 ```
 
-Use `test` for standalone tests, `describe`/`test` or `describe`/`it` for grouped tests. All three styles are used in the codebase — pick the one that best fits.
+When writing multiple tests, always group them inside a `describe` block named after the function or module under test. Never encode grouping via slashes in test names (e.g. `'myFn/error'`) — use nested `describe` blocks instead. Exception: a single standalone test case does not need a `describe` wrapper.
 
 ### Test patterns
 
@@ -57,31 +57,26 @@ test('smoke', async () => {
 
 #### Parametrized tests with `test.each`
 
-For functions with many input/output pairs, use `test.each` with TypeScript generics:
+For functions with many input/output pairs, use `test.each` inside a `describe` block:
 
 ```ts
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 import { parseConditionalNotation } from './parser.js';
 
-test.each<[string, ExpectedType]>([
-  ['input1', expectedOutput1],
-  ['input2', expectedOutput2],
-])('parseConditionalNotation/success', (input, expected) => {
-  const actual = parseConditionalNotation(input);
-  expect(actual).toEqual(expected);
-});
-```
+describe('parseConditionalNotation', () => {
+  test.each<[string, ExpectedType]>([
+    ['input1', expectedOutput1],
+    ['input2', expectedOutput2],
+  ])('success', (input, expected) => {
+    const actual = parseConditionalNotation(input);
+    expect(actual).toEqual(expected);
+  });
 
-For error cases:
-
-```ts
-test.each<[string]>([['bad-input-1'], ['bad-input-2']])(
-  'parseConditionalNotation/error',
-  (input) => {
+  test.each<[string]>([['bad-input-1'], ['bad-input-2']])('error', (input) => {
     expect(() => parseConditionalNotation(input)).toThrow();
-  }
-);
+  });
+});
 ```
 
 #### Grouped tests with `describe`
@@ -178,6 +173,7 @@ Use Vitest's built-in assertions (no external libraries):
 - For unavoidable mocks, use direct property overrides rather than Vitest's `vi.fn()` when possible
 - Use fixture directories (`__tests__/fixtures/`) for complex test data
 - When the mocked value is a file path, use Unix style paths (`/path/to/file`) for consistency, even on Windows
+- In test names and labels, use `->` (ASCII arrow) for symbols, not `→` (Unicode arrow)
 
 ### Steps
 
@@ -190,9 +186,9 @@ For each file path in `$ARGUMENTS`:
    - Dependencies (are they pure functions or do they need setup?)
 
 2. **Determine the test style:**
-   - Pure functions with many cases → `test.each`
-   - Module with distinct behaviors → `describe`/`test` groups
-   - Simple utility → flat `test` calls
+   - Multiple test cases → wrap in `describe` named after the function; use `test.each` for parametrized inputs
+   - Module with distinct behaviors → `describe` + nested `describe`/`test` groups
+   - Single test case → flat `test` call, no `describe` wrapper needed
    - Needs Fastify request → use `@game-cms/testing-lib`
 
 3. **Write** the test file at the co-located path (`<source>.test.ts`).
@@ -202,5 +198,3 @@ For each file path in `$ARGUMENTS`:
    - Default/empty values (null, undefined, empty string, empty array/object)
    - Edge cases specific to the function's logic
    - Error conditions (invalid inputs, thrown exceptions)
-
-5. **Verify** by running `npx vitest run --project unit <test-file-path>` to confirm tests pass.

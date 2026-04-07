@@ -34,7 +34,7 @@ export const renderer = <Args,>({
   data,
   options,
   error,
-  readonly,
+  readOnly,
   onDataChanged,
 }: ComponentDefaultRendererProps<'base::graph', Args>) => {
   type ResArgs = ResolveGraphArgs<Args>;
@@ -64,14 +64,14 @@ export const renderer = <Args,>({
               edges: data.edges,
             });
           },
-          readonly,
+          readOnly,
         },
         position: meta.position,
         measured: meta.measuredSize,
         selected: meta.selected,
         ...meta.size,
       })),
-    [data, componentId, baseOptions, error, readonly, onDataChanged]
+    [data, componentId, baseOptions, error, readOnly, onDataChanged]
   );
 
   const nodeKeys = useMemo(

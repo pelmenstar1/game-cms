@@ -23,7 +23,7 @@ export interface EntityComponentChoiceProps<Id extends ComponentId> {
   dataError: ComponentErrorById<Id> | undefined;
   condition: string;
   conditionError: string | undefined;
-  readonly?: boolean;
+  readOnly?: boolean;
 
   onConditionChanged?: (value: string) => void;
   onDataChanged?: (data: ComponentClientDataById<Id>) => void;
@@ -39,7 +39,7 @@ export function EntityComponentChoice<Id extends ComponentId>({
   data,
   conditionError,
   dataError,
-  readonly,
+  readOnly,
   onDataChanged,
   onConditionChanged,
   onDelete,
@@ -57,7 +57,7 @@ export function EntityComponentChoice<Id extends ComponentId>({
         className={styles.header}
         onDelete={onDelete}
         handleRef={handleRef}
-        readonly={readonly}
+        readonly={readOnly}
       >
         <Typography className={styles['alternative-label']}>
           {t('alternative')}
@@ -74,7 +74,7 @@ export function EntityComponentChoice<Id extends ComponentId>({
         data={data}
         options={options}
         error={dataError}
-        readonly={readonly}
+        readOnly={readOnly}
         onDataChanged={onDataChanged}
       />
     </div>

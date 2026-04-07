@@ -7,11 +7,16 @@ import type {
   ComponentStorageDataById,
 } from '@game-cms/core';
 
-type FileError = ComponentErrorById<'base::file'>;
-type FileData = ComponentOutDataById<'base::file'>;
-type FileDataIn = ComponentInDataById<'base::file'>;
-type FileStorageData = ComponentStorageDataById<'base::file'>;
-type FileClientData = ComponentClientDataById<'base::file'>;
+type FileId = 'base::file';
+
+export const id = 'game::spine' as const;
+export type Id = typeof id;
+
+type FileError = ComponentErrorById<FileId>;
+type FileData = ComponentOutDataById<FileId>;
+type FileDataIn = ComponentInDataById<FileId>;
+type FileStorageData = ComponentStorageDataById<FileId>;
+type FileClientData = ComponentClientDataById<FileId>;
 
 type BaseData<T> = {
   skeleton: T;

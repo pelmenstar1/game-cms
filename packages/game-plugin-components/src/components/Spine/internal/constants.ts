@@ -1,13 +1,13 @@
 import type { ComponentOptionsById } from '@game-cms/core';
 
+import { ComposeId } from '../../../types/compose.js';
+
 type FileOptions = ComponentOptionsById<'base::file'>;
 
 export type ComposeArgs = Record<
   'atlas' | 'images' | 'skeleton',
   { componentId: 'base::file'; options: FileOptions }
 >;
-
-export type ComposeId = 'base::compose';
 
 export const SKELETON_OPTIONS: FileOptions = {
   minItems: 1,

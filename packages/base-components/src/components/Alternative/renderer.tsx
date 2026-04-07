@@ -3,7 +3,7 @@ import {
   ComponentClientDataById,
   ComponentDefaultRendererProps,
 } from '@game-cms/core';
-import { removeIndex } from '@game-cms/shared/collections';
+import { removeIndex, withUpdatedItem } from '@game-cms/shared/collections';
 import {
   DraggableList,
   IconButton,
@@ -30,7 +30,7 @@ export const renderer = <Args,>({
   data,
   options,
   error,
-  readonly,
+  readOnly,
   onDataChanged,
 }: ComponentDefaultRendererProps<Id, Args>) => {
   type ItemData = ComponentClientDataById<Id, Args>['default'];
@@ -106,7 +106,7 @@ export const renderer = <Args,>({
           data={data.default}
           options={baseOptions}
           error={error?.default}
-          readonly={readonly}
+          readOnly={readOnly}
           onDataChanged={onDefaultChange}
         />
       </div>
@@ -119,8 +119,11 @@ export const renderer = <Args,>({
         >
           {(item, _, handleRef) => {
             const onItemDataChanged = (value: ItemData) => {
-              const newAlternative = [...data.alternative];
-              newAlternative[item.key] = { ...newAlternative[item.key], value };
+              const newAlternative = withUpdatedItem(
+                data.alternative,
+                item.key,
+                { ...data.alternative[item.key], value }
+              );
 
               onDataChanged?.({
                 default: data.default,
@@ -129,11 +132,11 @@ export const renderer = <Args,>({
             };
 
             const onItemConditionChanged = (condition: string) => {
-              const newAlternative = [...data.alternative];
-              newAlternative[item.key] = {
-                ...newAlternative[item.key],
-                condition,
-              };
+              const newAlternative = withUpdatedItem(
+                data.alternative,
+                item.key,
+                { ...data.alternative[item.key], condition }
+              );
 
               onDataChanged?.({
                 default: data.default,
@@ -159,7 +162,7 @@ export const renderer = <Args,>({
                 conditionError={itemError?.condition}
                 options={baseOptions}
                 handleRef={handleRef}
-                readonly={readonly}
+                readOnly={readOnly}
                 onDataChanged={onItemDataChanged}
                 onConditionChanged={onItemConditionChanged}
                 onDelete={onItemDelete}
@@ -169,7 +172,7 @@ export const renderer = <Args,>({
         </DraggableList>
       )}
 
-      {!readonly && (
+      {!readOnly && (
         <IconButton
           className={styles['add-alternative-button']}
           title={t('addItem')}

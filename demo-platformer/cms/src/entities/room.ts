@@ -1,10 +1,10 @@
+import { resizableTileGrid } from '@game-cms/game-plugin/components';
 import { entity } from 'game-cms';
 import {
   compose,
   dropdown,
   entityReference,
   file,
-  json,
   number,
   repeatable,
   text,
@@ -26,9 +26,7 @@ export default entity({
   components: {
     name: text(),
     background: file({ supportedMimeTypes: ['image/png'] }),
-    width: number({ integer: true, min: 1 }),
-    height: number({ integer: true, min: 1 }),
-    layout: json(),
+    layout: resizableTileGrid(),
     terrain: file({ supportedMimeTypes: ['image/png'] }),
     traps: repeatable({
       component: compose({

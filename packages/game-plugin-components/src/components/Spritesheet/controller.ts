@@ -2,6 +2,7 @@ import { defineComponentController } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
+import { ComposeId, composeId } from '../../types/compose.js';
 import { createShadowFileOrchestration } from '../../utils/shadowFile.js';
 import core from './core.js';
 import { ComposeArgs, getComposeOptions } from './internal/options.js';
@@ -20,27 +21,27 @@ const shadowAtlasOrchestration = createShadowFileOrchestration({
 export default defineComponentController({
   core,
   validator: (data, options, context) =>
-    context.validate<'base::compose', ComposeArgs>(
-      'base::compose',
+    context.validate<ComposeId, ComposeArgs>(
+      composeId,
       data,
       getComposeOptions(options)
     ),
   structure: (options, context) =>
-    context.getStructure<'base::compose', ComposeArgs>(
-      'base::compose',
+    context.getStructure<ComposeId, ComposeArgs>(
+      composeId,
       getComposeOptions(options)
     ),
   innerDependencies: (options, context) =>
-    context.getDependencies<'base::compose', ComposeArgs>(
-      'base::compose',
+    context.getDependencies<ComposeId, ComposeArgs>(
+      composeId,
       getComposeOptions(options)
     ),
   atomWalker: (data, options, apply, context) => {
-    context.walk('base::compose', data, getComposeOptions(options), apply);
+    context.walk(composeId, data, getComposeOptions(options), apply);
   },
   mergeData: async (target, source, options, context) => {
-    const result = await context.merge<'base::compose', ComposeArgs>(
-      'base::compose',
+    const result = await context.merge<ComposeId, ComposeArgs>(
+      composeId,
       target,
       source,
       getComposeOptions(options)
@@ -72,15 +73,15 @@ export default defineComponentController({
   },
   search: {
     createIndex: (data, options, context) =>
-      context.createSearchIndex<'base::compose', ComposeArgs>(
-        'base::compose',
+      context.createSearchIndex<ComposeId, ComposeArgs>(
+        composeId,
         data,
         getComposeOptions(options)
       ),
     getScore: (query, target, options, context) =>
-      context.getScore<'base::compose', ComposeArgs>(
+      context.getScore<ComposeId, ComposeArgs>(
         query,
-        'base::compose',
+        composeId,
         target,
         getComposeOptions(options)
       ),

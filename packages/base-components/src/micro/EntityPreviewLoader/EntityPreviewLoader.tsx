@@ -49,7 +49,7 @@ function Renderer<Id extends EntityId>({
     [clientTransformerContext, document, composeOptions]
   );
 
-  return <Compose data={clientData} options={composeOptions} readonly />;
+  return <Compose data={clientData} options={composeOptions} readOnly />;
 }
 
 export function EntityPreviewLoader({

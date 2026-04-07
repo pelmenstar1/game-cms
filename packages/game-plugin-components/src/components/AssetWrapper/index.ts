@@ -1,16 +1,16 @@
 import type { ComponentId, ComponentSchema } from '@game-cms/core';
 import { GameAssetPipeline } from '@game-cms/game-plugin-core';
 
-import type { AssetWrapperArgs } from './types';
+import { type AssetWrapperArgs, type Id, id } from './types';
 
-export function assetWrapper<Id extends ComponentId, Args>(input: {
+export function assetWrapper<CId extends ComponentId, Args>(input: {
   pipeline: GameAssetPipeline;
-  component: ComponentSchema<Id, Args>;
-}): ComponentSchema<'game::asset-wrapper', AssetWrapperArgs<Id, Args>> {
+  component: ComponentSchema<CId, Args>;
+}): ComponentSchema<Id, AssetWrapperArgs<CId, Args>> {
   const { component, pipeline } = input;
 
   return {
-    componentId: 'game::asset-wrapper',
+    componentId: id,
     options: {
       pipeline,
       componentId: component.componentId,

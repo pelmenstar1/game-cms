@@ -1,7 +1,9 @@
 import { defineComponentCore } from '@game-cms/core';
 
+import { id } from './types.js';
+
 export default defineComponentCore({
-  id: 'game::spine',
+  id,
   defaultOutData: () => ({
     atlas: [],
     skeleton: [],

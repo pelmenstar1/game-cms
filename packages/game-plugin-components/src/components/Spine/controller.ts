@@ -2,12 +2,12 @@ import { defineComponentController } from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { ObjectId } from 'mongodb';
 
+import { ComposeId, composeId } from '../../types/compose.js';
 import { createShadowFileOrchestration } from '../../utils/shadowFile.js';
 import core from './core.js';
 import {
   ATLAS_OPTIONS,
   type ComposeArgs,
-  type ComposeId,
   composeOptions,
   IMAGES_OPTIONS,
   SKELETON_OPTIONS,
@@ -34,28 +34,22 @@ export default defineComponentController({
   core,
   validator: (data, _, context, params) => {
     return context.validate<ComposeId, ComposeArgs>(
-      'base::compose',
+      composeId,
       data,
       composeOptions,
       params
     );
   },
   structure: (_, context) =>
-    context.getStructure<ComposeId, ComposeArgs>(
-      'base::compose',
-      composeOptions
-    ),
+    context.getStructure<ComposeId, ComposeArgs>(composeId, composeOptions),
   innerDependencies: (_, context) =>
-    context.getDependencies<ComposeId, ComposeArgs>(
-      'base::compose',
-      composeOptions
-    ),
+    context.getDependencies<ComposeId, ComposeArgs>(composeId, composeOptions),
   atomWalker: (data, _, apply, context) => {
-    context.walk('base::compose', data, composeOptions, apply);
+    context.walk(composeId, data, composeOptions, apply);
   },
   mergeData: async (target, source, _, context) => {
     const result = await context.merge<ComposeId, ComposeArgs>(
-      'base::compose',
+      composeId,
       target,
       source,
       composeOptions
@@ -92,7 +86,7 @@ export default defineComponentController({
     }),
     toStorage: async (data, _, context) => {
       const base = await context.toStorage<ComposeId, ComposeArgs>(
-        'base::compose',
+        composeId,
         data,
         composeOptions
       );

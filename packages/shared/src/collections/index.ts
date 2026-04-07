@@ -3,5 +3,7 @@ export * from './findNewKey.js';
 export * from './maybeArray.js';
 export * from './merge.js';
 export * from './removeIndex.js';
+export * from './resize.js';
 export * from './set.js';
 export * from './unique.js';
+export * from './update.js';

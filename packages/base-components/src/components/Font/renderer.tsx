@@ -25,7 +25,7 @@ export const renderer: ComponentDefaultRenderer<'base::font'> = ({
   options,
   error,
   onDataChanged,
-  readonly,
+  readOnly,
 }) => {
   const api = useComponentApi();
   const showModal = useModal();
@@ -64,7 +64,7 @@ export const renderer: ComponentDefaultRenderer<'base::font'> = ({
         options={repeatableOptions}
         error={error}
         onDataChanged={onDataChanged}
-        readonly={readonly}
+        readOnly={readOnly}
       />
     </div>
   );

@@ -4,6 +4,12 @@ import { cms } from '@game-cms/global';
 import { mapObject } from '@game-cms/shared/object';
 import { ObjectId } from 'mongodb';
 
+function to2D<T>(flat: T[], width: number, height: number): T[][] {
+  return Array.from({ length: height }, (_, row) =>
+    flat.slice(row * width, row * width + width)
+  );
+}
+
 const route = apiRoute({
   url: '/game-data',
   method: 'GET',
@@ -169,10 +175,14 @@ const route = apiRoute({
           return {
             name: room.name,
             background: room.background[0],
-            width: room.width,
-            height: room.height,
+            width: room.layout.width,
+            height: room.layout.height,
             terrain: room.terrain[0],
-            layout: room.layout as number[][],
+            layout: to2D(
+              room.layout.grid,
+              room.layout.width,
+              room.layout.height
+            ),
             checkpointImages: mapObject(room.checkpointImages, (value) => ({
               idle: {
                 file: value.idle.file[0],

@@ -1,12 +1,12 @@
 import type { SizedIterable } from './types.js';
 
-export function setAddMany<T>(target: Set<T>, values: T[]) {
+export function setAddMany<T>(target: Set<T>, values: readonly T[]) {
   for (const value of values) {
     target.add(value);
   }
 }
 
-export function setDeleteMany<T>(target: Set<T>, values: T[]) {
+export function setDeleteMany<T>(target: Set<T>, values: readonly T[]) {
   for (const value of values) {
     target.delete(value);
   }

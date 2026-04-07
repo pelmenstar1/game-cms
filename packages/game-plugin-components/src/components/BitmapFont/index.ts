@@ -1,3 +1,5 @@
 import { componentAccessor } from '@game-cms/core';
 
-export const bitmapFont = componentAccessor('game::bitmap-font');
+import { id } from './types.js';
+
+export const bitmapFont = componentAccessor(id);

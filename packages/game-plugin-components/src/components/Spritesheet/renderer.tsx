@@ -3,17 +3,19 @@ import { ComponentDefaultRenderer } from '@game-cms/core';
 import { IconButton, PreviewIcon, Toolbar } from '@game-cms/ui';
 
 import { useSpritesheetPreviewModal } from '../../hooks/useSpritesheetPreviewModal';
+import { composeId } from '../../types/compose';
 import { getComposeOptions } from './internal/options';
+import { Id } from './types';
 
-export const renderer: ComponentDefaultRenderer<'game::spritesheet'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   error,
   onDataChanged,
-  readonly,
+  readOnly,
 }) => {
   const api = useComponentApi();
-  const Compose = api.getDefaultRenderer('base::compose');
+  const Compose = api.getDefaultRenderer(composeId);
 
   const showSpritesheetPreview = useSpritesheetPreviewModal();
 
@@ -31,7 +33,7 @@ export const renderer: ComponentDefaultRenderer<'game::spritesheet'> = ({
   return (
     <div>
       <Toolbar>
-        <IconButton disabled={readonly} title="Preview" onClick={onPreview}>
+        <IconButton disabled={readOnly} title="Preview" onClick={onPreview}>
           <PreviewIcon />
         </IconButton>
       </Toolbar>
@@ -41,7 +43,7 @@ export const renderer: ComponentDefaultRenderer<'game::spritesheet'> = ({
         options={getComposeOptions(options)}
         error={error}
         onDataChanged={onDataChanged}
-        readonly={readonly}
+        readOnly={readOnly}
       />
     </div>
   );

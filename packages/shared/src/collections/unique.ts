@@ -1,3 +1,3 @@
-export function uniqueArray<T>(array: T[]): T[] {
+export function uniqueArray<T>(array: readonly T[]): T[] {
   return [...new Set(array)];
 }

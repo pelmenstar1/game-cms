@@ -10,25 +10,27 @@ import {
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { composeId } from '../../types/compose.js';
 import { getComposeOptions } from './internal/options.js';
+import { Id } from './types.js';
 
 const ThreeDModelPreviewModal = namedLazy(
   () => import('../../micro/ThreeDModelPreviewModal/index.js'),
   'ThreeDModelPreviewModal'
 );
 
-export const renderer: ComponentDefaultRenderer<'game::three-d-model'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   error,
   onDataChanged,
-  readonly,
+  readOnly,
 }) => {
   const { file: files } = data;
 
   const { t } = useTranslation('game');
 
   const api = useComponentApi();
-  const Compose = api.getDefaultRenderer('base::compose');
+  const Compose = api.getDefaultRenderer(composeId);
 
   const showModal = useModal();
 
@@ -59,7 +61,7 @@ export const renderer: ComponentDefaultRenderer<'game::three-d-model'> = ({
         options={getComposeOptions()}
         error={error}
         onDataChanged={onDataChanged}
-        readonly={readonly}
+        readOnly={readOnly}
       />
     </div>
   );

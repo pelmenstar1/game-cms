@@ -2,4 +2,6 @@ import './types.js';
 
 import { componentAccessor } from '@game-cms/core';
 
-export const spine = componentAccessor('game::spine');
+import { id } from './types.js';
+
+export const spine = componentAccessor(id);

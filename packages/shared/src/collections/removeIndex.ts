@@ -1,4 +1,4 @@
-export function removeIndex<T>(values: T[], targetIndex: number) {
+export function removeIndex<T>(values: readonly T[], targetIndex: number) {
   const result = [...values];
   result.splice(targetIndex, 1);
 

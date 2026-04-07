@@ -9,7 +9,7 @@ export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   error,
-  readonly,
+  readOnly,
   onDataChanged,
 }) => {
   const { t } = useTranslation('base', {
@@ -28,7 +28,7 @@ export const renderer: ComponentDefaultRenderer<Id> = ({
       className={styles.root}
       error={errorText}
       value={data}
-      readOnly={readonly}
+      readOnly={readOnly}
       onTextChanged={onDataChanged}
     />
   );

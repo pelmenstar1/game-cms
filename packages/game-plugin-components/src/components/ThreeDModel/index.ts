@@ -1,3 +1,5 @@
 import { componentAccessor } from '@game-cms/core';
 
-export const threeDModel = componentAccessor('game::three-d-model');
+import { id } from './types.js';
+
+export const threeDModel = componentAccessor(id);
