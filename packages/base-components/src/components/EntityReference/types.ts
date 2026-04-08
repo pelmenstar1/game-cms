@@ -2,6 +2,9 @@ import { EntityId } from '@game-cms/base-core';
 import { ComponentEntry } from '@game-cms/core';
 import { ObjectId } from 'mongodb';
 
+export const id = 'base::entity-reference' as const;
+export type Id = typeof id;
+
 type EntityComponentEntry = {
   outData: string | null;
   inData: string | null;
@@ -14,7 +17,7 @@ type EntityComponentEntry = {
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'base::entity-reference': ComponentEntry<EntityComponentEntry>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<EntityComponentEntry>;
   }
 }

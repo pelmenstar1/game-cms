@@ -1,6 +1,9 @@
 import type { ComponentEntry } from '@game-cms/core';
 import type { ZodType } from 'zod';
 
+export const id = 'base::json';
+export type Id = typeof id;
+
 type JsonArgs = { allowEmpty: boolean; type: unknown };
 
 type ResolveArgs<T> = T extends JsonArgs ? T : JsonArgs;
@@ -19,7 +22,7 @@ type JsonEntry<Args extends JsonArgs> = {
 };
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::json': ComponentEntry<JsonEntry<ResolveArgs<_Args>>>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<JsonEntry<ResolveArgs<Args>>>;
   }
 }

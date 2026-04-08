@@ -10,6 +10,7 @@ import { IfExtends, UnpackArray } from '@game-cms/shared';
 import { Key } from 'react';
 
 import { TitleSpecById } from '../../internal/title.js';
+import { id } from './internal/types.js';
 
 export type RepeatableArgs<Id = ComponentId, BaseArgs = unknown> = {
   id: Id;
@@ -58,15 +59,15 @@ type BaseNestedPathShape<Args extends RepeatableArgs> =
   ComponentNestedPathShape<Args['id'], Args['baseArgs']>[];
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::repeatable': ComponentEntry<RepeatableEntry<ResolveArgs<_Args>>>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<RepeatableEntry<ResolveArgs<Args>>>;
   }
 
   interface ComponentNestedPathMap<T, Args> {
-    'base::repeatable': BaseNestedPath<T, ResolveArgs<Args>>;
+    [id]: BaseNestedPath<T, ResolveArgs<Args>>;
   }
 
   interface ComponentNestedPathShapeMap<Args> {
-    'base::repeatable': BaseNestedPathShape<ResolveArgs<Args>>;
+    [id]: BaseNestedPathShape<ResolveArgs<Args>>;
   }
 }

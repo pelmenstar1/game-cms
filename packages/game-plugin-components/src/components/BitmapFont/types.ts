@@ -32,7 +32,7 @@ type BitmapFontEntry = {
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'game::bitmap-font': ComponentEntry<BitmapFontEntry>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<BitmapFontEntry>;
   }
 }

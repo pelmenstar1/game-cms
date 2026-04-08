@@ -15,6 +15,9 @@ import { NestedPathDot } from '../../internal/nestedPath.js';
 import { TitleSpec, TitleSpecById } from '../../internal/title.js';
 import { DataEntry, GetDataFromEntryArray } from './internal/types.js';
 
+export const id = 'base::dynamic-zone' as const;
+export type Id = typeof id;
+
 type BaseDynamicZoneInputEntry<Id extends ComponentId, Args, Title> = {
   title?: Title;
   option: { title: string };
@@ -143,17 +146,15 @@ type NestedPathShape<Input extends DynamicZoneInputComponents> = {
 }[keyof Input & string][];
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::dynamic-zone': ComponentEntry<
-      DynamicZoneEntry<ResolveInputComponents<_Args>>
-    >;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<DynamicZoneEntry<ResolveInputComponents<Args>>>;
   }
 
   interface ComponentNestedPathMap<T, Args> {
-    'base::dynamic-zone': NestedPath<T, ResolveInputComponents<Args>>;
+    [id]: NestedPath<T, ResolveInputComponents<Args>>;
   }
 
   interface ComponentNestedPathShapeMap<Args> {
-    'base::dynamic-zone': NestedPathShape<ResolveInputComponents<Args>>;
+    [id]: NestedPathShape<ResolveInputComponents<Args>>;
   }
 }

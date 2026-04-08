@@ -20,7 +20,7 @@ export default defineComponentController({
   core,
   validator: <Args>(
     data: unknown,
-    options: ComponentOptionsById<'base::compose', Args>,
+    options: ComponentOptionsById<Id, Args>,
     context: ForeignComponentValidationContext,
     params?: ComponentDataValidatorParams
   ) => {

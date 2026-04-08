@@ -1,8 +1,9 @@
 import { componentDataFlowTests } from '@game-cms/component-testing-lib/e2e';
 
 import { checkbox } from './index.js';
+import { id } from './types.js';
 
-componentDataFlowTests('base::checkbox', {
+componentDataFlowTests(id, {
   outs: [
     {
       data: ['choice1', 'choice3'],

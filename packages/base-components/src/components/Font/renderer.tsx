@@ -14,13 +14,14 @@ import {
   RepeatableArgs,
 } from './internal/repeatable.js';
 import styles from './renderer.module.scss';
+import { Id } from './types.js';
 
 const FontPreviewModal = namedLazy(
   () => import('../../micro/FontPreviewModal/index.js'),
   'FontPreviewModal'
 );
 
-export const renderer: ComponentDefaultRenderer<'base::font'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   error,

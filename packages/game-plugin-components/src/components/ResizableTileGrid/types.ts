@@ -5,8 +5,8 @@ export type Id = typeof id;
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'game::resizable-tile-grid': ComponentEntry<{
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<{
       outData: { width: number; height: number; grid: number[] };
       error:
         | 'INVALID_TYPE'

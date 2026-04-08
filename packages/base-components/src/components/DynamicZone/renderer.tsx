@@ -11,8 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { ComponentList } from '../../micro/ComponentList/index.js';
 import { DynamicZonePalette } from '../../micro/DynamicZonePalette/index.js';
 import styles from './renderer.module.scss';
-
-type Id = 'base::dynamic-zone';
+import { Id } from './types.js';
 
 export const renderer = <Args,>({
   data,

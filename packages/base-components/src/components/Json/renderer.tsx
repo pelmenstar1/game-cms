@@ -2,7 +2,9 @@ import { ComponentDefaultRenderer } from '@game-cms/core';
 import { JsonEditor } from '@game-cms/ui';
 import { useTranslation } from 'react-i18next';
 
-export const renderer: ComponentDefaultRenderer<'base::json'> = ({
+import { Id } from './types.js';
+
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   error,

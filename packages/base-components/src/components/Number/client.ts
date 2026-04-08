@@ -2,9 +2,10 @@ import { defineComponentClientController } from '@game-cms/core';
 import { safeParseFloat } from '@game-cms/shared/string';
 
 import core from './core.js';
+import { Id } from './types.js';
 import { validator } from './validator.js';
 
-export default defineComponentClientController<'base::number'>({
+export default defineComponentClientController<Id>({
   core,
   meta: {
     ui: {

@@ -2,4 +2,6 @@ import './types.js';
 
 import { componentAccessor } from '@game-cms/core';
 
-export const file = componentAccessor('base::file');
+import { id } from './types.js';
+
+export const file = componentAccessor(id);

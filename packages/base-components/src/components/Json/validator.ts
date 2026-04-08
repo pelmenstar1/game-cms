@@ -1,9 +1,8 @@
 import { ComponentOptionsById } from '@game-cms/core';
 
-export function validator(
-  data: unknown,
-  options: ComponentOptionsById<'base::json'>
-) {
+import { Id } from './types.js';
+
+export function validator(data: unknown, options: ComponentOptionsById<Id>) {
   const { type } = options;
   if (type) {
     const result = type.safeParse(data);

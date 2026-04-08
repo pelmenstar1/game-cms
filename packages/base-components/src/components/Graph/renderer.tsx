@@ -26,7 +26,7 @@ import {
   GraphCustomNodeData,
 } from '../../micro/GraphCustomNode/index.js';
 import styles from './renderer.module.scss';
-import { ResolveGraphArgs } from './types.js';
+import { Id, ResolveGraphArgs } from './types.js';
 
 const nodeTypes = { custom: GraphCustomNode };
 
@@ -36,7 +36,7 @@ export const renderer = <Args,>({
   error,
   readOnly,
   onDataChanged,
-}: ComponentDefaultRendererProps<'base::graph', Args>) => {
+}: ComponentDefaultRendererProps<Id, Args>) => {
   type ResArgs = ResolveGraphArgs<Args>;
   type Id = ResArgs['id'];
   type BaseArgs = ResArgs['baseArgs'];

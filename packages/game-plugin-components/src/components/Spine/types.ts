@@ -26,8 +26,8 @@ type BaseData<T> = {
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'game::spine': ComponentEntry<{
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<{
       options: Record<never, never>;
       error: {
         ownError?: 'INVALID_TYPE';

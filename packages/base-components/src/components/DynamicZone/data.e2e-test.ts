@@ -4,8 +4,9 @@ import { compose } from '../Compose/index.js';
 import { number } from '../Number/index.js';
 import { text } from '../Text/index.js';
 import { dynamicZone, dynamicZoneEntry } from './index.js';
+import { id } from './types.js';
 
-componentDataFlowTests('base::dynamic-zone', {
+componentDataFlowTests(id, {
   outs: [
     {
       data: [

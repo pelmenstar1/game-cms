@@ -1,7 +1,9 @@
 import { ComponentDefaultRenderer } from '@game-cms/core';
 import { Select } from '@game-cms/ui';
 
-export const renderer: ComponentDefaultRenderer<'base::dropdown'> = ({
+import { Id } from './types.js';
+
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   readOnly,

@@ -1,33 +1,36 @@
 import { defineComponentController } from '@game-cms/core';
 
 import core from './core.js';
-import { getRepeatableOptions, RepeatableArgs } from './internal/repeatable.js';
-
-const id = 'base::repeatable';
-
-type Id = typeof id;
+import {
+  getRepeatableOptions,
+  RepeatableArgs,
+  RepeatableId,
+} from './internal/repeatable.js';
 
 export default defineComponentController({
   core,
   validator: (data, options, context) => {
-    return context.validate<'base::repeatable', RepeatableArgs>(
+    return context.validate<RepeatableId, RepeatableArgs>(
       'base::repeatable',
       data,
       getRepeatableOptions(options)
     );
   },
   structure: (options, context) =>
-    context.getStructure<Id, RepeatableArgs>(id, getRepeatableOptions(options)),
+    context.getStructure<RepeatableId, RepeatableArgs>(
+      'base::repeatable',
+      getRepeatableOptions(options)
+    ),
   migrate: (data, options, context) => {
-    return context.migrate<Id, RepeatableArgs>(
-      id,
+    return context.migrate<RepeatableId, RepeatableArgs>(
+      'base::repeatable',
       data,
       getRepeatableOptions(options)
     );
   },
   mergeData: (target, source, options, context) => {
-    return context.merge<Id, RepeatableArgs>(
-      id,
+    return context.merge<RepeatableId, RepeatableArgs>(
+      'base::repeatable',
       target,
       source,
       getRepeatableOptions(options)
@@ -36,15 +39,15 @@ export default defineComponentController({
   storageTransformer: {
     getDefaultData: () => [],
     toStorage: (data, options, context) => {
-      return context.toStorage<Id, RepeatableArgs>(
-        id,
+      return context.toStorage<RepeatableId, RepeatableArgs>(
+        'base::repeatable',
         data,
         getRepeatableOptions(options)
       );
     },
-    fromStorage: async (data, options, context) => {
-      return context.fromStorage<Id, RepeatableArgs>(
-        id,
+    fromStorage: (data, options, context) => {
+      return context.fromStorage<RepeatableId, RepeatableArgs>(
+        'base::repeatable',
         data,
         getRepeatableOptions(options)
       );
@@ -52,16 +55,16 @@ export default defineComponentController({
   },
   search: {
     createIndex: (data, options, context) => {
-      return context.createSearchIndex<Id, RepeatableArgs>(
-        id,
+      return context.createSearchIndex<RepeatableId, RepeatableArgs>(
+        'base::repeatable',
         data,
         getRepeatableOptions(options)
       );
     },
     getScore: (query, target, options, context) => {
-      return context.getScore<Id, RepeatableArgs>(
+      return context.getScore<RepeatableId, RepeatableArgs>(
         query,
-        id,
+        'base::repeatable',
         target as never,
         getRepeatableOptions(options)
       );

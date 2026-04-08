@@ -5,9 +5,10 @@ import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ComponentList } from '../../micro/ComponentList/ComponentList.js';
+import { Id } from './internal/types.js';
 import styles from './renderer.module.scss';
 
-export const renderer: ComponentDefaultRenderer<'base::repeatable'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   options,
   data,
   error,

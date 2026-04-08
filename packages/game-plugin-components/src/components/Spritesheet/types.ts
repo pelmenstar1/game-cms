@@ -32,7 +32,7 @@ type SpritesheetEntry = {
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'game::spritesheet': ComponentEntry<SpritesheetEntry>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<SpritesheetEntry>;
   }
 }

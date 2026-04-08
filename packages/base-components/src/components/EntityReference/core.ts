@@ -1,6 +1,8 @@
 import { defineComponentCore } from '@game-cms/core';
 
+import { id } from './types.js';
+
 export default defineComponentCore({
-  id: 'base::entity-reference',
+  id,
   defaultOutData: () => null,
 });

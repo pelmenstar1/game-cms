@@ -1,11 +1,13 @@
 import { defineComponentCore } from '@game-cms/core';
 
+import { id } from './types.js';
+
 function invalidPath(message: string): never {
   throw new Error(`Invalid path: ${message}`);
 }
 
 export default defineComponentCore({
-  id: 'base::dynamic-zone',
+  id,
   defaultOutData: () => [],
   pathWalker: (data, { options }, path, apply, context) => {
     if (!path.startsWith('[')) {

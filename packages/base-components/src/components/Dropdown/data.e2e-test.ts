@@ -1,8 +1,9 @@
 import { componentDataFlowTests } from '@game-cms/component-testing-lib/e2e';
 
 import { dropdown } from './index.js';
+import { id } from './types.js';
 
-componentDataFlowTests('base::dropdown', {
+componentDataFlowTests(id, {
   outs: [
     {
       data: 'option1',

@@ -1,8 +1,10 @@
 import { defineComponentCore } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
+import { id } from './types.js';
+
 export default defineComponentCore({
-  id: 'base::compose',
+  id,
   defaultOutData: (options, context) => {
     return mapObject(options, (item) =>
       context.getDefaultData(item.componentId, item.options)

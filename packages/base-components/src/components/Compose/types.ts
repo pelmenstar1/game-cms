@@ -9,6 +9,9 @@ import {
 
 import { NestedPathDot } from '../../internal/nestedPath.js';
 
+export const id = 'base::compose' as const;
+export type Id = typeof id;
+
 export type ComposeInput = Record<string, ComponentSchema>;
 
 export type ResolveComposeInput<T> = T extends ComposeInput ? T : ComposeInput;
@@ -77,15 +80,15 @@ type NestedPathShape<Input extends ComposeInput> = {
 };
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::compose': ComponentEntry<ComposeEntry<_Args>>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<ComposeEntry<Args>>;
   }
 
   interface ComponentNestedPathMap<T, Args> {
-    'base::compose': NestedPath<T, ResolveComposeInput<Args>>;
+    [id]: NestedPath<T, ResolveComposeInput<Args>>;
   }
 
   interface ComponentNestedPathShapeMap<Args> {
-    'base::compose': NestedPathShape<ResolveComposeInput<Args>>;
+    [id]: NestedPathShape<ResolveComposeInput<Args>>;
   }
 }

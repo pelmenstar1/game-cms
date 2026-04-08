@@ -4,13 +4,10 @@ import core from './core.js';
 import {
   getRepeatableClientOptions,
   RepeatableArgs,
+  RepeatableId,
 } from './internal/repeatable.js';
 
-const id = 'base::repeatable';
-
-type Id = typeof id;
-
-export default defineComponentClientController<'base::font'>({
+export default defineComponentClientController({
   core,
   meta: {
     ui: {
@@ -18,27 +15,27 @@ export default defineComponentClientController<'base::font'>({
     },
   },
   getDefaultData: (options, context) =>
-    context.getDefaultData<Id, RepeatableArgs>(
-      id,
+    context.getDefaultData<RepeatableId, RepeatableArgs>(
+      'base::repeatable',
       getRepeatableClientOptions(options)
     ),
   validator: (data, options, context) => {
-    return context.validate<Id, RepeatableArgs>(
-      id,
+    return context.validate<RepeatableId, RepeatableArgs>(
+      'base::repeatable',
       data,
       getRepeatableClientOptions(options)
     );
   },
   transformer: {
     toClient: (data, options, context) =>
-      context.toClient<Id, RepeatableArgs>(
-        id,
+      context.toClient<RepeatableId, RepeatableArgs>(
+        'base::repeatable',
         data,
         getRepeatableClientOptions(options)
       ),
     fromClient: (clientData, options, context) =>
-      context.fromClient<Id, RepeatableArgs>(
-        id,
+      context.fromClient<RepeatableId, RepeatableArgs>(
+        'base::repeatable',
         clientData,
         getRepeatableClientOptions(options)
       ),

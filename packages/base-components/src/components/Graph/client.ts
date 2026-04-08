@@ -3,8 +3,9 @@ import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { validator } from './internal/validator.js';
+import { Id } from './types.js';
 
-export default defineComponentClientController<'base::graph'>({
+export default defineComponentClientController<Id>({
   core,
   getDefaultData: () => ({
     edges: [],

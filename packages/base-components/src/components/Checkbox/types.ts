@@ -1,6 +1,9 @@
 import { ComponentEntry } from '@game-cms/core';
 import { IfExtends } from '@game-cms/shared';
 
+export const id = 'base::checkbox' as const;
+export type Id = typeof id;
+
 export type CheckboxArgs = { key: string };
 
 type ResolveArgs<T> = IfExtends<T, CheckboxArgs>;
@@ -16,7 +19,7 @@ type CheckboxEntry<Args extends CheckboxArgs> = {
 };
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::checkbox': ComponentEntry<CheckboxEntry<ResolveArgs<_Args>>>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<CheckboxEntry<ResolveArgs<Args>>>;
   }
 }

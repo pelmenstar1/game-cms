@@ -20,7 +20,7 @@ import {
 } from '@game-cms/game-plugin-core';
 import { IfExtends } from '@game-cms/shared';
 
-export const id = 'game::asset-wrapper';
+export const id = 'game::asset-wrapper' as const;
 export type Id = typeof id;
 
 export type AssetWrapperArgs<
@@ -70,17 +70,15 @@ type BaseNestedPathShape<Args extends AssetWrapperArgs> =
   ComponentNestedPathShape<Args['id'], Args['baseArgs']>;
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'game::asset-wrapper': ComponentEntry<
-      AssetWrapperEntry<ResolveAssetWrapperArgs<_Args>>
-    >;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<AssetWrapperEntry<ResolveAssetWrapperArgs<Args>>>;
   }
 
   interface ComponentNestedPathMap<T, Args> {
-    'game::asset-wrapper': BaseNestedPath<T, ResolveAssetWrapperArgs<Args>>;
+    [id]: BaseNestedPath<T, ResolveAssetWrapperArgs<Args>>;
   }
 
   interface ComponentNestedPathShapeMap<Args> {
-    'game::asset-wrapper': BaseNestedPathShape<ResolveAssetWrapperArgs<Args>>;
+    [id]: BaseNestedPathShape<ResolveAssetWrapperArgs<Args>>;
   }
 }

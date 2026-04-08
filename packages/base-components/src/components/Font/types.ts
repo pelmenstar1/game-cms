@@ -11,6 +11,9 @@ import {
 import { FontFormat } from './internal/format.js';
 import { RepeatableArgs } from './internal/repeatable.js';
 
+export const id = 'base::font' as const;
+export type Id = typeof id;
+
 type FileId = 'base::file';
 
 export type FontStyle = 'normal' | 'italic';
@@ -37,7 +40,7 @@ type FontEntry = {
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'base::font': ComponentEntry<FontEntry>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<FontEntry>;
   }
 }

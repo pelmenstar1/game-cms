@@ -5,6 +5,7 @@ import { cms } from '@game-cms/global';
 
 import { font } from './index.js';
 import type { FontStyle } from './types.js';
+import { id } from './types.js';
 
 describe('Font', () => {
   let realFile: StorageFileItemWithId;
@@ -25,7 +26,7 @@ describe('Font', () => {
     realFile = meta;
   });
 
-  componentDataFlowTests('base::font', () => {
+  componentDataFlowTests(id, () => {
     const style: FontStyle = 'normal';
 
     return {

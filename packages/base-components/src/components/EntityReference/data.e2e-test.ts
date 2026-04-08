@@ -2,8 +2,9 @@ import { componentDataFlowTests } from '@game-cms/component-testing-lib/e2e';
 import { ObjectId } from 'mongodb';
 
 import { entityReference } from './index.js';
+import { id } from './types.js';
 
-componentDataFlowTests('base::entity-reference', {
+componentDataFlowTests(id, {
   outs: [
     { data: null, component: entityReference({ entityId: 'test' }) },
     {

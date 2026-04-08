@@ -4,8 +4,9 @@ import { compose } from '../Compose/index.js';
 import { number } from '../Number/index.js';
 import { text } from '../Text/index.js';
 import { repeatable } from './index.js';
+import { id } from './internal/types.js';
 
-componentDataFlowTests('base::repeatable', {
+componentDataFlowTests(id, {
   outs: [
     {
       data: ['123', '321'],

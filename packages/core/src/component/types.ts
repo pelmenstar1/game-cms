@@ -16,7 +16,7 @@ export type ComponentTypes = {
 export type ComponentEntry<T extends ComponentTypes> = T;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface ComponentTypeMap<_Args = unknown> extends Record<
+export interface ComponentTypeMap<Args = unknown> extends Record<
   string,
   ComponentTypes
 > {}

@@ -8,6 +8,9 @@ import {
 } from '@game-cms/core';
 import { IfExtends } from '@game-cms/shared';
 
+export const id = 'base::graph' as const;
+export type Id = typeof id;
+
 export type GraphArgs<
   Id extends ComponentId = ComponentId,
   BaseArgs = unknown,
@@ -86,15 +89,15 @@ type BaseNestedPathShape<Args extends GraphArgs = GraphArgs> = {
 };
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::graph': ComponentEntry<GraphEntry<ResolveGraphArgs<_Args>>>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<GraphEntry<ResolveGraphArgs<Args>>>;
   }
 
   interface ComponentNestedPathMap<T, Args> {
-    'base::graph': BaseNestedPath<T, ResolveGraphArgs<Args>>;
+    [id]: BaseNestedPath<T, ResolveGraphArgs<Args>>;
   }
 
   interface ComponentNestedPathShapeMap<Args> {
-    'base::graph': BaseNestedPathShape<ResolveGraphArgs<Args>>;
+    [id]: BaseNestedPathShape<ResolveGraphArgs<Args>>;
   }
 }

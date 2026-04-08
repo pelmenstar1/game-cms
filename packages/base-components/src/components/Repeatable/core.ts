@@ -1,7 +1,9 @@
 import { defineComponentCore } from '@game-cms/core';
 
+import { id } from './internal/types.js';
+
 export default defineComponentCore({
-  id: 'base::repeatable',
+  id,
   defaultOutData: () => [],
   pathWalker: (data, options, path, apply, context) => {
     const { componentId, baseOptions } = options;

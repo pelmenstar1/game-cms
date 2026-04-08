@@ -15,9 +15,8 @@ import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { DataEntry } from './internal/types.js';
+import { Id } from './types.js';
 import { validator } from './validator.js';
-
-type Id = (typeof core)['id'];
 
 export default defineComponentController({
   core,

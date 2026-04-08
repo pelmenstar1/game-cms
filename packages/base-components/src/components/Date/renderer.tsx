@@ -1,7 +1,9 @@
 import { ComponentDefaultRenderer } from '@game-cms/core';
 import { DatePicker } from '@game-cms/ui';
 
-export const renderer: ComponentDefaultRenderer<'base::date'> = ({
+import { Id } from './types.js';
+
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   onDataChanged,

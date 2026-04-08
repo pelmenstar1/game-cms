@@ -1,10 +1,9 @@
 import { ComponentOptionsById } from '@game-cms/core';
 import { resolveDateLike } from '@game-cms/shared/chrono';
 
-export function validator(
-  date: Date,
-  options: ComponentOptionsById<'base::date'>
-) {
+import { Id } from './types.js';
+
+export function validator(date: Date, options: ComponentOptionsById<Id>) {
   const time = date.getTime();
 
   if (options.minDate && time < resolveDateLike(options.minDate).getTime()) {

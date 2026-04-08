@@ -13,14 +13,14 @@ import { useTranslation } from 'react-i18next';
 
 import { FileList } from '../../micro/FileList/index.js';
 import styles from './renderer.module.scss';
-import { FileClientDataItem } from './types.js';
+import { FileClientDataItem, Id } from './types.js';
 
 const FileExplorerModal = namedLazy(
   () => import('../../micro/FileExplorerModal/index.js'),
   'FileExplorerModal'
 );
 
-export const renderer: ComponentDefaultRenderer<'base::file'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data: items,
   options: { supportedMimeTypes, maxItems },
   error,

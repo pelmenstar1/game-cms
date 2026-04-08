@@ -1,6 +1,9 @@
 import { ComponentEntry } from '@game-cms/core';
 import { IfExtends } from '@game-cms/shared';
 
+export const id = 'base::dropdown' as const;
+export type Id = typeof id;
+
 type DropdownArgs = { key: string };
 
 type ResolveArgs<T> = IfExtends<T, DropdownArgs>;
@@ -19,7 +22,7 @@ type DropdownEntry<Args extends DropdownArgs> = {
 };
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::dropdown': ComponentEntry<DropdownEntry<ResolveArgs<_Args>>>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<DropdownEntry<ResolveArgs<Args>>>;
   }
 }

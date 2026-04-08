@@ -16,6 +16,9 @@ import {
 } from '@game-cms/core';
 import { IfExtends } from '@game-cms/shared';
 
+export const id = 'base::alternative' as const;
+export type Id = typeof id;
+
 type AlternativeArgs<Id = ComponentId, BaseArgs = unknown> = {
   id: Id;
   baseArgs: BaseArgs;
@@ -76,15 +79,15 @@ type BaseNestedPathShape<Args extends AlternativeArgs = AlternativeArgs> = {
 };
 
 declare module '@game-cms/core' {
-  interface ComponentTypeMap<_Args> {
-    'base::alternative': ComponentEntry<AlternativeEntry<ResolveArgs<_Args>>>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<AlternativeEntry<ResolveArgs<Args>>>;
   }
 
   interface ComponentNestedPathMap<T, Args> {
-    'base::alternative': BaseNestedPath<T, ResolveArgs<Args>>;
+    [id]: BaseNestedPath<T, ResolveArgs<Args>>;
   }
 
   interface ComponentNestedPathShapeMap<Args> {
-    'base::alternative': BaseNestedPathShape<ResolveArgs<Args>>;
+    [id]: BaseNestedPathShape<ResolveArgs<Args>>;
   }
 }

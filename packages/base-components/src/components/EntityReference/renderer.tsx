@@ -12,6 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import styles from './renderer.module.scss';
+import { Id } from './types.js';
 
 const EntitySelectModal = namedLazy(
   () => import('../../micro/EntitySelectModal/index.js'),
@@ -23,7 +24,7 @@ const EntityPreviewModal = namedLazy(
   'EntityPreviewModal'
 );
 
-export const renderer: ComponentDefaultRenderer<'base::entity-reference'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options: { entityId },
   onDataChanged,

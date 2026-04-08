@@ -4,6 +4,7 @@ import { beforeAll, describe } from '@game-cms/e2e';
 import { cms } from '@game-cms/global';
 
 import { file } from './index.js';
+import { id } from './types.js';
 
 describe('File', () => {
   let realFile: StorageFileItemWithId;
@@ -24,7 +25,7 @@ describe('File', () => {
     realFile = meta;
   });
 
-  componentDataFlowTests('base::file', () => {
+  componentDataFlowTests(id, () => {
     return {
       outs: [
         { data: [], component: file() },

@@ -2,8 +2,9 @@ import { componentDataFlowTests } from '@game-cms/component-testing-lib/e2e';
 
 import { text } from '../Text/index.js';
 import { alternative } from './index.js';
+import { id } from './types.js';
 
-componentDataFlowTests('base::alternative', {
+componentDataFlowTests(id, {
   outs: [
     {
       data: {

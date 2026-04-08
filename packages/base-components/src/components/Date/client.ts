@@ -2,9 +2,10 @@ import { defineComponentClientController } from '@game-cms/core';
 import { resolveDateLike } from '@game-cms/shared/chrono';
 
 import core from './core.js';
+import { Id } from './types.js';
 import { validator } from './validator.js';
 
-export default defineComponentClientController<'base::date'>({
+export default defineComponentClientController<Id>({
   core,
   meta: {
     ui: {

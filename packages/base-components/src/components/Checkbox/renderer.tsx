@@ -2,9 +2,9 @@ import { ComponentDefaultRenderer } from '@game-cms/core';
 import { Checkbox, List } from '@game-cms/ui';
 
 import styles from './renderer.module.scss';
-import { CheckboxChoice } from './types.js';
+import { CheckboxChoice, Id } from './types.js';
 
-export const renderer: ComponentDefaultRenderer<'base::checkbox'> = ({
+export const renderer: ComponentDefaultRenderer<Id> = ({
   data,
   options,
   onDataChanged,

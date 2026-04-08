@@ -7,13 +7,14 @@ import {
 import { mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
+import { Id } from './types.js';
 import { validator } from './validator.js';
 
 export default defineComponentClientController({
   core,
   validator: <Args>(
     data: unknown,
-    options: ComponentClientOptionsById<'base::compose', Args>,
+    options: ComponentClientOptionsById<Id, Args>,
     context: ForeignComponentClientValidationContext,
     params?: ComponentDataValidatorParams
   ) => {

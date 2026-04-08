@@ -1,8 +1,10 @@
 import { defineComponentCore } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 
+import { id } from './types.js';
+
 export default defineComponentCore({
-  id: 'base::graph',
+  id,
   defaultOutData: () => ({
     nodes: {},
     edges: [],

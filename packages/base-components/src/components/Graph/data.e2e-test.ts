@@ -3,8 +3,9 @@ import { componentDataFlowTests } from '@game-cms/component-testing-lib/e2e';
 import { number } from '../Number/index.js';
 import { text } from '../Text/index.js';
 import { graph } from './index.js';
+import { id } from './types.js';
 
-componentDataFlowTests('base::graph', {
+componentDataFlowTests(id, {
   outs: [
     {
       data: { nodes: {}, edges: [] },

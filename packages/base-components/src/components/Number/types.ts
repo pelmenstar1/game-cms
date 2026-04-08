@@ -5,8 +5,8 @@ export type Id = typeof id;
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'base::number': ComponentEntry<{
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<{
       outData: number;
       clientData: string;
       options: {

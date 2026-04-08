@@ -12,5 +12,4 @@ export * from './Graph/index.js';
 export * from './Json/index.js';
 export * from './Number/index.js';
 export * from './Repeatable/index.js';
-export * from './Repeatable/types.js';
 export * from './Text/index.js';

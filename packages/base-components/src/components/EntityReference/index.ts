@@ -2,4 +2,6 @@ import './types.js';
 
 import { componentAccessor } from '@game-cms/core';
 
-export const entityReference = componentAccessor('base::entity-reference');
+import { id } from './types.js';
+
+export const entityReference = componentAccessor(id);

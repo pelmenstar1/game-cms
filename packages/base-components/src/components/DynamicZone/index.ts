@@ -7,9 +7,7 @@ import {
 } from '@game-cms/core';
 import { mapObject } from '@game-cms/shared/object';
 
-import { DynamicZoneInput, DynamicZoneInputEntry } from './types.js';
-
-type Id = 'base::dynamic-zone';
+import { DynamicZoneInput, DynamicZoneInputEntry, Id, id } from './types.js';
 
 export function dynamicZoneEntry<Id extends ComponentId, Args>(
   value: DynamicZoneInputEntry<Id, Args>
@@ -21,7 +19,7 @@ export function dynamicZone<const T extends DynamicZoneInput>(
   input: T
 ): ComponentSchema<Id, T> {
   return {
-    componentId: 'base::dynamic-zone',
+    componentId: id,
     options: {
       minItems: input.minItems,
       maxItems: input.maxItems,

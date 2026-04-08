@@ -26,7 +26,7 @@ type ThreeDModelEntry = {
 
 declare module '@game-cms/core' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ComponentTypeMap<_Args> {
-    'game::three-d-model': ComponentEntry<ThreeDModelEntry>;
+  interface ComponentTypeMap<Args> {
+    [id]: ComponentEntry<ThreeDModelEntry>;
   }
 }

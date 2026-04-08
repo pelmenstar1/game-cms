@@ -1,7 +1,9 @@
 import { defineComponentCore } from '@game-cms/core';
 
+import { id } from './types.js';
+
 export default defineComponentCore({
-  id: 'base::alternative',
+  id,
   defaultOutData: (options, context) => ({
     default: context.getDefaultData(options.componentId, options.baseOptions),
     alternative: [],

@@ -18,13 +18,12 @@ import { useTranslation } from 'react-i18next';
 
 import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
 import styles from './renderer.module.scss';
+import { Id } from './types.js';
 
 const AlternativeTestModal = namedLazy(
   () => import('../../micro/AlternativeTestModal/index.js'),
   'AlternativeTestModal'
 );
-
-type Id = 'base::alternative';
 
 export const renderer = <Args,>({
   data,

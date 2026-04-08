@@ -9,9 +9,7 @@ import { useMemo } from 'react';
 import { ComponentGridGroup } from '../../micro/ComponentGridGroup/index.js';
 import { ComponentGroup } from './internal/types.js';
 import styles from './renderer.module.scss';
-import { ComposeOptionsEntry } from './types.js';
-
-type Id = 'base::compose';
+import { ComposeOptionsEntry, Id } from './types.js';
 
 type ComposeGroup<Args> = ComponentGroup<ComponentOutDataById<Id, Args>>;
 

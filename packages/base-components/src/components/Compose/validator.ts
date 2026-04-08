@@ -4,12 +4,14 @@ import {
 } from '@game-cms/core';
 import { isNonNullObject } from '@game-cms/shared';
 
+import { Id } from './types.js';
+
 export function validator<Args>(
   data: unknown,
   keys: string[],
   params: ComponentDataValidatorParams | undefined,
   validate: (key: string, propValue: unknown) => unknown
-): ComponentErrorById<'base::compose', Args> | undefined {
+): ComponentErrorById<Id, Args> | undefined {
   if (!isNonNullObject(data)) {
     return { ownError: 'INVALID_TYPE' };
   }

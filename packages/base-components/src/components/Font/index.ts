@@ -1,3 +1,5 @@
 import { componentAccessor } from '@game-cms/core';
 
-export const font = componentAccessor('base::font');
+import { id } from './types.js';
+
+export const font = componentAccessor(id);
