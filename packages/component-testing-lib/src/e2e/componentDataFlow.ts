@@ -19,7 +19,7 @@ import {
   resolveMaybeFactory,
 } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { maybeImportFile, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
+import { maybeImportFile } from '@game-cms/shared/node';
 
 type TestInput<Id extends ComponentId> = {
   outs: { data: ComponentOutDataById<Id>; component: ComponentSchema<Id> }[];
@@ -32,7 +32,7 @@ async function gatherComponentClientChunk(dirPath: string) {
     default: ComponentClientController;
   }>(clientPath);
 
-  if (clientModule !== MODULE_NOT_FOUND_MARK) {
+  if (clientModule !== undefined) {
     const controller = clientModule.default;
 
     return [controller.core.id, controller] as const;

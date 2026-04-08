@@ -1,39 +1,31 @@
+import path from 'node:path';
+
 import { createJiti } from 'jiti';
-import { describe, expect, test } from 'vitest';
+import { describe } from 'vitest';
 
 import { maybeJitiImport } from '../jiti.js';
-import { MODULE_NOT_FOUND_MARK } from '../module.js';
+import { describeImportBehavior } from './helpers/importBehavior.js';
+
+function fixture(name: string) {
+  return `./fixtures/${name}`;
+}
+
+const jiti = createJiti(import.meta.url);
 
 describe('maybeJitiImport', () => {
-  test('existing module', async () => {
-    const jiti = createJiti(import.meta.url);
+  const opts = {
+    importFn: (p: string) => maybeJitiImport(jiti, p),
+    paths: {
+      existing: ['../buffer.ts', fixture('defaultExport.js')],
+      throwing: fixture('throwingModule.js'),
+      unknown: fixture('nonExistentModule.js'),
+      importNonExistent: fixture('importNonExistentFile.js'),
+    },
+  };
 
-    await expect(maybeJitiImport(jiti, '../buffer.ts')).resolves.not.toBe(
-      MODULE_NOT_FOUND_MARK
-    );
-  });
-
-  test('throwing module', async () => {
-    const jiti = createJiti(import.meta.url);
-
-    await expect(
-      maybeJitiImport(jiti, './fixtures/throwingModule.js')
-    ).rejects.toBeInstanceOf(Error);
-  });
-
-  test('unknown module', async () => {
-    const jiti = createJiti(import.meta.url);
-
-    await expect(
-      maybeJitiImport(jiti, './fixtures/nonExistentModule.js')
-    ).resolves.toBe(MODULE_NOT_FOUND_MARK);
-  });
-
-  test('module importing non-existent file', async () => {
-    const jiti = createJiti(import.meta.url);
-
-    await expect(
-      maybeJitiImport(jiti, './fixtures/importNonExistentFile.js')
-    ).rejects.toBeInstanceOf(Error);
+  describeImportBehavior('relative paths', opts);
+  describeImportBehavior('absolute paths', {
+    ...opts,
+    resolvePath: (p) => path.resolve(import.meta.dirname, p),
   });
 });

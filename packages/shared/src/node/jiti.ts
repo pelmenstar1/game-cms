@@ -1,16 +1,13 @@
 import type { Jiti, JitiResolveOptions } from 'jiti';
 
-import { MODULE_NOT_FOUND_MARK } from './module.js';
-
 export async function maybeJitiImport<T>(
   jiti: Jiti,
   id: string,
-  opts?: JitiResolveOptions
+  // We cannot allow passing `default` here, because it can't differentiate between "module not found" and "module found but has no default export" cases,
+  // which is crucial for our use case
+  opts?: Omit<JitiResolveOptions, 'default'>
 ) {
   const result = await jiti.import<T | undefined>(id, { ...opts, try: true });
-  if (result === undefined) {
-    return MODULE_NOT_FOUND_MARK;
-  }
 
   return result;
 }

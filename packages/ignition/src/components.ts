@@ -9,7 +9,7 @@ import type {
 import type { ComponentDistributionInfo, ComponentEnv } from '@game-cms/global';
 import { resolveAsyncMaybeFactory } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
-import { maybeImportFile, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
+import { maybeImportFile } from '@game-cms/shared/node';
 
 export async function getAllComponentDistributions(
   context: PluginValueSourceContext
@@ -47,7 +47,7 @@ async function getDistributionControllers(distPath: string) {
           default: ComponentController;
         }>(controllerPath);
 
-        if (controllerModule !== MODULE_NOT_FOUND_MARK) {
+        if (controllerModule !== undefined) {
           return controllerModule.default;
         }
       }

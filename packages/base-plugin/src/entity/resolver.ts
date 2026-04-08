@@ -2,7 +2,7 @@ import fs from 'node:fs';
 
 import { EntityEnvConfig } from '@game-cms/base-core';
 import type { PluginValueSourceContext } from '@game-cms/core';
-import { maybeJitiImport, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
+import { maybeJitiImport } from '@game-cms/shared/node';
 import { mapObject } from '@game-cms/shared/object';
 import { createJiti } from 'jiti';
 
@@ -23,11 +23,9 @@ async function resolveSchemaRegistry(schemaRegistryFilePath: string) {
   const jiti = createJiti(import.meta.url);
   const schemaRegistry = await maybeJitiImport(jiti, schemaRegistryFilePath);
 
-  if (schemaRegistry == MODULE_NOT_FOUND_MARK) {
-    return;
+  if (schemaRegistry !== undefined) {
+    validateEntitySchemaMap(schemaRegistry);
   }
-
-  validateEntitySchemaMap(schemaRegistry);
 
   return schemaRegistry;
 }

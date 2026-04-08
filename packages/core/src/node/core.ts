@@ -1,5 +1,5 @@
 import { isNonNullObject } from '@game-cms/shared';
-import { maybeImportFile, MODULE_NOT_FOUND_MARK } from '@game-cms/shared/node';
+import { maybeImportFile } from '@game-cms/shared/node';
 
 export async function getComponentIdFromClientFile(filePath: string) {
   function expected(message: string): never {
@@ -9,7 +9,7 @@ export async function getComponentIdFromClientFile(filePath: string) {
   }
 
   const moduleValue = await maybeImportFile(filePath);
-  if (moduleValue === MODULE_NOT_FOUND_MARK) {
+  if (moduleValue === undefined) {
     return null;
   }
 

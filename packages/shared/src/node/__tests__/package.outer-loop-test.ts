@@ -10,6 +10,10 @@ function convertToDistPath(filePath: string) {
   return filePath.replace(path.join('src', 'node'), path.join('dist', 'node'));
 }
 
+function fixture(name: string) {
+  return path.join(import.meta.dirname, 'fixtures', name);
+}
+
 async function runRemoteTest(filePath: string) {
   const distPath = convertToDistPath(filePath);
 
@@ -37,14 +41,10 @@ describe('resolveImport', () => {
   });
 
   test('cjs', async () => {
-    await runRemoteTest(
-      path.join(import.meta.dirname, 'fixtures', 'packageTest.cjs')
-    );
+    await runRemoteTest(fixture('packageTest.cjs'));
   });
 
   test('mjs', async () => {
-    await runRemoteTest(
-      path.join(import.meta.dirname, 'fixtures', 'packageTest.mjs')
-    );
+    await runRemoteTest(fixture('packageTest.mjs'));
   });
 });

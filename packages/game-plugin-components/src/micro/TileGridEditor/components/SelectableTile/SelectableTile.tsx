@@ -3,7 +3,10 @@ import { ComponentProps } from 'react';
 
 import styles from './SelectableTile.module.scss';
 
-export interface SelectableTileProps extends ComponentProps<'div'> {
+export interface SelectableTileProps extends Omit<
+  ComponentProps<'div'>,
+  'children'
+> {
   selected: boolean;
   onSelectedChanged?: (state: boolean) => void;
 }
@@ -12,6 +15,7 @@ export function SelectableTile({
   className,
   selected,
   onSelectedChanged,
+  ...rest
 }: SelectableTileProps) {
   return (
     <div
@@ -21,6 +25,8 @@ export function SelectableTile({
         className
       )}
       onClick={() => onSelectedChanged?.(!selected)}
+      draggable={false}
+      {...rest}
     />
   );
 }
