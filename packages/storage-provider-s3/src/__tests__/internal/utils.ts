@@ -1,6 +1,7 @@
-import path from 'node:path';
-
-import { loadEnvFileIfExists } from '@game-cms/shared/node';
+import {
+  findNearestPackageRoot,
+  loadEnvFileIfExists,
+} from '@game-cms/shared/node';
 
 import { S3StorageProviderConfig } from '../../types.js';
 
@@ -19,8 +20,7 @@ export function getTestConfig(): S3StorageProviderConfig {
 }
 
 export async function loadTestEnv() {
-  await loadEnvFileIfExists(
-    path.join(import.meta.dirname, '../../'),
-    '.env.test'
-  );
+  const packageRoot = findNearestPackageRoot(import.meta.dirname);
+
+  await loadEnvFileIfExists(packageRoot, '.env.test');
 }

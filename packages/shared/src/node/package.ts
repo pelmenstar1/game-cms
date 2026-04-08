@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -47,6 +48,24 @@ export function resolveImportFile(meta: ImportMeta, id: string) {
 
 export function resolveImportDirectory(meta: ImportMeta, id: string) {
   return path.dirname(resolveImportFile(meta, id));
+}
+
+export function findNearestPackageRoot(initialDir: string): string {
+  let dir = initialDir;
+
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  while (true) {
+    if (fs.existsSync(path.join(dir, 'package.json'))) {
+      return dir;
+    }
+
+    const parent = path.dirname(dir);
+    if (parent === dir) {
+      throw new Error(`No package.json found starting from: ${initialDir}`);
+    }
+
+    dir = parent;
+  }
 }
 
 export async function readPackageInfo(dirPath: string) {
