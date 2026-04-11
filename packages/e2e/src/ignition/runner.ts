@@ -5,7 +5,7 @@ import { getCurrentSuite, Suite } from '../internal/suite.js';
 
 interface TestFailure {
   label: string;
-  error: Error;
+  error: unknown;
 }
 
 async function runSuite(
@@ -17,6 +17,10 @@ async function runSuite(
   let failed = 0;
   const label = prefix ? `${prefix} > ${suite.name}` : suite.name;
 
+  if (!prefix && suite.file) {
+    console.log(chalk.cyan(`\n${suite.file}`));
+  }
+
   for (const hook of suite.beforeAlls) {
     await hook();
   }
@@ -26,21 +30,40 @@ async function runSuite(
     try {
       await t.fn();
       passed++;
+
       console.log(chalk.green(`  ✓ ${testLabel}`));
     } catch (error) {
       failed++;
+      failures.push({ label: testLabel, error });
+
       console.log(chalk.red(`  ✗ ${testLabel}`));
-      failures.push({ label: testLabel, error: error as Error });
     }
   }
 
   for (const child of suite.children) {
     const r = await runSuite(child, label, failures);
+
     passed += r.passed;
     failed += r.failed;
   }
 
   return { passed, failed };
+}
+
+function printFailure(f: TestFailure): void {
+  console.log(chalk.red(`  ✗ ${f.label}`));
+
+  if (f.error instanceof Error) {
+    console.log(chalk.yellow(`    ${f.error.message}`));
+
+    if (f.error.stack) {
+      console.log(chalk.dim(`    ${f.error.stack}`));
+    }
+  } else {
+    console.log(chalk.yellow(`    ${String(f.error)}`));
+  }
+
+  console.log();
 }
 
 export async function runTests(): Promise<void> {
@@ -53,14 +76,11 @@ export async function runTests(): Promise<void> {
 
   if (failures.length > 0) {
     console.log(chalk.red.bold('Failed tests:\n'));
+
     for (const f of failures) {
-      console.log(chalk.red(`  ✗ ${f.label}`));
-      console.log(chalk.yellow(`    ${f.error.message}`));
-      if (f.error.stack) {
-        console.log(chalk.dim(`    ${f.error.stack}`));
-      }
-      console.log();
+      printFailure(f);
     }
+
     process.exit(1);
   }
 }

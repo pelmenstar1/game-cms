@@ -8,6 +8,6 @@ export { default as 'base::entity' } from './entity.js';
 export { default as 'base::entityCheck' } from './entityCheck.js';
 export { default as 'base::entityHook' } from './entityHook.js';
 export { default as 'base::entitySchema' } from './entitySchema.js';
-export { default as 'base::storage' } from './storage.js';
+export * from './storage/index.js';
 export { default as 'base::storage::trace' } from './storageTrace.js';
 export { default as 'base::user' } from './user.js';

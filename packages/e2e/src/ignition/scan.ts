@@ -1,6 +1,8 @@
 import { glob } from 'glob';
 import { createJiti } from 'jiti';
 
+import { setCurrentFile } from '../internal/suite.js';
+
 export async function importTests(rootDir: string) {
   const files = await glob('**/*e2e-test.ts', {
     ignore: ['**/node_modules/**', '**/dist/**'],
@@ -10,5 +12,8 @@ export async function importTests(rootDir: string) {
 
   const jiti = createJiti(import.meta.url);
 
-  await Promise.all(files.map((file) => jiti.import(file)));
+  for (const file of files) {
+    setCurrentFile(file);
+    await jiti.import(file);
+  }
 }

@@ -1,13 +1,18 @@
 import { MaybePromise } from '@game-cms/shared';
 
-import { getCurrentSuite, setCurrentSuite, Suite } from './internal/suite.js';
+import {
+  getCurrentFile,
+  getCurrentSuite,
+  setCurrentSuite,
+  Suite,
+} from './internal/suite.js';
 
 export function describe(name: string, fn: () => void): void {
-  const suite: Suite = { name, tests: [], beforeAlls: [], children: [] };
-
-  getCurrentSuite().children.push(suite);
-
   const parent = getCurrentSuite();
+  const file = parent.file ?? getCurrentFile();
+  const suite: Suite = { name, file, tests: [], beforeAlls: [], children: [] };
+
+  parent.children.push(suite);
 
   setCurrentSuite(suite);
   fn();
