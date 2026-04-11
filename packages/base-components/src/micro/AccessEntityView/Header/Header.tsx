@@ -1,8 +1,10 @@
 import { EntityClientSchemaById, EntityId } from '@game-cms/base-core';
 import {
+  ArrowLeftIcon,
   classNames,
   DeleteIcon,
   IconButton,
+  IconLinkButton,
   IconSwitchButton,
   PreviewIcon,
   Typography,
@@ -37,6 +39,14 @@ export function Header<Id extends EntityId>({
 
   return (
     <div className={classNames(styles.root, className)}>
+      <IconLinkButton
+        className={styles['back-button']}
+        title="Back"
+        to={`/entities/${entityId}`}
+      >
+        <ArrowLeftIcon />
+      </IconLinkButton>
+
       <Typography variant="h4" className={styles['title']}>
         {schema.title}
       </Typography>
