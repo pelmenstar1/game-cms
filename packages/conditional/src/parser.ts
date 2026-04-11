@@ -15,10 +15,18 @@ function invalidExpression(message: string): never {
   throw new Error(`Invalid expression: ${message}`);
 }
 
+function invalidSequenceOfTokens(): never {
+  invalidExpression('invalid sequence of tokens');
+}
+
+function expectedExpressionAfter(type: string): never {
+  invalidExpression(`expected expression after ${type} operator`);
+}
+
 function parseTokens(tokens: Token[]): ConditionalAstExpression {
   let lastExpression: ConditionalAstExpression | undefined;
   let lastBinaryOperator: ConditionalBinaryOperator | undefined;
-  let lastUnaryOperator: ConditionalUnaryOperator | undefined;
+  const pendingUnaryOperators: ConditionalUnaryOperator[] = [];
 
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i];
@@ -52,9 +60,34 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
       i = lastIndex - 1;
     }
 
+    const unaryOperator = getUnaryOperatorFromToken(token);
+    if (unaryOperator !== undefined) {
+      pendingUnaryOperators.push(unaryOperator);
+
+      continue;
+    }
+
+    if (pendingUnaryOperators.length > 0) {
+      if (currentExpression === undefined) {
+        invalidSequenceOfTokens();
+      }
+
+      for (let i = pendingUnaryOperators.length - 1; i >= 0; i--) {
+        const op = pendingUnaryOperators[i];
+
+        currentExpression = {
+          $type: 'unary',
+          operator: op,
+          expr: currentExpression,
+        };
+      }
+
+      pendingUnaryOperators.length = 0;
+    }
+
     if (lastBinaryOperator !== undefined) {
       if (lastExpression === undefined || currentExpression === undefined) {
-        invalidExpression('invalid sequence of tokens');
+        invalidSequenceOfTokens();
       }
 
       lastExpression = {
@@ -69,22 +102,6 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
       continue;
     }
 
-    if (lastUnaryOperator !== undefined) {
-      if (currentExpression === undefined) {
-        invalidExpression('invalid sequence of tokens');
-      }
-
-      lastExpression = {
-        $type: 'unary',
-        operator: lastUnaryOperator,
-        expr: currentExpression,
-      };
-
-      lastUnaryOperator = undefined;
-
-      continue;
-    }
-
     if (currentExpression !== undefined) {
       lastExpression = currentExpression;
     }
@@ -95,21 +112,14 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
 
       continue;
     }
-
-    const unaryOperator = getUnaryOperatorFromToken(token);
-    if (unaryOperator !== undefined) {
-      lastUnaryOperator = unaryOperator;
-
-      continue;
-    }
   }
 
   if (lastBinaryOperator !== undefined) {
-    invalidExpression('expected expression after binary operator');
+    expectedExpressionAfter('binary');
   }
 
-  if (lastUnaryOperator !== undefined) {
-    invalidExpression('expected expression after unary operator');
+  if (pendingUnaryOperators.length > 0) {
+    expectedExpressionAfter('unary');
   }
 
   if (lastExpression === undefined) {

@@ -61,7 +61,7 @@ function throwUnexpectedType(
   rhs: unknown
 ): never {
   throw new TypeError(
-    `Unexpected lhs or rhs for ${operator} operator: lhs = ${typeof lhs}, rhs = ${typeof rhs}`
+    `Unexpected lhs or rhs for '${operator}' operator: lhs = ${typeof lhs}, rhs = ${typeof rhs}`
   );
 }
 
@@ -101,7 +101,7 @@ export function evaluateConditionalExpression(
       const rhs = evaluateConditionalExpression(expression.rhs, input);
 
       if (operator.onlyBoolean) {
-        if (typeof lhs !== 'boolean' || typeof rhs === 'boolean') {
+        if (typeof lhs !== 'boolean' || typeof rhs !== 'boolean') {
           throwUnexpectedType(expression.operator, lhs, rhs);
         }
       } else if (operator.onlyNumber) {
