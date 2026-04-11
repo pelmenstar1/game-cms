@@ -82,32 +82,3 @@ The parser produces a recursive AST. Each node carries a `$type` discriminant:
 | `unary`   | `operator`, `expr`       |
 
 All literal values (including bare numbers) are stored as strings in the AST. Numeric coercion happens at evaluation time only for the comparison operators.
-
-## Evaluation
-
-`evaluateConditionalExpression(expression, input)` walks the AST and resolves variables from `input: Record<string, string | number | boolean | undefined>`. It returns `string | number | boolean`. Referencing an unknown variable throws.
-
-## ConditionalData
-
-A `ConditionalData<T>` pairs a default value with an ordered list of `{ condition, value }` alternatives:
-
-```ts
-type ConditionalData<T> = {
-  default: T;
-  alternative: { condition: ConditionalAstExpression; value: T }[];
-};
-```
-
-`resolveConditionalData(data, input)` evaluates each condition in order and returns the first matching value. If no condition matches it returns `data.default`.
-
-## API
-
-```ts
-import {
-  parseConditionalNotation, // string → ConditionalAstExpression
-  evaluateConditionalExpression, // (ast, input) → string | number | boolean
-  resolveConditionalData, // (ConditionalData<T>, input) → T
-  conditionalAstExpressionToString, // ast → string (stringifier)
-  inferExpressionOutput, // ast → 'boolean' | 'string' | 'dependsOnVar'
-} from '@game-cms/conditional';
-```

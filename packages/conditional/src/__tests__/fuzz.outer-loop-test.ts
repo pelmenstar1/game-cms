@@ -1,12 +1,15 @@
+import { mergeObjects } from '@game-cms/shared/object';
 import { describe, expect, test } from 'vitest';
 
+import { ConditionalAstExpression, ConditionalBinaryOperator } from '../ast.js';
 import { evaluateConditionalExpression } from '../eval.js';
 import { parseConditionalNotation } from '../parser.js';
 import { conditionalAstExpressionToString } from '../stringifier.js';
 import type { ConditionalValueInput } from '../types.js';
 
 type Expr = {
-  source: string;
+  text: string;
+  expr: ConditionalAstExpression;
   vars: ConditionalValueInput;
   oracle: string | number | boolean;
 };
@@ -32,68 +35,90 @@ function randInt(lo: number, hi: number, rng: () => number): number {
   return lo + Math.floor(rng() * (hi - lo + 1));
 }
 
-function mergeVars(...maps: ConditionalValueInput[]): ConditionalValueInput {
-  let out: ConditionalValueInput = {};
-  for (const m of maps) {
-    out = { ...out, ...m };
-  }
-
-  return out;
-}
-
 function makeGen(rng: () => number) {
+  type CompOp = {
+    sym: string;
+    op: ConditionalBinaryOperator;
+    fn: (a: number, b: number) => boolean;
+  };
+
   let seq = 0;
   const freshVar = (): string => `v${seq++}`;
 
   const WORDS = ['foo', 'bar', 'baz', 'qux', 'alpha', 'beta'] as const;
 
-  const COMP_OPS = [
-    { sym: '<', fn: (a: number, b: number): boolean => a < b },
-    { sym: '<=', fn: (a: number, b: number): boolean => a <= b },
-    { sym: '>', fn: (a: number, b: number): boolean => a > b },
-    { sym: '>=', fn: (a: number, b: number): boolean => a >= b },
-  ] as const;
+  const COMP_OPS: CompOp[] = [
+    { sym: '<', op: 'lt', fn: (a, b) => a < b },
+    { sym: '<=', op: 'lte', fn: (a, b) => a <= b },
+    { sym: '>', op: 'gt', fn: (a, b) => a > b },
+    { sym: '>=', op: 'gte', fn: (a, b) => a >= b },
+  ];
 
   function numLit(): NumericExpr {
     const n = randInt(0, 99, rng);
+    const text = String(n);
 
-    return { source: String(n), vars: {}, oracle: String(n), numVal: n };
+    return {
+      text: text,
+      expr: { $type: 'literal', value: text },
+      vars: {},
+      oracle: text,
+      numVal: n,
+    };
   }
 
   function strLit(): Expr {
     const v = pick(WORDS, rng);
 
-    return { source: `'${v}'`, vars: {}, oracle: v };
+    return {
+      text: `'${v}'`,
+      expr: { $type: 'literal', value: v },
+      vars: {},
+      oracle: v,
+    };
   }
 
   function boolVar(): Expr {
     const name = freshVar();
     const val = rng() < 0.5;
 
-    return { source: `$${name}`, vars: { [name]: val }, oracle: val };
+    return {
+      text: `$${name}`,
+      expr: { $type: 'var', name },
+      vars: { [name]: val },
+      oracle: val,
+    };
   }
 
   function numVar(): NumericExpr {
     const name = freshVar();
     const n = randInt(0, 99, rng);
 
-    return { source: `$${name}`, vars: { [name]: n }, oracle: n, numVal: n };
+    return {
+      text: `$${name}`,
+      expr: { $type: 'var', name },
+      vars: { [name]: n },
+      oracle: n,
+      numVal: n,
+    };
   }
 
   function strVar(): Expr {
     const name = freshVar();
     const v = pick(WORDS, rng);
 
-    return { source: `$${name}`, vars: { [name]: v }, oracle: v };
+    return {
+      text: `$${name}`,
+      expr: { $type: 'var', name },
+      vars: { [name]: v },
+      oracle: v,
+    };
   }
 
   function anyAtom(): Expr {
-    const r = rng();
-    if (r < 0.25) return numLit();
-    if (r < 0.5) return strLit();
-    if (r < 0.75) return numVar();
+    const gen = pick([numLit, strLit, numVar, strVar], rng);
 
-    return strVar();
+    return gen();
   }
 
   function numericOperand(): NumericExpr {
@@ -101,78 +126,99 @@ function makeGen(rng: () => number) {
   }
 
   function boolExpr(depth: number): Expr {
+    type Generator = () => Expr;
+
     if (depth === 0) return boolVar();
 
-    const roll = rng();
+    const generators: Generator[] = [
+      () => boolVar(),
+      // unary not
+      () => {
+        const inner = boolExpr(depth - 1);
+        return {
+          text: `!(${inner.text})`,
+          expr: { $type: 'unary', operator: 'not', expr: inner.expr },
+          vars: inner.vars,
+          oracle: !(inner.oracle as boolean),
+        };
+      },
+      // numeric comparison
+      () => {
+        const l = numericOperand();
+        const r = numericOperand();
+        const op = pick(COMP_OPS, rng);
 
-    // leaf
-    if (roll < 0.05) return boolVar();
+        return {
+          text: `(${l.text}${op.sym}${r.text})`,
+          expr: {
+            $type: 'binary',
+            operator: op.op,
+            lhs: l.expr,
+            rhs: r.expr,
+          },
+          vars: mergeObjects([l.vars, r.vars]),
+          oracle: op.fn(l.numVal, r.numVal),
+        };
+      },
+      // equality / inequality
+      () => {
+        const genAtom = pick([numLit, strLit, numVar, strVar], rng);
 
-    // unary not
-    if (roll < 0.15) {
-      const inner = boolExpr(depth - 1);
-      return {
-        source: `!(${inner.source})`,
-        vars: inner.vars,
-        oracle: !(inner.oracle as boolean),
-      };
-    }
+        const l = genAtom();
+        const r = genAtom();
+        const eq = rng() < 0.5;
 
-    // numeric comparison
-    if (roll < 0.3) {
-      const l = numericOperand();
-      const r = numericOperand();
-      const op = pick(COMP_OPS, rng);
-      return {
-        source: `(${l.source}${op.sym}${r.source})`,
-        vars: mergeVars(l.vars, r.vars),
-        oracle: op.fn(l.numVal, r.numVal),
-      };
-    }
+        return {
+          text: `(${l.text}${eq ? '==' : '!='}${r.text})`,
+          expr: {
+            $type: 'binary',
+            operator: eq ? 'eq' : 'neq',
+            lhs: l.expr,
+            rhs: r.expr,
+          },
+          vars: mergeObjects([l.vars, r.vars]),
+          oracle: eq ? l.oracle === r.oracle : l.oracle !== r.oracle,
+        };
+      },
+      // logical
+      () => {
+        const l = boolExpr(depth - 1);
+        const r = boolExpr(depth - 1);
 
-    // equality / inequality – same atom generator on both sides keeps oracle
-    // types consistent and produces a realistic true/false split
-    if (roll < 0.4) {
-      const genAtom = pick([numLit, strLit, numVar, strVar] as const, rng);
-      const l = genAtom();
-      const r = genAtom();
-      const eq = rng() < 0.5;
-      return {
-        source: `(${l.source}${eq ? '==' : '!='}${r.source})`,
-        vars: mergeVars(l.vars, r.vars),
-        oracle: eq ? l.oracle === r.oracle : l.oracle !== r.oracle,
-      };
-    }
+        const lValue = l.oracle as boolean;
+        const rValue = r.oracle as boolean;
 
-    // logical and
-    if (roll < 0.7) {
-      const l = boolExpr(depth - 1);
-      const r = boolExpr(depth - 1);
-      return {
-        source: `(${l.source} && ${r.source})`,
-        vars: mergeVars(l.vars, r.vars),
-        oracle: (l.oracle as boolean) && (r.oracle as boolean),
-      };
-    }
+        const isAnd = rng() < 0.5;
+        const textOp = isAnd ? '&&' : '||';
+        const operator = isAnd ? 'and' : 'or';
 
-    // logical or
-    const l = boolExpr(depth - 1);
-    const r = boolExpr(depth - 1);
-    return {
-      source: `(${l.source} || ${r.source})`,
-      vars: mergeVars(l.vars, r.vars),
-      oracle: (l.oracle as boolean) || (r.oracle as boolean),
-    };
+        return {
+          text: `(${l.text} ${textOp} ${r.text})`,
+          expr: { $type: 'binary', operator, lhs: l.expr, rhs: r.expr },
+          vars: mergeObjects([l.vars, r.vars]),
+          oracle: isAnd ? lValue && rValue : lValue || rValue,
+        };
+      },
+    ];
+
+    const gen = pick(generators, rng);
+
+    return gen();
   }
 
   return { boolExpr, anyAtom };
 }
 
 function assertExpr(expr: Expr, label: string): void {
-  const errorMessage = `${label}\n  source : ${expr.source}\n  vars   : ${JSON.stringify(expr.vars)}\n  oracle : ${expr.oracle}`;
+  const errorMessage = `${label} source: ${expr.text}; vars: ${JSON.stringify(expr.vars)}; oracle: ${expr.oracle}`;
 
   try {
-    const ast = parseConditionalNotation(expr.source);
+    const ast = parseConditionalNotation(expr.text);
+
+    expect(ast, `${errorMessage}; AST: ${JSON.stringify(ast)}`).toEqual(
+      expr.expr
+    );
+
     const evalResult = evaluateConditionalExpression(ast, expr.vars);
 
     expect(evalResult).toEqual(expr.oracle);
@@ -191,7 +237,7 @@ function assertExpr(expr: Expr, label: string): void {
 const SEED = 0xc0ffee;
 
 describe('fuzz: random boolean expressions', () => {
-  for (let depth = 1; depth <= 5; depth++) {
+  for (let depth = 1; depth <= 10; depth++) {
     describe(`depth ${depth}`, () => {
       const rng = createRng(SEED + depth);
       const gen = makeGen(rng);
@@ -204,25 +250,3 @@ describe('fuzz: random boolean expressions', () => {
     });
   }
 });
-
-// describe('fuzz: equality over mixed-type atoms', () => {
-//   const rng = createRng(SEED + 100);
-//   const gen = makeGen(rng);
-
-//   for (let i = 0; i < 300; i++) {
-//     test(`iteration ${i}`, () => {
-//       const l = gen.anyAtom();
-//       const r = gen.anyAtom();
-//       const eq = rng() < 0.5;
-
-//       assertExpr(
-//         {
-//           source: `(${l.source}${eq ? '==' : '!='}${r.source})`,
-//           vars: mergeVars(l.vars, r.vars),
-//           oracle: eq ? l.oracle === r.oracle : l.oracle !== r.oracle,
-//         },
-//         `[iter=${i}]`
-//       );
-//     });
-//   }
-// });

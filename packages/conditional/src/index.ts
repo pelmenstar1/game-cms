@@ -1,6 +1,5 @@
 export * from './ast.js';
 export * from './eval.js';
-export * from './infer.js';
 export * from './parser.js';
 export * from './resolver.js';
 export * from './stringifier.js';

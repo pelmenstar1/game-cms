@@ -11,8 +11,6 @@ export const enum TokenType {
   NOT = 9,
   NEQ = 10,
   VAR_START = 11,
-  TRUE = 12,
-  FALSE = 13,
 }
 
 export const enum StringTokenType {

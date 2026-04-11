@@ -18,8 +18,6 @@ describe('tokenizeText', () => {
     ['<=', [TokenType.LTE]],
     ['>', [TokenType.GT]],
     ['>=', [TokenType.GTE]],
-    ['true', [TokenType.TRUE]],
-    ['false', [TokenType.FALSE]],
     ['123', [{ type: StringTokenType.LITERAL, value: '123' }]],
     ["'hello'", [{ type: StringTokenType.STRING, value: 'hello' }]],
 
@@ -61,26 +59,6 @@ describe('tokenizeText', () => {
     [
       '$a123',
       [TokenType.VAR_START, { type: StringTokenType.LITERAL, value: 'a123' }],
-    ],
-
-    // Boolean keyword operands.
-    [
-      '$abc==true',
-      [
-        TokenType.VAR_START,
-        { type: StringTokenType.LITERAL, value: 'abc' },
-        TokenType.EQ,
-        TokenType.TRUE,
-      ],
-    ],
-    [
-      '$abc==false',
-      [
-        TokenType.VAR_START,
-        { type: StringTokenType.LITERAL, value: 'abc' },
-        TokenType.EQ,
-        TokenType.FALSE,
-      ],
     ],
 
     // Comparison operators.
@@ -203,7 +181,6 @@ describe('tokenizeText', () => {
         { type: StringTokenType.LITERAL, value: 'abc' },
       ],
     ],
-    ['!true', [TokenType.NOT, TokenType.TRUE]],
   ])('%s', (input, expected) => {
     expect(tokenizeText(input)).toEqual(expected);
   });

@@ -18,8 +18,6 @@ const tokenInfoMap: Record<string, Token> = {
   '||': TokenType.OR,
   '==': TokenType.EQ,
   '!=': TokenType.NEQ,
-  true: TokenType.TRUE,
-  false: TokenType.FALSE,
 };
 
 const tokenMapKeys = Object.keys(tokenInfoMap);

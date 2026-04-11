@@ -22,7 +22,7 @@ function needToWrapInParens(expr: ConditionalAstExpression): boolean {
   if (expr.$type === 'unary') {
     const operand = expr.expr;
 
-    return operand.$type === 'binary' || operand.$type === 'unary';
+    return operand.$type === 'binary';
   }
 
   return false;
