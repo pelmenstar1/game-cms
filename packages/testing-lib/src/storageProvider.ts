@@ -72,11 +72,80 @@ export function setupStorageProviderTests<Result extends StorageProviderResult>(
     });
   });
 
+  describe('deleteMany', () => {
+    test('should delete multiple existing files and return true for each', async () => {
+      await using provider = await createProvider();
+
+      const protocol = provider.value.protocol;
+
+      if (!protocol.deleteMany) {
+        return;
+      }
+
+      const { extra: extra1 } = await protocol.upload({
+        name: 'file1',
+        mime: 'text/plain',
+        content: Buffer.from('a'),
+      });
+      const { extra: extra2 } = await protocol.upload({
+        name: 'file2',
+        mime: 'text/plain',
+        content: Buffer.from('b'),
+      });
+
+      const { deletedStatuses } = await protocol.deleteMany([extra1, extra2]);
+
+      expect(deletedStatuses).toEqual([{ value: true }, { value: true }]);
+
+      expect(await exists(provider, extra1)).toBe(false);
+      expect(await exists(provider, extra2)).toBe(false);
+    });
+
+    test('should return true for non-existing file', async () => {
+      await using provider = await createProvider();
+
+      const protocol = provider.value.protocol;
+
+      if (!protocol.deleteMany) return;
+
+      const { extra: existing } = await protocol.upload({
+        name: 'file1',
+        mime: 'text/plain',
+        content: Buffer.from('a'),
+      });
+      const nonExisting = nonExistingExtra();
+
+      const { deletedStatuses } = await protocol.deleteMany([
+        existing,
+        nonExisting,
+      ]);
+
+      expect(deletedStatuses).toEqual([{ value: true }, { value: true }]);
+      expect(await exists(provider, existing)).toBe(false);
+    });
+
+    test('should return empty statuses for empty array', async () => {
+      await using provider = await createProvider();
+
+      const protocol = provider.value.protocol;
+
+      if (!protocol.deleteMany) {
+        return;
+      }
+
+      const { deletedStatuses } = await protocol.deleteMany([]);
+
+      expect(deletedStatuses).toEqual([]);
+    });
+  });
+
   describe('delete', () => {
     test('should delete file if exists', async () => {
       await using provider = await createProvider();
 
-      const { extra } = await provider.value.protocol.upload({
+      const protocol = provider.value.protocol;
+
+      const { extra } = await protocol.upload({
         name: '123',
         mime: 'text/plain',
         content: Buffer.from('123'),
@@ -84,7 +153,7 @@ export function setupStorageProviderTests<Result extends StorageProviderResult>(
 
       expect(await exists(provider, extra)).toEqual(true);
 
-      await provider.value.protocol.delete(extra);
+      await protocol.delete(extra);
 
       expect(await exists(provider, extra)).toEqual(false);
     });
@@ -102,16 +171,17 @@ export function setupStorageProviderTests<Result extends StorageProviderResult>(
 
   test('getContent', async () => {
     await using provider = await createProvider();
+    const protocol = provider.value.protocol;
 
     const expected = Buffer.from('123');
 
-    const { extra } = await provider.value.protocol.upload({
+    const { extra } = await protocol.upload({
       name: '123',
       mime: 'text/plain',
       content: expected,
     });
 
-    const actual = await provider.value.protocol.getContent(extra);
+    const actual = await protocol.getContent(extra);
 
     expect(expected.equals(actual)).toEqual(true);
   });
@@ -120,22 +190,23 @@ export function setupStorageProviderTests<Result extends StorageProviderResult>(
     describe('file exists', () => {
       fileSourceTests(async (transformer) => {
         await using provider = await createProvider();
+        const protocol = provider.value.protocol;
 
         const initial = Buffer.from('initial');
-        const { extra } = await provider.value.protocol.upload({
+        const { extra } = await protocol.upload({
           name: 'patch-test',
           mime: 'text/plain',
           content: transformer(initial),
         });
 
         const patched = Buffer.from('patched');
-        const { size } = await provider.value.protocol.patchContent({
+        const { size } = await protocol.patchContent({
           extra,
           mime: 'text/plain',
           content: transformer(patched),
         });
 
-        const actual = await provider.value.protocol.getContent(extra);
+        const actual = await protocol.getContent(extra);
 
         expect(patched.equals(actual)).toEqual(true);
         expect(size).toEqual(patched.length);

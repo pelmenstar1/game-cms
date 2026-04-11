@@ -6,6 +6,8 @@ import type {
   AbortOptions,
   StorageAddon,
   StorageAddonContext,
+  StorageProvider,
+  StorageProviderDeleteManyResult,
   StorageProviderUploadResult,
 } from '@game-cms/base-core';
 import {
@@ -203,6 +205,42 @@ function enhanceMime(name: string, mime: string) {
   return mime;
 }
 
+async function deleteManyFilesViaProvider<Extra>(
+  provider: StorageProvider<Extra>,
+  extras: Extra[]
+): Promise<StorageProviderDeleteManyResult> {
+  const { protocol } = provider;
+
+  if (protocol.deleteMany) {
+    return protocol.deleteMany(extras);
+  }
+
+  const results = await Promise.allSettled(
+    extras.map((extra) => protocol.delete(extra))
+  );
+
+  return {
+    deletedStatuses: results.map((result) => {
+      return result.status === 'fulfilled'
+        ? { value: true }
+        : // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          { value: false, reason: result.reason };
+    }),
+  };
+}
+
+async function deleteManyFilesInCollection(values: { _id: ObjectId }[]) {
+  await collection().deleteMany({
+    _id: { $in: values.map(({ _id }) => _id) },
+  });
+}
+
+class FailedDeletionError extends Error {
+  constructor(public readonly reasons: unknown[]) {
+    super('Some files could not be deleted from storage provider');
+  }
+}
+
 export default service({
   id: 'base::storage',
   lifecycle: {
@@ -361,21 +399,12 @@ export default service({
       ]),
     });
 
-    return {
-      items: await Promise.all(items.map((item) => hydrateItem(item))),
-      meta,
-    };
+    const hydratedItems = await Promise.all(items.map(hydrateItem));
+
+    return { items: hydratedItems, meta };
   },
   deleteById: async (id: ObjectId, options?: DeleteStorageItemOptions) => {
-    async function deleteViaProvider(extra: unknown) {
-      try {
-        await storageProvider().protocol.delete(extra);
-      } catch (error) {
-        if (!options?.force) {
-          throw error;
-        }
-      }
-    }
+    const provider = storageProvider();
 
     const items = await collection()
       .find(
@@ -393,15 +422,30 @@ export default service({
 
       await collection().deleteOne({ _id: id });
     } else {
-      await Promise.all(
-        items
-          .filter((item) => item.type === StorageItemType.FILE)
-          .map((item) => deleteViaProvider(item.extra))
+      const files = items.filter((item) => item.type === StorageItemType.FILE);
+
+      const deletionResult = await deleteManyFilesViaProvider(
+        provider,
+        files.map(({ extra }) => extra)
       );
 
-      await collection().deleteMany({
-        _id: { $in: items.map(({ _id }) => _id) },
-      });
+      if (options?.force) {
+        await deleteManyFilesInCollection(files);
+      } else {
+        const effectivelyDeletedFiles = files.filter(
+          (_, index) => deletionResult.deletedStatuses[index].value
+        );
+
+        await deleteManyFilesInCollection(effectivelyDeletedFiles);
+
+        const failedDeletions = deletionResult.deletedStatuses
+          .filter((status) => !status.value)
+          .map((status) => status.reason);
+
+        if (failedDeletions.length > 0) {
+          throw new FailedDeletionError(failedDeletions);
+        }
+      }
     }
 
     cms().service('base::appEvents').emit('base::storage::itemDeleted', { id });

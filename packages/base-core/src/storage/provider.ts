@@ -31,6 +31,10 @@ export type StorageProviderUploadResult<Extra> = {
   size: number;
 };
 
+export type StorageProviderDeleteManyResult = {
+  deletedStatuses: ({ value: true } | { value: false; reason?: unknown })[];
+};
+
 export interface StorageProviderProtocol<Extra> {
   upload: (
     info: UploadFileToProviderInfo,
@@ -43,6 +47,8 @@ export interface StorageProviderProtocol<Extra> {
   ) => Promise<{ size: number }>;
 
   delete: (extra: Extra) => Promise<void>;
+  deleteMany?: (extra: Extra[]) => Promise<StorageProviderDeleteManyResult>;
+
   getUrl: (extra: Extra) => MaybePromise<string>;
   getContent: (extra: Extra, options?: AbortOptions) => Promise<Uint8Array>;
 }

@@ -1,5 +1,6 @@
 import {
   DeleteObjectCommand,
+  DeleteObjectsCommand,
   GetObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -63,6 +64,34 @@ export function s3StorageProvider(
             Key: key,
           })
         );
+      },
+      deleteMany: async (extras) => {
+        if (extras.length === 0) {
+          return { deletedStatuses: [] };
+        }
+
+        const objects = extras.map(({ key }) => ({ Key: key }));
+
+        const result = await client.send(
+          new DeleteObjectsCommand({
+            Bucket: bucket,
+            Delete: { Objects: objects },
+          })
+        );
+
+        return {
+          deletedStatuses: extras.map(({ key }) => {
+            const isDeleted = result.Deleted?.some((item) => item.Key === key);
+
+            if (isDeleted) {
+              return { value: true };
+            }
+
+            const error = result.Errors?.find((item) => item.Key === key);
+
+            return { value: false, reason: error?.Code };
+          }),
+        };
       },
       getContent: async ({ key }, options) => {
         const result = await client.send(
