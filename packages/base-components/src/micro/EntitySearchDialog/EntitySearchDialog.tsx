@@ -54,6 +54,7 @@ export function EntitySearchDialog<T extends EntityId>({
         className={styles.query}
         value={query}
         onTextChanged={setQuery}
+        autoFocus
       />
 
       <MultipleDataLoader

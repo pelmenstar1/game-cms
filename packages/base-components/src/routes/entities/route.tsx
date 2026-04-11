@@ -78,7 +78,7 @@ export default function Page({
 
       {selectedEntity && (
         <div className={styles.content}>
-          <Toolbar>
+          <Toolbar className={styles['toolbar']}>
             <IconButton
               className={styles['search-button']}
               title="Search"

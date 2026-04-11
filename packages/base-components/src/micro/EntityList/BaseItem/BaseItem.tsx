@@ -9,7 +9,7 @@ import {
   ComponentOptionsById,
   ComponentOutDataById,
 } from '@game-cms/core';
-import { classNames, Typography } from '@game-cms/ui';
+import { classNames } from '@game-cms/ui';
 import { ComponentProps, ElementType, useMemo } from 'react';
 
 import { getComponentListPreviewComponent } from '../../../internal/entity.js';
@@ -111,11 +111,11 @@ export function BaseItem<
         const displayKey = displayKeys[i];
 
         if (typeof value === 'string') {
-          return <Typography key={displayKey}>{value}</Typography>;
+          value = { data: value, id: 'base::text', options: {} };
         }
 
         if (value === undefined) {
-          return <span key={displayKey}></span>;
+          return <span key={displayKey} />;
         }
 
         return (

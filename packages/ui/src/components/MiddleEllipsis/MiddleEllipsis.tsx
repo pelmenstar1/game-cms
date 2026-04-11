@@ -1,28 +1,23 @@
-import { type ComponentProps, useLayoutEffect, useRef, useState } from 'react';
+import { type ComponentProps, useLayoutEffect, useRef } from 'react';
 
 import { useBounds } from '../../hooks';
 import { Typography, type TypographyProps } from '../Typography';
 
 export interface MiddleEllipsisProps
   extends TypographyProps, Omit<ComponentProps<'p'>, 'children'> {
-  children: string;
+  children: string | null | undefined;
 }
 
 const ELLIPSIS = '…';
 const LAST_SYMBOLS_COUNT = 4;
 
-let _renderingContext: CanvasRenderingContext2D | undefined;
+let _renderingContext: CanvasRenderingContext2D | null | undefined;
 
 function renderingContext() {
-  if (!_renderingContext) {
+  if (_renderingContext === undefined) {
     const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
 
-    if (!context) {
-      throw new Error('Failed to create canvas rendering context');
-    }
-
-    _renderingContext = context;
+    _renderingContext = canvas.getContext('2d');
   }
 
   return _renderingContext;
@@ -51,10 +46,22 @@ function binarySearch(
   return max;
 }
 
-function fitText(element: HTMLParagraphElement, text: string, width: number) {
-  const context = renderingContext();
+function fitText(
+  element: HTMLParagraphElement,
+  text: string | null | undefined,
+  width: number
+) {
+  text ??= '';
 
-  context.font = window.getComputedStyle(element).font;
+  const context = renderingContext();
+  if (context === null) {
+    return text;
+  }
+
+  const style = window.getComputedStyle(element);
+
+  context.font = style.font;
+  context.letterSpacing = style.letterSpacing;
 
   const fullWidth = context.measureText(text).width;
 
@@ -74,26 +81,21 @@ function fitText(element: HTMLParagraphElement, text: string, width: number) {
     (guess) => context.measureText(text.slice(0, guess)).width
   );
 
-  return text.slice(0, fitCount) + suffix;
+  return text.slice(0, fitCount - 1) + suffix;
 }
 
 export function MiddleEllipsis({ children, ...props }: MiddleEllipsisProps) {
   const ref = useRef<HTMLParagraphElement>(null);
 
   const size = useBounds(ref);
-  const [effectiveText, setEffectiveText] = useState('');
 
   useLayoutEffect(() => {
     const element = ref.current;
 
     if (element) {
-      setEffectiveText(fitText(element, children, size.width));
+      element.textContent = fitText(element, children, size.width);
     }
   }, [children, size]);
 
-  return (
-    <Typography ref={ref} title={children} {...props}>
-      {effectiveText}
-    </Typography>
-  );
+  return <Typography ref={ref} title={children} {...props} />;
 }
