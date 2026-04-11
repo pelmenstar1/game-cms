@@ -161,7 +161,6 @@ const route = apiRoute({
       },
       hero: {
         name: hero.name,
-        folder: hero.folder,
         frameWidth: hero.frameWidth,
         frameHeight: hero.frameHeight,
         hp: hero.hp,

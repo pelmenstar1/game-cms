@@ -33,7 +33,6 @@ const trapAnimation = z.object({
 
 const trap = z.object({
   name: z.string(),
-  folder: z.string(),
   damage: z.number(),
   behavior: z.enum(['static', 'moving', 'triggered']),
   moveRange: z.number(),
@@ -116,7 +115,6 @@ export const gameData = z.object({
   }),
   hero: z.object({
     name: z.string(),
-    folder: z.string(),
     frameWidth: z.number(),
     frameHeight: z.number(),
     hp: z.number(),

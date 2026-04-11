@@ -12,7 +12,6 @@ export default entity({
   title: 'Trap',
   components: {
     name: text(),
-    folder: text(),
     damage: number({ integer: true, min: 0 }),
     behavior: dropdown([
       { key: 'static', title: 'Static' },

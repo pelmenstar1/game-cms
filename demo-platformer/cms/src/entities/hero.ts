@@ -5,7 +5,6 @@ export default entity({
   title: 'Hero',
   components: {
     name: text(),
-    folder: text(),
     frameWidth: number({ integer: true, min: 1 }),
     frameHeight: number({ integer: true, min: 1 }),
     hp: number({ integer: true, min: 1 }),
