@@ -14,6 +14,7 @@ import {
   namedLazy,
   PagePresenter,
   useAsyncCallback,
+  useDebouncedValue,
   useModal,
   useNotification,
 } from '@game-cms/ui';
@@ -66,14 +67,17 @@ export function FileExplorer({
   const notification = useNotification();
 
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const stableSearch = useDebouncedValue(search, 500);
 
   const listOptions = useMemo(
     () => ({
       size: PAGE_SIZE,
       offset: (page - 1) * PAGE_SIZE,
       parent: folderId,
+      search: stableSearch,
     }),
-    [folderId, page]
+    [folderId, page, stableSearch]
   );
 
   const [selectedItemIds, setSelectedItems] = useState<string[]>([]);
@@ -205,12 +209,14 @@ export function FileExplorer({
           <FileControlHeader
             isDeleteEnabled={selectedItemIds.length > 0}
             hasParent={folderId !== undefined}
+            items={items}
+            searchQuery={search}
             onDelete={onDelete}
             onUpload={onUpload}
             onCreateFolder={onCreateFolder}
             onRefresh={refreshItems}
             onGoToParent={onGoToParent}
-            items={items}
+            onSearchQueryChanged={setSearch}
           />
           <PagePresenter
             page={page}

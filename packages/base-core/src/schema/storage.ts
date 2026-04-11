@@ -33,6 +33,7 @@ export const listStorageItemsOptions = z.object({
   ...pagingOptionsSchema.shape,
   includeHidden: z.boolean().optional(),
   parent: stringObjectId.optional(),
+  search: z.string().optional(),
 });
 
 export const deleteStorageItemOptions = z.object({

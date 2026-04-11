@@ -11,6 +11,7 @@ export * from './DraggableList';
 export * from './DragHandle';
 export * from './ErrorBoard';
 export * from './ErrorMessage';
+export * from './ExpandableSearchInput';
 export * from './FileDrop';
 export * from './FileDropArea';
 export * from './IconButton';

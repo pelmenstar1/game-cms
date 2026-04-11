@@ -2,6 +2,7 @@ export * from './nativeEventListener';
 export * from './useAbstractQueryResult';
 export * from './useAsyncCallback';
 export * from './useBounds';
+export * from './useDebouncedValue';
 export * from './useFetch';
 export * from './useHotkey';
 export * from './useInterval';

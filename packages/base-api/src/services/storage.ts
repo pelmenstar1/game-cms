@@ -208,6 +208,7 @@ export default service({
   lifecycle: {
     onInit: async () => {
       await storageProvider().init?.();
+      await collection().createIndex({ name: 'text' });
     },
   },
   collection,
@@ -334,8 +335,9 @@ export default service({
     return await storageProvider().protocol.getUrl(extra);
   },
   list: async (options: ListStorageItemsOptions & AbortOptions) => {
-    const { parent } = options;
+    const { parent, search } = options;
     let matchOperator: Document | undefined;
+    let sortOperator: Document | undefined;
 
     if (parent) {
       (matchOperator ??= {}).parent = parent;
@@ -347,8 +349,16 @@ export default service({
       };
     }
 
+    if (search) {
+      (matchOperator ??= {}).$text = { $search: search };
+      (sortOperator ??= {}).score = { $meta: 'textScore' };
+    }
+
     const { items, meta } = await getPage(collection(), options, {
-      pre: matchOperator && [{ $match: matchOperator }],
+      pre: filterOutNullable([
+        matchOperator && { $match: matchOperator },
+        sortOperator && { $sort: sortOperator },
+      ]),
     });
 
     return {

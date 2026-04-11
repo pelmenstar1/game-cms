@@ -62,7 +62,7 @@ export default function Page({
     }
   }, [selectedEntity, showModal]);
 
-  useHotkey(['Control', 'f'], onShowSearch);
+  useHotkey({ combination: ['Control', 'f'], callback: onShowSearch });
 
   return (
     <div className={styles.root}>

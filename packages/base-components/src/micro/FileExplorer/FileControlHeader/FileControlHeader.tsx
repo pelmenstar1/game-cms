@@ -3,6 +3,7 @@ import {
   ArrowLeftIcon,
   classNames,
   DeleteIcon,
+  ExpandableSearchInput,
   IconButton,
   List,
   NewFolderIcon,
@@ -18,12 +19,14 @@ export interface FileControlHeaderProps {
   items: StorageClientItem[];
   isDeleteEnabled?: boolean;
   hasParent?: boolean;
+  searchQuery?: string;
 
   onDelete?: () => void;
   onUpload?: () => void;
   onCreateFolder?: () => void;
   onRefresh?: () => void;
   onGoToParent?: () => void;
+  onSearchQueryChanged?: (value: string) => void;
 }
 
 export function FileControlHeader({
@@ -31,11 +34,13 @@ export function FileControlHeader({
   items,
   isDeleteEnabled,
   hasParent,
+  searchQuery,
   onDelete,
   onUpload,
   onCreateFolder,
   onRefresh,
   onGoToParent,
+  onSearchQueryChanged,
 }: FileControlHeaderProps) {
   return (
     <List className={classNames(styles.root, className)}>
@@ -50,6 +55,14 @@ export function FileControlHeader({
       >
         <ArrowLeftIcon />
       </IconButton>
+
+      {searchQuery !== undefined && (
+        <ExpandableSearchInput
+          text={searchQuery}
+          onTextChanged={onSearchQueryChanged}
+          hotKey
+        />
+      )}
 
       <IconButton title="Refresh" onClick={onRefresh} hover="fill">
         <RefreshIcon />

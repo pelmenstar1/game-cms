@@ -9,7 +9,7 @@ export default apiRoute({
     id: 'storage$list',
   },
   schema: {
-    querystring: listStorageItemsOptions,
+    querystring: listStorageItemsOptions.strict(),
   },
   handler: (req) => {
     const options = req.query;

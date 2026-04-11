@@ -38,12 +38,14 @@ export function ModalDialog({
   useScrollbar(false);
 
   const onFastExit = useCallback(() => {
-    if (fastExit) {
-      onClose(undefined);
-    }
-  }, [fastExit, onClose]);
+    onClose(undefined);
+  }, [onClose]);
 
-  useHotkey(['Escape'], onFastExit);
+  useHotkey({
+    combination: ['Escape'],
+    callback: onFastExit,
+    isEnabled: fastExit,
+  });
 
   return createPortal(
     <ModalOverlay className={styles.overlay} effect={effect}>

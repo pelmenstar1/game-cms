@@ -5,10 +5,22 @@ import { useEffect, useRef } from 'react';
 import type { KeyboardKey } from '../utils/keyboard';
 import { addNativeEventListener } from './nativeEventListener';
 
-export function useHotkey(combination: KeyboardKey[], callback: () => void) {
+export type UseHotkeyOptions = {
+  combination: KeyboardKey[];
+  callback: () => void;
+  isEnabled?: boolean;
+};
+
+export function useHotkey({
+  combination,
+  callback,
+  isEnabled = true,
+}: UseHotkeyOptions) {
   const pressedKeysRef = useRef(new Set<string>());
 
   useEffect(() => {
+    if (!isEnabled) return;
+
     return combineActions(
       addNativeEventListener(window, 'keydown', (event) => {
         const pressedKeys = pressedKeysRef.current;
