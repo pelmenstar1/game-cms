@@ -7,6 +7,18 @@ import { pnpm } from './process';
 
 const BUILD_SCRIPT = 'test:build';
 
+// Groups are processed sequentially; packages within a group are built in parallel.
+const PACKAGE_GROUPS: string[][] = [
+  ['demo-app'],
+  ['@demo-platformer/cms'],
+  [
+    '@demo-platformer/frontend',
+    '@game-cms/ui',
+    '@game-cms/base-components',
+    '@game-cms/game-plugin-components',
+  ],
+];
+
 async function getPackagesWithBuildScript() {
   const workspacePackages = await getWorkspacePackages();
 
@@ -26,10 +38,22 @@ async function getPackagesWithBuildScript() {
 async function main() {
   const workspacePackages = await getPackagesWithBuildScript();
 
-  for (const { dirPath, name } of workspacePackages) {
-    printInfo(`Building ${chalk.blue(name)}`);
+  for (const group of PACKAGE_GROUPS) {
+    const pkgs = workspacePackages.filter(({ name }) => group.includes(name));
 
-    await pnpm(BUILD_SCRIPT, dirPath);
+    if (pkgs.length === 0) {
+      continue;
+    }
+
+    if (pkgs.length === 1) {
+      printInfo(`Building ${chalk.blue(pkgs[0].name)}`);
+    } else {
+      printInfo(
+        `Building in parallel: ${pkgs.map(({ name }) => chalk.blue(name)).join(', ')}`
+      );
+    }
+
+    await Promise.all(pkgs.map(({ dirPath }) => pnpm(BUILD_SCRIPT, dirPath)));
   }
 }
 
