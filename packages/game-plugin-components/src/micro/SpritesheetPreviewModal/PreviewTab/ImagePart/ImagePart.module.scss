@@ -17,3 +17,11 @@
   background: var(--color-background);
   border-top-right-radius: 0;
 }
+
+.image {
+  image-rendering: pixelated;
+}
+
+.transform-view {
+  height: 100%;
+}

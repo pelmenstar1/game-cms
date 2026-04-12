@@ -25,3 +25,7 @@ export function rectsIntersect(a: Rect, b: Rect) {
     a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top
   );
 }
+
+export function roundToNearestMultiple(value: number, step: number) {
+  return Math.round(value / step) * step;
+}

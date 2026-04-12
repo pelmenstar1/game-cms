@@ -1,0 +1,12 @@
+.root {
+  position: relative;
+  overflow: hidden;
+
+  > img {
+    position: absolute;
+    width: auto;
+    height: 100%;
+    left: calc(var(--frame-index) * -100%);
+    image-rendering: pixelated;
+  }
+}

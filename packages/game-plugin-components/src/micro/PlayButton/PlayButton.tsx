@@ -22,7 +22,7 @@ export function PlayButton({
   ...rest
 }: PlayButtonProps) {
   const { t } = useTranslation('game', {
-    keyPrefix: 'micro.SpineController.PlayButton',
+    keyPrefix: 'micro.PlayButton',
   });
 
   const onClick = () => {

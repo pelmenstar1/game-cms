@@ -22,8 +22,8 @@ const heroAnimation = z.object({
 
 const trapSprite = z.object({
   image: z.array(fileItem),
-  frameWidth: z.number(),
-  frameHeight: z.number(),
+  width: z.number(),
+  height: z.number(),
 });
 
 const trapAnimation = z.object({
@@ -43,8 +43,8 @@ const trap = z.object({
 
 const itemSprite = z.object({
   image: z.array(fileItem),
-  frameWidth: z.number(),
-  frameHeight: z.number(),
+  width: z.number(),
+  height: z.number(),
 });
 
 const item = z.object({

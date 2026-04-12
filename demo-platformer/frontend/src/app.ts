@@ -95,8 +95,8 @@ async function fetchGameData(): Promise<GameDataResult> {
         if (url) {
           animations[anim.state] = {
             path: url,
-            frameWidth: anim.sprite.frameWidth,
-            frameHeight: anim.sprite.frameHeight,
+            frameWidth: anim.sprite.width,
+            frameHeight: anim.sprite.height,
           };
           cmsAssetUrls.push(url);
         }
@@ -123,8 +123,8 @@ async function fetchGameData(): Promise<GameDataResult> {
           name: entry.item.name,
           sprite: {
             path: url,
-            frameWidth: entry.item.sprite.frameWidth,
-            frameHeight: entry.item.sprite.frameHeight,
+            frameWidth: entry.item.sprite.width,
+            frameHeight: entry.item.sprite.height,
           },
           collectedAlias: entry.item.collected.url,
           effect: entry.item.effect,

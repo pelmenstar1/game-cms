@@ -13,11 +13,9 @@
     "SpineRenderer": {
       "spineFailed": "Failed to load a spine animation"
     },
-    "SpineController": {
-      "PlayButton": {
-        "play": "Play",
-        "pause": "Pause"
-      }
+    "PlayButton": {
+      "play": "Play",
+      "pause": "Pause"
     },
     "SpritesheetPreviewModal": {
       "ImagePreview": {

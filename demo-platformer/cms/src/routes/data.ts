@@ -184,12 +184,12 @@ const route = apiRoute({
             ),
             checkpointImages: mapObject(room.checkpointImages, (value) => ({
               idle: {
-                file: value.idle.file[0],
+                file: value.idle.image[0],
                 width: value.idle.width,
                 height: value.idle.height,
               },
               moving: {
-                file: value.moving.file[0],
+                file: value.moving.image[0],
                 width: value.moving.width,
                 height: value.moving.height,
               },

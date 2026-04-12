@@ -1,6 +1,6 @@
 import { classNames, OptionSwitch, Slider, Typography } from '@game-cms/ui';
 
-import { PlayButton } from '../PlayButton/index.js';
+import { PlayButton } from '../../PlayButton/index.js';
 import styles from './Header.module.scss';
 
 const SPEED_OPTIONS = [0.5, 1, 2];

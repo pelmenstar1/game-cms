@@ -1,4 +1,4 @@
-import { clampNumber, lerp } from '@game-cms/shared';
+import { clampNumber, lerp, roundToNearestMultiple } from '@game-cms/shared';
 import {
   type ComponentProps,
   type PointerEvent,
@@ -15,6 +15,7 @@ export interface SliderProps extends Omit<ComponentProps<'div'>, 'children'> {
   min: number;
   max: number;
   value: number;
+  step?: number;
 
   onValueChanged?: (value: number) => void;
 }
@@ -25,6 +26,7 @@ export function Slider({
   min,
   max,
   value,
+  step,
   onValueChanged,
   ...rest
 }: SliderProps) {
@@ -38,7 +40,12 @@ export function Slider({
   const handleThumbMove = (clientX: number) => {
     const dx = clientX - containerBounds.left;
     const newProgress = clampNumber(0, 1, dx / containerBounds.width);
-    const newValue = lerp(min, max, newProgress);
+    let newValue = lerp(min, max, newProgress);
+
+    if (step !== undefined) {
+      newValue = roundToNearestMultiple(newValue - min, step) + min;
+      newValue = Math.min(newValue, max);
+    }
 
     onValueChanged?.(newValue);
   };

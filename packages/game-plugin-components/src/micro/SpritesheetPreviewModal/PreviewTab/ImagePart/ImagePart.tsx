@@ -26,9 +26,9 @@ export function ImagePart({ className, imageUrl, atlasData }: ImagePartProps) {
 
   return (
     <div className={classNames(styles.root, className)}>
-      <TransformView>
+      <TransformView className={styles['transform-view']}>
         <div className={styles.content}>
-          <img src={imageUrl} />
+          <img className={styles.image} src={imageUrl} />
           {atlasData && (
             <SpritesheetMap
               className={styles.map}

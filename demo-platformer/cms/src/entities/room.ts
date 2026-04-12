@@ -1,4 +1,7 @@
-import { resizableTileGrid } from '@game-cms/game-plugin/components';
+import {
+  resizableTileGrid,
+  spriteStripe,
+} from '@game-cms/game-plugin/components';
 import { entity } from 'game-cms';
 import {
   compose,
@@ -10,10 +13,8 @@ import {
   text,
 } from 'game-cms/components';
 
-const checkpointImageVariant = compose({
-  file: file({ supportedMimeTypes: ['image/png'], maxItems: 1 }),
-  width: number({ integer: true, min: 1 }),
-  height: number({ integer: true, min: 1 }),
+const checkpointImageVariant = spriteStripe({
+  supportedMimeTypes: ['image/png'],
 });
 
 const checkpointImage = compose({

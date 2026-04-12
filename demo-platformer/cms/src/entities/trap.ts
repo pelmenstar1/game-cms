@@ -1,8 +1,8 @@
+import { spriteStripe } from '@game-cms/game-plugin/components';
 import { entity } from 'game-cms';
 import {
   compose,
   dropdown,
-  file,
   number,
   repeatable,
   text,
@@ -24,10 +24,8 @@ export default entity({
     animations: repeatable({
       component: compose({
         state: text(),
-        sprite: compose({
-          image: file({ supportedMimeTypes: ['image/png'], maxItems: 1 }),
-          frameWidth: number({ integer: true, min: 1 }),
-          frameHeight: number({ integer: true, min: 1 }),
+        sprite: spriteStripe({
+          supportedMimeTypes: ['image/png'],
         }),
       }),
     }),
