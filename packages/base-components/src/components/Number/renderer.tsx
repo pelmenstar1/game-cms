@@ -1,5 +1,5 @@
 import { ComponentDefaultRenderer } from '@game-cms/core';
-import { TextInput } from '@game-cms/ui';
+import { NumberInput } from '@game-cms/ui';
 import { useTranslation } from 'react-i18next';
 
 import styles from './renderer.module.scss';
@@ -24,11 +24,14 @@ export const renderer: ComponentDefaultRenderer<Id> = ({
     : undefined;
 
   return (
-    <TextInput
+    <NumberInput
       className={styles.root}
       error={errorText}
-      value={data}
+      text={data}
       readOnly={readOnly}
+      min={options.min}
+      max={options.max}
+      integer={options.integer}
       onTextChanged={onDataChanged}
     />
   );

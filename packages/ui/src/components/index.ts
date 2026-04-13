@@ -34,6 +34,7 @@ export * from './ModalOverlay';
 export * from './MultipleDataLoader';
 export * from './NavTabs';
 export * from './Notification';
+export * from './NumberInput';
 export * from './OptionBase';
 export * from './OptionSwitch';
 export * from './PagePresenter';
