@@ -19,7 +19,7 @@ function setupEntityCheckFixture() {
           {
             id: 'test-check',
             dashboard: {
-              entityAccessRenderer: {
+              clientController: {
                 filePath: path.join(fixtureDir, 'testCheck.js'),
               },
             },

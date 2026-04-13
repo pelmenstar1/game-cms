@@ -18,12 +18,14 @@ export type EntityCheckBlockProps = {
 const getComponent = createCachedFactory(
   <Id extends EntityCheckId>(checkId: Id, context: EntityCheckContextType) => {
     return React.lazy(async () => {
-      const renderer = await context.getRenderer(checkId);
+      const controller = await context.getClientController(checkId);
+      const renderer = await controller?.renderer?.();
+
       if (!renderer) {
         return { default: () => null };
       }
 
-      return { default: renderer };
+      return renderer;
     });
   }
 );

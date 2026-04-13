@@ -73,8 +73,7 @@
         "src/types.ts",
         "src/client.ts",
         "src/**/route.tsx",
-        "src/**/config.client.ts",
-        "src/**/entityAccessRenderer.tsx"
+        "src/**/*.client.ts"
       ]
     },
     "packages/base-plugin": {

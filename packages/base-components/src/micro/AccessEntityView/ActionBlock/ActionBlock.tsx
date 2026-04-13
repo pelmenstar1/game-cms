@@ -5,6 +5,8 @@ import styles from './ActionBlock.module.scss';
 export interface ActionBlockProps {
   className?: string;
   disabled?: boolean;
+  publishDisabled?: boolean;
+  saveDisabled?: boolean;
   onSave?: () => void;
   onPublish?: () => void;
   onUnpublish?: () => void;
@@ -13,6 +15,8 @@ export interface ActionBlockProps {
 export function ActionBlock({
   className,
   disabled,
+  publishDisabled,
+  saveDisabled,
   onSave,
   onPublish,
   onUnpublish,
@@ -20,13 +24,21 @@ export function ActionBlock({
   return (
     <div className={classNames(styles['root'], className)}>
       {onPublish && (
-        <Button buttonVariant="solid" onClick={onPublish} disabled={disabled}>
+        <Button
+          buttonVariant="solid"
+          onClick={onPublish}
+          disabled={disabled || publishDisabled}
+        >
           Publish
         </Button>
       )}
 
       {onSave && (
-        <Button buttonVariant="outlined" onClick={onSave} disabled={disabled}>
+        <Button
+          buttonVariant="outlined"
+          onClick={onSave}
+          disabled={disabled || saveDisabled}
+        >
           Save
         </Button>
       )}

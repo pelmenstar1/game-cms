@@ -35,7 +35,7 @@ export const invokeEntityCheckAction = <
 
 export const getEntityCheckRun = (context: RequestContext, id: string) =>
   request(context, {
-    url: `/entityChecks/runs/${id}`,
+    url: `/entityCheck/runs/${id}`,
     method: 'GET',
     response: json<ClientEntityCheckRunWithId>(),
   });

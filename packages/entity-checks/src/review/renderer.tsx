@@ -12,7 +12,7 @@ import {
 } from '@game-cms/ui';
 import { useCallback } from 'react';
 
-import styles from './entityAccessRenderer.module.scss';
+import styles from './renderer.module.scss';
 
 const renderer: EntityCheckRenderer = ({
   className,

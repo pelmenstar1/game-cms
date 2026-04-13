@@ -1,8 +1,13 @@
 declare module 'virtual:dashboard/entityCheckConnectorData' {
-  import { EntityCheckId, EntityCheckRenderer } from '@game-cms/base-core';
+  import {
+    EntityCheckClientController,
+    EntityCheckId,
+  } from '@game-cms/base-core';
 
   const _default: {
-    [Id in EntityCheckId]?: () => Promise<{ default: EntityCheckRenderer<Id> }>;
+    [Id in EntityCheckId]?: () => Promise<{
+      default: EntityCheckClientController<Id>;
+    }>;
   };
 
   export default _default;

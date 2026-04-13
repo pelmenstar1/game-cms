@@ -14,6 +14,7 @@ import { maybePromiseThen, Or } from '@game-cms/shared';
 import { classNames } from '@game-cms/ui';
 import { useCallback, useEffect, useState } from 'react';
 
+import { useEntityChecksAllowed } from '../../hooks/useEntityChecksAllowed.js';
 import {
   EntityComposeError,
   EntityComposeOptions,
@@ -81,6 +82,12 @@ export function AccessEntityView<Id extends EntityId>({
 
   const [previewEnabled, setPreviewEnabled] = useState(false);
   const [inData, setInData] = useState<InDataWithError<Id> | undefined>();
+
+  const checksAllowed = useEntityChecksAllowed(
+    entityId,
+    initialId,
+    initialValue?.checks
+  );
 
   const error = inData?.error;
 
@@ -161,6 +168,8 @@ export function AccessEntityView<Id extends EntityId>({
         <div className={styles['side-panel']}>
           <ActionBlock
             disabled={error !== undefined}
+            publishDisabled={!checksAllowed.published}
+            saveDisabled={!checksAllowed.draft}
             onPublish={
               selectedVariant !== 'published' ? onPublishTransformed : undefined
             }

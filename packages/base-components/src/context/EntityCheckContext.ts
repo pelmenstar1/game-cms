@@ -1,13 +1,18 @@
-import { EntityCheckId, EntityCheckRenderer } from '@game-cms/base-core';
+import {
+  EntityCheckClientController,
+  EntityCheckId,
+} from '@game-cms/base-core';
 import { MaybePromise, unimplemented } from '@game-cms/shared';
 import React from 'react';
 
 export type EntityCheckContextType = {
-  getRenderer: <Id extends EntityCheckId>(
+  checkIds: EntityCheckId[];
+  getClientController: <Id extends EntityCheckId>(
     id: Id
-  ) => MaybePromise<EntityCheckRenderer<Id> | undefined>;
+  ) => MaybePromise<EntityCheckClientController<Id> | undefined>;
 };
 
 export const EntityCheckContext = React.createContext<EntityCheckContextType>({
-  getRenderer: unimplemented('getRenderer'),
+  checkIds: [],
+  getClientController: unimplemented('getClientController'),
 });

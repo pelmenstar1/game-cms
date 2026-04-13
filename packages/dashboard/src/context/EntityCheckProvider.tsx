@@ -4,10 +4,14 @@ import {
 } from '@game-cms/base-components/shared';
 import { PropsWithChildren } from 'react';
 
-import { getEntityCheckRenderer } from '@/connector/entityCheck';
+import {
+  entityCheckIds,
+  getEntityCheckClientController,
+} from '@/connector/entityCheck';
 
 const context: EntityCheckContextType = {
-  getRenderer: getEntityCheckRenderer,
+  checkIds: entityCheckIds,
+  getClientController: getEntityCheckClientController,
 };
 
 export function EntityCheckProvider({ children }: PropsWithChildren) {

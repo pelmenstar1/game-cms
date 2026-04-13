@@ -4,7 +4,7 @@ import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/entityChecks/runs/:id',
+  url: '/entityCheck/runs/:id',
   method: 'GET',
   schema: {
     params: z.object({

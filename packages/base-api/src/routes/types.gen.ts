@@ -13,8 +13,8 @@ declare module '@game-cms/core/api' {
     'POST /auth/token/jwt': typeof import('./auth/token/signin.js');
     'POST /auth/user/refresh': typeof import('./auth/user/refresh.js');
     'POST /auth/user/signin': typeof import('./auth/user/signin.js');
+    'GET /entityCheck/runs/:id': typeof import('./entityCheck/runs/[id]/get.js');
     'GET /entityCheck/runs': typeof import('./entityCheck/runs/list.js');
-    'GET /entityChecks/runs/:id': typeof import('./entityCheck/runs/[id]/get.js');
     'GET /entitySchema/byId/:id': typeof import('./entitySchema/get.js');
     'GET /entitySchema/list': typeof import('./entitySchema/list.js');
     'DELETE /entity/:entityId/byId/:id': typeof import('./entity/byId/delete.js');

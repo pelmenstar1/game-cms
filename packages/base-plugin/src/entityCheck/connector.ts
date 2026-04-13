@@ -9,16 +9,16 @@ export function emitEntityCheckConnector() {
 export default {
   ${entityChecks
     .map(({ id, dashboard }) => {
-      const renderer = dashboard?.entityAccessRenderer;
+      const controller = dashboard?.clientController;
 
-      if (renderer) {
-        return { id: id as string, renderer };
+      if (controller) {
+        return { id: id as string, controller };
       }
     })
     .filter((pair) => pair !== undefined)
     .map(
-      ({ id, renderer }) =>
-        `${JSON.stringify(id)}: () => import('${pathToFileURL(renderer.filePath)}')`
+      ({ id, controller }) =>
+        `${JSON.stringify(id)}: () => import('${pathToFileURL(controller.filePath)}')`
     )
     .join(',')}
 }`;

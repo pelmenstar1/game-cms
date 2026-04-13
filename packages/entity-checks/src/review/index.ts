@@ -72,11 +72,11 @@ export function review() {
   return defineEntityCheck({
     id: 'base::review',
     clientConfig: {
-      filePath: path.join(import.meta.dirname, './config.client.js'),
+      filePath: path.join(import.meta.dirname, 'config.client.js'),
     },
     dashboard: {
-      entityAccessRenderer: {
-        filePath: path.join(import.meta.dirname, './entityAccessRenderer.js'),
+      clientController: {
+        filePath: path.join(import.meta.dirname, 'controller.client.js'),
       },
       routes: dashboardRoutes,
     },
