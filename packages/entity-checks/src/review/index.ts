@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {
   defineEntityCheck,
-  type EntityMeta,
+  type EntityDocumentMeta,
   NoPasswordUser,
 } from '@game-cms/base-core';
 import { type ApiRoute, apiRoute } from '@game-cms/core/api';
@@ -56,7 +56,7 @@ async function getRequiredReviewersWithUserData() {
 }
 
 function isApproved(
-  meta: EntityMeta | undefined,
+  meta: EntityDocumentMeta | undefined,
   lastApproveTime: number | undefined
 ) {
   const lastUpdatedTime = meta?.lastUpdatedTime;
@@ -127,8 +127,7 @@ export function review() {
         },
       },
     },
-    when: ({ id }) => id !== undefined,
-    execute: async ({ entityMeta, storageData }) => {
+    execute: async ({ documentMeta, storageData }) => {
       const requiredReviewers = await getRequiredReviewers();
 
       for (const requiredReviewer of requiredReviewers) {
@@ -136,7 +135,7 @@ export function review() {
 
         if (
           !isApproved(
-            entityMeta,
+            documentMeta,
             storageData?.reviewers[reviewerId]?.lastApproveTime
           )
         ) {
@@ -144,7 +143,7 @@ export function review() {
         }
       }
     },
-    getClientData: async ({ entityMeta, storageData }) => {
+    getClientData: async ({ documentMeta, storageData }) => {
       const requiredReviewers = await getRequiredReviewersWithUserData();
 
       return {
@@ -152,7 +151,7 @@ export function review() {
           return {
             user,
             approved: isApproved(
-              entityMeta,
+              documentMeta,
               storageData?.reviewers[user.id]?.lastApproveTime
             ),
           };

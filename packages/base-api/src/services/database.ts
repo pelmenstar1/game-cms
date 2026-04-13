@@ -11,6 +11,7 @@ import {
   CommandFailedEvent,
   CommandStartedEvent,
   CommandSucceededEvent,
+  Document,
   MongoClient,
   type TransactionOptions,
 } from 'mongodb';
@@ -33,6 +34,10 @@ function client(): MongoClient {
   }
 
   return _client;
+}
+
+function rawCollection<T extends Document>(name: string) {
+  return client().db().collection<T>(name);
 }
 
 export default service({
@@ -62,13 +67,14 @@ export default service({
     },
   },
   client,
+  rawCollection,
   collection: <T extends DatabaseCollectionId>(id: T) => {
-    return client().db().collection<DatabaseCollectionTypeMap[T]>(id);
+    return rawCollection<DatabaseCollectionTypeMap[T]>(id);
   },
   entityCollection: <Id extends EntityId>(id: Id) => {
-    return client()
-      .db()
-      .collection<EntityPersistentDocumentById<Id>>(`base::entity::${id}`);
+    return rawCollection<EntityPersistentDocumentById<Id>>(
+      `base::entity::${id}`
+    );
   },
   withTransaction: async <R>(
     action: (session: ClientSession) => Promise<R>

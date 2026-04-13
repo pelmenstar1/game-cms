@@ -80,3 +80,11 @@ export type UnionToIntersection<U> =
 export type AnyFunction<R = any> = (...args: any[]) => R;
 
 export type AnyAsyncFunction<R = unknown> = AnyFunction<Promise<R>>;
+
+export type JsonAtomValue = number | string | boolean | null;
+export type JsonValue =
+  | JsonAtomValue
+  | JsonValue[]
+  | {
+      [K in string]?: JsonValue;
+    };

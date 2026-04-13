@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { defineComponentController } from '@game-cms/core';
-import { filterOutNullable } from '@game-cms/shared/collections';
+import { fromEntriesNullable } from '@game-cms/shared/object';
 
 import core from './core.js';
 
@@ -78,7 +78,7 @@ export default defineComponentController({
 
       return {
         base: await context.fromStorage(componentId, data.base, baseOptions),
-        derived: Object.fromEntries(filterOutNullable(derivedEntries)),
+        derived: fromEntriesNullable(derivedEntries),
       };
     },
     toStorage: async (data, options, context) => {

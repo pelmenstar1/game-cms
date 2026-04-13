@@ -4,7 +4,7 @@ import {
   StandardClientOptions,
 } from '@game-cms/core/api/client';
 
-import { getApiTokenJwt } from './requests/apiToken.js';
+import { getApiTokenJwt } from './requests/auth/apiToken.js';
 
 export interface StandardClientWithApiTokenOptions extends StandardClientOptions {
   apiToken: string;

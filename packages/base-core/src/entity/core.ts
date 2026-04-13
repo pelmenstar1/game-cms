@@ -9,11 +9,11 @@ import type {
 import { Long, ObjectId } from 'mongodb';
 import type z from 'zod';
 
-import type { entityVariant } from '../schema/entity.js';
+import type { entityVariant } from '../schema/entity/index.js';
 import type {
   EntityCheckClientDataMap,
   EntityCheckStorageDataMap,
-} from './check.js';
+} from './check/index.js';
 import { AnyEntityPreviewController } from './preview.js';
 
 export type ComponentTypeDataRegistryEntry<
@@ -66,7 +66,7 @@ type BaseEntityClientSchemaComponents<
 export type EntityClientComponents<Id extends EntityId> =
   BaseEntityClientSchemaComponents<EntityComponentsTypes<Id>>;
 
-export type EntityMeta = {
+export type EntityDocumentMeta = {
   lastUpdatedTime: number;
 };
 
@@ -80,7 +80,7 @@ export type EntityVariantData<
 > = {
   variantId: number | Long;
   components: Components;
-  meta: EntityMeta;
+  meta: EntityDocumentMeta;
   search: Search;
   checks?: Partial<EntityCheckStorageDataMap>;
 };

@@ -13,7 +13,7 @@ const jwtOptions: JwtSourceOptions = {
 };
 
 export default apiRoute({
-  url: '/entity/:entityId/:entityObjectId/check/:checkId/:actionId',
+  url: '/entity/:entityId/:entityDocumentId/check/:checkId/:actionId',
   method: 'POST',
   config: {
     id: () => {
@@ -29,13 +29,13 @@ export default apiRoute({
   schema: {
     params: z.object({
       entityId: z.string(),
-      entityObjectId: stringObjectId,
+      entityDocumentId: stringObjectId,
       checkId: z.string(),
       actionId: z.string(),
     }),
   },
   handler: async (req) => {
-    const { entityId, entityObjectId, checkId, actionId } = req.params;
+    const { entityId, entityDocumentId, checkId, actionId } = req.params;
     const rawPayload = req.body;
 
     const { validateActionPayload, invokeAction } =
@@ -59,7 +59,7 @@ export default apiRoute({
     await invokeAction({
       actionId,
       entityId,
-      entityObjectId,
+      entityDocumentId,
       actionPayload,
       id: checkId,
       actorId: new ObjectId(actorId),

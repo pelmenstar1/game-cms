@@ -1,13 +1,4 @@
-import { ComponentDataCustomValidator } from '@game-cms/core';
-
-import { AnyEntityCheck } from './check.js';
-import { AnyEntityHook } from './hook.js';
-
-export type EntityConfig = {
-  checks?: AnyEntityCheck[];
-  hooks?: AnyEntityHook[];
-  customValidators?: Record<string, ComponentDataCustomValidator>;
-};
+export interface EntityConfig {}
 
 declare module '@game-cms/core' {
   interface UnresolvedCmsConfig {

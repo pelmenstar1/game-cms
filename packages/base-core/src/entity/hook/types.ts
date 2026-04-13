@@ -1,13 +1,8 @@
-import { HttpMethodWithBody } from '@game-cms/core/api';
-import {
-  fetchWithJsonBody,
-  handleResponseError,
-  MaybePromise,
-} from '@game-cms/shared';
+import { MaybePromise } from '@game-cms/shared';
 import { MaybeArray } from '@game-cms/shared/collections';
 import { ObjectId } from 'mongodb';
 
-import { EntityId, EntityVariant, EntityVariantData } from './core.js';
+import { EntityId, EntityVariant, EntityVariantData } from '../core.js';
 
 type EventHookTarget = MaybeArray<EntityId>;
 
@@ -59,32 +54,3 @@ export const entityHook = <
 >(
   value: EntityHook<Target, On>
 ) => value;
-
-export type EntityWebhookHandlerOptionsInit = Omit<
-  RequestInit,
-  'body' | 'method'
-> & {
-  method?: HttpMethodWithBody;
-};
-
-export type EntityWebhookHandlerOptions = {
-  url: string | URL;
-  init?: EntityWebhookHandlerOptionsInit;
-};
-
-export function entityWebhookHandler<
-  Target extends EntityId,
-  On extends EntityHookEventName,
->({ url, init }: EntityWebhookHandlerOptions): EntityHookHandler<Target, On> {
-  return async (payload) => {
-    const response = await fetchWithJsonBody(url, {
-      body: payload,
-      method: init?.method ?? 'POST',
-      ...init,
-    });
-
-    if (!response.ok) {
-      await handleResponseError(response, 'Failed to call webhook');
-    }
-  };
-}

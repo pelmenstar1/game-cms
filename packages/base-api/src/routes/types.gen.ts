@@ -13,13 +13,14 @@ declare module '@game-cms/core/api' {
     'POST /auth/token/jwt': typeof import('./auth/token/signin.js');
     'POST /auth/user/refresh': typeof import('./auth/user/refresh.js');
     'POST /auth/user/signin': typeof import('./auth/user/signin.js');
+    'GET /entityCheck/runs': typeof import('./entityCheck/runs/list.js');
     'GET /entitySchema/byId/:id': typeof import('./entitySchema/get.js');
     'GET /entitySchema/list': typeof import('./entitySchema/list.js');
     'DELETE /entity/:entityId/byId/:id': typeof import('./entity/byId/delete.js');
     'GET /entity/:entityId/byId/:id': typeof import('./entity/byId/get.js');
     'POST /entity/:entityId/byId/:id/unpublish': typeof import('./entity/byId/unpublish.js');
     'PUT /entity/:entityId/byId/:id': typeof import('./entity/byId/update.js');
-    'POST /entity/:entityId/:entityObjectId/check/:checkId/:actionId': typeof import('./entity/check/action.js');
+    'POST /entity/:entityId/:entityDocumentId/check/:checkId/:actionId': typeof import('./entity/check/action.js');
     'POST /entity/:entityId': typeof import('./entity/create.js');
     'GET /entity/:entityId/internal/byId/:id': typeof import('./entity/internal/byId/get.js');
     'GET /entity/:entityId/list': typeof import('./entity/list.js');

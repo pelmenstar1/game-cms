@@ -1,12 +1,10 @@
 import {
   AbortOptions,
   BaseEntityStorageDataById,
-  EntityCheckStorageData,
   EntityErrorById,
   EntityId,
   EntityInDataById,
   EntityInternalOutDataById,
-  EntityMeta,
   EntityPartialInDataById,
   EntityPersistentDocumentById,
   EntityResolvedDataById,
@@ -37,7 +35,7 @@ import {
 } from '@game-cms/shared/object';
 import { Long, ObjectId } from 'mongodb';
 
-import { getPage } from '../utils/paging.js';
+import { getPage } from '../../utils/paging.js';
 
 declare module '@game-cms/base-core' {
   interface AppEventsRegistry {
@@ -209,42 +207,33 @@ function createSearchIndex<Id extends EntityId>(
   });
 }
 
-async function createStorageData<Id extends EntityId>(
+async function transformInDataToStorage<Id extends EntityId>(
   entityId: Id,
-  rawData: EntityInDataById<Id>
-): Promise<EntityStorageDataById<Id>> {
+  inData: EntityInDataById<Id>
+) {
   const schema = getEntitySchema(entityId);
   const { foreignStorageResolverContext } = cms().service('base::component');
 
-  const { run: runEntityChecks } = cms().service('base::entityCheck');
-
-  const components = await asyncMapObject(rawData, (item, key) => {
+  const components = await asyncMapObject(inData, (item, key) => {
     const { componentId, options } = schema.components[key];
 
     return foreignStorageResolverContext.toStorage(componentId, item, options);
   });
 
-  const entityMeta: EntityMeta = {
-    lastUpdatedTime: Date.now(),
-  };
-
-  await runEntityChecks({
-    entityId,
-    entityData: components,
-    entityMeta,
-  });
-
   return {
     variantId: Long.ZERO,
     components,
-    meta: entityMeta,
+    meta: {
+      lastUpdatedTime: Date.now(),
+    },
     search: createSearchIndex(components, schema),
     checks: {},
   };
 }
 
-async function toStoragePartialData<Id extends EntityId>(
+async function transformPartialInDataToStorage<Id extends EntityId>(
   entityId: Id,
+  documentId: ObjectId,
   target: EntityStorageDataById<Id>,
   source: EntityPartialInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
@@ -272,9 +261,9 @@ async function toStoragePartialData<Id extends EntityId>(
 
   const sourceMerged = Object.fromEntries(
     sourceMergedEntries.filter(Boolean) as [string, unknown][]
-  ) as Partial<EntityCheckStorageData<Id>>;
+  );
 
-  return {
+  const result: EntityStorageDataById<Id> = {
     ...target,
     variantId: maybeLongAdd(target.variantId, 1),
     components: {
@@ -283,6 +272,14 @@ async function toStoragePartialData<Id extends EntityId>(
     },
     meta: { lastUpdatedTime: Date.now() },
   };
+
+  await cms().service('base::entityCheck').run({
+    entityId,
+    documentId,
+    documentData: result,
+  });
+
+  return result;
 }
 
 function createEntityVariants<Id extends EntityId>(
@@ -494,11 +491,17 @@ export default service({
     data: EntityInDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
-    const storageData = await createStorageData(id, data);
+    const storageData = await transformInDataToStorage(id, data);
 
     const { insertedId } = await collection(id).insertOne(
       createEntityVariants(storageData, variant)
     );
+
+    await cms().service('base::entityCheck').run({
+      entityId: id,
+      documentId: insertedId,
+      documentData: storageData,
+    });
 
     cms().service('base::appEvents').emit('base::entity::created', {
       entityId: id,
@@ -511,19 +514,20 @@ export default service({
   },
   update: async <Id extends EntityId>(
     entityId: Id,
-    id: ObjectId,
+    documentId: ObjectId,
     data: EntityPartialInDataById<Id>,
     variant: EntityVariant = 'published'
   ) => {
     const col = collection(entityId);
 
-    const target = await col.findOne({ _id: id });
+    const target = await col.findOne({ _id: documentId });
     if (target === null) {
       return false;
     }
 
-    const storageData = await toStoragePartialData(
+    const storageData = await transformPartialInDataToStorage(
       entityId,
+      documentId,
       target.draft,
       data
     );
@@ -531,7 +535,7 @@ export default service({
     await disposePersistentDocument(entityId, target, { afterUpdate: true });
 
     await col.updateOne(
-      { _id: id },
+      { _id: documentId },
       {
         $set: createEntityVariants(storageData, variant),
       }
@@ -539,16 +543,16 @@ export default service({
 
     cms().service('base::appEvents').emit('base::entity::updated', {
       entityId,
-      id,
+      id: documentId,
       variant,
       newData: storageData,
     });
 
     return true;
   },
-  deleteById: async (entityId: string, id: ObjectId) => {
+  deleteById: async (entityId: string, documentId: ObjectId) => {
     const deletedDocument = await collection(entityId).findOneAndDelete({
-      _id: id,
+      _id: documentId,
     });
 
     if (deletedDocument !== null) {
@@ -556,7 +560,7 @@ export default service({
 
       cms()
         .service('base::appEvents')
-        .emit('base::entity::deleted', { entityId, id });
+        .emit('base::entity::deleted', { entityId, id: documentId });
 
       await Promise.all([
         disposeEntity(entityId, draft),

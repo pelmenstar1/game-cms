@@ -22,7 +22,7 @@ import {
 import { cms, env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { FileSource } from '@game-cms/shared/node';
-import { asyncMapObject } from '@game-cms/shared/object';
+import { asyncMapObject, fromEntriesNullable } from '@game-cms/shared/object';
 import { ClientSession, Collection, Document, ObjectId, WithId } from 'mongodb';
 
 import { getPage } from '../../utils/paging.js';
@@ -245,7 +245,7 @@ export async function baseUploadFile<Extra>(
       })
     );
 
-    addonData = Object.fromEntries(filterOutNullable(addonEntries));
+    addonData = fromEntriesNullable(addonEntries);
   } else {
     uploadResult = await protocol.upload(enhancedPayload);
   }

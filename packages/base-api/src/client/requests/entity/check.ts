@@ -2,9 +2,18 @@ import {
   EntityCheckActionIds,
   EntityCheckActionPayload,
   EntityCheckId,
+  EntityCheckRunWithId,
   EntityId,
+  ListEntityCheckRunsOptions,
 } from '@game-cms/base-core';
-import { jsonInit, request, RequestContext } from '@game-cms/core/api/client';
+import {
+  json,
+  jsonInit,
+  request,
+  RequestContext,
+  url,
+} from '@game-cms/core/api/client';
+import { PageData } from '@game-cms/shared';
 
 export const invokeEntityCheckAction = <
   Id extends EntityCheckId,
@@ -21,4 +30,14 @@ export const invokeEntityCheckAction = <
     url: `/entity/${entityId}/${documentId}/check/${checkId}/${action}`,
     method: 'POST',
     body: payload && jsonInit(payload),
+  });
+
+export const listEntityCheckRuns = (
+  context: RequestContext,
+  options: ListEntityCheckRunsOptions
+) =>
+  request(context, {
+    url: url({ path: '/entityCheck/runs', search: options }),
+    method: 'GET',
+    response: json<PageData<EntityCheckRunWithId>>(),
   });
