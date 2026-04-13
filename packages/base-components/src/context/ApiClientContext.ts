@@ -14,6 +14,11 @@ export type ResolveApiRequestResult<
   Options extends ApiActionOptions,
 > = Options['nullIfNotFound'] extends true ? T | null : T;
 
+export type MakeApiRequestResult<T, Options extends ApiRequestOptions> = {
+  promise: Promise<ResolveApiRequestResult<T, Options>>;
+  abort: () => void;
+};
+
 export type ApiClientContextType = {
   makeApiRequest: <
     Args extends unknown[],
@@ -23,10 +28,7 @@ export type ApiClientContextType = {
     fn: RequestFn<Args, T>,
     args: Args,
     options?: ApiRequestOptions
-  ) => {
-    promise: Promise<ResolveApiRequestResult<T, Options>>;
-    abort: () => void;
-  };
+  ) => MakeApiRequestResult<T, Options>;
 };
 
 export const ApiClientContext =

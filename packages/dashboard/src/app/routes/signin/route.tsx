@@ -5,6 +5,7 @@ import {
   Button,
   classNames,
   Labeled,
+  PageUrl,
   PasswordInput,
   TextInput,
   Typography,
@@ -12,9 +13,24 @@ import {
   useTestRegex,
   useTypedNavigate,
 } from '@game-cms/ui';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useLocation } from 'react-router';
 
 import styles from './route.module.scss';
+
+function useRedirectParameter() {
+  const { search } = useLocation();
+
+  return useMemo(() => {
+    const value = new URLSearchParams(search).get('redirect');
+
+    if (value?.startsWith('/')) {
+      return value as PageUrl;
+    }
+
+    return '/';
+  }, [search]);
+}
 
 export default function Page() {
   const [email, setEmail] = useState('');
@@ -25,6 +41,7 @@ export default function Page() {
 
   const doSignIn = useApiAction(signUserIn, { redirectOnUnauthorized: false });
 
+  const redirectUrl = useRedirectParameter();
   const { refresh: refreshPermissions } = useSelfSession();
 
   const redirect = useTypedNavigate();
@@ -35,12 +52,20 @@ export default function Page() {
       .then(() => {
         refreshPermissions();
 
-        return redirect('/');
+        return redirect(redirectUrl);
       })
       .catch(() => {
         notification.error('Invalid email or password');
       });
-  }, [email, notification, password, redirect, doSignIn, refreshPermissions]);
+  }, [
+    email,
+    notification,
+    password,
+    redirectUrl,
+    redirect,
+    doSignIn,
+    refreshPermissions,
+  ]);
 
   return (
     <div className={styles.root}>

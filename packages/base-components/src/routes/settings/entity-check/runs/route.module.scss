@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 1em;
+}
+
+.loader,
+.page-view,
+.list {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}

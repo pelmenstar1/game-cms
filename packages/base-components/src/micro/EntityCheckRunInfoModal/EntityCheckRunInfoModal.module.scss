@@ -1,0 +1,17 @@
+.content,
+.tabs,
+.tab {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  flex-grow: 1;
+}
+
+.tab {
+  &,
+  > * {
+    flex-grow: 1;
+  }
+}

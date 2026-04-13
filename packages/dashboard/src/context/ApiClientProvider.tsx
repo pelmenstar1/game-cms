@@ -3,6 +3,7 @@ import {
   ApiClientContext,
   ApiClientContextType,
   ApiRequestOptions,
+  MakeApiRequestResult,
   ResolveApiRequestResult,
 } from '@game-cms/base-components/shared';
 import {
@@ -15,22 +16,32 @@ import {
   RequestContext,
   RequestFn,
 } from '@game-cms/core/api/client';
-import { createAbortController } from '@game-cms/shared';
+import {
+  createAbortController,
+  MaybeFactory,
+  resolveMaybeFactory,
+} from '@game-cms/shared';
 import type { PageUrl, TypedNavigateFunction } from '@game-cms/ui';
 import { type PropsWithChildren, useMemo } from 'react';
-import { useNavigate } from 'react-router';
+import { Location, useLocation, useNavigate } from 'react-router';
 
 type RedirectConfig = {
   key: keyof ApiRequestOptions;
   defaultValue?: boolean;
-  route: PageUrl;
+  route: MaybeFactory<PageUrl, [location: Location]>;
 };
 
 const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
   'base::access/unauthorized': {
     key: 'redirectOnUnauthorized',
     defaultValue: true,
-    route: '/signin',
+    route: (location) => {
+      const redirectUrl = encodeURIComponent(
+        location.pathname + location.search
+      );
+
+      return `/signin?redirect=${redirectUrl}`;
+    },
   },
   'base::entity/notFound': {
     key: 'redirectOnNotFound',
@@ -39,21 +50,32 @@ const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
   },
 };
 
-async function handleRedirects(
-  error: ApiError,
-  navigate: TypedNavigateFunction,
-  options?: ApiRequestOptions
-) {
+type HandleRedirectsParams = {
+  error: ApiError;
+  navigate: TypedNavigateFunction;
+  location: Location;
+  options?: ApiRequestOptions;
+};
+
+async function handleRedirects({
+  error,
+  navigate,
+  location,
+  options,
+}: HandleRedirectsParams) {
   const config = redirectConfigMap[error.code as ApiErrorCode];
 
   if (config && (options?.[config.key] ?? config.defaultValue)) {
-    await navigate(config.route);
+    const to = resolveMaybeFactory(config.route, location);
+
+    await navigate(to);
   }
 }
 
 export function ApiClientProvider({ children }: PropsWithChildren) {
   const client = useMemo(() => createStandardClient({ baseUrl: '/api' }), []);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const baseMakeApiRequest = <
     T,
@@ -64,10 +86,7 @@ export function ApiClientProvider({ children }: PropsWithChildren) {
     args: Args,
     options?: Options,
     checkExpired: boolean = true
-  ): {
-    promise: Promise<ResolveApiRequestResult<T, Options>>;
-    abort: () => void;
-  } => {
+  ): MakeApiRequestResult<T, Options> => {
     const abortController = createAbortController();
     const context: RequestContext = {
       client,
@@ -94,7 +113,7 @@ export function ApiClientProvider({ children }: PropsWithChildren) {
           ) {
             return null as ResolveApiRequestResult<T, Options>;
           } else {
-            await handleRedirects(error, navigate, options);
+            await handleRedirects({ error, navigate, options, location });
           }
         }
 

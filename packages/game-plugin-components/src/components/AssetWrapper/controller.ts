@@ -7,12 +7,12 @@ import core from './core.js';
 export default defineComponentController({
   core,
   validator: (data, options, context, params) => {
-    return context.validate(
-      options.componentId,
-      data,
-      options.baseOptions,
-      params
-    );
+    const { componentId, baseOptions } = options;
+    const base = context.validate(componentId, data, baseOptions, params);
+
+    if (base !== undefined) {
+      return { base };
+    }
   },
   structure: (options, context) =>
     context.getStructure(options.componentId, options.baseOptions),

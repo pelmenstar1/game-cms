@@ -48,7 +48,10 @@ type AssetWrapperEntry<Args extends AssetWrapperArgs> = {
     componentId: Args['id'];
     baseOptions: ComponentClientOptionsById<Args['id'], Args['baseArgs']>;
   };
-  error: ComponentErrorById<Args['id'], Args['baseArgs']>;
+  error: {
+    ownError?: 'INVALID_TYPE';
+    base?: ComponentErrorById<Args['id'], Args['baseArgs']>;
+  };
   clientData: {
     base: ComponentClientDataById<Args['id'], Args['baseArgs']>;
     derived?: GameAssetPipelineStepOutDataMap;

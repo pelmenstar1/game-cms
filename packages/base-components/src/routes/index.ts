@@ -23,7 +23,7 @@ export const routes: CustomDashboardRoute[] = [
   route('entities/+/route.js', 'entities/:name/+'),
   route('entities/edit/route.js', 'entities/:name/edit/:id'),
   route('files/route.js', 'files'),
-  settingsRoute('route.js', 'settings'),
+  route('settings/route.js', 'settings'),
 
   // Users
   settingsRoute('users/route.js', 'users'),
@@ -37,4 +37,7 @@ export const routes: CustomDashboardRoute[] = [
 
   // Public routes
   settingsRoute('public-routes/route.js', 'public-routes'),
+
+  // Entity checks
+  settingsRoute('entity-check/runs/route.js', 'entity-check/runs'),
 ];

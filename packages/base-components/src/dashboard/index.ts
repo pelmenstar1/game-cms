@@ -24,6 +24,11 @@ const config: PluginClientDashboardConfig = {
         href: '/settings/users',
         permission: 'user$get',
       },
+      {
+        text: 'Entity Check Runs',
+        href: '/settings/entity-check/runs',
+        permission: 'entityCheck/runs$get',
+      },
     ],
   },
 };

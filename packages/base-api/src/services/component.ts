@@ -248,16 +248,15 @@ const foreignDependencySourceContext: ForeignComponentDependencySourceContext =
   {
     getDependencies: (id, options) => {
       const { innerDependencies } = getController(id);
+      let result: ComponentId[] = [];
 
       if (innerDependencies) {
-        if (Array.isArray(innerDependencies)) {
-          return innerDependencies;
-        }
-
-        return innerDependencies(options, foreignDependencySourceContext);
+        result = Array.isArray(innerDependencies)
+          ? innerDependencies
+          : innerDependencies(options, foreignDependencySourceContext);
       }
 
-      return [];
+      return [...result, id];
     },
   };
 

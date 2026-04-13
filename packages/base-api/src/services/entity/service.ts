@@ -84,11 +84,17 @@ function getEntitySchema<Id extends EntityId>(entityId: Id) {
   return result;
 }
 
-async function fromStorageData<Id extends EntityId>(
-  entityId: Id,
-  objectId: ObjectId,
-  storageData: EntityStorageDataById<Id>
+type StorageDataToOutOptions<Id extends EntityId> = {
+  entityId: Id;
+  documentId: ObjectId;
+  documentVariant: EntityVariant;
+  storageData: EntityStorageDataById<Id>;
+};
+
+async function storageDataToOut<Id extends EntityId>(
+  options: StorageDataToOutOptions<Id>
 ): Promise<EntityInternalOutDataById<Id>> {
+  const { entityId, documentId, documentVariant, storageData } = options;
   const { components, meta, checks } = storageData;
 
   const schema = getEntitySchema(entityId);
@@ -107,10 +113,15 @@ async function fromStorageData<Id extends EntityId>(
 
   const clientChecksData = await cms()
     .service('base::entityCheck')
-    .getClientData(entityId, meta, objectId, checks ?? {});
+    .getClientData(checks ?? {}, {
+      entityId,
+      documentMeta: meta,
+      documentVariant,
+      documentId,
+    });
 
   return {
-    id: objectId,
+    id: documentId,
     components: rawComponents,
     meta: meta,
     checks: clientChecksData,
@@ -119,14 +130,14 @@ async function fromStorageData<Id extends EntityId>(
 
 async function getRawById<Id extends EntityId>(
   entityId: Id,
-  id: ObjectId,
-  variant: EntityVariant = 'published',
+  documentId: ObjectId,
+  documentVariant: EntityVariant = 'published',
   options?: AbortOptions
 ): Promise<EntityInternalOutDataById<Id> | null> {
   const result = await collection(entityId).findOne(
-    { _id: id },
+    { _id: documentId },
     {
-      projection: { [variant]: 1 },
+      projection: { [documentVariant]: 1 },
       signal: options?.signal,
     }
   );
@@ -135,13 +146,18 @@ async function getRawById<Id extends EntityId>(
     return null;
   }
 
-  const { _id, [variant]: data } = result;
+  const { [documentVariant]: storageData } = result;
 
-  if (data === undefined) {
+  if (storageData === undefined) {
     return null;
   }
 
-  return fromStorageData(entityId, _id, data);
+  return storageDataToOut({
+    entityId,
+    documentId,
+    documentVariant,
+    storageData,
+  });
 }
 
 function resolveRawEntity<Id extends EntityId>(
@@ -166,13 +182,13 @@ function resolveRawEntity<Id extends EntityId>(
 
 async function getRawSingleton<Id extends EntityId>(
   entityId: Id,
-  variant: EntityVariant = 'published',
+  documentVariant: EntityVariant = 'published',
   options?: AbortOptions
 ): Promise<EntityInternalOutDataById<Id> | null> {
   const result = await collection(entityId).findOne(
-    { [variant]: { $exists: true } },
+    { [documentVariant]: { $exists: true } },
     {
-      projection: { [variant]: 1 },
+      projection: { [documentVariant]: 1 },
       signal: options?.signal,
     }
   );
@@ -181,13 +197,18 @@ async function getRawSingleton<Id extends EntityId>(
     return null;
   }
 
-  const { _id, [variant]: data } = result;
+  const { _id, [documentVariant]: storageData } = result;
 
-  if (data === undefined) {
+  if (storageData === undefined) {
     return null;
   }
 
-  return fromStorageData(entityId, _id, data);
+  return storageDataToOut({
+    entityId,
+    documentId: _id,
+    documentVariant,
+    storageData,
+  });
 }
 
 function createSearchIndex<Id extends EntityId>(
@@ -233,7 +254,6 @@ async function transformInDataToStorage<Id extends EntityId>(
 
 async function transformPartialInDataToStorage<Id extends EntityId>(
   entityId: Id,
-  documentId: ObjectId,
   target: EntityStorageDataById<Id>,
   source: EntityPartialInDataById<Id>
 ): Promise<EntityStorageDataById<Id>> {
@@ -272,12 +292,6 @@ async function transformPartialInDataToStorage<Id extends EntityId>(
     },
     meta: { lastUpdatedTime: Date.now() },
   };
-
-  await cms().service('base::entityCheck').run({
-    entityId,
-    documentId,
-    documentData: result,
-  });
 
   return result;
 }
@@ -485,7 +499,7 @@ export default service({
       },
     },
   },
-  storageDataToOut: fromStorageData,
+  storageDataToOut,
   create: async <Id extends EntityId>(
     id: Id,
     data: EntityInDataById<Id>,
@@ -501,6 +515,7 @@ export default service({
       entityId: id,
       documentId: insertedId,
       documentData: storageData,
+      documentVariant: variant,
     });
 
     cms().service('base::appEvents').emit('base::entity::created', {
@@ -527,12 +542,20 @@ export default service({
 
     const storageData = await transformPartialInDataToStorage(
       entityId,
-      documentId,
       target.draft,
       data
     );
 
-    await disposePersistentDocument(entityId, target, { afterUpdate: true });
+    try {
+      await cms().service('base::entityCheck').run({
+        entityId,
+        documentId,
+        documentData: storageData,
+        documentVariant: variant,
+      });
+    } finally {
+      await disposePersistentDocument(entityId, target, { afterUpdate: true });
+    }
 
     await col.updateOne(
       { _id: documentId },
@@ -576,12 +599,18 @@ export default service({
     entityId: Id,
     options: PagingOptions & AbortOptions
   ) => {
+    const documentVariant: EntityVariant = 'draft';
     const result = await getPage(collection(entityId), options);
 
     return {
       items: await Promise.all(
         result.items.map((item) =>
-          fromStorageData(entityId, item._id, item.draft)
+          storageDataToOut({
+            entityId,
+            documentId: item._id,
+            documentVariant,
+            storageData: item[documentVariant],
+          })
         )
       ),
       meta: result.meta,
@@ -641,6 +670,7 @@ export default service({
     query: string,
     options: PagingOptions & AbortOptions
   ) => {
+    const documentVariant: EntityVariant = 'draft';
     const schema = getEntitySchema(entityId);
 
     const allItems: { id: ObjectId; data: EntityStorageDataById<Id> }[] = [];
@@ -648,10 +678,11 @@ export default service({
     const cursor = collection(entityId).find({}, { signal: options.signal });
 
     for await (const item of cursor) {
-      const score = getEntitySearchScore(query, item.draft, schema);
+      const variantData = item[documentVariant];
+      const score = getEntitySearchScore(query, variantData, schema);
 
       if (score > SEARCH_THRESHOLD) {
-        allItems.push({ id: item._id, data: item.draft });
+        allItems.push({ id: item._id, data: variantData });
       }
     }
 
@@ -659,9 +690,14 @@ export default service({
 
     return {
       items: await Promise.all(
-        allItems
-          .slice(offset, offset + options.size)
-          .map((item) => fromStorageData(entityId, item.id, item.data))
+        allItems.slice(offset, offset + options.size).map((item) =>
+          storageDataToOut({
+            entityId,
+            documentVariant,
+            documentId: item.id,
+            storageData: item.data,
+          })
+        )
       ),
       meta: {
         totalCount: allItems.length,

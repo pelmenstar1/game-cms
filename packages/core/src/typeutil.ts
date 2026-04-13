@@ -9,6 +9,11 @@ export type ToClientType<T> = T extends ObjectId | Date
       }
     : T;
 
+export type ToPartialClientType<T, K extends keyof T> = ToClientType<
+  Pick<T, K>
+> &
+  Omit<T, K>;
+
 type IdArray = DefaultExport<{ id: PropertyKey }>[];
 
 type IdArrayToEntries<T extends IdArray> = {

@@ -14,13 +14,13 @@ export function createMemoryEntityCheckLogger(): MemoryEntityCheckLogger {
 
   function createLevelFn(level: EntityCheckLogLevel): EntityCheckLogFn {
     return (message) => {
-      entries.push({ level, message });
+      entries.push({ level, timestamp: new Date(), message });
     };
   }
 
   const logger: MemoryEntityCheckLogger = {
     entries,
-    emit: (entry: EntityCheckLogEntry) => {
+    emit: (entry) => {
       entries.push(entry);
     },
     info: createLevelFn('info'),

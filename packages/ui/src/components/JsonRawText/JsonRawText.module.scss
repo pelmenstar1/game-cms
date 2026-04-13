@@ -1,0 +1,7 @@
+@use '../../theme/jsonColors' as *;
+
+.root {
+  @include json-colors;
+
+  font-family: monospace;
+}

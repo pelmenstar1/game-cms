@@ -54,46 +54,52 @@ export default function Page() {
   }, [doUpdateReviewers, notification, users]);
 
   return (
-    <DataLoader result={result} className={styles['content']}>
-      {({ users }) => (
-        <>
-          <List>
-            {users.map((user) => (
-              <li key={user.id}>
-                <Link
-                  to={`/settings/users/${user.id}`}
-                  className={styles['item']}
-                >
-                  <Typography>{user.displayName}</Typography>
+    <div className={styles['root']}>
+      <Typography variant="h5">Reviewers</Typography>
 
-                  <IconButton
-                    title="Remove from reviewers"
-                    className={styles['item-delete']}
+      <DataLoader result={result} className={styles['content']}>
+        {({ users }) => (
+          <>
+            <List>
+              {users.map((user) => (
+                <li key={user.id} className={styles['item']}>
+                  <Link
+                    to={`/settings/users/${user.id}`}
+                    className={styles['item-link']}
                   >
-                    <DeleteIcon />
-                  </IconButton>
-                </Link>
-              </li>
-            ))}
-          </List>
+                    {user.displayName}
+                  </Link>
 
-          {canChangeReviewers && (
-            <IconButton title="Add reviewer" className={styles['add']}>
-              <PlusIcon />
-            </IconButton>
-          )}
+                  {canChangeReviewers && (
+                    <IconButton
+                      title="Remove from reviewers"
+                      className={styles['item-delete']}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )}
+                </li>
+              ))}
+            </List>
 
-          {canChangeReviewers && (
-            <Button
-              buttonVariant="solid"
-              onClick={onSave}
-              className={styles['save']}
-            >
-              Save
-            </Button>
-          )}
-        </>
-      )}
-    </DataLoader>
+            {canChangeReviewers && (
+              <IconButton title="Add reviewer" className={styles['add']}>
+                <PlusIcon />
+              </IconButton>
+            )}
+
+            {canChangeReviewers && (
+              <Button
+                buttonVariant="solid"
+                onClick={onSave}
+                className={styles['save']}
+              >
+                Save
+              </Button>
+            )}
+          </>
+        )}
+      </DataLoader>
+    </div>
   );
 }

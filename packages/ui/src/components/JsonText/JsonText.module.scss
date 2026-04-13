@@ -1,14 +1,9 @@
-@use '../../theme/jsonColors' as *;
-
 .root {
   display: flex;
   flex-direction: column;
 }
 
 .content {
-  @include json-colors;
-
-  font-family: monospace;
   overflow-y: auto;
   flex-grow: 1;
 }

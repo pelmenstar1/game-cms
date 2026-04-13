@@ -77,6 +77,7 @@ export default defineConfig(
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
         },
       ],
       '@typescript-eslint/no-empty-object-type': [

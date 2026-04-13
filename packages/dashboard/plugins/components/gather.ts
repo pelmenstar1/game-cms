@@ -22,7 +22,6 @@ function getEntityComponentDependencies(
       options
     );
 
-    out.add(componentId);
     setAddMany(out, inner);
   }
 }
@@ -31,7 +30,7 @@ export async function gatherRequiredComponents() {
   const allComponents = await gatherComponents(env());
   const descriptors = Object.values(env().entity.schemaRegistry?.items ?? {});
 
-  const requiredComponents = new Set<ComponentId>();
+  const requiredComponents = new Set<ComponentId>(['base::compose']);
 
   for (const descriptor of descriptors) {
     getEntityComponentDependencies(descriptor, requiredComponents);

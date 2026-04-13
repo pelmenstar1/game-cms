@@ -32,6 +32,7 @@ async function linkStyles(
         path.relative(baseDir, filePath)
       );
 
+      await fsp.rm(distPath, { force: true });
       await fsp.mkdir(path.dirname(distPath), { recursive: true });
 
       try {

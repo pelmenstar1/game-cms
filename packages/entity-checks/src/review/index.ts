@@ -127,6 +127,7 @@ export function review() {
         },
       },
     },
+    when: ({ documentVariant }) => documentVariant === 'published',
     execute: async ({ documentMeta, storageData }) => {
       const requiredReviewers = await getRequiredReviewers();
 

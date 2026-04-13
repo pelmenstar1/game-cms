@@ -11,8 +11,12 @@ export default function Page() {
   useEffect(() => {
     if (clientConfigResult.status === 'success') {
       const tabs = clientConfigResult.value.dashboard?.settings?.tabs ?? [];
+      const [firstTab] = tabs;
 
-      void navigate(tabs[0].href);
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (firstTab) {
+        void navigate(firstTab.href);
+      }
     }
   }, [clientConfigResult, navigate]);
 

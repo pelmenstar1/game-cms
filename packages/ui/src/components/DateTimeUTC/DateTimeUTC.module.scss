@@ -1,0 +1,16 @@
+.root {
+  display: flex;
+  align-items: center;
+}
+
+.t-span {
+  margin-left: 5px;
+  margin-right: 5px;
+  color: var(--color-text-on-background-dark);
+  font-weight: 700;
+}
+
+.globe-icon {
+  margin-left: 8px;
+  fill: currentColor;
+}

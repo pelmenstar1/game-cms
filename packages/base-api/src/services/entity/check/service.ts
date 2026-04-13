@@ -2,10 +2,12 @@ import type {
   EntityCheckActionIds,
   EntityCheckActionPayload,
   EntityCheckId,
+  EntityCheckRun,
   EntityCheckRunStatus,
   EntityCheckStorageDataMap,
   EntityDocumentMeta,
   EntityId,
+  EntityVariant,
 } from '@game-cms/base-core';
 import {
   createMemoryEntityCheckLogger,
@@ -18,13 +20,15 @@ import {
 import { service } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
-import { JsonValue } from '@game-cms/shared';
+import { isNonNullObject, JsonValue } from '@game-cms/shared';
+import { filterOutNullable } from '@game-cms/shared/collections';
 import { fromEntriesNullable } from '@game-cms/shared/object';
 import type { ObjectId } from 'mongodb';
 
 type RunEntityChecksParams<Id extends EntityId> = {
   entityId: Id;
   documentId: ObjectId;
+  documentVariant: EntityVariant;
   documentData: Pick<
     EntityStorageDataById<Id>,
     'components' | 'checks' | 'meta'
@@ -61,11 +65,31 @@ function getActionById<
   return action;
 }
 
+function getMaybeString(value: Record<string, unknown>, key: string) {
+  const result = value[key];
+
+  if (typeof result === 'string') {
+    return result;
+  }
+}
+
+function serializeError(error: unknown): JsonValue | undefined {
+  if (isNonNullObject(error)) {
+    return {
+      error: {
+        name: getMaybeString(error, 'name'),
+        message: getMaybeString(error, 'message'),
+        stack: getMaybeString(error, 'stack'),
+      },
+    };
+  }
+}
+
 async function runEntityCheck<Id extends EntityCheckId, EId extends EntityId>(
   check: EntityCheck<Id>,
   params: RunEntityChecksParams<EId>
-) {
-  const { entityId, documentId, documentData } = params;
+): Promise<EntityCheckRun | undefined> {
+  const { entityId, documentId, documentData, documentVariant } = params;
   const { checks, meta, components } = documentData;
 
   const storageData = checks?.[check.id] as
@@ -76,6 +100,7 @@ async function runEntityCheck<Id extends EntityCheckId, EId extends EntityId>(
     entityId,
     documentId,
     storageData,
+    documentVariant,
     documentMeta: meta,
     documentData: components,
   };
@@ -86,32 +111,28 @@ async function runEntityCheck<Id extends EntityCheckId, EId extends EntityId>(
     const logger = createMemoryEntityCheckLogger();
     let status: EntityCheckRunStatus = 'success';
 
+    const createdAt = new Date();
+
     try {
       await check.execute({ ...whenParams, logger });
     } catch (error) {
-      let args: JsonValue | undefined;
-
-      if (error instanceof Error) {
-        args = {
-          error: {
-            name: error.name,
-            message: error.message,
-            stack: error.stack,
-          },
-        };
-      }
+      const args = serializeError(error);
 
       status = 'failed';
       logger.error('Check execution failed', args);
     }
 
-    await cms().service('base::entityCheck::run').addRun({
+    const finishedAt = new Date();
+
+    return {
       checkId: check.id,
       entityId,
       documentId,
       status,
+      createdAt,
+      finishedAt,
       logEntries: logger.entries,
-    });
+    };
   }
 }
 
@@ -120,7 +141,27 @@ async function runEntityChecks<Id extends EntityId>(
 ) {
   const checks = getAll();
 
-  await Promise.all(checks.map((check) => runEntityCheck(check, params)));
+  const results = await Promise.allSettled(
+    checks.map((check) => runEntityCheck(check, params))
+  );
+
+  const runs = filterOutNullable(
+    results.map((result) => {
+      return result.status === 'fulfilled' ? result.value : null;
+    })
+  );
+
+  await cms().service('base::entityCheck::run').addRuns(runs);
+
+  if (
+    results.some((result) => result.status === 'rejected') ||
+    runs.some((run) => run.status === 'failed')
+  ) {
+    throw new ApiError(
+      'One or more entity checks failed',
+      'base::entity/checkFailed'
+    );
+  }
 }
 
 type InvokeActionParams<
@@ -139,6 +180,7 @@ async function invokeAction<
   Id extends EntityCheckId,
   Action extends EntityCheckActionIds<Id>,
 >(params: InvokeActionParams<Id, Action>) {
+  const documentVariant: EntityVariant = 'draft';
   const action = getActionById(params.id, params.actionId);
 
   const entityData = await cms()
@@ -148,7 +190,7 @@ async function invokeAction<
       { _id: params.entityDocumentId },
       {
         projection: {
-          draft: { meta: 1, checks: 1 },
+          [documentVariant]: { meta: 1, checks: 1 },
         },
       }
     );
@@ -157,16 +199,17 @@ async function invokeAction<
     throw new ApiError('Unknown entity object', 'base::entity/notFound');
   }
 
-  const entityVariantData = entityData.draft;
+  const entityVariantData = entityData[documentVariant];
 
   const newStorageData = await action.execute({
     entityId: params.entityId,
     payload: params.actionPayload,
-    documentMeta: entityVariantData.meta,
     storageData: entityVariantData.checks?.[params.actionId] as
       | EntityCheckStorageData<Id>
       | undefined,
     documentId: params.entityDocumentId,
+    documentMeta: entityVariantData.meta,
+    documentVariant,
     context: {
       actorId: params.actorId,
     },
@@ -177,7 +220,7 @@ async function invokeAction<
     .entityCollection(params.entityId)
     .updateOne(
       { _id: params.entityDocumentId },
-      { $set: { [`draft.checks.${params.id}`]: newStorageData } }
+      { $set: { [`${documentVariant}.checks.${params.id}`]: newStorageData } }
     );
 }
 
@@ -208,39 +251,41 @@ function validateActionPayload<
   return value as EntityCheckActionPayload<Id, Action>;
 }
 
+type GetCheckClientDataContext = {
+  entityId: EntityId;
+  documentId: ObjectId;
+  documentMeta: EntityDocumentMeta;
+  documentVariant: EntityVariant;
+};
+
 async function getCheckClientDataEntry<Id extends EntityCheckId>(
   check: EntityCheck<Id>,
-  entityId: EntityId,
-  documentMeta: EntityDocumentMeta,
-  documentId: ObjectId,
-  storageData: EntityCheckStorageData<Id>
+  storageData: EntityCheckStorageData<Id> | undefined,
+  context: GetCheckClientDataContext
 ) {
-  const { id, when, getClientData } = check;
+  const { id, getClientData } = check;
 
-  const params = { entityId, documentMeta, documentId, storageData };
+  const params = {
+    storageData,
+    ...context,
+  };
 
-  if (when === undefined || (await when(params))) {
-    const value = getClientData ? await getClientData(params) : storageData;
+  const value = getClientData ? await getClientData(params) : storageData;
 
-    return [id, value] as const;
-  }
+  return [id, value] as const;
 }
 
 async function getClientData(
-  entityId: EntityId,
-  documentMeta: EntityDocumentMeta,
-  documentId: ObjectId,
-  data: EntityCheckStorageDataMap
+  data: EntityCheckStorageDataMap,
+  context: GetCheckClientDataContext
 ): Promise<EntityCheckClientDataMap> {
   const entries = await Promise.all(
     getAll().map((check) =>
       getCheckClientDataEntry(
         check,
-        entityId,
-        documentMeta,
-        documentId,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        data[check.id]
+        data[check.id],
+        context
       )
     )
   );

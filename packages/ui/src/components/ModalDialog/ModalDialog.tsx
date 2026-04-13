@@ -1,5 +1,13 @@
-import { type ReactElement, type ReactNode, useCallback, useId } from 'react';
+import {
+  type ReactElement,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+} from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router';
 
 import { useScrollbar } from '../../hooks';
 import { useHotkey } from '../../hooks/useHotkey';
@@ -35,6 +43,9 @@ export function ModalDialog({
 }: ModalDialogProps) {
   const titleId = useId();
 
+  const location = useLocation();
+  const initialLocation = useRef(location);
+
   useScrollbar(false);
 
   const onFastExit = useCallback(() => {
@@ -46,6 +57,12 @@ export function ModalDialog({
     callback: onFastExit,
     isEnabled: fastExit,
   });
+
+  useEffect(() => {
+    if (initialLocation.current !== location) {
+      onClose(undefined);
+    }
+  }, [location, onClose]);
 
   return createPortal(
     <ModalOverlay className={styles.overlay} effect={effect}>

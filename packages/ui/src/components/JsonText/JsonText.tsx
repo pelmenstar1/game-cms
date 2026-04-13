@@ -1,6 +1,4 @@
 import { prettifyJson } from '@game-cms/shared/json';
-import jsonLanguage from 'highlight.js/lib/languages/json';
-import { createLowlight } from 'lowlight';
 import { useMemo, useState } from 'react';
 
 import { DownloadIcon } from '../../icons';
@@ -8,7 +6,7 @@ import { classNames } from '../../utils/classNames';
 import { Checkbox } from '../Checkbox';
 import { DownloadLink } from '../DownloadLink';
 import { IconComponentBase } from '../IconComponentBase';
-import { LowlightText } from '../LowlightText';
+import { JsonRawText } from '../JsonRawText';
 import { Toolbar } from '../Toolbar';
 import styles from './JsonText.module.scss';
 
@@ -25,8 +23,6 @@ export function JsonText({ className, text, filename }: JsonTextProps) {
     () => (isPretty ? prettifyJson(text) : text),
     [isPretty, text]
   );
-
-  const lowlight = useMemo(() => createLowlight({ json: jsonLanguage }), []);
 
   const dataBlob = useMemo(
     () =>
@@ -53,13 +49,7 @@ export function JsonText({ className, text, filename }: JsonTextProps) {
         </IconComponentBase>
       </Toolbar>
 
-      <pre className={styles.content}>
-        <LowlightText
-          lowlight={lowlight}
-          language="json"
-          text={effectiveText}
-        />
-      </pre>
+      <JsonRawText className={styles.content} text={effectiveText} />
     </div>
   );
 }

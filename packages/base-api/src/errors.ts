@@ -3,7 +3,7 @@ import { ApiErrorStatusMap } from '@game-cms/core/api';
 declare module '@game-cms/core/api' {
   interface ApiErrorCodeMap {
     base: {
-      entity: ['notFound', 'duplicate'];
+      entity: ['notFound', 'duplicate', 'checkFailed'];
       schema: ['validation'];
       access: ['unauthorized', 'expired'];
       server: ['internalError'];
@@ -16,6 +16,7 @@ export const errorStatuses: ApiErrorStatusMap = {
   'base::access/expired': 401,
   'base::access/unauthorized': 401,
   'base::entity/duplicate': 409,
+  'base::entity/checkFailed': 400,
   'base::entity/notFound': 404,
   'base::server/internalError': 500,
 };

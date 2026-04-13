@@ -59,7 +59,7 @@ export const renderer = <Args,>({
   const onAlternativeItemsChanged = (newItems: typeof alternativeItems) => {
     onDataChanged?.({
       default: data.default,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
       alternative: newItems.map(({ key, ...rest }) => rest),
     });
   };

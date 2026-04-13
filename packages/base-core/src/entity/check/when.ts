@@ -1,7 +1,7 @@
 import { MaybePromise } from '@game-cms/shared';
 import { ObjectId } from 'mongodb';
 
-import { EntityDocumentMeta, EntityId } from '../core.js';
+import { EntityDocumentMeta, EntityId, EntityVariant } from '../core.js';
 import { EntityCheckId, EntityCheckStorageData } from './types.js';
 
 export type EntityCheckWhenParams<
@@ -11,6 +11,7 @@ export type EntityCheckWhenParams<
   entityId: EId;
   documentId: ObjectId;
   documentMeta: EntityDocumentMeta;
+  documentVariant: EntityVariant;
   storageData?: EntityCheckStorageData<Id>;
 };
 

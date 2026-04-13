@@ -19,6 +19,7 @@ export default defineConfig((env) => ({
       'ui',
       'base-components',
       'game-plugin-components',
+      'entity-checks',
       'entity-previews',
     ]),
     ignitePlugin(),

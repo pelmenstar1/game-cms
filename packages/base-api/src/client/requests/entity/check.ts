@@ -1,8 +1,9 @@
 import {
+  ClientConciseEntityCheckRunWithId,
+  ClientEntityCheckRunWithId,
   EntityCheckActionIds,
   EntityCheckActionPayload,
   EntityCheckId,
-  EntityCheckRunWithId,
   EntityId,
   ListEntityCheckRunsOptions,
 } from '@game-cms/base-core';
@@ -32,6 +33,13 @@ export const invokeEntityCheckAction = <
     body: payload && jsonInit(payload),
   });
 
+export const getEntityCheckRun = (context: RequestContext, id: string) =>
+  request(context, {
+    url: `/entityChecks/runs/${id}`,
+    method: 'GET',
+    response: json<ClientEntityCheckRunWithId>(),
+  });
+
 export const listEntityCheckRuns = (
   context: RequestContext,
   options: ListEntityCheckRunsOptions
@@ -39,5 +47,5 @@ export const listEntityCheckRuns = (
   request(context, {
     url: url({ path: '/entityCheck/runs', search: options }),
     method: 'GET',
-    response: json<PageData<EntityCheckRunWithId>>(),
+    response: json<PageData<ClientConciseEntityCheckRunWithId>>(),
   });

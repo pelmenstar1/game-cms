@@ -82,10 +82,7 @@ async function traceFileInEntityCollection<Id extends EntityId>(
   const cursor = cms()
     .service('base::database')
     .entityCollection(entityId)
-    .find(
-      {},
-      { projection: { draft: { components: 1 }, published: { components: 1 } } }
-    );
+    .find();
 
   const entityService = cms().service('base::entity');
 
@@ -93,11 +90,12 @@ async function traceFileInEntityCollection<Id extends EntityId>(
 
   for await (const document of cursor) {
     if (isFileUsedInEntity(schema, document, fileId)) {
-      const outDraft = await entityService.storageDataToOut(
+      const outDraft = await entityService.storageDataToOut({
         entityId,
-        document._id,
-        document.draft
-      );
+        documentId: document._id,
+        documentVariant: 'draft',
+        storageData: document.draft,
+      });
 
       result.push(outDraft);
     }

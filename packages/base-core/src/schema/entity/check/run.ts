@@ -3,7 +3,7 @@ import z from 'zod';
 
 export const listEntityCheckRunsOptions = z.object({
   ...pagingOptionsSchema.shape,
-  checkId: z.string(),
-  entityId: z.string(),
-  documentId: z.string(),
+  checkId: z.string().optional(),
+  entityId: z.string().optional(),
+  documentId: z.string().optional(),
 });

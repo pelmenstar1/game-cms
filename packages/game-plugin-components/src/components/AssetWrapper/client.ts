@@ -1,4 +1,5 @@
 import { defineComponentClientController } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 
 import core from './core.js';
 
@@ -10,12 +11,27 @@ export default defineComponentClientController({
     };
   },
   validator: (data, options, context, params) => {
-    return context.validate(
-      options.componentId,
-      data,
-      options.baseOptions,
-      params
-    );
+    if (isNonNullObject(data) && 'base' in data) {
+      const { base } = data;
+
+      if (base !== undefined) {
+        const { componentId, baseOptions } = options;
+        const base = context.validate(
+          componentId,
+          data.base,
+          baseOptions,
+          params
+        );
+
+        if (base !== undefined) {
+          return { base };
+        }
+
+        return;
+      }
+    }
+
+    return { ownError: 'INVALID_TYPE' as const };
   },
   transformer: {
     fromClient: (clientData, options, context) => {
