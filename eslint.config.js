@@ -2,6 +2,7 @@
 
 import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
+import importPlugin from 'eslint-plugin-import';
 import prettier from 'eslint-plugin-prettier/recommended';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -29,6 +30,7 @@ export default defineConfig(
   reactHooks.configs.flat['recommended-latest'],
   tseslint.configs.strictTypeChecked,
   unicorn.configs.recommended,
+  importPlugin.flatConfigs.recommended,
   {
     settings: {
       react: {
@@ -101,6 +103,12 @@ export default defineConfig(
 
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+
+      'import/no-unresolved': 'off',
+      'import/no-named-as-default': 'off',
+      'import/named': 'off',
+      'import/no-named-as-default-member': 'off',
+      'import/no-duplicates': 'error',
     },
   },
   prettier

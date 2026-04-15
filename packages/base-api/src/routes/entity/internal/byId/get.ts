@@ -1,7 +1,6 @@
 import { EntityInternalOutDataById } from '@game-cms/base-core';
 import { entityVariant } from '@game-cms/base-core/schema';
-import { ApiError } from '@game-cms/core/api';
-import { apiRoute } from '@game-cms/core/api';
+import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';

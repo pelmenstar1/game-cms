@@ -1,6 +1,6 @@
 import { type MaybeArray } from '@game-cms/shared/collections';
-import { type ReactElement, useEffect, useId } from 'react';
-import React from 'react';
+import type { ReactElement } from 'react';
+import { cloneElement, useEffect, useId } from 'react';
 
 import { classNames } from '../../utils/classNames';
 import { Button } from '../Button';
@@ -70,7 +70,7 @@ export function Tabs<K extends string>({
         ))}
       </List>
 
-      {React.cloneElement(selectedChild, {
+      {cloneElement(selectedChild, {
         isSelected: true,
         id: `${globalId}-panel-${selectedChild.props.tabId}`,
         labelledBy: `${globalId}-tab-${selectedChild.props.tabId}`,

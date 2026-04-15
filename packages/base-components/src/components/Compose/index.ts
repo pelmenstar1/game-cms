@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 import './types.js';
 
 import { ComponentOptionsById, ComponentSchema } from '@game-cms/core';

@@ -1,8 +1,10 @@
 import { type Rect, rectsIntersect } from '@game-cms/shared';
-import type { ComponentProps } from 'react';
-import type { PointerEvent } from 'react';
-import { useRef } from 'react';
-import { useCallback } from 'react';
+import {
+  type ComponentProps,
+  type PointerEvent,
+  useCallback,
+  useRef,
+} from 'react';
 
 import { useBounds } from '../../hooks';
 import { classNames } from '../../utils/classNames';

@@ -1,12 +1,5 @@
-import {
-  type ComponentType,
-  type PropsWithChildren,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import React from 'react';
+import type { ComponentType, PropsWithChildren } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import {
   type InferModalResult,

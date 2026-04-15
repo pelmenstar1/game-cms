@@ -1,11 +1,12 @@
-import { ApiError } from '@game-cms/core/api';
-import { apiRoute } from '@game-cms/core/api';
+import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import cookie from 'cookie';
 import type { FastifyRequest } from 'fastify';
 
-import { REFRESH_JWT_COOKIE_NAME } from '../../../utils/authCookie.js';
-import { createSessionAuthCookie } from '../../../utils/authCookie.js';
+import {
+  createSessionAuthCookie,
+  REFRESH_JWT_COOKIE_NAME,
+} from '../../../utils/authCookie.js';
 
 function getRefreshToken(req: FastifyRequest) {
   const { cookie: rawCookie } = req.headers;

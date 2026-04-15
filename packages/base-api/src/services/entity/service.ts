@@ -21,8 +21,8 @@ import {
   ComponentSchema,
   ComponentStorageDisposeDataParams,
   searchScoreComposer,
+  service,
 } from '@game-cms/core';
-import { service } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
 import { cms, log } from '@game-cms/global';
 import { isNonNullObject, PagingOptions } from '@game-cms/shared';
