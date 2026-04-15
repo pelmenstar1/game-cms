@@ -29,6 +29,7 @@ export function useEntityChecksAllowed(
         const controller =
           await entityCheckContext.getClientController(checkId);
         const isAllowed = controller?.isAllowed;
+        const options = entityCheckContext.getOptions(checkId);
 
         if (isAllowed === undefined) {
           return { draft: true, published: true };
@@ -39,12 +40,14 @@ export function useEntityChecksAllowed(
             entityId,
             documentId,
             data,
+            options,
             documentVariant: 'draft',
           }),
           published: isAllowed({
             entityId,
             documentId,
             data,
+            options,
             documentVariant: 'published',
           }),
         };

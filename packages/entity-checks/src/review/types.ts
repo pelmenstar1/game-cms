@@ -3,6 +3,16 @@ import type z from 'zod';
 
 import type { updateReviewersPayload } from './schema.js';
 
+export type ReviewOptions = {
+  onlyForPublished?: boolean;
+};
+
+export type UpdateReviewersPayload = z.infer<typeof updateReviewersPayload>;
+
+export type GetReviewersResponse = {
+  users: NoPasswordUser[];
+};
+
 declare module '@game-cms/base-core' {
   interface EntityCheckTypeMap {
     'base::review': {
@@ -12,6 +22,7 @@ declare module '@game-cms/base-core' {
           approved: boolean;
         }[];
       };
+      clientOptions: ReviewOptions;
       storageData: {
         reviewers: Record<string, { lastApproveTime?: number } | undefined>;
       };
@@ -21,9 +32,3 @@ declare module '@game-cms/base-core' {
     };
   }
 }
-
-export type UpdateReviewersPayload = z.infer<typeof updateReviewersPayload>;
-
-export type GetReviewersResponse = {
-  users: NoPasswordUser[];
-};

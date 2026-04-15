@@ -9,8 +9,10 @@ import {
 import { EntityCheckActionMap } from './action.js';
 import { EntityCheckApiConfig } from './api.js';
 import {
+  EntityCheckClientOptions,
   EntityCheckDashboardConfig,
   EntityCheckGetClientDataFn,
+  IsEntityCheckClientOptionsDefined,
 } from './client.js';
 import { EntityCheckExecuteFn } from './execute.js';
 import { EntityCheckId, EntityCheckTypes } from './types.js';
@@ -32,6 +34,12 @@ export type EntityCheck<Id extends string = string> = BaseEntityCheck<Id> &
       actions: EntityCheckActionMap<Id>;
     },
     IsAllOptional<EntityCheckActionMap<Id>>
+  > &
+  RequiredIf<
+    {
+      clientOptions?: EntityCheckClientOptions<Id>;
+    },
+    IsEntityCheckClientOptionsDefined<Id>
   > &
   RequiredIf<
     {

@@ -41,6 +41,7 @@ export function EntityCheckBlock({
     <div>
       {Object.entries(data).map(([checkId, checkData]) => {
         const Component = getComponent(checkId, context);
+        const options = context.getOptions(checkId);
 
         return (
           <Component
@@ -48,6 +49,7 @@ export function EntityCheckBlock({
             data={checkData}
             entityId={entityId}
             documentId={documentId}
+            options={options}
           />
         );
       })}

@@ -11,7 +11,7 @@ import { ObjectId, WithId } from 'mongodb';
 
 import { updateReviewersPayload } from './schema.js';
 import { routes as dashboardRoutes } from './settings/routes.js';
-import { GetReviewersResponse } from './types.js';
+import { GetReviewersResponse, ReviewOptions } from './types.js';
 
 declare module '@game-cms/base-core' {
   interface DatabaseCollectionTypeMap {
@@ -68,12 +68,15 @@ function isApproved(
   );
 }
 
-export function review() {
+export function review(options?: ReviewOptions) {
+  options ??= { onlyForPublished: true };
+
   return defineEntityCheck({
     id: 'base::review',
     clientConfig: {
       filePath: path.join(import.meta.dirname, 'config.client.js'),
     },
+    clientOptions: options,
     dashboard: {
       clientController: {
         filePath: path.join(import.meta.dirname, 'controller.client.js'),
@@ -127,7 +130,15 @@ export function review() {
         },
       },
     },
-    when: ({ documentVariant }) => documentVariant === 'published',
+    when: ({ documentVariant }) => {
+      const onlyForPublished = options.onlyForPublished ?? true;
+
+      if (onlyForPublished) {
+        return documentVariant === 'published';
+      }
+
+      return true;
+    },
     execute: async ({ documentMeta, storageData }) => {
       const requiredReviewers = await getRequiredReviewers();
 

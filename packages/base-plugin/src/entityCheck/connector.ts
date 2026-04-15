@@ -8,18 +8,22 @@ export function emitEntityCheckConnector() {
   return `
 export default {
   ${entityChecks
-    .map(({ id, dashboard }) => {
-      const controller = dashboard?.clientController;
+    .map(({ id, clientOptions, dashboard }) => {
+      const controllerPath = dashboard?.clientController?.filePath;
 
-      if (controller) {
-        return { id: id as string, controller };
-      }
+      const controllerDef = controllerPath
+        ? `controller: () => import('${pathToFileURL(controllerPath)}')`
+        : '';
+
+      const optionsDef = clientOptions
+        ? `options: ${JSON.stringify(clientOptions)},`
+        : '';
+
+      return `${JSON.stringify(id)}: {
+          ${optionsDef}
+          ${controllerDef}
+        }`;
     })
-    .filter((pair) => pair !== undefined)
-    .map(
-      ({ id, controller }) =>
-        `${JSON.stringify(id)}: () => import('${pathToFileURL(controller.filePath)}')`
-    )
     .join(',')}
 }`;
 }

@@ -5,12 +5,12 @@ import {
 import { PropsWithChildren } from 'react';
 
 import {
-  entityCheckIds,
   getEntityCheckClientController,
+  getEntityCheckOptions,
 } from '@/connector/entityCheck';
 
 const context: EntityCheckContextType = {
-  checkIds: entityCheckIds,
+  getOptions: getEntityCheckOptions,
   getClientController: getEntityCheckClientController,
 };
 

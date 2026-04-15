@@ -35,7 +35,7 @@ type RunEntityChecksParams<Id extends EntityId> = {
   >;
 };
 
-function getAll() {
+function getAll(): EntityCheck[] {
   return env().config.entity?.checks ?? [];
 }
 
@@ -46,7 +46,7 @@ function getById<Id extends EntityCheckId>(id: Id) {
     throw new ApiError('Unknown check', 'base::entity/notFound');
   }
 
-  return check as EntityCheck<Id>;
+  return check as unknown as EntityCheck<Id>;
 }
 
 function getActionById<
@@ -281,12 +281,7 @@ async function getClientData(
 ): Promise<EntityCheckClientDataMap> {
   const entries = await Promise.all(
     getAll().map((check) =>
-      getCheckClientDataEntry(
-        check,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        data[check.id],
-        context
-      )
+      getCheckClientDataEntry(check, data[check.id], context)
     )
   );
 

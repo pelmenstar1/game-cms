@@ -1,3 +1,10 @@
-const renderer = () => 'test-check';
+// @ts-check
 
-export default renderer;
+/** @type {import('@game-cms/base-core').EntityCheckClientController} */
+const controller = {
+  renderer: () => ({
+    default: () => 'test-check',
+  }),
+};
+
+export default controller;
