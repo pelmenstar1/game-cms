@@ -23,7 +23,7 @@ export default apiRoute({
       .getById(id, { signal: req.abortSignal });
 
     if (user === null) {
-      throw new ApiError('User not found', 'base::entity/notFound');
+      throw new ApiError('User not found', { code: 'base::entity/notFound' });
     }
 
     return user;

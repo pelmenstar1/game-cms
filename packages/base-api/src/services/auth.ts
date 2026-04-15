@@ -97,12 +97,10 @@ async function parseJwtWithSchema<T>(token: string, schema: ZodType<T>) {
 
   const payloadResult = schema.safeParse(payload);
   if (!payloadResult.success) {
-    throw new ApiError(
-      'Invalid token payload',
-      'base::access/unauthorized',
-      null,
-      { cause: payloadResult.error }
-    );
+    throw new ApiError('Invalid token payload', {
+      code: 'base::access/unauthorized',
+      options: { cause: payloadResult.error },
+    });
   }
 
   return payloadResult.data;
@@ -166,10 +164,9 @@ export default service({
       : false;
 
     if (user === null || !isValid) {
-      throw new ApiError(
-        'Invalid user or password',
-        'base::access/unauthorized'
-      );
+      throw new ApiError('Invalid user or password', {
+        code: 'base::access/unauthorized',
+      });
     }
 
     const [session, refresh] = await Promise.all([
@@ -191,7 +188,7 @@ export default service({
       .getById(new ObjectId(userId), options);
 
     if (user === null) {
-      throw new ApiError('Unknown user', 'base::entity/notFound');
+      throw new ApiError('Unknown user', { code: 'base::entity/notFound' });
     }
 
     return createSessionToken('userSession', user);
@@ -202,13 +199,15 @@ export default service({
       .getByToken(token, options);
 
     if (tokenInfo === null) {
-      throw new ApiError('Unknown token', 'base::access/unauthorized');
+      throw new ApiError('Unknown token', {
+        code: 'base::access/unauthorized',
+      });
     }
 
     const now = Date.now();
 
     if (now > tokenInfo.expirationDate.getTime()) {
-      throw new ApiError('Token expired', 'base::access/expired');
+      throw new ApiError('Token expired', { code: 'base::access/expired' });
     }
 
     return createSessionToken('apiToken', {
@@ -229,16 +228,15 @@ export default service({
         permissions !== '*' &&
         !hasPermission(permissions, routeId)
       ) {
-        throw new ApiError(
-          'Cannot access this route',
-          'base::access/unauthorized'
-        );
+        throw new ApiError('Cannot access this route', {
+          code: 'base::access/unauthorized',
+        });
       }
 
       return { actorId: id };
     } catch (error: unknown) {
       if (error instanceof JWTExpired) {
-        throw new ApiError('Expired token', 'base::access/expired');
+        throw new ApiError('Expired token', { code: 'base::access/expired' });
       }
 
       throw error;

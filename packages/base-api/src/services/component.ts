@@ -31,7 +31,9 @@ function getController<T extends ComponentId>(id: T) {
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (controller === undefined) {
-    throw new ApiError(`Unknown component: ${id}`, 'base::entity/notFound');
+    throw new ApiError(`Unknown component: ${id}`, {
+      code: 'base::entity/notFound',
+    });
   }
 
   return controller;

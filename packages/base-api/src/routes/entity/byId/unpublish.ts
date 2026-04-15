@@ -24,7 +24,7 @@ export default apiRoute({
     const result = await cms().service('base::entity').unpublish(entityId, id);
 
     if (!result) {
-      throw new ApiError('Entity not found', 'base::entity/notFound');
+      throw new ApiError('Entity not found', { code: 'base::entity/notFound' });
     }
   },
 });

@@ -1,4 +1,3 @@
-import { ApiError } from '@game-cms/core/api';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
@@ -48,9 +47,6 @@ export default apiRoute({
     );
 
     const token = getRequestJwt(req, jwtOptions);
-    if (token === undefined) {
-      throw new ApiError('No JWT', 'base::access/expired');
-    }
 
     const { actorId } = await cms()
       .service('base::auth')

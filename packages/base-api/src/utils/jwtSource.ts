@@ -1,3 +1,4 @@
+import { ApiError } from '@game-cms/core/api';
 import cookie from 'cookie';
 import type { FastifyRequest } from 'fastify';
 
@@ -40,4 +41,6 @@ export function getRequestJwt(req: FastifyRequest, options: JwtSourceOptions) {
       return result;
     }
   }
+
+  throw new ApiError('No JWT', { code: 'base::access/expired' });
 }

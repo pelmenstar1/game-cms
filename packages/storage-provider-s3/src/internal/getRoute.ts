@@ -53,7 +53,9 @@ export function getFileRoute(
         return await res.send(target);
       } catch (error) {
         if (error instanceof NoSuchKey) {
-          throw new ApiError('File not found', 'base::entity/notFound');
+          throw new ApiError('File not found', {
+            code: 'base::entity/notFound',
+          });
         }
 
         throw error;

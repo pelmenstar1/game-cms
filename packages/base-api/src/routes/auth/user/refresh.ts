@@ -24,7 +24,9 @@ export default apiRoute({
     const refreshToken = getRefreshToken(req);
 
     if (!refreshToken) {
-      throw new ApiError('No refresh token', 'base::access/unauthorized');
+      throw new ApiError('No refresh token', {
+        code: 'base::access/unauthorized',
+      });
     }
 
     const userSession = await cms()

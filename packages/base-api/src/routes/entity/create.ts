@@ -28,7 +28,9 @@ export default apiRoute({
     const schema = getEntityValidationType(entityId);
     const body = schema.safeParse(req.body);
     if (!body.success) {
-      throw new ApiError(body.error.message, 'base::schema/validation');
+      throw new ApiError(body.error.message, {
+        code: 'base::schema/validation',
+      });
     }
 
     const result = await cms()

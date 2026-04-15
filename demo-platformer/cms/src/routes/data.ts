@@ -27,14 +27,14 @@ const route = apiRoute({
 
     if (!config) {
       throw new ApiError('No published game-config found', {
-        api: 'base::entity/notFound',
+        code: 'base::entity/notFound',
       });
     }
 
     // 2. Resolve hero
     if (!config.hero) {
       throw new ApiError('No hero configured', {
-        api: 'base::entity/notFound',
+        code: 'base::entity/notFound',
       });
     }
 
@@ -46,15 +46,14 @@ const route = apiRoute({
     );
     if (!hero) {
       throw new ApiError('hero not found', {
-        api: 'base::entity/notFound',
+        code: 'base::entity/notFound',
       });
     }
 
     // 3. Resolve level
     if (!config.startingLevel) {
       throw new ApiError('No starting level configured', {
-        api: 'base::entity/notFound',
-        http: 404,
+        code: 'base::entity/notFound',
       });
     }
 
@@ -66,7 +65,7 @@ const route = apiRoute({
     );
     if (!level) {
       throw new ApiError('level not found', {
-        api: 'base::entity/notFound',
+        code: 'base::entity/notFound',
       });
     }
 
@@ -84,7 +83,7 @@ const route = apiRoute({
         );
         if (!result) {
           throw new ApiError(`room not found: ${id}`, {
-            api: 'base::entity/notFound',
+            code: 'base::entity/notFound',
           });
         }
         return result;
@@ -119,7 +118,7 @@ const route = apiRoute({
           );
           if (!result) {
             throw new ApiError(`trap not found: ${id}`, {
-              api: 'base::entity/notFound',
+              code: 'base::entity/notFound',
             });
           }
           return [id, result] as const;
@@ -135,7 +134,7 @@ const route = apiRoute({
           );
           if (!result) {
             throw new ApiError(`item not found: ${id}`, {
-              api: 'base::entity/notFound',
+              code: 'base::entity/notFound',
             });
           }
           return [id, { ...result, collected: result.collected[0] }] as const;

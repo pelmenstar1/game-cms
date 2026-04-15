@@ -37,7 +37,7 @@ export default apiRoute({
     }
 
     if (file === undefined) {
-      throw new ApiError('No file', 'base::schema/validation');
+      throw new ApiError('No file', { code: 'base::schema/validation' });
     }
 
     const meta = metaRaw

@@ -27,7 +27,7 @@ type Extra = { fileName: string };
 const GET_ROUTE = '/storage/file/get';
 
 function throwFileNotFound(): never {
-  throw new ApiError('File not found', 'base::entity/notFound');
+  throw new ApiError('File not found', { code: 'base::entity/notFound' });
 }
 
 function collection() {

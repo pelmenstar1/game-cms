@@ -21,14 +21,15 @@ async function checkFile(fileId: ObjectId, signal?: AbortSignal) {
     .findOne({ _id: fileId }, { projection: { type: 1 }, signal });
 
   if (item === null) {
-    throw new ApiError('File does not exist', 'base::entity/notFound');
+    throw new ApiError('File does not exist', {
+      code: 'base::entity/notFound',
+    });
   }
 
   if (item.type !== StorageItemType.FILE) {
-    throw new ApiError(
-      'Storage item expected to be a file',
-      'base::schema/validation'
-    );
+    throw new ApiError('Storage item expected to be a file', {
+      code: 'base::schema/validation',
+    });
   }
 }
 

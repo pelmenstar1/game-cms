@@ -20,7 +20,7 @@ export default apiRoute({
 
     const result = await cms().service('base::storage').getInfo(id);
     if (result === null) {
-      throw new ApiError('Unknown item', 'base::entity/notFound');
+      throw new ApiError('Unknown item', { code: 'base::entity/notFound' });
     }
 
     return result;

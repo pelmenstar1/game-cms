@@ -22,7 +22,7 @@ export default apiRoute({
       .getById({ id, signal: req.abortSignal });
 
     if (run === null) {
-      throw new ApiError('Run not found', 'base::entity/notFound');
+      throw new ApiError('Run not found', { code: 'base::entity/notFound' });
     }
 
     return run;

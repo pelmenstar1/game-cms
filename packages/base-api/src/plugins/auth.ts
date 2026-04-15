@@ -2,7 +2,6 @@ import type {
   ApiRouteContextConfig,
   CmsFastifyInstance,
 } from '@game-cms/core/api';
-import { ApiError } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { resolveMaybeFactory } from '@game-cms/shared';
 import type { RouteGenericInterface } from 'fastify';
@@ -39,9 +38,6 @@ export function initAuth(instance: CmsFastifyInstance) {
         }
 
         const token = getRequestJwt(req, jwtOptions);
-        if (token === undefined) {
-          throw new ApiError('No JWT', 'base::access/expired');
-        }
 
         const { actorId } = await cms()
           .service('base::auth')

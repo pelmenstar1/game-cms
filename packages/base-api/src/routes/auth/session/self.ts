@@ -1,5 +1,4 @@
 import { getSessionInfoResponse } from '@game-cms/base-core/schema';
-import { ApiError } from '@game-cms/core/api';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
@@ -17,9 +16,6 @@ export default apiRoute({
   handler: async (req) => {
     const authService = cms().service('base::auth');
     const jwt = getRequestJwt(req, { cookieName: SESSION_JWT_COOKIE_NAME });
-    if (jwt === undefined) {
-      throw new ApiError('No JWT', 'base::access/unauthorized');
-    }
 
     return authService.getSessionInfo(jwt);
   },

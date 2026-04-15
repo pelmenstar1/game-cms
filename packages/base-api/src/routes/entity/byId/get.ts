@@ -34,7 +34,7 @@ export default apiRoute({
       });
 
     if (result === null) {
-      throw new ApiError('Entity not found', 'base::entity/notFound');
+      throw new ApiError('Entity not found', { code: 'base::entity/notFound' });
     }
 
     return result;

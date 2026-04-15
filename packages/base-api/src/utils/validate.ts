@@ -6,11 +6,10 @@ export function apiValidateValue<T>(value: unknown, schema: ZodType<T>) {
   if (!result.success) {
     const { error } = result;
 
-    throw new ApiError(
-      'Schema validation issue',
-      'base::schema/validation',
-      error.issues
-    );
+    throw new ApiError('Schema validation issue', {
+      code: 'base::schema/validation',
+      details: error.issues,
+    });
   }
 
   return result.data;

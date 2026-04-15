@@ -25,7 +25,9 @@ export default apiRoute({
       .getById(id, { signal: req.abortSignal });
 
     if (result === null) {
-      throw new ApiError('Unknown API token', 'base::entity/notFound');
+      throw new ApiError('Unknown API token', {
+        code: 'base::entity/notFound',
+      });
     }
 
     return result;

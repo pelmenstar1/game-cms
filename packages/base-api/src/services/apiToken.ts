@@ -87,7 +87,9 @@ export default service({
     const { permissions } = payload;
 
     if (!cms().service('base::auth').isValidPermissions(permissions)) {
-      throw new ApiError('Unknown permissions', 'base::schema/validation');
+      throw new ApiError('Unknown permissions', {
+        code: 'base::schema/validation',
+      });
     }
 
     const token = await generateToken();

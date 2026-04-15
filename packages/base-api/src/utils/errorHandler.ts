@@ -9,7 +9,7 @@ export type ErrorResponseBody = {
   details?: unknown;
 };
 
-type ErrorResponseParserResult = {
+type ErrorSerializerResult = {
   status: number;
   body: ErrorResponseBody;
 };
@@ -18,6 +18,8 @@ type FastifyValidationError = {
   message: string;
   validation?: string;
 };
+
+type ErrorSerializer = (error: unknown) => ErrorSerializerResult | undefined;
 
 function getApiStatusCode(error: ApiError) {
   const { code } = error;
@@ -28,21 +30,18 @@ function getApiStatusCode(error: ApiError) {
   return status ?? 400;
 }
 
-function getApiErrorResponse(error: ApiError): ErrorResponseParserResult {
-  const status = getApiStatusCode(error);
+const apiErrorSerializer: ErrorSerializer = (error) => {
+  if (error instanceof ApiError) {
+    const { message, code, details } = error;
 
-  const { message, code, details } = error;
+    return {
+      status: getApiStatusCode(error),
+      body: { message, code, details },
+    };
+  }
+};
 
-  return {
-    status,
-    body: { message, code, details },
-  };
-}
-
-function getGenericErrorResponse(error: unknown): {
-  status: number;
-  body: ErrorResponseBody;
-} {
+const fastifyValidationErrorSerializer: ErrorSerializer = (error) => {
   if (isErrorWithCode(error, 'FST_ERR_VALIDATION')) {
     const { message, validation } = error as FastifyValidationError;
 
@@ -55,20 +54,32 @@ function getGenericErrorResponse(error: unknown): {
       },
     };
   }
+};
 
-  return {
-    status: 500,
-    body: {
-      message: 'Internal Server Error',
-      code: 'base::server/internalError',
-    },
-  };
-}
+const genericErrorSerializer: ErrorSerializer = () => ({
+  status: 500,
+  body: {
+    message: 'Internal Server Error',
+    code: 'base::server/internalError',
+  },
+});
+
+const serializers: ErrorSerializer[] = [
+  apiErrorSerializer,
+  fastifyValidationErrorSerializer,
+  genericErrorSerializer,
+];
 
 function resolveResponseAndStatus(error: unknown) {
-  return error instanceof ApiError
-    ? getApiErrorResponse(error)
-    : getGenericErrorResponse(error);
+  for (const serializer of serializers) {
+    const result = serializer(error);
+
+    if (result !== undefined) {
+      return result;
+    }
+  }
+
+  throw new Error('No serializer found for error');
 }
 
 export function errorHandler() {

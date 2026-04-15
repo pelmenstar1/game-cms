@@ -1,7 +1,7 @@
 import { isNonNullObject, safeGetText } from '@game-cms/shared';
 import { parseJsonOptional } from '@game-cms/shared/json';
 
-import { ApiError } from '../../error.js';
+import { ApiError, ApiErrorCode } from '../../error.js';
 
 export async function handleResponseError(response: Response) {
   const bodyString = await safeGetText(response);
@@ -10,24 +10,34 @@ export async function handleResponseError(response: Response) {
   }
 
   const body = parseJsonOptional(bodyString);
+
+  let errorMessage = bodyString;
+  let errorCode: ApiErrorCode | undefined;
+  let errorDetails: unknown;
+
   if (isNonNullObject(body)) {
-    const { error } = body as { error?: unknown };
+    const { error } = body;
 
     if (isNonNullObject(error)) {
-      const { message, code } = error;
+      const { message, code, details } = error;
 
       if (typeof message === 'string') {
-        if (typeof code === 'string') {
-          throw new ApiError(message, {
-            api: code,
-            http: response.status,
-          });
-        }
+        errorMessage = message;
+      }
 
-        throw new ApiError(message, { http: response.status });
+      if (typeof code === 'string') {
+        errorCode = code;
+      }
+
+      if (details !== undefined) {
+        errorDetails = details;
       }
     }
   }
 
-  throw new ApiError(bodyString, { http: response.status });
+  throw new ApiError(errorMessage, {
+    code: errorCode,
+    httpCode: response.status,
+    details: errorDetails,
+  });
 }

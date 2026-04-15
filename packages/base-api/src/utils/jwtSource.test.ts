@@ -20,9 +20,9 @@ function getRequestJwtViaFastify(options: MakeRequestInjectOptions) {
 
 describe('getRequestJwt', () => {
   test('no jwt', async () => {
-    const actual = await getRequestJwtViaFastify({});
+    const actual = getRequestJwtViaFastify({});
 
-    expect(actual).toBeUndefined();
+    await expect(actual).rejects.toBeInstanceOf(Error);
   });
 
   test('auth header', async () => {

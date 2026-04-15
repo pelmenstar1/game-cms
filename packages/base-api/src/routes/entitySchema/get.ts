@@ -19,7 +19,7 @@ export default apiRoute({
     const result = cms().service('base::entitySchema').getClientSchemaById(id);
 
     if (result === undefined) {
-      throw new ApiError('Unknown entity', 'base::entity/notFound');
+      throw new ApiError('Unknown entity', { code: 'base::entity/notFound' });
     }
 
     return result;

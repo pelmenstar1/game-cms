@@ -43,7 +43,7 @@ function getById<Id extends EntityCheckId>(id: Id) {
   const check = getAll().find((check) => check.id === id);
 
   if (!check) {
-    throw new ApiError('Unknown check', 'base::entity/notFound');
+    throw new ApiError('Unknown check', { code: 'base::entity/notFound' });
   }
 
   return check as unknown as EntityCheck<Id>;
@@ -59,7 +59,7 @@ function getActionById<
     | undefined;
 
   if (!action) {
-    throw new ApiError('Unknown action', 'base::entity/notFound');
+    throw new ApiError('Unknown action', { code: 'base::entity/notFound' });
   }
 
   return action;
@@ -157,10 +157,9 @@ async function runEntityChecks<Id extends EntityId>(
     results.some((result) => result.status === 'rejected') ||
     runs.some((run) => run.status === 'failed')
   ) {
-    throw new ApiError(
-      'One or more entity checks failed',
-      'base::entity/checkFailed'
-    );
+    throw new ApiError('One or more entity checks failed', {
+      code: 'base::entity/checkFailed',
+    });
   }
 }
 
@@ -196,7 +195,9 @@ async function invokeAction<
     );
 
   if (!entityData) {
-    throw new ApiError('Unknown entity object', 'base::entity/notFound');
+    throw new ApiError('Unknown entity object', {
+      code: 'base::entity/notFound',
+    });
   }
 
   const entityVariantData = entityData[documentVariant];
@@ -237,12 +238,10 @@ function validateActionPayload<
   if (payloadSchema) {
     const result = payloadSchema.safeParse(value);
     if (result.error) {
-      throw new ApiError(
-        'Invalid action payload',
-        'base::schema/validation',
-        null,
-        { cause: result.error }
-      );
+      throw new ApiError('Invalid action payload', {
+        code: 'base::schema/validation',
+        options: { cause: result.error },
+      });
     }
 
     return result.data;

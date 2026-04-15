@@ -20,7 +20,7 @@ export default apiRoute({
 
     const result = await cms().service('base::user').delete(id);
     if (!result) {
-      throw new ApiError('User not found', 'base::entity/notFound');
+      throw new ApiError('User not found', { code: 'base::entity/notFound' });
     }
   },
 });

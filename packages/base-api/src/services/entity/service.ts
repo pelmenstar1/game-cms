@@ -78,7 +78,7 @@ function collection<T extends EntityId>(id: T) {
 function getEntitySchema<Id extends EntityId>(entityId: Id) {
   const result = cms().service('base::entitySchema').getSchemaById(entityId);
   if (result === undefined) {
-    throw new ApiError('Unknown entity', 'base::entity/notFound');
+    throw new ApiError('Unknown entity', { code: 'base::entity/notFound' });
   }
 
   return result;

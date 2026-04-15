@@ -101,7 +101,9 @@ async function createUser(
   }
 ) {
   if (!emailRegex.test(payload.email)) {
-    throw new ApiError('Invalid email format', 'base::schema/validation');
+    throw new ApiError('Invalid email format', {
+      code: 'base::schema/validation',
+    });
   }
 
   try {
@@ -118,10 +120,9 @@ async function createUser(
     return { id: user.insertedId };
   } catch (error) {
     if (isDuplicateKeyError(error)) {
-      throw new ApiError(
-        'User with specified email already exists',
-        'base::entity/duplicate'
-      );
+      throw new ApiError('User with specified email already exists', {
+        code: 'base::entity/duplicate',
+      });
     }
 
     throw error;
@@ -195,7 +196,9 @@ export default service({
   },
   create: async (payload: CreateUserPayload) => {
     if (!cms().service('base::auth').isValidPermissions(payload.permissions)) {
-      throw new ApiError('Unknown permissions', 'base::schema/validation');
+      throw new ApiError('Unknown permissions', {
+        code: 'base::schema/validation',
+      });
     }
 
     return createUser(payload);
