@@ -8,7 +8,7 @@ export type MaybeSearch<T extends string> = T | `${T}?${string}`;
 
 export type RequestContext = {
   client: ApiClient;
-  abortController?: AbortController;
+  abortSignal?: AbortSignal;
 };
 
 export type RequestFn<Args extends unknown[], R> = (

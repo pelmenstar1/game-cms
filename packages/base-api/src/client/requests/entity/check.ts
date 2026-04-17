@@ -7,6 +7,7 @@ import {
   EntityId,
   ListEntityCheckRunsOptions,
 } from '@game-cms/base-core';
+import { ToClientType } from '@game-cms/core';
 import {
   json,
   jsonInit,
@@ -42,7 +43,7 @@ export const getEntityCheckRun = (context: RequestContext, id: string) =>
 
 export const listEntityCheckRuns = (
   context: RequestContext,
-  options: ListEntityCheckRunsOptions
+  options: ToClientType<ListEntityCheckRunsOptions>
 ) =>
   request(context, {
     url: url({ path: '/entityCheck/runs', search: options }),

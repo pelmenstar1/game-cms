@@ -1,36 +1,34 @@
-import {
-  createContext,
-  type ReactNode,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 
+import { useCancellableTimeout } from '../../hooks/useCancellableTimeout';
 import { classNames } from '../../utils/classNames';
-import { contextUseFactory } from '../../utils/contextFactory';
 import { Typography } from '../Typography';
 import styles from './Notification.module.scss';
-
-export type NotificationType = 'info' | 'error';
+import {
+  NotificationContext,
+  type NotificationContextType,
+} from './NotificationContext';
+import type {
+  NotificationContent,
+  NotificationState,
+  NotificationType,
+} from './types';
 
 export type NotificationProps = {
-  message: string;
+  content: NotificationContent;
   type: NotificationType;
   isVisible: boolean;
 };
 
-export type NotificationWrapperProps = {
-  children: ReactNode;
-};
+function getContentDuration(content: NotificationContent) {
+  if (typeof content === 'object') {
+    return content.duration;
+  }
+}
 
-type SendMessages = Record<NotificationType, (message: string) => void>;
+export function Notification({ content, type, isVisible }: NotificationProps) {
+  const message = typeof content === 'string' ? content : content.message;
 
-export type NotificationManager = SendMessages;
-
-export const NotificationContext =
-  /*@__PURE__*/ createContext<NotificationManager | null>(null);
-
-export function Notification({ message, type, isVisible }: NotificationProps) {
   return (
     <div
       className={classNames(
@@ -39,46 +37,55 @@ export function Notification({ message, type, isVisible }: NotificationProps) {
       )}
       role="alert"
     >
-      <Typography className={styles[`text-type-${type}`]}>{message}</Typography>
+      <div
+        className={classNames(
+          styles['content'],
+          styles[`content-type-${type}`]
+        )}
+      >
+        <Typography className={styles['message']}>{message}</Typography>
+        {typeof content === 'object' && content.addon}
+      </div>
     </div>
   );
 }
 
+export type NotificationWrapperProps = {
+  children: ReactNode;
+};
+
 export function NotificationWrapper({ children }: NotificationWrapperProps) {
   const [isVisible, setVisible] = useState<boolean>(false);
-  const [notification, setNotification] = useState<{
-    message: string;
-    type: NotificationType;
-  }>();
+  const [notification, setNotification] = useState<NotificationState>();
 
-  const showNotification = useCallback(
-    (message: string, type: NotificationType) => {
+  const scheduleTimeout = useCancellableTimeout();
+
+  const manager = useMemo((): NotificationContextType => {
+    const show = (state: NotificationState) => {
       setVisible(true);
-      setNotification({ message, type });
+      setNotification(state);
 
-      setTimeout(() => {
+      const duration = getContentDuration(state.content) ?? 3000;
+
+      scheduleTimeout(() => {
         setVisible(false);
 
         // Let the animation run for 250 ms
-        setTimeout(() => {
+        scheduleTimeout(() => {
           setNotification(undefined);
         }, 250);
-      }, 3000);
-    },
-    []
-  );
+      }, duration);
+    };
 
-  const manager = useMemo(
-    (): NotificationManager => ({
-      info: (message) => {
-        showNotification(message, 'info');
+    return {
+      info: (content) => {
+        show({ content, type: 'info' });
       },
-      error: (message) => {
-        showNotification(message, 'error');
+      error: (content) => {
+        show({ content, type: 'error' });
       },
-    }),
-    [showNotification]
-  );
+    };
+  }, [scheduleTimeout]);
 
   return (
     <NotificationContext.Provider value={manager}>
@@ -87,8 +94,3 @@ export function NotificationWrapper({ children }: NotificationWrapperProps) {
     </NotificationContext.Provider>
   );
 }
-
-export const useNotification = /*@__PURE__*/ contextUseFactory(
-  NotificationContext,
-  'NotificationContext'
-);

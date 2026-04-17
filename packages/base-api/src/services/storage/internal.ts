@@ -98,12 +98,17 @@ export async function hydrateItem<Extra>(
 }
 
 export function ensureFileItem<Extra>(
-  item: StoragePersistentItem<Extra> | null
+  item: StoragePersistentItem<Extra> | null,
+  id: ObjectId
 ): asserts item is StoragePersistentItem<Extra> & {
   type: StorageItemType.FILE;
 } {
-  if (item?.type !== StorageItemType.FILE) {
-    throw new Error('Expected file item');
+  if (item === null) {
+    throw new Error(`Storage item not found: ${id}`);
+  }
+
+  if (item.type !== StorageItemType.FILE) {
+    throw new Error(`Expected file item: ${id}`);
   }
 }
 
@@ -116,7 +121,7 @@ export async function getFileExtraById<Extra>(
     { projection: { type: 1, extra: 1 }, signal: options?.signal }
   );
 
-  ensureFileItem(item);
+  ensureFileItem(item, id);
 
   return item.extra;
 }
@@ -291,7 +296,7 @@ export async function basePatchContent<Extra>(
     { signal: options?.signal }
   );
 
-  ensureFileItem(item);
+  ensureFileItem(item, id);
 
   const size = await provider.protocol.patchContent(
     { content, extra: item.extra, mime: item.mime },

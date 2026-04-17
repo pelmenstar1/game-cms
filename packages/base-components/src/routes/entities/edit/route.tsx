@@ -8,20 +8,17 @@ import type {
   EntityInstanceComponents,
   EntityVariant,
 } from '@game-cms/base-core';
-import {
-  MultipleDataLoader,
-  useNotification,
-  useTypedNavigate,
-} from '@game-cms/ui';
+import { MultipleDataLoader } from '@game-cms/ui';
 import { useCallback } from 'react';
 
-import { useApiAction } from '../../../hooks/useApiAction.js';
+import { useAccessEntity } from '../../../hooks/internal/useAccessEntity.js';
 import { useApiQuery } from '../../../hooks/useApiQuery.js';
 import { useCheckPermissions } from '../../../hooks/useCheckPermissions.js';
 import { useClientTransformerContext } from '../../../hooks/useClientTransformerContext.js';
 import { useEntitySchema } from '../../../hooks/useEntitySchema.js';
 import { useEntitySharedContext } from '../../../hooks/useEntitySharedContext.js';
-import { AccessEntityView } from '../../../micro/AccessEntityView/index.js';
+import { AccessEntityView } from '../../../micro/Entity/AccessEntityView/index.js';
+import { entityCheckFailed } from '../../../utils/entityErrorHandlers/entityCheckFailed.js';
 import styles from './route.module.scss';
 
 export default function Page({
@@ -40,53 +37,44 @@ export default function Page({
   const clientContext = useEntitySharedContext(id);
   const clientTransformerContext = useClientTransformerContext(name);
 
-  const notification = useNotification();
-  const redirect = useTypedNavigate();
+  const doUpdateEntity = useAccessEntity({
+    queryFn: updateEntityById,
+    redirectOnSuccess: `/entities/${name}`,
+    messageOnSuccess: 'Entity updated',
+    messageOnFailure: 'Failed to update the entity',
+    errorHandlers: [entityCheckFailed],
+  });
 
-  const doUpdateEntity = useApiAction(updateEntityById);
-  const doDeleteEntity = useApiAction(deleteEntityById);
-  const doUnpublishEntity = useApiAction(unpublishEntity);
+  const doDeleteEntity = useAccessEntity({
+    queryFn: deleteEntityById,
+    redirectOnSuccess: `/entities/${name}`,
+    messageOnSuccess: 'Entity deleted',
+    messageOnFailure: 'Failed to delete the entity',
+  });
+
+  const doUnpublishEntity = useAccessEntity({
+    queryFn: unpublishEntity,
+    redirectOnSuccess: `/entities/${name}`,
+    messageOnSuccess: 'Entity unpublished',
+    messageOnFailure: 'Failed to unpublish the entity',
+  });
 
   useCheckPermissions(`entity/${name}$update`);
 
   const onSave = useCallback(
     (data: EntityInstanceComponents, variant: EntityVariant) => {
-      doUpdateEntity(name, id, data, variant)
-        .then(() => {
-          void redirect(`/entities/${name}`);
-
-          notification.info('Entity updated');
-        })
-        .catch(() => {
-          notification.error('Failed to update an entity');
-        });
+      doUpdateEntity(name, id, data, variant);
     },
-    [doUpdateEntity, notification, name, id, redirect]
+    [doUpdateEntity, name, id]
   );
 
   const onDelete = useCallback(() => {
-    doDeleteEntity(name, id)
-      .then(() => {
-        void redirect('/entities');
-
-        notification.info('Entity deleted');
-      })
-      .catch(() => {
-        notification.error('Failed to delete the entity');
-      });
-  }, [doDeleteEntity, id, name, notification, redirect]);
+    doDeleteEntity(name, id);
+  }, [doDeleteEntity, name, id]);
 
   const onUnpublish = useCallback(() => {
-    doUnpublishEntity(name, id)
-      .then(() => {
-        void redirect('/entities');
-
-        notification.info('Entity unpublished');
-      })
-      .catch(() => {
-        notification.error('Failed to unpublish the entity');
-      });
-  }, [doUnpublishEntity, id, name, notification, redirect]);
+    doUnpublishEntity(name, id);
+  }, [doUnpublishEntity, name, id]);
 
   return (
     <MultipleDataLoader

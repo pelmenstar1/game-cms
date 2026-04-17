@@ -42,5 +42,5 @@ export function getRequestJwt(req: FastifyRequest, options: JwtSourceOptions) {
     }
   }
 
-  throw new ApiError('No JWT', { code: 'base::access/expired' });
+  throw new ApiError('No JWT', { code: 'base::access/invalidToken' });
 }

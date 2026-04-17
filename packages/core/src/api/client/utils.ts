@@ -36,7 +36,7 @@ export function request<
     | RequestOptions<Method, Url>
     | RequestOptionsWithResult<R, Method, Url>
 ) {
-  const signal = context.abortController?.signal;
+  const signal = context.abortSignal;
   if (signal) {
     options.signal = signal;
   }

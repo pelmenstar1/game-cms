@@ -8,36 +8,40 @@
   left: 0;
   bottom: 0;
 
-  p {
+  .content {
+    display: flex;
+    align-items: center;
     box-sizing: border-box;
+    padding: 1em;
+    margin: 0.5em;
 
     background-color: var(--color-background-dark);
     border: 2px solid var(--color);
+    border-radius: 1em;
     box-shadow:
       0 0 var(--shadow-outer) var(--color),
       0 0 var(--shadow-inner) var(--color) inset;
 
-    border-radius: 1em;
-
-    padding: 1em;
-    margin: 0.5em;
-
     animation: 0.2s ease-out 0s push;
 
-    &.text-type-error {
+    &-type-error {
       --color: var(--color-danger);
       --shadow-inner: 2px;
       --shadow-outer: 8px;
     }
 
-    &.text-type-plain {
+    &-type-plain {
       --color: var(--color-text-on-background-dark);
       --shadow-inner: 1px;
       --shadow-outer: 2px;
     }
   }
 
-  &-invisible p {
+  .message {
+    flex-grow: 1;
+  }
+
+  &-invisible .content {
     transform: translate(0, 150%);
     animation: 0.25s ease-in 0s pull;
   }

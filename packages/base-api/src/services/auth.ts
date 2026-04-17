@@ -207,7 +207,9 @@ export default service({
     const now = Date.now();
 
     if (now > tokenInfo.expirationDate.getTime()) {
-      throw new ApiError('Token expired', { code: 'base::access/expired' });
+      throw new ApiError('Token expired', {
+        code: 'base::access/invalidToken',
+      });
     }
 
     return createSessionToken('apiToken', {
@@ -236,7 +238,9 @@ export default service({
       return { actorId: id };
     } catch (error: unknown) {
       if (error instanceof JWTExpired) {
-        throw new ApiError('Expired token', { code: 'base::access/expired' });
+        throw new ApiError('Expired token', {
+          code: 'base::access/invalidToken',
+        });
       }
 
       throw error;

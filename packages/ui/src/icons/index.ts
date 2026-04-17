@@ -8,6 +8,7 @@ export * from './ArrowLeftIcon';
 export * from './ArrowRightIcon';
 export * from './BlockQuoteIcon';
 export * from './BoldIcon';
+export * from './BookmarkStacksIcon';
 export * from './BulletListIcon';
 export * from './CalendarIcon';
 export * from './CheckIcon';

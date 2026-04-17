@@ -144,19 +144,44 @@ async function runEntityChecks<Id extends EntityId>(
   );
 
   const runs = filterOutNullable(
-    results.map((result) => {
-      return result.status === 'fulfilled' ? result.value : null;
+    results.map((result, i): EntityCheckRun | undefined => {
+      if (result.status === 'rejected') {
+        const now = new Date();
+
+        return {
+          checkId: checks[i].id,
+          entityId: params.entityId,
+          documentId: params.documentId,
+          status: 'failed',
+          createdAt: now,
+          finishedAt: now,
+          logEntries: [
+            {
+              level: 'error',
+              message: 'Check execution failed',
+              timestamp: now,
+              args: serializeError(result.reason),
+            },
+          ],
+        };
+      }
+
+      return result.value;
     })
   );
 
-  await cms().service('base::entityCheck::run').addRuns(runs);
+  const runsWithId = await cms()
+    .service('base::entityCheck::run')
+    .addRuns(runs);
 
-  if (
-    results.some((result) => result.status === 'rejected') ||
-    runs.some((run) => run.status === 'failed')
-  ) {
+  const failedRuns = runsWithId.filter((run) => run.status === 'failed');
+
+  if (failedRuns.length > 0) {
     throw new ApiError('One or more entity checks failed', {
-      code: 'base::entity/checkFailed',
+      code: 'base::entityCheck/fail',
+      details: {
+        failedRunIds: failedRuns.map((run) => run.id.toString()),
+      },
     });
   }
 }

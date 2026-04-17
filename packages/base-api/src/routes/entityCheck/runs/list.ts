@@ -9,15 +9,16 @@ export default apiRoute({
     querystring: listEntityCheckRunsOptions,
   },
   config: {
-    id: 'entity/[entityId]/runs$get',
+    id: 'entityCheck/runs$get',
   },
   handler: async (req) => {
-    const { checkId, documentId, entityId, size, offset } = req.query;
+    const { checkId, documentId, entityId, runId, size, offset } = req.query;
 
     return cms().service('base::entityCheck::run').list({
       checkId,
       entityId,
       documentId,
+      runId,
       size,
       offset,
       signal: req.abortSignal,

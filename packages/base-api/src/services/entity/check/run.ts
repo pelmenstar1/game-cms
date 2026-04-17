@@ -27,21 +27,44 @@ function collection() {
 }
 
 async function addRun(info: EntityCheckRun) {
-  await collection().insertOne(info);
+  return collection().insertOne(info);
 }
 
 async function addRuns(values: readonly EntityCheckRun[]) {
   if (values.length > 0) {
-    await collection().insertMany(values);
+    const result = await collection().insertMany(values);
+
+    return Object.values(result.insertedIds).map((id, index) => ({
+      ...values[index],
+      id,
+    }));
   }
+
+  return [];
+}
+
+function resolveListMatcher(options: ListEntityCheckRunsOptions) {
+  const { checkId, entityId, runId, documentId } = options;
+
+  const result: Record<string, unknown> = omitUndefined({
+    checkId,
+    entityId,
+    documentId,
+  });
+
+  if (runId) {
+    result._id = Array.isArray(runId) ? { $in: runId } : runId;
+  }
+
+  return result;
 }
 
 async function list(
   options: ListOptions
 ): Promise<PageData<ConciseEntityCheckRunWithId<ObjectId>>> {
-  const { checkId, entityId, documentId, offset, size, signal } = options;
+  const { offset, size, signal } = options;
 
-  const match = omitUndefined({ checkId, entityId, documentId });
+  const match = resolveListMatcher(options);
 
   const result = await getPage(
     collection(),

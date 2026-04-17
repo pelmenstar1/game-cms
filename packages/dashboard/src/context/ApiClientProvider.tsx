@@ -7,9 +7,9 @@ import {
   ResolveApiRequestResult,
 } from '@game-cms/base-components/shared';
 import {
-  ApiError,
   ApiErrorCode,
   ApiErrorCodeTypeMap,
+  isApiError,
 } from '@game-cms/core/api';
 import {
   createStandardClient,
@@ -32,7 +32,7 @@ type RedirectConfig = {
 };
 
 const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
-  'base::access/unauthorized': {
+  'base::access/invalidToken': {
     key: 'redirectOnUnauthorized',
     defaultValue: true,
     route: (location) => {
@@ -51,19 +51,19 @@ const redirectConfigMap: ApiErrorCodeTypeMap<RedirectConfig> = {
 };
 
 type HandleRedirectsParams = {
-  error: ApiError;
+  code?: ApiErrorCode;
   navigate: TypedNavigateFunction;
   location: Location;
   options?: ApiRequestOptions;
 };
 
 async function handleRedirects({
-  error,
+  code,
   navigate,
   location,
   options,
 }: HandleRedirectsParams) {
-  const config = redirectConfigMap[error.code as ApiErrorCode];
+  const config = redirectConfigMap[code as ApiErrorCode];
 
   if (config && (options?.[config.key] ?? config.defaultValue)) {
     const to = resolveMaybeFactory(config.route, location);
@@ -71,6 +71,11 @@ async function handleRedirects({
     await navigate(to);
   }
 }
+
+type BaseMakeApiRequestAdditionalOptions = {
+  checkExpired?: boolean;
+  signal?: AbortSignal;
+};
 
 export function ApiClientProvider({ children }: PropsWithChildren) {
   const client = useMemo(() => createStandardClient({ baseUrl: '/api' }), []);
@@ -85,36 +90,60 @@ export function ApiClientProvider({ children }: PropsWithChildren) {
     fn: RequestFn<Args, T>,
     args: Args,
     options?: Options,
-    checkExpired: boolean = true
+    additionalOptions?: BaseMakeApiRequestAdditionalOptions
   ): MakeApiRequestResult<T, Options> => {
-    const abortController = createAbortController();
-    const context: RequestContext = {
-      client,
-      abortController,
-    };
+    let abortSignal: AbortSignal | undefined;
+    let abortController: AbortController | undefined;
 
-    const worker = async (): Promise<ResolveApiRequestResult<T, Options>> => {
+    if (additionalOptions?.signal) {
+      abortSignal = additionalOptions.signal;
+    } else {
+      abortController = createAbortController();
+      abortSignal = abortController?.signal;
+    }
+
+    const context: RequestContext = { client, abortSignal };
+
+    const worker = async () => {
       try {
         return await fn(context, ...args);
       } catch (error: unknown) {
-        if (error instanceof ApiError) {
-          if (
-            checkExpired &&
-            (error.code === 'base::access/expired' ||
-              error.code === 'base::access/unauthorized')
-          ) {
-            await baseMakeApiRequest(refreshUserSession, [], options, false)
-              .promise;
+        if (isApiError(error)) {
+          const checkExpired = additionalOptions?.checkExpired ?? true;
 
-            return baseMakeApiRequest(fn, args, options, false).promise;
+          if (checkExpired && error.code === 'base::access/invalidToken') {
+            let tokenRefreshed = false;
+
+            try {
+              await baseMakeApiRequest(refreshUserSession, [], options, {
+                checkExpired: false,
+                // We don't want to pass the original signal here, we don't need refresh to be aborted.
+              }).promise;
+
+              tokenRefreshed = true;
+            } catch {
+              // Redirect is below, no need to do anything here
+            }
+
+            if (tokenRefreshed) {
+              return await baseMakeApiRequest(fn, args, options, {
+                checkExpired: false,
+                signal: context.abortSignal,
+              }).promise;
+            }
           } else if (
             error.code === 'base::entity/notFound' &&
             options?.nullIfNotFound
           ) {
             return null as ResolveApiRequestResult<T, Options>;
-          } else {
-            await handleRedirects({ error, navigate, options, location });
           }
+
+          await handleRedirects({
+            code: error.code,
+            navigate,
+            options,
+            location,
+          });
         }
 
         throw error;

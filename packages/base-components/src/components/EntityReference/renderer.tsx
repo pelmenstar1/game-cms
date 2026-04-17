@@ -15,12 +15,12 @@ import styles from './renderer.module.scss';
 import { Id } from './types.js';
 
 const EntitySelectModal = namedLazy(
-  () => import('../../micro/EntitySelectModal/index.js'),
+  () => import('../../micro/Entity/EntitySelectModal/index.js'),
   'EntitySelectModal'
 );
 
 const EntityPreviewModal = namedLazy(
-  () => import('../../micro/EntityPreviewModal/index.js'),
+  () => import('../../micro/Entity/EntityPreviewModal/index.js'),
   'EntityPreviewModal'
 );
 

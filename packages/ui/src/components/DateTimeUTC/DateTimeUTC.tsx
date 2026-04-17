@@ -5,6 +5,7 @@ import styles from './DateTimeUTC.module.scss';
 
 export interface DateTimeUTCProps extends TypographyProps {
   className?: string;
+  isCompact?: boolean;
   input: string | Date;
 }
 
@@ -26,11 +27,18 @@ function formatDateToParts(input: string | Date) {
   };
 }
 
-export function DateTimeUTC({ className, input, ...rest }: DateTimeUTCProps) {
+export function DateTimeUTC({
+  className,
+  input,
+  isCompact,
+  ...rest
+}: DateTimeUTCProps) {
   const { date, time } = formatDateToParts(input);
 
-  return (
-    <Typography className={classNames(styles.root, className)} {...rest}>
+  const content = isCompact ? (
+    `${date}T${time}`
+  ) : (
+    <>
       <span>{date}</span>
       <span className={styles['t-span']}>T</span>
       <span>{time}</span>
@@ -38,6 +46,12 @@ export function DateTimeUTC({ className, input, ...rest }: DateTimeUTCProps) {
       <span title="Date and time are shown in UTC format">
         <GlobeIcon className={styles['globe-icon']} />
       </span>
+    </>
+  );
+
+  return (
+    <Typography className={classNames(styles.root, className)} {...rest}>
+      {content}
     </Typography>
   );
 }

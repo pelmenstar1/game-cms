@@ -1,4 +1,4 @@
-import { ApiError, ApiErrorCode } from '@game-cms/core/api';
+import { ApiError, ApiErrorCode, isApiError } from '@game-cms/core/api';
 import { env } from '@game-cms/global';
 import { isErrorWithCode } from '@game-cms/shared';
 import type { FastifyReply, FastifyRequest } from 'fastify';
@@ -31,7 +31,7 @@ function getApiStatusCode(error: ApiError) {
 }
 
 const apiErrorSerializer: ErrorSerializer = (error) => {
-  if (error instanceof ApiError) {
+  if (isApiError(error)) {
     const { message, code, details } = error;
 
     return {

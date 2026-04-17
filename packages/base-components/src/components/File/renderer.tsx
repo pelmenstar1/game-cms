@@ -11,12 +11,12 @@ import {
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FileList } from '../../micro/FileList/index.js';
+import { FileList } from '../../micro/File/FileList/index.js';
 import styles from './renderer.module.scss';
 import { FileClientDataItem, Id } from './types.js';
 
 const FileExplorerModal = namedLazy(
-  () => import('../../micro/FileExplorerModal/index.js'),
+  () => import('../../micro/File/FileExplorerModal/index.js'),
   'FileExplorerModal'
 );
 

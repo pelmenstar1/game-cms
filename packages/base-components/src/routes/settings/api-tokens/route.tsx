@@ -10,7 +10,7 @@ import {
 
 import { useApiQuery } from '../../../hooks/useApiQuery.js';
 import { useQueryPage } from '../../../hooks/useQueryPage.js';
-import { ApiTokenItem } from '../../../micro/ApiTokenItem/index.js';
+import { ApiTokenItem } from '../../../micro/ApiToken/ApiTokenItem/index.js';
 import styles from './route.module.scss';
 
 const PAGE_SIZE = 10;

@@ -13,8 +13,8 @@ import { useCallback, useEffect } from 'react';
 
 import { useEntitySchemaContext } from '../../hooks/useEntitySchemaContext.js';
 import { useSelfSession } from '../../hooks/useSelfSession.js';
-import { EntityListLoader } from '../../micro/EntityListLoader/index.js';
-import { EntitySearchDialog } from '../../micro/EntitySearchDialog/index.js';
+import { EntityListLoader } from '../../micro/Entity/EntityListLoader/index.js';
+import { EntitySearchDialog } from '../../micro/Entity/EntitySearchDialog/index.js';
 import styles from './route.module.scss';
 
 export function meta() {

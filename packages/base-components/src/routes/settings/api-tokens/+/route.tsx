@@ -21,8 +21,8 @@ import {
 import { useCallback, useState } from 'react';
 
 import { useApiAction } from '../../../../hooks/useApiAction.js';
-import { DisplayApiTokenDialog } from '../../../../micro/DisplayApiTokenDialog/index.js';
-import { PermissionsEditor } from '../../../../micro/PermissionsEditor/index.js';
+import { DisplayApiTokenDialog } from '../../../../micro/ApiToken/DisplayApiTokenDialog/index.js';
+import { PermissionsEditor } from '../../../../micro/Permissions/PermissionsEditor/index.js';
 import styles from './route.module.scss';
 
 const EXPIRATION_TIME_SUGGESTIONS: RelativeTime[] = ['30d', '60d', '90d'];

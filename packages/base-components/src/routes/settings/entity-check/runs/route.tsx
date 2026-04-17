@@ -3,7 +3,7 @@ import { DataLoader, PagePresenter, usePagingOptions } from '@game-cms/ui';
 
 import { useApiQuery } from '../../../../hooks/useApiQuery.js';
 import { useQueryPage } from '../../../../hooks/useQueryPage.js';
-import { EntityCheckRunList } from '../../../../micro/EntityCheckRunList/index.js';
+import { EntityCheckRunList } from '../../../../micro/EntityCheck/EntityCheckRunList/index.js';
 import styles from './route.module.scss';
 
 const PAGE_SIZE = 20;

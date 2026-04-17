@@ -64,6 +64,10 @@
     },
     "./types": {
       "types": "./dist/types.d.ts"
+    },
+    "./zod": {
+      "import": "./dist/zod/index.js",
+      "types": "./dist/zod/index.d.ts"
     }
   }
 }

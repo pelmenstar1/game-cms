@@ -16,7 +16,7 @@ import { useApiAction } from '../../../hooks/useApiAction.js';
 import { useApiQuery } from '../../../hooks/useApiQuery.js';
 import { useCheckPermissions } from '../../../hooks/useCheckPermissions.js';
 import { useSelfSession } from '../../../hooks/useSelfSession.js';
-import { PermissionsEditor } from '../../../micro/PermissionsEditor/index.js';
+import { PermissionsEditor } from '../../../micro/Permissions/PermissionsEditor/index.js';
 import styles from './route.module.scss';
 
 export default function Page() {

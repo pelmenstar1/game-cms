@@ -10,20 +10,20 @@ import { SessionProvider } from '@/context/SessionProvider';
 
 export function Providers({ children }: PropsWithChildren) {
   return (
-    <NotificationWrapper>
-      <ApiClientProvider>
-        <EntitySchemaProvider>
-          <EntityHubProvider>
-            <ClientConfigProvider>
-              <EntityCheckProvider>
-                <SessionProvider>
-                  <ModalProvider>{children}</ModalProvider>
-                </SessionProvider>
-              </EntityCheckProvider>
-            </ClientConfigProvider>
-          </EntityHubProvider>
-        </EntitySchemaProvider>
-      </ApiClientProvider>
-    </NotificationWrapper>
+    <ApiClientProvider>
+      <EntitySchemaProvider>
+        <EntityHubProvider>
+          <ClientConfigProvider>
+            <EntityCheckProvider>
+              <SessionProvider>
+                <ModalProvider>
+                  <NotificationWrapper>{children}</NotificationWrapper>
+                </ModalProvider>
+              </SessionProvider>
+            </EntityCheckProvider>
+          </ClientConfigProvider>
+        </EntityHubProvider>
+      </EntitySchemaProvider>
+    </ApiClientProvider>
   );
 }

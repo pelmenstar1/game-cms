@@ -16,7 +16,7 @@ import {
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { EntityComponentChoice } from '../../micro/EntityComponentChoice/index.js';
+import { EntityComponentChoice } from '../../micro/Entity/EntityComponentChoice/index.js';
 import styles from './renderer.module.scss';
 import { Id } from './types.js';
 

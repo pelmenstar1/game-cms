@@ -14,7 +14,7 @@ import {
 
 import { useApiAction } from '../../../../hooks/useApiAction.js';
 import { useApiQuery } from '../../../../hooks/useApiQuery.js';
-import { PermissionsEditor } from '../../../../micro/PermissionsEditor/index.js';
+import { PermissionsEditor } from '../../../../micro/Permissions/PermissionsEditor/index.js';
 import { formatExpirationDate } from '../../../../utils/expirationDate.js';
 import styles from './route.module.scss';
 

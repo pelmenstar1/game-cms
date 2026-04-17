@@ -1,6 +1,3 @@
-export type * from './Notification';
-export {
-  Notification,
-  NotificationWrapper,
-  useNotification,
-} from './Notification';
+export { Notification, NotificationWrapper } from './Notification';
+export { useNotification } from './NotificationContext';
+export type { NotificationContent, NotificationType } from './types';

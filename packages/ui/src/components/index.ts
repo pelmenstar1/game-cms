@@ -10,6 +10,7 @@ export * from './DateTimeUTC';
 export * from './DownloadLink';
 export * from './DraggableList';
 export * from './DragHandle';
+export * from './DynamicColumnGrid';
 export * from './ErrorBoard';
 export * from './ErrorMessage';
 export * from './ExpandableSearchInput';

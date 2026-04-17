@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router';
 
-import { FileExplorer } from '../../micro/FileExplorer/index.js';
+import { FileExplorer } from '../../micro/File/FileExplorer/index.js';
 import styles from './route.module.scss';
 
 export default function Page() {

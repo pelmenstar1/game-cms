@@ -14,7 +14,7 @@ import {
 } from '@game-cms/ui';
 import { useCallback, useState } from 'react';
 
-import { PermissionsEditor } from '../PermissionsEditor/index.js';
+import { PermissionsEditor } from '../Permissions/PermissionsEditor/index.js';
 import styles from './AccessUserView.module.scss';
 
 export interface AccessUserViewProps {
