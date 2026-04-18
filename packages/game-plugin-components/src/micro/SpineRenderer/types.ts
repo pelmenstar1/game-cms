@@ -4,4 +4,4 @@ export type SpineData = {
   images: string[];
 };
 
-export type OnAnimationTimeChanged = (time: number) => void;
+export type OnAnimationTimeChanged = (time: number, duration: number) => void;

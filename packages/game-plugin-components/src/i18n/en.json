@@ -13,6 +13,12 @@
     "SpineRenderer": {
       "spineFailed": "Failed to load a spine animation"
     },
+    "SpineController": {
+      "Header": {
+        "exportFrame": "Export frame",
+        "fit": "Fit to view"
+      }
+    },
     "PlayButton": {
       "play": "Play",
       "pause": "Pause"

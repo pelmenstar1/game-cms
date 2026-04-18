@@ -3,6 +3,7 @@ import {
   IndeterminateCircularProgress,
   namedLazy,
 } from '@game-cms/ui';
+import FileSaver from 'file-saver';
 import {
   type ComponentProps,
   Suspense,
@@ -31,12 +32,13 @@ export function SpineController({
   spine,
   ...rest
 }: SpineControllerProps) {
-  const timeSliderRef = useRef<SpineRendererRefType>(null);
+  const rendererRef = useRef<SpineRendererRefType>(null);
 
   const [isRunning, setRunning] = useState(true);
   const [selectedAnimation, setSelectedAnimation] = useState<string>();
   const [animations, setAnimations] = useState<string[] | undefined>();
   const [animationTime, setAnimationTime] = useState(0);
+  const [animationDuration, setAnimationDuration] = useState(0);
   const [speed, setSpeed] = useState(1);
 
   const onAnimationsLoaded = useCallback((names: string[]) => {
@@ -47,12 +49,40 @@ export function SpineController({
   const onSliderTimeChanged = useCallback((time: number) => {
     setAnimationTime(time);
 
-    timeSliderRef.current?.setTime(time);
+    rendererRef.current?.setTime(time);
   }, []);
 
-  const onAnimationSelected = useCallback((name: string) => {
-    setSelectedAnimation(name);
-    setAnimationTime(0);
+  const onAnimationTimeChanged = useCallback(
+    (time: number, duration: number) => {
+      setAnimationTime(time);
+      setAnimationDuration(duration);
+    },
+    []
+  );
+
+  const onAnimationSelected = useCallback(
+    (name: string) => {
+      setSelectedAnimation(name);
+      onSliderTimeChanged(0);
+    },
+    [onSliderTimeChanged]
+  );
+
+  const onExportFrame = useCallback(() => {
+    const worker = async () => {
+      const blob = await rendererRef.current?.exportFrame();
+      if (!blob) {
+        return;
+      }
+
+      FileSaver(blob, `${selectedAnimation ?? 'frame'}.png`);
+    };
+
+    void worker();
+  }, [selectedAnimation]);
+
+  const onFit = useCallback(() => {
+    rendererRef.current?.fit();
   }, []);
 
   return (
@@ -61,10 +91,13 @@ export function SpineController({
         className={styles.header}
         isRunning={isRunning}
         animationTime={animationTime}
+        animationDuration={animationDuration}
         speed={speed}
         onRunningChanged={setRunning}
         onAnimationTimeChanged={onSliderTimeChanged}
         onSpeedChanged={setSpeed}
+        onExportFrame={onExportFrame}
+        onFit={onFit}
       />
 
       <AnimationList
@@ -76,14 +109,14 @@ export function SpineController({
 
       <Suspense fallback={null}>
         <SpineRenderer
-          ref={timeSliderRef}
+          ref={rendererRef}
           className={styles['renderer']}
           spine={spine}
           animation={selectedAnimation}
           isRunning={isRunning}
           speed={speed}
           onAnimationsLoaded={onAnimationsLoaded}
-          onAnimationTimeChanged={setAnimationTime}
+          onAnimationTimeChanged={onAnimationTimeChanged}
         />
       </Suspense>
 

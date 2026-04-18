@@ -25,6 +25,7 @@ export * from './ErrorIcon';
 export * from './EventIcon';
 export * from './ExclamationIcon';
 export * from './FilesIcon';
+export * from './FitScreenIcon';
 export * from './FolderIcon';
 export * from './GlobeIcon';
 export * from './GoogleSpreadsheetIcon';

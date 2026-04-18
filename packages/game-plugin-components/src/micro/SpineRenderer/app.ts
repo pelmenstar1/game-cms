@@ -179,12 +179,15 @@ export async function createSpineApplication() {
   }
 
   function refreshAnimation() {
-    const state = resolvedSpine?.component.state;
+    const component = resolvedSpine?.component;
 
-    if (state) {
+    if (component) {
+      const { state } = component;
+
       if (currentAnimation !== undefined) {
         if (state.tracks[0]?.animation?.name !== currentAnimation) {
           state.setAnimation(0, currentAnimation, true);
+          component.update(0);
         }
       } else {
         state.clearTracks();
@@ -206,7 +209,7 @@ export async function createSpineApplication() {
       if (duration) {
         const time = firstTrack.getAnimationTime() / duration;
 
-        onAnimationTimeChanged?.(time);
+        onAnimationTimeChanged?.(time, duration);
       }
     }
   }
@@ -287,6 +290,7 @@ export async function createSpineApplication() {
     currentAnimation = name;
 
     refreshAnimation();
+    setTime(0);
     onSizeChanged();
   }
 
@@ -314,13 +318,13 @@ export async function createSpineApplication() {
     if (track) {
       const duration = track.animation?.duration;
 
-      if (duration) {
+      if (duration !== undefined) {
         track.trackTime = lerp(0, duration, relativeTime);
 
         getSpineComponent().update(0);
 
         updateBoundsRect();
-        onAnimationTimeChanged?.(relativeTime);
+        onAnimationTimeChanged?.(relativeTime, duration);
       }
     }
   }
@@ -331,6 +335,18 @@ export async function createSpineApplication() {
     if (firstTrack) {
       firstTrack.timeScale = value;
     }
+  }
+
+  function exportFrame(): Promise<Blob | null> {
+    app.renderer.render(app.stage);
+
+    const canvas = app.renderer.extract.canvas(app.stage) as HTMLCanvasElement;
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, 'image/png');
+    });
   }
 
   return {
@@ -345,5 +361,6 @@ export async function createSpineApplication() {
     setOnAnimationTimeChanged,
     setTime,
     setSpeed,
+    exportFrame,
   };
 }

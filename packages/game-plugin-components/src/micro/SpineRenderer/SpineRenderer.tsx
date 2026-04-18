@@ -1,19 +1,28 @@
-import { useNotification } from '@game-cms/ui';
+import { classNames, useNotification } from '@game-cms/ui';
 import {
   type ComponentProps,
   type Ref,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  type ReactZoomPanPinchRef,
+  TransformComponent,
+  TransformWrapper,
+} from 'react-zoom-pan-pinch';
 
 import { PixiScene } from '../PixiScene';
 import { createSpineApplication, type SpineApplication } from './app.js';
-import type { SpineData } from './types.js';
+import styles from './SpineRenderer.module.scss';
+import type { OnAnimationTimeChanged, SpineData } from './types.js';
 
 export type SpineRendererRefType = {
   setTime: (relativeTime: number) => void;
+  exportFrame: () => Promise<Blob | null>;
+  fit: () => void;
 };
 
 export interface SpineRendererProps extends Omit<
@@ -27,11 +36,12 @@ export interface SpineRendererProps extends Omit<
   isRunning?: boolean;
 
   onAnimationsLoaded?: (names: string[]) => void;
-  onAnimationTimeChanged?: (time: number) => void;
+  onAnimationTimeChanged?: OnAnimationTimeChanged;
 }
 
 export function SpineRenderer({
   ref,
+  className,
   spine,
   animation,
   isRunning = true,
@@ -47,12 +57,19 @@ export function SpineRenderer({
 
   const [app, setApp] = useState<SpineApplication | null>(null);
   const [isSpineLoaded, setSpineLoaded] = useState(false);
+  const transformRef = useRef<ReactZoomPanPinchRef>(null);
 
   useImperativeHandle(
     ref,
     () => ({
       setTime: (time) => {
         app?.setTime(time);
+      },
+      exportFrame: async () => {
+        return (await app?.exportFrame()) ?? null;
+      },
+      fit: () => {
+        transformRef.current?.resetTransform();
       },
     }),
     [app]
@@ -95,10 +112,19 @@ export function SpineRenderer({
   }, [app, isSpineLoaded, onAnimationsLoaded]);
 
   return (
-    <PixiScene
-      sceneLoader={createSpineApplication}
-      onSceneLoaded={setApp}
-      {...rest}
-    />
+    <div className={classNames(styles.root, className)} {...rest}>
+      <TransformWrapper ref={transformRef} minScale={0.1} maxScale={10}>
+        <TransformComponent
+          wrapperClass={styles['transform-wrapper']}
+          contentClass={styles['transform-content']}
+        >
+          <PixiScene
+            className={styles.scene}
+            sceneLoader={createSpineApplication}
+            onSceneLoaded={setApp}
+          />
+        </TransformComponent>
+      </TransformWrapper>
+    </div>
   );
 }
