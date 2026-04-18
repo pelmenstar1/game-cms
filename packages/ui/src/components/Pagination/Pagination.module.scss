@@ -67,11 +67,15 @@
 }
 
 .back-forward {
+  visibility: hidden;
   padding: 0;
   text-decoration: none;
   height: 24px;
-
   fill: var(--color-text-on-background);
+
+  &-visible {
+    visibility: visible;
+  }
 }
 
 .forward {

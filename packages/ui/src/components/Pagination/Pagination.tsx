@@ -86,24 +86,32 @@ function Delimiter() {
   );
 }
 
-type BackForwardButtonProps = {
+interface BackForwardButtonProps extends InteractionButtonProps {
   className?: string;
   page: number;
   interaction: PageInteractionProps;
+  visible: boolean;
   children: ReactNode;
-};
+}
 
 function BackForwardButton({
   className,
   interaction,
   page,
+  visible,
   children,
+  ...rest
 }: BackForwardButtonProps) {
   return (
     <InteractionButton
+      className={classNames(
+        styles['back-forward'],
+        visible && styles['back-forward-visible'],
+        className
+      )}
       interaction={interaction}
       page={page}
-      className={classNames(styles['back-forward'], className)}
+      {...rest}
     >
       {children}
     </InteractionButton>
@@ -135,28 +143,26 @@ export function Pagination({
       aria-label="Сторінки"
       className={classNames(styles.root, className)}
     >
-      {current > 1 && (
-        <BackForwardButton
-          interaction={buttonProps}
-          page={current - 1}
-          aria-label="Попередня сторінка"
-        >
-          <ArrowLeftIcon />
-        </BackForwardButton>
-      )}
+      <BackForwardButton
+        interaction={buttonProps}
+        page={current - 1}
+        aria-label="Попередня сторінка"
+        visible={current > 1}
+      >
+        <ArrowLeftIcon />
+      </BackForwardButton>
 
       <ul>{items}</ul>
 
-      {current < total && (
-        <BackForwardButton
-          interaction={buttonProps}
-          page={current + 1}
-          className={styles.forward}
-          aria-label="Наступна сторінка"
-        >
-          <ArrowRightIcon />
-        </BackForwardButton>
-      )}
+      <BackForwardButton
+        interaction={buttonProps}
+        page={current + 1}
+        className={styles.forward}
+        visible={current < total}
+        aria-label="Наступна сторінка"
+      >
+        <ArrowRightIcon />
+      </BackForwardButton>
     </nav>
   );
 }
