@@ -17,15 +17,15 @@ import type {
 import { createMemoryEntityCheckLogger } from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
-import { cms, env } from '@game-cms/global';
-import { isNonNullObject, JsonValue } from '@game-cms/shared';
+import { cms, env, log } from '@game-cms/global';
+import { JsonValue, parseErrorStack } from '@game-cms/shared';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { fromEntriesNullable } from '@game-cms/shared/object';
 import type { ObjectId } from 'mongodb';
 
 type RunEntityChecksParams<Id extends EntityId> = {
   entityId: Id;
-  documentId: ObjectId;
+  documentId?: ObjectId;
   documentVariant: EntityVariant;
   documentData: Pick<
     EntityStorageDataById<Id>,
@@ -63,21 +63,13 @@ function getActionById<
   return action;
 }
 
-function getMaybeString(value: Record<string, unknown>, key: string) {
-  const result = value[key];
-
-  if (typeof result === 'string') {
-    return result;
-  }
-}
-
 function serializeError(error: unknown): JsonValue | undefined {
-  if (isNonNullObject(error)) {
+  if (Error.isError(error)) {
     return {
       error: {
-        name: getMaybeString(error, 'name'),
-        message: getMaybeString(error, 'message'),
-        stack: getMaybeString(error, 'stack'),
+        name: error.name,
+        message: error.message,
+        stack: parseErrorStack(error),
       },
     };
   }
@@ -146,6 +138,8 @@ async function runEntityChecks<Id extends EntityId>(
   const runs = filterOutNullable(
     results.map((result, i): EntityCheckRun | undefined => {
       if (result.status === 'rejected') {
+        log().error(result.reason);
+
         const now = new Date();
 
         return {
@@ -158,7 +152,7 @@ async function runEntityChecks<Id extends EntityId>(
           logEntries: [
             {
               level: 'error',
-              message: 'Check execution failed',
+              message: 'Check execution failed (not during execution)',
               timestamp: now,
               args: serializeError(result.reason),
             },

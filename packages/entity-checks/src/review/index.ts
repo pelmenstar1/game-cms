@@ -144,13 +144,10 @@ export function review(options?: ReviewOptions) {
 
       for (const requiredReviewer of requiredReviewers) {
         const reviewerId = requiredReviewer.toString();
+        const lastApproveTime =
+          storageData?.reviewers[reviewerId]?.lastApproveTime;
 
-        if (
-          !isApproved(
-            documentMeta,
-            storageData?.reviewers[reviewerId]?.lastApproveTime
-          )
-        ) {
+        if (!isApproved(documentMeta, lastApproveTime)) {
           throw new Error(`Entity is not approved by user ${reviewerId}`);
         }
       }

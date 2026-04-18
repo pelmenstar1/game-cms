@@ -507,16 +507,15 @@ export default service({
   ) => {
     const storageData = await transformInDataToStorage(id, data);
 
-    const { insertedId } = await collection(id).insertOne(
-      createEntityVariants(storageData, variant)
-    );
-
     await cms().service('base::entityCheck').run({
       entityId: id,
-      documentId: insertedId,
       documentData: storageData,
       documentVariant: variant,
     });
+
+    const { insertedId } = await collection(id).insertOne(
+      createEntityVariants(storageData, variant)
+    );
 
     cms().service('base::appEvents').emit('base::entity::created', {
       entityId: id,

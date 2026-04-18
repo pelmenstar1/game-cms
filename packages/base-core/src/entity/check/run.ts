@@ -15,7 +15,7 @@ export type EntityCheckRunStatus = 'success' | 'failed';
 export interface ConciseEntityCheckRun {
   checkId: EntityCheckId;
   entityId: EntityId;
-  documentId: ObjectId;
+  documentId?: ObjectId;
   createdAt: Date;
   finishedAt: Date;
   status: EntityCheckRunStatus;

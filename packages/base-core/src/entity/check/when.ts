@@ -9,9 +9,13 @@ export type EntityCheckWhenParams<
   EId extends EntityId = EntityId,
 > = {
   entityId: EId;
-  documentId: ObjectId;
+
+  // Document id might be undefined if the entity is being created and the check is being run before the document is actually created.
+  documentId?: ObjectId;
   documentMeta: EntityDocumentMeta;
   documentVariant: EntityVariant;
+
+  // The storage data might be undefined if the check is being run for a document that doesn't have any data yet (e.g. during creation).
   storageData?: EntityCheckStorageData<Id>;
 };
 
