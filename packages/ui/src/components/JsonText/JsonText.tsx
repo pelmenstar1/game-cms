@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { DownloadIcon } from '../../icons';
 import { classNames } from '../../utils/classNames';
 import { Checkbox } from '../Checkbox';
-import { DownloadLink } from '../DownloadLink';
+import { DownloadTextLink } from '../DownloadTextLink';
 import { IconComponentBase } from '../IconComponentBase';
 import { JsonRawText } from '../JsonRawText';
 import { Toolbar } from '../Toolbar';
@@ -24,14 +24,6 @@ export function JsonText({ className, text, filename }: JsonTextProps) {
     [isPretty, text]
   );
 
-  const dataBlob = useMemo(
-    () =>
-      new Blob([text], {
-        type: 'application/json',
-      }),
-    [text]
-  );
-
   return (
     <div className={classNames(styles.root, className)}>
       <Toolbar>
@@ -40,8 +32,9 @@ export function JsonText({ className, text, filename }: JsonTextProps) {
         </Checkbox>
 
         <IconComponentBase
-          as={DownloadLink}
-          data={dataBlob}
+          as={DownloadTextLink}
+          content={text}
+          mime="application/json"
           download={filename}
           hover="fill"
         >

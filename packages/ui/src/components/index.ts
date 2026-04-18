@@ -8,6 +8,7 @@ export * from './DataLoader';
 export * from './DatePicker';
 export * from './DateTimeUTC';
 export * from './DownloadLink';
+export * from './DownloadTextLink';
 export * from './DraggableList';
 export * from './DragHandle';
 export * from './DynamicColumnGrid';
