@@ -281,7 +281,10 @@ export async function createSpineApplication() {
   }
 
   function getAnimations() {
-    const spine = getSpineComponent();
+    const spine = resolvedSpine?.component;
+    if (!spine) {
+      return [];
+    }
 
     return spine.skeleton.data.animations.map(({ name }) => name);
   }

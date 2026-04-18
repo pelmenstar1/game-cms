@@ -22,7 +22,7 @@
     "mongodb": "catalog:",
     "pixi.js": "catalog:",
     "react-i18next": "catalog:",
-    "react-zoom-pan-pinch": "^3.7.0",
+    "react-zoom-pan-pinch": "catalog:",
     "three": "^0.183.2",
     "uuid": "catalog:",
     "zod": "catalog:"
