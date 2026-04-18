@@ -2,9 +2,10 @@ import path from 'node:path';
 
 import { apiConfig, serviceSource } from '@game-cms/base-api';
 import { routes } from '@game-cms/base-components/routes';
-import type {
-  OwnEnvironment,
-  OwnPluginClientConfig,
+import {
+  getEntityCheckItems,
+  type OwnEnvironment,
+  type OwnPluginClientConfig,
 } from '@game-cms/base-core';
 import type { Plugin } from '@game-cms/core';
 import { filterOutNullable } from '@game-cms/shared/collections';
@@ -34,7 +35,9 @@ export const basePlugin: Plugin<{
         filterOutNullable(
           [
             ...routes,
-            config.entity?.checks?.map((check) => check.dashboard?.routes),
+            getEntityCheckItems(config.entity).map(
+              (check) => check.dashboard?.routes
+            ),
           ].flat(2)
         ),
     },
@@ -63,8 +66,10 @@ export const basePlugin: Plugin<{
     ),
   },
   clientConfigSource: (config) => {
-    const result = config.entity?.checks?.map((check) => check.clientConfig);
+    const result = getEntityCheckItems(config.entity).map(
+      (check) => check.clientConfig
+    );
 
-    return filterOutNullable(result ?? []);
+    return filterOutNullable(result);
   },
 };

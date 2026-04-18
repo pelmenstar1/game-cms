@@ -4,6 +4,7 @@ import type {
   EntityCheckActionIds,
   EntityCheckActionPayload,
   EntityCheckClientDataMap,
+  EntityCheckConfig,
   EntityCheckId,
   EntityCheckRun,
   EntityCheckRunStatus,
@@ -14,7 +15,10 @@ import type {
   EntityStorageDataById,
   EntityVariant,
 } from '@game-cms/base-core';
-import { createMemoryEntityCheckLogger } from '@game-cms/base-core';
+import {
+  createMemoryEntityCheckLogger,
+  getEntityCheckItems,
+} from '@game-cms/base-core';
 import { service } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
 import { cms, env, log } from '@game-cms/global';
@@ -33,8 +37,26 @@ type RunEntityChecksParams<Id extends EntityId> = {
   >;
 };
 
+const DEFAULT_CONFIG: EntityCheckConfig = {
+  captureStackTrace: true,
+};
+
 function getAll(): EntityCheck[] {
-  return env().config.entity?.checks ?? [];
+  return getEntityCheckItems(env().config.entity);
+}
+
+function getConfig(): EntityCheckConfig {
+  const checks = env().config.entity?.checks;
+
+  if (checks && !Array.isArray(checks)) {
+    const { config } = checks;
+
+    if (config) {
+      return config;
+    }
+  }
+
+  return DEFAULT_CONFIG;
 }
 
 function getById<Id extends EntityCheckId>(id: Id) {
@@ -65,13 +87,18 @@ function getActionById<
 
 function serializeError(error: unknown): JsonValue | undefined {
   if (Error.isError(error)) {
-    return {
-      error: {
-        name: error.name,
-        message: error.message,
-        stack: parseErrorStack(error),
-      },
+    const config = getConfig();
+
+    const result: JsonValue = {
+      name: error.name,
+      message: error.message,
     };
+
+    if (config.captureStackTrace) {
+      result.stack = parseErrorStack(error);
+    }
+
+    return { error: result };
   }
 }
 

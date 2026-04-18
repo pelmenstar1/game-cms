@@ -1,9 +1,10 @@
 import { pathToFileURL } from 'node:url';
 
+import { getEntityCheckItems } from '@game-cms/base-core';
 import { env } from '@game-cms/global';
 
 export function emitEntityCheckConnector() {
-  const entityChecks = env().config.entity?.checks ?? [];
+  const entityChecks = getEntityCheckItems(env().config.entity);
 
   return `
 export default {

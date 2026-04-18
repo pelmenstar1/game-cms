@@ -274,9 +274,6 @@ importers:
         specifier: workspace:*
         version: link:../packages/game-cms
     devDependencies:
-      '@game-cms/core':
-        specifier: workspace:*
-        version: link:../packages/core
       '@types/node':
         specifier: 'catalog:'
         version: 25.5.0

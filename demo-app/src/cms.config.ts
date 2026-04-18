@@ -40,7 +40,7 @@ export default config((env) => ({
     addons: [imageSize(), responsiveImages({ breakpoints: [320, 420] })],
   },
   entity: {
-    checks: [review()],
+    checks: { config: { captureStackTrace: false }, items: [review()] },
     hooks: [
       entityHook({
         target: 'test',

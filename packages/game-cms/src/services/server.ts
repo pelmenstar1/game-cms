@@ -1,3 +1,5 @@
+import '@game-cms/core';
+
 import { ApiRoute } from '@game-cms/core/api';
 import { env, setLogger } from '@game-cms/global';
 import { initServices } from '@game-cms/ignition';

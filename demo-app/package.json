@@ -16,7 +16,6 @@
     "game-cms": "workspace:*"
   },
   "devDependencies": {
-    "@game-cms/core": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "catalog:"
   }

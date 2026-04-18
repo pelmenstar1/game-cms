@@ -2,7 +2,8 @@ import path from 'node:path';
 
 import cors from '@fastify/cors';
 import multipart from '@fastify/multipart';
-import type { PluginApiConfig, ServiceSource } from '@game-cms/core';
+import { getEntityCheckItems } from '@game-cms/base-core';
+import { type PluginApiConfig, type ServiceSource } from '@game-cms/core';
 import { UnknownApiRoute } from '@game-cms/core/api';
 import { scanDirectorySource } from '@game-cms/core/node';
 import { combineAsyncFactories } from '@game-cms/shared';
@@ -29,9 +30,9 @@ export const apiConfig: PluginApiConfig = {
       ),
       ({ config }) => config.storage.provider.routes ?? [],
       ({ config }) =>
-        config.entity?.checks?.flatMap(
+        getEntityCheckItems(config.entity).flatMap(
           (check) => check.api?.routes as UnknownApiRoute[]
-        ) ?? []
+        )
     ),
   },
   fastify: {
