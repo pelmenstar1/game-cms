@@ -74,7 +74,7 @@ export function FileExplorer({
     () => ({
       size: PAGE_SIZE,
       offset: (page - 1) * PAGE_SIZE,
-      parent: folderId,
+      parent: folderId === undefined ? 'no-parent' : folderId,
       search: stableSearch,
     }),
     [folderId, page, stableSearch]

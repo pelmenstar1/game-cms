@@ -338,7 +338,8 @@ export async function baseListItems<Extra>(
   let sortOperator: Document | undefined;
 
   if (parent) {
-    (matchOperator ??= {}).parent = parent;
+    (matchOperator ??= {}).parent =
+      parent === 'no-parent' ? { $exists: false } : parent;
   }
 
   if (!options.includeHidden) {

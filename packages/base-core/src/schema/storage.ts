@@ -32,7 +32,7 @@ export const uploadFileResponse = z.object({
 export const listStorageItemsOptions = z.object({
   ...pagingOptionsSchema.shape,
   includeHidden: z.boolean().optional(),
-  parent: stringObjectId.optional(),
+  parent: z.union([stringObjectId, z.literal('no-parent')]).optional(),
   search: z.string().optional(),
 });
 

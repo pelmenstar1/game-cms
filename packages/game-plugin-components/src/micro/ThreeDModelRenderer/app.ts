@@ -1,11 +1,14 @@
 import {
   AmbientLight,
   AxesHelper,
+  Box3,
   Color,
   LoadingManager,
   Object3D,
   PerspectiveCamera,
   Scene,
+  Sphere,
+  Vector3,
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -45,9 +48,84 @@ export function createApplication() {
     renderer.render(scene, camera);
   }
 
+  function fitCameraToModel(target: Object3D) {
+    const box = new Box3().setFromObject(target);
+    const sphere = new Sphere();
+    box.getBoundingSphere(sphere);
+
+    const center = sphere.center;
+    const radius = sphere.radius;
+
+    const fovRad = (camera.fov * Math.PI) / 180;
+    const distance = radius / Math.sin(fovRad / 2);
+
+    const direction = new Vector3(0, 0.5, 1).normalize();
+    camera.position.copy(center).addScaledVector(direction, distance);
+    camera.near = distance / 100;
+    camera.far = distance * 100;
+    camera.updateProjectionMatrix();
+
+    controls.target.copy(center);
+    controls.update();
+  }
+
   function setBackgroundTheme(theme: BackgroundTheme) {
     scene.background =
       theme === 'light' ? new Color(0xff_ff_ff) : new Color(0x44_44_44);
+  }
+
+  function setModelSource(
+    source: string,
+    onProgress?: (progress: number) => void,
+    abortSignal?: AbortSignal
+  ) {
+    return new Promise<void>((resolve, reject) => {
+      const manager = new LoadingManager();
+
+      const loader = new GLTFLoader(manager);
+      loader.setWithCredentials(true);
+
+      loader.load(
+        source,
+        (gltf) => {
+          if (abortSignal?.aborted) {
+            return;
+          }
+
+          if (model) {
+            scene.remove(model);
+          }
+
+          model = gltf.scene;
+          scene.add(model);
+          fitCameraToModel(model);
+
+          resolve();
+        },
+        (event) => {
+          if (event.lengthComputable && onProgress) {
+            onProgress(event.loaded / event.total);
+          }
+        },
+        reject
+      );
+    });
+  }
+
+  function setSize(width: number, height: number) {
+    if (width > 0 && height > 0) {
+      renderer.setSize(width, height, true);
+
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+
+      render();
+    }
+  }
+
+  function destroy() {
+    renderer.dispose();
+    controls.removeEventListener('change', render);
   }
 
   renderer.setAnimationLoop(render);
@@ -57,56 +135,9 @@ export function createApplication() {
 
   return {
     canvas,
-    setModelSource: (
-      source: string,
-      onProgress?: (progress: number) => void,
-      abortSignal?: AbortSignal
-    ) => {
-      return new Promise<void>((resolve, reject) => {
-        const manager = new LoadingManager();
-
-        const loader = new GLTFLoader(manager);
-        loader.setWithCredentials(true);
-
-        loader.load(
-          source,
-          (gltf) => {
-            if (abortSignal?.aborted) {
-              return;
-            }
-
-            if (model) {
-              scene.remove(model);
-            }
-
-            model = gltf.scene;
-            scene.add(model);
-
-            resolve();
-          },
-          (event) => {
-            if (event.lengthComputable && onProgress) {
-              onProgress(event.loaded / event.total);
-            }
-          },
-          reject
-        );
-      });
-    },
-    setSize: (width: number, height: number) => {
-      if (width > 0 && height > 0) {
-        renderer.setSize(width, height, true);
-
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-
-        render();
-      }
-    },
+    setModelSource,
+    setSize,
     setBackgroundTheme,
-    destroy: () => {
-      renderer.dispose();
-      controls.removeEventListener('change', render);
-    },
+    destroy,
   };
 }
