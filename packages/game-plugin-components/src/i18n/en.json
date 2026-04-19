@@ -16,7 +16,8 @@
     "SpineController": {
       "Header": {
         "exportFrame": "Export frame",
-        "fit": "Fit to view"
+        "fit": "Fit to view",
+        "loop": "Loop"
       }
     },
     "PlayButton": {

@@ -17,6 +17,7 @@ export function IconSwitchButton({
   className,
   children,
   checked,
+  title,
   rounding,
   hover,
   onCheckedChanged,
@@ -29,6 +30,7 @@ export function IconSwitchButton({
   return (
     <IconComponentBase
       as="label"
+      title={title}
       rounding={rounding}
       hover={hover}
       className={classNames(checked && styles['root-checked'], className)}

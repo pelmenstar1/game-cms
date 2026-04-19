@@ -103,6 +103,8 @@ export async function createSpineApplication() {
 
   let initialBoundsMap: InitialBoundsMap | undefined;
   let currentAnimation: string | undefined;
+  let currentSkin: string | undefined;
+  let currentLoop = true;
   let currentAnimationRunning = true;
   let onAnimationTimeChanged: OnAnimationTimeChanged | undefined;
 
@@ -185,8 +187,13 @@ export async function createSpineApplication() {
       const { state } = component;
 
       if (currentAnimation !== undefined) {
-        if (state.tracks[0]?.animation?.name !== currentAnimation) {
-          state.setAnimation(0, currentAnimation, true);
+        const firstTrack = state.tracks[0];
+
+        if (
+          firstTrack?.animation?.name !== currentAnimation ||
+          firstTrack.loop !== currentLoop
+        ) {
+          state.setAnimation(0, currentAnimation, currentLoop);
           component.update(0);
         }
       } else {
@@ -273,6 +280,7 @@ export async function createSpineApplication() {
     }
 
     refreshAnimation();
+    refreshSkin();
     onSizeChanged();
   }
 
@@ -287,6 +295,31 @@ export async function createSpineApplication() {
     }
 
     return spine.skeleton.data.animations.map(({ name }) => name);
+  }
+
+  function getSkins() {
+    const spine = resolvedSpine?.component;
+    if (!spine) {
+      return [];
+    }
+
+    return spine.skeleton.data.skins.map(({ name }) => name);
+  }
+
+  function refreshSkin() {
+    if (!currentSkin) return;
+
+    const spine = resolvedSpine?.component;
+    if (!spine) return;
+
+    spine.skeleton.setSkinByName(currentSkin);
+    spine.skeleton.setSlotsToSetupPose();
+    spine.update(0);
+  }
+
+  function setSkin(name: string | undefined) {
+    currentSkin = name;
+    refreshSkin();
   }
 
   function setAnimation(name: string | undefined) {
@@ -307,6 +340,11 @@ export async function createSpineApplication() {
         app.ticker.remove(onTick);
       }
     }
+  }
+
+  function setLoop(value: boolean) {
+    currentLoop = value;
+    refreshAnimation();
   }
 
   function setOnAnimationTimeChanged(
@@ -358,8 +396,11 @@ export async function createSpineApplication() {
     setSize,
     onSizeChanged,
     getAnimations,
+    getSkins,
     destroy,
     setAnimation,
+    setLoop,
+    setSkin,
     setAnimationRunning,
     setOnAnimationTimeChanged,
     setTime,

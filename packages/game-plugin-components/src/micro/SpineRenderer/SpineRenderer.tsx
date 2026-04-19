@@ -35,7 +35,10 @@ export interface SpineRendererProps extends Omit<
   animation?: string;
   isRunning?: boolean;
 
+  skin?: string;
+  loop?: boolean;
   onAnimationsLoaded?: (names: string[]) => void;
+  onSkinsLoaded?: (names: string[]) => void;
   onAnimationTimeChanged?: OnAnimationTimeChanged;
 }
 
@@ -44,9 +47,12 @@ export function SpineRenderer({
   className,
   spine,
   animation,
+  skin,
+  loop = true,
   isRunning = true,
   speed = 1,
   onAnimationsLoaded,
+  onSkinsLoaded,
   onAnimationTimeChanged,
   ...rest
 }: SpineRendererProps) {
@@ -66,7 +72,11 @@ export function SpineRenderer({
         app?.setTime(time);
       },
       exportFrame: async () => {
-        return (await app?.exportFrame()) ?? null;
+        if (app) {
+          return app.exportFrame();
+        }
+
+        return null;
       },
       fit: () => {
         transformRef.current?.resetTransform();
@@ -94,6 +104,14 @@ export function SpineRenderer({
   }, [app, animation]);
 
   useEffect(() => {
+    app?.setSkin(skin);
+  }, [app, skin]);
+
+  useEffect(() => {
+    app?.setLoop(loop);
+  }, [app, loop]);
+
+  useEffect(() => {
     app?.setAnimationRunning(isRunning);
   }, [app, isRunning]);
 
@@ -108,8 +126,9 @@ export function SpineRenderer({
   useEffect(() => {
     if (app && isSpineLoaded) {
       onAnimationsLoaded?.(app.getAnimations());
+      onSkinsLoaded?.(app.getSkins());
     }
-  }, [app, isSpineLoaded, onAnimationsLoaded]);
+  }, [app, isSpineLoaded, onAnimationsLoaded, onSkinsLoaded]);
 
   return (
     <div className={classNames(styles.root, className)} {...rest}>

@@ -28,7 +28,10 @@ export function OptionSwitch<T extends Key>({
   renderOption,
   ...rest
 }: OptionSwitchProps<T>) {
-  const selectedIndex = selected !== undefined ? options.indexOf(selected) : -1;
+  const selectedIndex =
+    selected !== undefined
+      ? options.findIndex((o) => Object.is(o, selected))
+      : -1;
 
   return (
     <div
@@ -42,7 +45,7 @@ export function OptionSwitch<T extends Key>({
     >
       {options.map((option, index) => (
         <UnstyledOption
-          key={option}
+          key={String(option)}
           className={classNames(
             styles['item'],
             disabled && styles['item-disabled'],
