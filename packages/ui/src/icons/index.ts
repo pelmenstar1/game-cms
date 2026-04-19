@@ -35,6 +35,7 @@ export * from './InfoIcon';
 export * from './InstagramIcon';
 export * from './ItalicIcon';
 export * from './LegendToggleIcon';
+export * from './LightbulbIcon';
 export * from './LightModeIcon';
 export * from './LinkIcon';
 export * from './LoopIcon';

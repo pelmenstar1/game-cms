@@ -1,0 +1,11 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.button {
+  background: var(--color-background);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  padding: 0.25em;
+}

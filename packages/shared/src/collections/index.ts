@@ -1,3 +1,4 @@
+export * from './cycle.js';
 export * from './filter.js';
 export * from './findNewKey.js';
 export * from './maybeArray.js';

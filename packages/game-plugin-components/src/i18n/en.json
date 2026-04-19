@@ -46,7 +46,12 @@
     },
     "ThreeDModelController": {
       "switchTheme": "Switch theme",
-      "failedToLoadModel": "Failed to load the model"
+      "failedToLoadModel": "Failed to load the model",
+      "lighting": {
+        "ambient": "Ambient lighting",
+        "directional": "Directional lighting",
+        "hemisphere": "Hemisphere lighting"
+      }
     },
     "PixiScene": {
       "sceneFailed": "Failed to create a game scene"

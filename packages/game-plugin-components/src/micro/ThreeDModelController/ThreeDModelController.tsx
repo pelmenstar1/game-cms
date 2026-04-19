@@ -1,19 +1,16 @@
-import {
-  CircularProgress,
-  classNames,
-  DarkModeIcon,
-  ErrorMessage,
-  IconButton,
-  LightModeIcon,
-} from '@game-cms/ui';
+import { cycleArray } from '@game-cms/shared/collections';
+import { CircularProgress, classNames, ErrorMessage } from '@game-cms/ui';
 import { ComponentProps, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
   BackgroundTheme,
+  LIGHTING_TYPES,
+  LightingType,
   ModelStatus,
   ThreeDModelRenderer,
 } from '../ThreeDModelRenderer';
+import { Header } from './Header';
 import styles from './ThreeDModelController.module.scss';
 
 export interface ThreeDModelControllerProps extends ComponentProps<'div'> {
@@ -33,8 +30,14 @@ export function ThreeDModelController({
   const [backgroundTheme, setBackgroundTheme] =
     useState<BackgroundTheme>('light');
 
+  const [lightingType, setLightingType] = useState<LightingType>('directional');
+
   const switchBackgroundTheme = useCallback(() => {
     setBackgroundTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  }, []);
+
+  const cycleLightingType = useCallback(() => {
+    setLightingType((prev) => cycleArray(LIGHTING_TYPES, prev));
   }, []);
 
   const { t } = useTranslation('game', {
@@ -44,14 +47,13 @@ export function ThreeDModelController({
   return (
     <div className={classNames(styles.root, className)} {...rest}>
       {modelStatus.type === 'loaded' && (
-        <IconButton
-          className={styles['switch-theme']}
-          title={t('switchTheme')}
-          hover="fill"
-          onClick={switchBackgroundTheme}
-        >
-          {backgroundTheme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-        </IconButton>
+        <Header
+          className={styles.toolbar}
+          backgroundTheme={backgroundTheme}
+          lightingType={lightingType}
+          onSwitchTheme={switchBackgroundTheme}
+          onCycleLightingType={cycleLightingType}
+        />
       )}
 
       <ThreeDModelRenderer
@@ -61,6 +63,7 @@ export function ThreeDModelController({
         )}
         source={source}
         backgroundTheme={backgroundTheme}
+        lightingType={lightingType}
         onModelStatusChanged={setModelStatus}
       />
 

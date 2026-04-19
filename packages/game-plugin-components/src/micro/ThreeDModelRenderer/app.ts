@@ -3,6 +3,9 @@ import {
   AxesHelper,
   Box3,
   Color,
+  DirectionalLight,
+  HemisphereLight,
+  Light,
   LoadingManager,
   Object3D,
   PerspectiveCamera,
@@ -14,6 +17,7 @@ import {
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+import { LightingType } from './constants';
 import { BackgroundTheme } from './types';
 
 const FOV = 75;
@@ -26,6 +30,7 @@ export type Application = ReturnType<typeof createApplication>;
 export function createApplication() {
   const scene = new Scene();
   let model: Object3D | undefined;
+  let activeLights: Light[] = [];
 
   const renderer = new WebGLRenderer({ antialias: true });
 
@@ -33,9 +38,6 @@ export function createApplication() {
 
   const camera = new PerspectiveCamera(FOV, ASPECT, NEAR, FAR);
   camera.position.z = 2;
-
-  const light = new AmbientLight(0xff_ff_ff, 1);
-  scene.add(light);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 0, 0);
@@ -70,8 +72,35 @@ export function createApplication() {
   }
 
   function setBackgroundTheme(theme: BackgroundTheme) {
-    scene.background =
-      theme === 'light' ? new Color(0xff_ff_ff) : new Color(0x44_44_44);
+    const background = theme === 'light' ? 0xff_ff_ff : 0x44_44_44;
+
+    scene.background = new Color(background);
+  }
+
+  function setLightingType(type: LightingType) {
+    for (const light of activeLights) {
+      scene.remove(light);
+    }
+
+    if (type === 'ambient') {
+      const ambient = new AmbientLight(0xff_ff_ff, 1);
+
+      activeLights = [ambient];
+    } else if (type === 'directional') {
+      const ambient = new AmbientLight(0xff_ff_ff, 0.4);
+      const directional = new DirectionalLight(0xff_ff_ff, 1.5);
+      directional.position.set(5, 10, 5);
+
+      activeLights = [ambient, directional];
+    } else {
+      const hemisphereLight = new HemisphereLight(0x87_ce_eb, 0x8b_73_55, 1.5);
+
+      activeLights = [hemisphereLight];
+    }
+
+    for (const light of activeLights) {
+      scene.add(light);
+    }
   }
 
   function setModelSource(
@@ -132,12 +161,14 @@ export function createApplication() {
   controls.addEventListener('change', render);
 
   setBackgroundTheme('light');
+  setLightingType('directional');
 
   return {
     canvas,
     setModelSource,
     setSize,
     setBackgroundTheme,
+    setLightingType,
     destroy,
   };
 }

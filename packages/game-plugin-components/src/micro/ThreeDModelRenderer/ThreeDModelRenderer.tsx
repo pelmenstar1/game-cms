@@ -3,15 +3,15 @@ import { classNames, useBounds } from '@game-cms/ui';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 
 import { Application, createApplication } from './app';
+import { LightingType } from './constants';
 import styles from './ThreeDModelRenderer.module.scss';
 import { BackgroundTheme, ModelStatus } from './types';
-
-export * from './types';
 
 export interface ThreeDModelRendererProps {
   className?: string;
   source: string;
   backgroundTheme?: BackgroundTheme;
+  lightingType?: LightingType;
 
   onModelStatusChanged?: (status: ModelStatus) => void;
 }
@@ -20,6 +20,7 @@ export function ThreeDModelRenderer({
   className,
   source,
   backgroundTheme = 'light',
+  lightingType = 'directional',
   onModelStatusChanged,
 }: ThreeDModelRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,6 +57,10 @@ export function ThreeDModelRenderer({
   useEffect(() => {
     appRef.current?.setBackgroundTheme(backgroundTheme);
   }, [backgroundTheme]);
+
+  useEffect(() => {
+    appRef.current?.setLightingType(lightingType);
+  }, [lightingType]);
 
   useEffect(() => {
     const abortController = createAbortController();
