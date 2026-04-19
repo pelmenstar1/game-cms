@@ -18,6 +18,9 @@
         "exportFrame": "Export frame",
         "fit": "Fit to view",
         "loop": "Loop"
+      },
+      "AnimationList": {
+        "search": "Search"
       }
     },
     "PlayButton": {
