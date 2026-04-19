@@ -29,6 +29,7 @@ export * from './FitScreenIcon';
 export * from './FolderIcon';
 export * from './GlobeIcon';
 export * from './GoogleSpreadsheetIcon';
+export * from './GridIcon';
 export * from './HomeIcon';
 export * from './ImageIcon';
 export * from './InfoIcon';

@@ -28,6 +28,7 @@ export interface ThreeDModelRendererProps {
   isPlaying?: boolean;
   autoRotate?: boolean;
   axesVisible?: boolean;
+  gridVisible?: boolean;
   seekTarget?: { value: number };
 
   onModelStatusChanged?: (status: ModelStatus) => void;
@@ -45,6 +46,7 @@ export function ThreeDModelRenderer({
   isPlaying = false,
   autoRotate = false,
   axesVisible = false,
+  gridVisible = false,
   seekTarget,
   onModelStatusChanged,
   onAnimationsLoaded,
@@ -141,6 +143,10 @@ export function ThreeDModelRenderer({
   useEffect(() => {
     appRef.current?.setAxesVisible(axesVisible);
   }, [axesVisible]);
+
+  useEffect(() => {
+    appRef.current?.setGridVisible(gridVisible);
+  }, [gridVisible]);
 
   useEffect(() => {
     if (seekTarget !== undefined) {

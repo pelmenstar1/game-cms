@@ -48,6 +48,7 @@
       "switchTheme": "Switch theme",
       "autoRotate": "Auto-rotate",
       "axes": "Toggle axes",
+      "grid": "Toggle grid",
       "screenshot": "Download screenshot",
       "failedToLoadModel": "Failed to load the model",
       "play": "Play",

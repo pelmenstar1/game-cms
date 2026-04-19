@@ -36,6 +36,7 @@ export function ThreeDModelController({
   const [lightingType, setLightingType] = useState<LightingType>('directional');
   const [isAutoRotating, setIsAutoRotating] = useState(false);
   const [isAxesVisible, setIsAxesVisible] = useState(false);
+  const [isGridVisible, setIsGridVisible] = useState(false);
 
   const rendererRef = useRef<ThreeDModelRendererHandle>(null);
 
@@ -59,6 +60,10 @@ export function ThreeDModelController({
 
   const toggleAxes = useCallback(() => {
     setIsAxesVisible((prev) => !prev);
+  }, []);
+
+  const toggleGrid = useCallback(() => {
+    setIsGridVisible((prev) => !prev);
   }, []);
 
   const handleScreenshot = useCallback(() => {
@@ -104,10 +109,12 @@ export function ThreeDModelController({
           lightingType={lightingType}
           isAutoRotating={isAutoRotating}
           isAxesVisible={isAxesVisible}
+          isGridVisible={isGridVisible}
           onSwitchTheme={switchBackgroundTheme}
           onCycleLightingType={cycleLightingType}
           onToggleAutoRotate={toggleAutoRotate}
           onToggleAxes={toggleAxes}
+          onToggleGrid={toggleGrid}
           onScreenshot={handleScreenshot}
         />
       )}
@@ -123,6 +130,7 @@ export function ThreeDModelController({
         lightingType={lightingType}
         autoRotate={isAutoRotating}
         axesVisible={isAxesVisible}
+        gridVisible={isGridVisible}
         activeClipIndex={activeClipIndex}
         isPlaying={isPlaying}
         seekTarget={seekTarget}

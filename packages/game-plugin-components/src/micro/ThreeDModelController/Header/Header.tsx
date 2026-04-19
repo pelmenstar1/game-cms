@@ -2,6 +2,7 @@ import {
   classNames,
   DarkModeIcon,
   DownloadIcon,
+  GridIcon,
   IconButton,
   IconSwitchButton,
   LightbulbIcon,
@@ -20,11 +21,13 @@ export interface HeaderProps {
   lightingType: LightingType;
   isAutoRotating: boolean;
   isAxesVisible: boolean;
+  isGridVisible: boolean;
 
   onSwitchTheme: () => void;
   onCycleLightingType: () => void;
   onToggleAutoRotate: () => void;
   onToggleAxes: () => void;
+  onToggleGrid: () => void;
   onScreenshot: () => void;
 }
 
@@ -34,10 +37,12 @@ export function Header({
   lightingType,
   isAutoRotating,
   isAxesVisible,
+  isGridVisible,
   onSwitchTheme,
   onCycleLightingType,
   onToggleAutoRotate,
   onToggleAxes,
+  onToggleGrid,
   onScreenshot,
 }: HeaderProps) {
   const { t } = useTranslation('game', {
@@ -82,6 +87,16 @@ export function Header({
         onCheckedChanged={onToggleAxes}
       >
         <LineAxisIcon />
+      </IconSwitchButton>
+
+      <IconSwitchButton
+        className={styles.button}
+        title={t('grid')}
+        hover="fill"
+        checked={isGridVisible}
+        onCheckedChanged={onToggleGrid}
+      >
+        <GridIcon />
       </IconSwitchButton>
 
       <IconButton

@@ -8,6 +8,7 @@ import {
   Box3,
   Color,
   DirectionalLight,
+  GridHelper,
   HemisphereLight,
   Light,
   LoadingManager,
@@ -55,8 +56,18 @@ export function createApplication() {
 
   const axes = new AxesHelper(FAR);
   axes.visible = false;
-
   scene.add(axes);
+
+  let gridVisible = false;
+  let grid = new GridHelper(2, 20);
+  grid.visible = false;
+
+  scene.add(grid);
+
+  function setGridVisible(visible: boolean) {
+    gridVisible = visible;
+    grid.visible = visible;
+  }
 
   function render(timestamp: number) {
     if (mixer) {
@@ -92,6 +103,14 @@ export function createApplication() {
 
     controls.target.copy(center);
     controls.update();
+
+    scene.remove(grid);
+
+    grid = new GridHelper(radius * 4, 20);
+    grid.position.set(center.x, box.min.y, center.z);
+    grid.visible = gridVisible;
+
+    scene.add(grid);
   }
 
   function setBackgroundTheme(theme: BackgroundTheme) {
@@ -263,6 +282,7 @@ export function createApplication() {
     seekAnimation,
     setAutoRotate,
     setAxesVisible,
+    setGridVisible,
     setOnTimeUpdate,
     screenshot,
     destroy,
