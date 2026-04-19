@@ -7,9 +7,10 @@ import { PrettyAtlasView } from './PrettyAtlasView';
 export interface AtlasPartProps {
   className?: string;
   atlasData?: AtlasData;
+  imageUrl: string;
 }
 
-export function AtlasPart({ className, atlasData }: AtlasPartProps) {
+export function AtlasPart({ className, atlasData, imageUrl }: AtlasPartProps) {
   if (!atlasData) {
     return null;
   }
@@ -17,7 +18,7 @@ export function AtlasPart({ className, atlasData }: AtlasPartProps) {
   return (
     <UncontrolledTabs className={className} tabClassName={styles.tab}>
       <Tab tabId="pretty" title="Pretty">
-        <PrettyAtlasView spritesheet={atlasData.value} />
+        <PrettyAtlasView spritesheet={atlasData.value} imageUrl={imageUrl} />
       </Tab>
 
       <Tab tabId="raw" title="Raw">

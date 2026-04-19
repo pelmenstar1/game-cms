@@ -52,6 +52,7 @@ export function PreviewTab({ className, imageUrl, atlasUrl }: PreviewTabProps) {
 
         <AtlasPart
           atlasData={atlasData}
+          imageUrl={imageUrl}
           className={classNames(styles['part'], styles['atlas'])}
         />
       </div>

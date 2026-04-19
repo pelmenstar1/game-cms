@@ -37,6 +37,7 @@
       "pause": "Pause"
     },
     "SpritesheetPreviewModal": {
+      "title": "Spritesheet preview",
       "ImagePreview": {
         "toggleMap": "Toggle map"
       }

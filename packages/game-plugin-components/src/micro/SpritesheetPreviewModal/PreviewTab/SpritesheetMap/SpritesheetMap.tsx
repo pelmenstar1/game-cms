@@ -26,9 +26,7 @@ export function SpritesheetMap({
     const canvas = canvasRef.current;
 
     if (canvas) {
-      const ctx = canvas.getContext('2d');
-
-      contextRef.current = ctx;
+      contextRef.current = canvas.getContext('2d');
     }
   }, []);
 
@@ -42,8 +40,10 @@ export function SpritesheetMap({
     ctx.strokeStyle = '#f00';
     ctx.lineWidth = 1;
 
-    for (const [name, frame] of Object.entries(spritesheet.frames)) {
-      const { x, y, w, h } = frame.frame;
+    const { frames } = spritesheet;
+
+    for (const name in frames) {
+      const { x, y, w, h } = frames[name].frame;
       const isSelected = selectedFrame === name;
 
       if (!displayAllFrames && !isSelected) continue;
@@ -71,6 +71,7 @@ export function SpritesheetMap({
 
       if (px >= x && px <= x + w && py >= y && py <= y + h) {
         setSelectedFrame(name);
+
         return;
       }
     }
@@ -83,6 +84,7 @@ export function SpritesheetMap({
       width={width}
       height={height}
       onPointerMove={handlePointerMove}
+      onPointerDown={handlePointerMove}
     />
   );
 }
