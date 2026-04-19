@@ -13,7 +13,8 @@ export function PrettyAtlasView({
   className,
   spritesheet,
 }: PrettyAtlasViewProps) {
-  const { selectedFrame, setSelectedFrame } = usePreviewTabContext();
+  const { selectedFrame, setSelectedFrame, setPinnedFrame } =
+    usePreviewTabContext();
 
   return (
     <List className={classNames(styles.root, className)}>
@@ -26,6 +27,7 @@ export function PrettyAtlasView({
           )}
           onClick={() => {
             setSelectedFrame(name);
+            setPinnedFrame(name);
           }}
         >
           <Typography weight="bold">{name}</Typography>

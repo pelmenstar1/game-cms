@@ -93,12 +93,12 @@ export default defineComponentController({
       return composer.result();
     },
     createIndex: (data, options, context) => {
-      return mapObject(data, (value, key) => {
-        const { componentId, options: baseOptions } = options[key];
+      return mapObject(options, (schema, key) => {
+        const { componentId, options: baseOptions } = schema;
 
         return context.createSearchIndex(
           componentId,
-          value as never,
+          data[key] as never,
           baseOptions
         );
       });

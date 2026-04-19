@@ -54,6 +54,7 @@ export function FolderNameModal({ onClose }: FolderNameModalProps) {
           onTextChanged={setName}
           error={!isValid}
           onKeyDown={onKeyDown}
+          autoFocus
         />
       </Labeled>
 

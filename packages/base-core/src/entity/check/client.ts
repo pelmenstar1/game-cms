@@ -49,9 +49,9 @@ export type EntityCheckRenderer<Id extends EntityCheckId = EntityCheckId> = (
 type BaseEntityCheckIsAllowedOptions<Id extends EntityCheckId = EntityCheckId> =
   {
     entityId: EntityId;
-    documentId: string;
+    documentId?: string;
     documentVariant: EntityVariant;
-    data: EntityCheckClientData<Id>;
+    data?: EntityCheckClientData<Id>;
   };
 
 export type EntityCheckIsAllowedOptions<

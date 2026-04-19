@@ -1,5 +1,5 @@
-import { classNames, useTextFetch } from '@game-cms/ui';
-import { useMemo } from 'react';
+import { classNames, useNotification, useTextFetch } from '@game-cms/ui';
+import { useEffect, useState } from 'react';
 
 import { spritesheetDataWithSize } from '../../../utils/spritesheet/schema';
 import { AtlasPart } from './AtlasPart';
@@ -16,19 +16,30 @@ export interface PreviewTabProps {
 
 export function PreviewTab({ className, imageUrl, atlasUrl }: PreviewTabProps) {
   const atlasResult = useTextFetch(atlasUrl);
+  const [atlasData, setAtlasData] = useState<AtlasData>();
 
-  const atlasData = useMemo((): AtlasData | undefined => {
+  const notification = useNotification();
+
+  useEffect(() => {
     if (atlasResult.status === 'success') {
-      const atlasObject: unknown = JSON.parse(atlasResult.value);
-      const parseResult = spritesheetDataWithSize.safeParse(atlasObject);
+      try {
+        const atlasObject: unknown = JSON.parse(atlasResult.value);
+        const parseResult = spritesheetDataWithSize.safeParse(atlasObject);
 
-      if (parseResult.success) {
-        return { raw: atlasResult.value, value: parseResult.data };
+        if (parseResult.success) {
+          setAtlasData({ raw: atlasResult.value, value: parseResult.data });
+        } else {
+          console.error(parseResult.error);
+
+          notification.error('Failed to parse atlas data');
+        }
+      } catch (error) {
+        console.error(error);
+
+        notification.error('Failed to parse atlas JSON');
       }
-
-      console.error(parseResult.error);
     }
-  }, [atlasResult]);
+  }, [atlasResult, notification]);
 
   return (
     <PreviewTabContextProvider>

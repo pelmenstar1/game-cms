@@ -4,13 +4,16 @@ import { PreviewTabContext, PreviewTabContextType } from './context';
 
 export function PreviewTabContextProvider({ children }: PropsWithChildren) {
   const [selectedFrame, setSelectedFrame] = useState<string>();
+  const [pinnedFrame, setPinnedFrame] = useState<string>();
 
   const context = useMemo(
     (): PreviewTabContextType => ({
       selectedFrame,
       setSelectedFrame,
+      pinnedFrame,
+      setPinnedFrame,
     }),
-    [selectedFrame]
+    [selectedFrame, pinnedFrame]
   );
 
   return (
