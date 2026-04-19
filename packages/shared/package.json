@@ -68,6 +68,10 @@
     "./zod": {
       "import": "./dist/zod/index.js",
       "types": "./dist/zod/index.d.ts"
+    },
+    "./browser": {
+      "import": "./dist/browser/index.js",
+      "types": "./dist/browser/index.d.ts"
     }
   }
 }

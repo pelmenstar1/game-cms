@@ -1,3 +1,4 @@
+import { canvasToBlob } from '@game-cms/shared/browser';
 import {
   AmbientLight,
   AnimationAction,
@@ -227,6 +228,12 @@ export function createApplication() {
     renderer.render(scene, camera);
   }
 
+  function screenshot() {
+    renderer.render(scene, camera);
+
+    return canvasToBlob(renderer.domElement);
+  }
+
   function destroy() {
     renderer.dispose();
     controls.removeEventListener('change', renderImmediate);
@@ -250,6 +257,7 @@ export function createApplication() {
     seekAnimation,
     setAutoRotate,
     setOnTimeUpdate,
+    screenshot,
     destroy,
   };
 }

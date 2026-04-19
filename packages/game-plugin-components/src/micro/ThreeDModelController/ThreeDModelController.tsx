@@ -1,6 +1,6 @@
 import { cycleArray } from '@game-cms/shared/collections';
 import { CircularProgress, classNames, ErrorMessage } from '@game-cms/ui';
-import { ComponentProps, useCallback, useState } from 'react';
+import { ComponentProps, useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -10,6 +10,7 @@ import {
   LightingType,
   ModelStatus,
   ThreeDModelRenderer,
+  ThreeDModelRendererHandle,
 } from '../ThreeDModelRenderer';
 import { AnimationControls } from './AnimationControls';
 import { Header } from './Header';
@@ -35,6 +36,8 @@ export function ThreeDModelController({
   const [lightingType, setLightingType] = useState<LightingType>('directional');
   const [isAutoRotating, setIsAutoRotating] = useState(false);
 
+  const rendererRef = useRef<ThreeDModelRendererHandle>(null);
+
   const [animations, setAnimations] = useState<AnimationInfo[]>([]);
   const [activeClipIndex, setActiveClipIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -51,6 +54,10 @@ export function ThreeDModelController({
 
   const toggleAutoRotate = useCallback(() => {
     setIsAutoRotating((prev) => !prev);
+  }, []);
+
+  const handleScreenshot = useCallback(() => {
+    rendererRef.current?.takeScreenshot();
   }, []);
 
   const handleAnimationsLoaded = useCallback((loaded: AnimationInfo[]) => {
@@ -94,10 +101,12 @@ export function ThreeDModelController({
           onSwitchTheme={switchBackgroundTheme}
           onCycleLightingType={cycleLightingType}
           onToggleAutoRotate={toggleAutoRotate}
+          onScreenshot={handleScreenshot}
         />
       )}
 
       <ThreeDModelRenderer
+        ref={rendererRef}
         className={classNames(
           styles.renderer,
           modelStatus.type === 'loaded' && styles['renderer-loaded']

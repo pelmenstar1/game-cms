@@ -1,4 +1,4 @@
-import { copyToClipboard } from '@game-cms/shared';
+import { copyToClipboard } from '@game-cms/shared/browser';
 import type { ComponentProps } from 'react';
 
 import { CopyIcon } from '../../icons';

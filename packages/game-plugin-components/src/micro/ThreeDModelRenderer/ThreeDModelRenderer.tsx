@@ -1,11 +1,22 @@
 import { createAbortController } from '@game-cms/shared';
 import { classNames, useBounds } from '@game-cms/ui';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import FileSaver from 'file-saver';
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 
 import { Application, createApplication } from './app';
 import { LightingType } from './constants';
 import styles from './ThreeDModelRenderer.module.scss';
 import { AnimationInfo, BackgroundTheme, ModelStatus } from './types';
+
+export interface ThreeDModelRendererHandle {
+  takeScreenshot: () => void;
+}
 
 export interface ThreeDModelRendererProps {
   className?: string;
@@ -22,19 +33,25 @@ export interface ThreeDModelRendererProps {
   onAnimationTimeUpdate?: (time: number) => void;
 }
 
-export function ThreeDModelRenderer({
-  className,
-  source,
-  backgroundTheme = 'light',
-  lightingType = 'directional',
-  activeClipIndex,
-  isPlaying = false,
-  autoRotate = false,
-  seekTarget,
-  onModelStatusChanged,
-  onAnimationsLoaded,
-  onAnimationTimeUpdate,
-}: ThreeDModelRendererProps) {
+export const ThreeDModelRenderer = forwardRef<
+  ThreeDModelRendererHandle,
+  ThreeDModelRendererProps
+>(function ThreeDModelRenderer(
+  {
+    className,
+    source,
+    backgroundTheme = 'light',
+    lightingType = 'directional',
+    activeClipIndex,
+    isPlaying = false,
+    autoRotate = false,
+    seekTarget,
+    onModelStatusChanged,
+    onAnimationsLoaded,
+    onAnimationTimeUpdate,
+  },
+  ref
+) {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
 
@@ -53,6 +70,24 @@ export function ThreeDModelRenderer({
   isPlayingRef.current = isPlaying;
 
   const size = useBounds(containerRef);
+
+  useImperativeHandle(ref, () => ({
+    takeScreenshot() {
+      // eslint-disable-next-line unicorn/consistent-function-scoping
+      const worker = async () => {
+        const app = appRef.current;
+        if (!app) {
+          return;
+        }
+
+        const data = await app.screenshot();
+
+        FileSaver(data, 'screenshot.png');
+      };
+
+      void worker();
+    },
+  }));
 
   useLayoutEffect(() => {
     const container = containerRef.current;
@@ -150,4 +185,4 @@ export function ThreeDModelRenderer({
   return (
     <div className={classNames(styles.root, className)} ref={containerRef} />
   );
-}
+});

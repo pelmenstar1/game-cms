@@ -47,6 +47,7 @@
     "ThreeDModelController": {
       "switchTheme": "Switch theme",
       "autoRotate": "Auto-rotate",
+      "screenshot": "Download screenshot",
       "failedToLoadModel": "Failed to load the model",
       "play": "Play",
       "pause": "Pause",

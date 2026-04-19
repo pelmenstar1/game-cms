@@ -1,6 +1,7 @@
 import {
   classNames,
   DarkModeIcon,
+  DownloadIcon,
   IconButton,
   IconSwitchButton,
   LightbulbIcon,
@@ -21,6 +22,7 @@ export interface HeaderProps {
   onSwitchTheme: () => void;
   onCycleLightingType: () => void;
   onToggleAutoRotate: () => void;
+  onScreenshot: () => void;
 }
 
 export function Header({
@@ -31,6 +33,7 @@ export function Header({
   onSwitchTheme,
   onCycleLightingType,
   onToggleAutoRotate,
+  onScreenshot,
 }: HeaderProps) {
   const { t } = useTranslation('game', {
     keyPrefix: 'micro.ThreeDModelController',
@@ -65,6 +68,15 @@ export function Header({
       >
         <LoopIcon />
       </IconSwitchButton>
+
+      <IconButton
+        className={styles.button}
+        title={t('screenshot')}
+        hover="fill"
+        onClick={onScreenshot}
+      >
+        <DownloadIcon />
+      </IconButton>
     </div>
   );
 }
