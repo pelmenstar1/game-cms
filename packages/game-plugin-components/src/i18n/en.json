@@ -21,6 +21,12 @@
       },
       "AnimationList": {
         "search": "Search"
+      },
+      "SpeedInput": {
+        "speed": "Speed"
+      },
+      "SkinSelector": {
+        "skin": "Skin"
       }
     },
     "SpineModal": {

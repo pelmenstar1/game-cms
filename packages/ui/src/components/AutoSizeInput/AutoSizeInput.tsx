@@ -24,6 +24,7 @@ export function AutoSizeInput({
         value={value}
         className={inputClassName}
         onChange={(event) => {
+          onChange?.(event);
           onTextChanged?.(event.target.value);
         }}
         {...rest}

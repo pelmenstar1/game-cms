@@ -1,5 +1,6 @@
 import { AutoSizeInput, Typography } from '@game-cms/ui';
 import { type KeyboardEvent, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import styles from './SpeedInput.module.scss';
 
@@ -11,6 +12,10 @@ interface SpeedInputProps {
 const MIN_SPEED = 0.1;
 
 export function SpeedInput({ speed, onSpeedChanged }: SpeedInputProps) {
+  const { t } = useTranslation('game', {
+    keyPrefix: 'micro.SpineController.SpeedInput',
+  });
+
   const [editValue, setEditValue] = useState<string | null>(null);
 
   const commit = (raw: string) => {
@@ -36,7 +41,7 @@ export function SpeedInput({ speed, onSpeedChanged }: SpeedInputProps) {
         type="number"
         min={MIN_SPEED}
         step="any"
-        aria-label="Speed"
+        aria-label={t('speed')}
         value={editValue ?? speed}
         onFocus={() => {
           setEditValue(String(speed));

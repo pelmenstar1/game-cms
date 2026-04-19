@@ -268,18 +268,23 @@ export async function createSpineApplication() {
   }
 
   function refreshSkin() {
-    if (!currentSkin) return;
-
     const spine = resolvedSpine?.component;
-    if (!spine) return;
 
-    spine.skeleton.setSkinByName(currentSkin);
-    spine.skeleton.setSlotsToSetupPose();
-    spine.update(0);
+    if (!spine) {
+      return;
+    }
+
+    if (currentSkin === undefined || currentSkin === '') {
+      spine.skeleton.setSkin(null);
+    } else {
+      spine.skeleton.setSkinByName(currentSkin);
+    }
   }
 
   function setSkin(name: string | undefined) {
     currentSkin = name;
+
+    onSizeChanged();
     refreshSkin();
   }
 

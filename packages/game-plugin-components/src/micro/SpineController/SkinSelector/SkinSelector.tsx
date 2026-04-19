@@ -1,5 +1,6 @@
 import { classNames, Select } from '@game-cms/ui';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import styles from './SkinSelector.module.scss';
 
@@ -16,6 +17,10 @@ export function SkinSelector({
   selectedSkin,
   onSkinSelected,
 }: SkinSelectorProps) {
+  const { t } = useTranslation('game', {
+    keyPrefix: 'micro.SpineController.SkinSelector',
+  });
+
   const items = useMemo(
     () => skins.map((name) => ({ key: name, title: name })),
     [skins]
@@ -26,7 +31,7 @@ export function SkinSelector({
       className={classNames(styles.root, className)}
       items={items}
       selectedItem={selectedSkin}
-      placeholder="Skin"
+      placeholder={t('skin')}
       onItemSelected={onSkinSelected}
     />
   );
