@@ -8,7 +8,7 @@ import {
   TextInput,
   useValidation,
 } from '@game-cms/ui';
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 
 import styles from './FolderNameModal.module.scss';
 
@@ -26,14 +26,22 @@ export function FolderNameModal({ onClose }: FolderNameModalProps) {
 
   const isValid = testValidationResult(validation);
 
+  const onSubmit = () => {
+    if (isValid) {
+      onClose(name);
+    }
+  };
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+
+      onSubmit();
+    }
+  };
+
   const createButton = (
-    <Button
-      disabled={!isValid}
-      buttonVariant="solid"
-      onClick={() => {
-        onClose(name);
-      }}
-    >
+    <Button disabled={!isValid} buttonVariant="solid" onClick={onSubmit}>
       Create
     </Button>
   );
@@ -41,7 +49,12 @@ export function FolderNameModal({ onClose }: FolderNameModalProps) {
   return (
     <ModalDialog effect="blur" onClose={onClose} footer={createButton}>
       <Labeled title="Name">
-        <TextInput value={name} onTextChanged={setName} error={!isValid} />
+        <TextInput
+          value={name}
+          onTextChanged={setName}
+          error={!isValid}
+          onKeyDown={onKeyDown}
+        />
       </Labeled>
 
       <ErrorBoard className={styles['error-board']} items={validation} />

@@ -46,7 +46,20 @@
     },
     "ThreeDModelController": {
       "switchTheme": "Switch theme",
-      "failedToLoadModel": "Failed to load the model"
+      "autoRotate": "Auto-rotate",
+      "axes": "Toggle axes",
+      "grid": "Toggle grid",
+      "screenshot": "Download screenshot",
+      "failedToLoadModel": "Failed to load the model",
+      "play": "Play",
+      "pause": "Pause",
+      "selectAnimation": "Select animation",
+      "animationIndex": "Animation {{index}}",
+      "lighting": {
+        "ambient": "Ambient lighting",
+        "directional": "Directional lighting",
+        "hemisphere": "Hemisphere lighting"
+      }
     },
     "PixiScene": {
       "sceneFailed": "Failed to create a game scene"

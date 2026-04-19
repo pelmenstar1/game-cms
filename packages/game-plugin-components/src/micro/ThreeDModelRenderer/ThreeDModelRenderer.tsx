@@ -1,36 +1,93 @@
 import { createAbortController } from '@game-cms/shared';
 import { classNames, useBounds } from '@game-cms/ui';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import FileSaver from 'file-saver';
+import {
+  Ref,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 
 import { Application, createApplication } from './app';
+import { LightingType } from './constants';
 import styles from './ThreeDModelRenderer.module.scss';
-import { BackgroundTheme, ModelStatus } from './types';
+import { AnimationInfo, BackgroundTheme, ModelStatus } from './types';
 
-export * from './types';
+export interface ThreeDModelRendererHandle {
+  takeScreenshot: () => void;
+}
 
 export interface ThreeDModelRendererProps {
+  ref?: Ref<ThreeDModelRendererHandle>;
   className?: string;
   source: string;
   backgroundTheme?: BackgroundTheme;
+  lightingType?: LightingType;
+  activeClipIndex?: number;
+  isPlaying?: boolean;
+  autoRotate?: boolean;
+  axesVisible?: boolean;
+  gridVisible?: boolean;
+  seekTarget?: { value: number };
 
   onModelStatusChanged?: (status: ModelStatus) => void;
+  onAnimationsLoaded?: (animations: AnimationInfo[]) => void;
+  onAnimationTimeUpdate?: (time: number) => void;
 }
 
 export function ThreeDModelRenderer({
+  ref,
   className,
   source,
   backgroundTheme = 'light',
+  lightingType = 'directional',
+  activeClipIndex,
+  isPlaying = false,
+  autoRotate = false,
+  axesVisible = false,
+  gridVisible = false,
+  seekTarget,
   onModelStatusChanged,
+  onAnimationsLoaded,
+  onAnimationTimeUpdate,
 }: ThreeDModelRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
 
   const onModelStatusChangedRef = useRef(onModelStatusChanged);
+  const onAnimationsLoadedRef = useRef(onAnimationsLoaded);
+  const onAnimationTimeUpdateRef = useRef(onAnimationTimeUpdate);
+  const isPlayingRef = useRef(isPlaying);
 
   // eslint-disable-next-line react-hooks/refs
   onModelStatusChangedRef.current = onModelStatusChanged;
+  // eslint-disable-next-line react-hooks/refs
+  onAnimationsLoadedRef.current = onAnimationsLoaded;
+  // eslint-disable-next-line react-hooks/refs
+  onAnimationTimeUpdateRef.current = onAnimationTimeUpdate;
+  // eslint-disable-next-line react-hooks/refs
+  isPlayingRef.current = isPlaying;
 
   const size = useBounds(containerRef);
+
+  useImperativeHandle(ref, () => ({
+    takeScreenshot() {
+      // eslint-disable-next-line unicorn/consistent-function-scoping
+      const worker = async () => {
+        const app = appRef.current;
+        if (!app) {
+          return;
+        }
+
+        const data = await app.screenshot();
+
+        FileSaver(data, 'screenshot.png');
+      };
+
+      void worker();
+    },
+  }));
 
   useLayoutEffect(() => {
     const container = containerRef.current;
@@ -39,11 +96,14 @@ export function ThreeDModelRenderer({
       const app = createApplication();
       appRef.current = app;
 
+      app.setOnTimeUpdate((time) => {
+        onAnimationTimeUpdateRef.current?.(time);
+      });
+
       container.append(app.canvas);
 
       return () => {
         app.destroy();
-
         app.canvas.remove();
       };
     }
@@ -58,6 +118,43 @@ export function ThreeDModelRenderer({
   }, [backgroundTheme]);
 
   useEffect(() => {
+    appRef.current?.setLightingType(lightingType);
+  }, [lightingType]);
+
+  useEffect(() => {
+    if (activeClipIndex !== undefined && activeClipIndex >= 0) {
+      appRef.current?.playAnimation(activeClipIndex, isPlayingRef.current);
+    }
+    // isPlayingRef intentionally excluded — it's a ref, not reactive state
+  }, [activeClipIndex]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      appRef.current?.resumeAnimation();
+    } else {
+      appRef.current?.pauseAnimation();
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    appRef.current?.setAutoRotate(autoRotate);
+  }, [autoRotate]);
+
+  useEffect(() => {
+    appRef.current?.setAxesVisible(axesVisible);
+  }, [axesVisible]);
+
+  useEffect(() => {
+    appRef.current?.setGridVisible(gridVisible);
+  }, [gridVisible]);
+
+  useEffect(() => {
+    if (seekTarget !== undefined) {
+      appRef.current?.seekAnimation(seekTarget.value);
+    }
+  }, [seekTarget]);
+
+  useEffect(() => {
     const abortController = createAbortController();
     const app = appRef.current;
 
@@ -70,8 +167,13 @@ export function ThreeDModelRenderer({
             onModelStatusChanged?.({ type: 'loading', progress });
           };
 
-          await app.setModelSource(source, onProgress, abortController?.signal);
+          const animations = await app.setModelSource(
+            source,
+            onProgress,
+            abortController?.signal
+          );
 
+          onAnimationsLoadedRef.current?.(animations);
           onModelStatusChanged?.({ type: 'loaded' });
         } catch (error: unknown) {
           console.error(error);

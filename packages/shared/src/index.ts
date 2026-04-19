@@ -1,5 +1,4 @@
 export * from './abortController.js';
-export * from './clipboard.js';
 export * from './delay.js';
 export * from './error.js';
 export * from './fetch.js';
