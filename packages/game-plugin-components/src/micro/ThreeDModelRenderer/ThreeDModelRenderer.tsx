@@ -2,7 +2,7 @@ import { createAbortController } from '@game-cms/shared';
 import { classNames, useBounds } from '@game-cms/ui';
 import FileSaver from 'file-saver';
 import {
-  forwardRef,
+  Ref,
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
@@ -19,6 +19,7 @@ export interface ThreeDModelRendererHandle {
 }
 
 export interface ThreeDModelRendererProps {
+  ref?: Ref<ThreeDModelRendererHandle>;
   className?: string;
   source: string;
   backgroundTheme?: BackgroundTheme;
@@ -26,6 +27,7 @@ export interface ThreeDModelRendererProps {
   activeClipIndex?: number;
   isPlaying?: boolean;
   autoRotate?: boolean;
+  axesVisible?: boolean;
   seekTarget?: { value: number };
 
   onModelStatusChanged?: (status: ModelStatus) => void;
@@ -33,25 +35,21 @@ export interface ThreeDModelRendererProps {
   onAnimationTimeUpdate?: (time: number) => void;
 }
 
-export const ThreeDModelRenderer = forwardRef<
-  ThreeDModelRendererHandle,
-  ThreeDModelRendererProps
->(function ThreeDModelRenderer(
-  {
-    className,
-    source,
-    backgroundTheme = 'light',
-    lightingType = 'directional',
-    activeClipIndex,
-    isPlaying = false,
-    autoRotate = false,
-    seekTarget,
-    onModelStatusChanged,
-    onAnimationsLoaded,
-    onAnimationTimeUpdate,
-  },
-  ref
-) {
+export function ThreeDModelRenderer({
+  ref,
+  className,
+  source,
+  backgroundTheme = 'light',
+  lightingType = 'directional',
+  activeClipIndex,
+  isPlaying = false,
+  autoRotate = false,
+  axesVisible = false,
+  seekTarget,
+  onModelStatusChanged,
+  onAnimationsLoaded,
+  onAnimationTimeUpdate,
+}: ThreeDModelRendererProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const appRef = useRef<Application | null>(null);
 
@@ -141,6 +139,10 @@ export const ThreeDModelRenderer = forwardRef<
   }, [autoRotate]);
 
   useEffect(() => {
+    appRef.current?.setAxesVisible(axesVisible);
+  }, [axesVisible]);
+
+  useEffect(() => {
     if (seekTarget !== undefined) {
       appRef.current?.seekAnimation(seekTarget.value);
     }
@@ -185,4 +187,4 @@ export const ThreeDModelRenderer = forwardRef<
   return (
     <div className={classNames(styles.root, className)} ref={containerRef} />
   );
-});
+}

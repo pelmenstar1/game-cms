@@ -54,6 +54,8 @@ export function createApplication() {
   controls.update();
 
   const axes = new AxesHelper(FAR);
+  axes.visible = false;
+
   scene.add(axes);
 
   function render(timestamp: number) {
@@ -209,6 +211,10 @@ export function createApplication() {
     controls.autoRotate = enabled;
   }
 
+  function setAxesVisible(visible: boolean) {
+    axes.visible = visible;
+  }
+
   function setOnTimeUpdate(callback: ((time: number) => void) | undefined) {
     onTimeUpdate = callback;
   }
@@ -256,6 +262,7 @@ export function createApplication() {
     resumeAnimation,
     seekAnimation,
     setAutoRotate,
+    setAxesVisible,
     setOnTimeUpdate,
     screenshot,
     destroy,

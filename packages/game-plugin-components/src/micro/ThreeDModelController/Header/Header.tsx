@@ -6,6 +6,7 @@ import {
   IconSwitchButton,
   LightbulbIcon,
   LightModeIcon,
+  LineAxisIcon,
   LoopIcon,
 } from '@game-cms/ui';
 import { useTranslation } from 'react-i18next';
@@ -18,10 +19,12 @@ export interface HeaderProps {
   backgroundTheme: BackgroundTheme;
   lightingType: LightingType;
   isAutoRotating: boolean;
+  isAxesVisible: boolean;
 
   onSwitchTheme: () => void;
   onCycleLightingType: () => void;
   onToggleAutoRotate: () => void;
+  onToggleAxes: () => void;
   onScreenshot: () => void;
 }
 
@@ -30,9 +33,11 @@ export function Header({
   backgroundTheme,
   lightingType,
   isAutoRotating,
+  isAxesVisible,
   onSwitchTheme,
   onCycleLightingType,
   onToggleAutoRotate,
+  onToggleAxes,
   onScreenshot,
 }: HeaderProps) {
   const { t } = useTranslation('game', {
@@ -67,6 +72,16 @@ export function Header({
         onCheckedChanged={onToggleAutoRotate}
       >
         <LoopIcon />
+      </IconSwitchButton>
+
+      <IconSwitchButton
+        className={styles.button}
+        title={t('axes')}
+        hover="fill"
+        checked={isAxesVisible}
+        onCheckedChanged={onToggleAxes}
+      >
+        <LineAxisIcon />
       </IconSwitchButton>
 
       <IconButton

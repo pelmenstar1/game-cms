@@ -37,6 +37,7 @@ export * from './ItalicIcon';
 export * from './LegendToggleIcon';
 export * from './LightbulbIcon';
 export * from './LightModeIcon';
+export * from './LineAxisIcon';
 export * from './LinkIcon';
 export * from './LoopIcon';
 export * from './MagicWandIcon';
