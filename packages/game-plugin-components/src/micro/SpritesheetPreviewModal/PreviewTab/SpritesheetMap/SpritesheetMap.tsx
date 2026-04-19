@@ -20,7 +20,7 @@ export function SpritesheetMap({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  const { left, top, width, height } = useBounds(canvasRef);
+  const { width, height } = useBounds(canvasRef);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -34,7 +34,9 @@ export function SpritesheetMap({
 
   useEffect(() => {
     const ctx = contextRef.current;
-    if (!ctx) return;
+    if (!ctx) {
+      return;
+    }
 
     ctx.clearRect(0, 0, width, height);
     ctx.strokeStyle = '#f00';
@@ -53,13 +55,19 @@ export function SpritesheetMap({
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
 
-    const px = e.clientX - left;
-    const py = e.clientY - top;
+    if (!canvas) {
+      return;
+    }
 
-    for (const [name, frame] of Object.entries(spritesheet.frames)) {
-      const { x, y, w, h } = frame.frame;
+    const rect = canvas.getBoundingClientRect();
+    const px = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const py = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+    const { frames } = spritesheet;
+
+    for (const name in frames) {
+      const { x, y, w, h } = frames[name].frame;
 
       if (px >= x && px <= x + w && py >= y && py <= y + h) {
         setSelectedFrame(name);

@@ -40,9 +40,13 @@ export function TransformView({
       zoomToRect(x, y, w, h) {
         const wrapper = wrapperRef.current;
         const container = containerRef.current;
-        if (!wrapper || !container) return;
+
+        if (!wrapper || !container) {
+          return;
+        }
 
         const { width: cW, height: cH } = container.getBoundingClientRect();
+
         const scale = Math.min(cW / w, cH / h) * 0.8;
         const positionX = cW / 2 - (x + w / 2) * scale;
         const positionY = cH / 2 - (y + h / 2) * scale;
