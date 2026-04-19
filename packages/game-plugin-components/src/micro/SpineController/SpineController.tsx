@@ -16,7 +16,9 @@ import type { SpineRendererRefType } from '../SpineRenderer/index.js';
 import type { SpineData } from '../SpineRenderer/types.js';
 import { AnimationList } from './AnimationList/index.js';
 import { Header } from './Header/index.js';
+import { SkinSelector } from './SkinSelector/index.js';
 import styles from './SpineController.module.scss';
+import { SpeedValue } from './types.js';
 
 const SpineRenderer = namedLazy(
   () => import('../SpineRenderer/index.js'),
@@ -37,13 +39,25 @@ export function SpineController({
   const [isRunning, setRunning] = useState(true);
   const [selectedAnimation, setSelectedAnimation] = useState<string>();
   const [animations, setAnimations] = useState<string[] | undefined>();
+  const [skins, setSkins] = useState<string[]>([]);
+  const [selectedSkin, setSelectedSkin] = useState<string>();
+  const [loop, setLoop] = useState(true);
   const [animationTime, setAnimationTime] = useState(0);
   const [animationDuration, setAnimationDuration] = useState(0);
-  const [speed, setSpeed] = useState(1);
+  const [speed, setSpeed] = useState<SpeedValue>({ isCustom: false, value: 1 });
 
   const onAnimationsLoaded = useCallback((names: string[]) => {
     setAnimations(names);
     setSelectedAnimation(names[0]);
+  }, []);
+
+  const onSkinsLoaded = useCallback((names: string[]) => {
+    setSkins(names);
+    setSelectedSkin(names[0]);
+  }, []);
+
+  const onSkinSelected = useCallback((name: string) => {
+    setSelectedSkin(name);
   }, []);
 
   const onSliderTimeChanged = useCallback((time: number) => {
@@ -90,22 +104,34 @@ export function SpineController({
       <Header
         className={styles.header}
         isRunning={isRunning}
+        loop={loop}
         animationTime={animationTime}
         animationDuration={animationDuration}
         speed={speed}
         onRunningChanged={setRunning}
+        onLoopChanged={setLoop}
         onAnimationTimeChanged={onSliderTimeChanged}
         onSpeedChanged={setSpeed}
         onExportFrame={onExportFrame}
         onFit={onFit}
       />
 
-      <AnimationList
-        className={styles['animation-list']}
-        animations={animations ?? []}
-        selectedAnimation={selectedAnimation}
-        onAnimationSelected={onAnimationSelected}
-      />
+      <div className={styles['side-panel']}>
+        {skins.length > 1 && (
+          <SkinSelector
+            skins={skins}
+            selectedSkin={selectedSkin}
+            onSkinSelected={onSkinSelected}
+          />
+        )}
+
+        <AnimationList
+          className={styles['animation-list']}
+          animations={animations ?? []}
+          selectedAnimation={selectedAnimation}
+          onAnimationSelected={onAnimationSelected}
+        />
+      </div>
 
       <Suspense fallback={null}>
         <SpineRenderer
@@ -113,9 +139,12 @@ export function SpineController({
           className={styles['renderer']}
           spine={spine}
           animation={selectedAnimation}
+          skin={selectedSkin}
+          loop={loop}
           isRunning={isRunning}
-          speed={speed}
+          speed={speed.value}
           onAnimationsLoaded={onAnimationsLoaded}
+          onSkinsLoaded={onSkinsLoaded}
           onAnimationTimeChanged={onAnimationTimeChanged}
         />
       </Suspense>

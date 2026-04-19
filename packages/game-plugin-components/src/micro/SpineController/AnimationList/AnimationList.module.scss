@@ -1,5 +1,17 @@
 .root {
+  display: flex;
+  flex-direction: column;
   margin-left: 0.25em;
+  min-height: 0;
+}
+
+.search {
+  margin: 0.25em 0.5em 0.5em;
+}
+
+.list {
+  flex: 1;
+  overflow: auto;
 
   &-item {
     display: block;

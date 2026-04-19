@@ -1,4 +1,5 @@
 export * from './Accordion';
+export * from './AutoSizeInput';
 export * from './BaseFileDropArea';
 export * from './Button';
 export * from './Checkbox';

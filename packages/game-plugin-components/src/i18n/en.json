@@ -16,8 +16,21 @@
     "SpineController": {
       "Header": {
         "exportFrame": "Export frame",
-        "fit": "Fit to view"
+        "fit": "Fit to view",
+        "loop": "Loop"
+      },
+      "AnimationList": {
+        "search": "Search"
+      },
+      "SpeedInput": {
+        "speed": "Speed"
+      },
+      "SkinSelector": {
+        "skin": "Skin"
       }
+    },
+    "SpineModal": {
+      "title": "Spine preview"
     },
     "PlayButton": {
       "play": "Play",

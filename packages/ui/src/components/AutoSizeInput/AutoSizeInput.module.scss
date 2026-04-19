@@ -1,0 +1,25 @@
+.root {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: attr(data-value) ' ';
+    visibility: hidden;
+    white-space: pre-wrap;
+  }
+
+  input {
+    position: absolute;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+  }
+
+  &::after,
+  input {
+    font: inherit;
+  }
+}

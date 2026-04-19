@@ -3,16 +3,17 @@ import {
   DownloadIcon,
   FitScreenIcon,
   IconButton,
-  OptionSwitch,
+  IconSwitchButton,
+  LoopIcon,
   Slider,
   Typography,
 } from '@game-cms/ui';
 import { useTranslation } from 'react-i18next';
 
 import { PlayButton } from '../../PlayButton/index.js';
+import { SpeedSwitch } from '../SpeedSwitch/index.js';
+import { SpeedValue } from '../types.js';
 import styles from './Header.module.scss';
-
-const SPEED_OPTIONS = [0.5, 1, 2];
 
 function formatSeconds(seconds: number) {
   const m = Math.floor(seconds / 60);
@@ -24,13 +25,15 @@ function formatSeconds(seconds: number) {
 export interface HeaderProps {
   className?: string;
   isRunning: boolean;
+  loop: boolean;
   animationTime: number;
   animationDuration: number;
-  speed: number;
+  speed: SpeedValue;
 
   onRunningChanged?: (value: boolean) => void;
+  onLoopChanged?: (value: boolean) => void;
   onAnimationTimeChanged?: (value: number) => void;
-  onSpeedChanged?: (value: number) => void;
+  onSpeedChanged?: (value: SpeedValue) => void;
   onExportFrame?: () => void;
   onFit?: () => void;
 }
@@ -38,10 +41,12 @@ export interface HeaderProps {
 export function Header({
   className,
   isRunning,
+  loop,
   animationTime,
   animationDuration,
   speed,
   onRunningChanged,
+  onLoopChanged,
   onAnimationTimeChanged,
   onSpeedChanged,
   onExportFrame,
@@ -58,26 +63,38 @@ export function Header({
       <div className={styles['buttons']}>
         <PlayButton isRunning={isRunning} onRunningChanged={onRunningChanged} />
 
-        <OptionSwitch
+        <SpeedSwitch
           className={styles['speed-switch']}
-          itemClassName={styles['speed-switch-item']}
-          options={SPEED_OPTIONS}
-          selected={speed}
-          onOptionSelected={onSpeedChanged}
-          renderOption={(option) => (
-            <Typography weight="bold">{option}x</Typography>
-          )}
+          speed={speed}
+          onSpeedChanged={onSpeedChanged}
         />
 
         <Typography className={styles['time']} weight="bold">
           {formatSeconds(currentSeconds)} / {formatSeconds(animationDuration)}
         </Typography>
 
-        <IconButton className={styles['fit']} title={t('fit')} onClick={onFit}>
+        <IconSwitchButton
+          className={classNames(styles['icon-button'], styles['loop'])}
+          title={t('loop')}
+          checked={loop}
+          onCheckedChanged={onLoopChanged}
+        >
+          <LoopIcon />
+        </IconSwitchButton>
+
+        <IconButton
+          className={styles['icon-button']}
+          title={t('fit')}
+          onClick={onFit}
+        >
           <FitScreenIcon />
         </IconButton>
 
-        <IconButton title={t('exportFrame')} onClick={onExportFrame}>
+        <IconButton
+          className={styles['icon-button']}
+          title={t('exportFrame')}
+          onClick={onExportFrame}
+        >
           <DownloadIcon />
         </IconButton>
       </div>
