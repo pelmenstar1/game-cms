@@ -1,5 +1,8 @@
 import {
   AmbientLight,
+  AnimationAction,
+  AnimationClip,
+  AnimationMixer,
   AxesHelper,
   Box3,
   Color,
@@ -18,7 +21,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { LightingType } from './constants';
-import { BackgroundTheme } from './types';
+import { AnimationInfo, BackgroundTheme } from './types';
 
 const FOV = 75;
 const ASPECT = 2;
@@ -31,6 +34,12 @@ export function createApplication() {
   const scene = new Scene();
   let model: Object3D | undefined;
   let activeLights: Light[] = [];
+
+  let mixer: AnimationMixer | undefined;
+  let currentAction: AnimationAction | undefined;
+  let animationClips: AnimationClip[] = [];
+  let onTimeUpdate: ((time: number) => void) | undefined;
+  let prevTimestamp = 0;
 
   const renderer = new WebGLRenderer({ antialias: true });
 
@@ -46,7 +55,17 @@ export function createApplication() {
   const axes = new AxesHelper(FAR);
   scene.add(axes);
 
-  function render() {
+  function render(timestamp: number) {
+    if (mixer) {
+      const delta = (timestamp - prevTimestamp) / 1000;
+      mixer.update(delta);
+
+      if (onTimeUpdate && currentAction) {
+        onTimeUpdate(currentAction.time);
+      }
+    }
+
+    prevTimestamp = timestamp;
     renderer.render(scene, camera);
   }
 
@@ -108,7 +127,7 @@ export function createApplication() {
     onProgress?: (progress: number) => void,
     abortSignal?: AbortSignal
   ) {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<AnimationInfo[]>((resolve, reject) => {
       const manager = new LoadingManager();
 
       const loader = new GLTFLoader(manager);
@@ -125,11 +144,23 @@ export function createApplication() {
             scene.remove(model);
           }
 
+          mixer?.stopAllAction();
+          currentAction = undefined;
+          animationClips = gltf.animations;
+
           model = gltf.scene;
           scene.add(model);
           fitCameraToModel(model);
 
-          resolve();
+          mixer =
+            animationClips.length > 0 ? new AnimationMixer(model) : undefined;
+
+          resolve(
+            animationClips.map((clip) => ({
+              name: clip.name,
+              duration: clip.duration,
+            }))
+          );
         },
         (event) => {
           if (event.lengthComputable && onProgress) {
@@ -141,6 +172,41 @@ export function createApplication() {
     });
   }
 
+  function playAnimation(index: number, play: boolean) {
+    if (!mixer || index < 0 || index >= animationClips.length) return;
+
+    currentAction?.stop();
+    currentAction = mixer.clipAction(animationClips[index]);
+    currentAction.play();
+
+    if (!play) {
+      currentAction.paused = true;
+    }
+  }
+
+  function pauseAnimation() {
+    if (currentAction) {
+      currentAction.paused = true;
+    }
+  }
+
+  function resumeAnimation() {
+    if (currentAction) {
+      currentAction.paused = false;
+    }
+  }
+
+  function seekAnimation(time: number) {
+    if (currentAction && mixer) {
+      currentAction.time = time;
+      mixer.update(0);
+    }
+  }
+
+  function setOnTimeUpdate(callback: ((time: number) => void) | undefined) {
+    onTimeUpdate = callback;
+  }
+
   function setSize(width: number, height: number) {
     if (width > 0 && height > 0) {
       renderer.setSize(width, height, true);
@@ -148,17 +214,21 @@ export function createApplication() {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
 
-      render();
+      renderer.render(scene, camera);
     }
+  }
+
+  function renderImmediate() {
+    renderer.render(scene, camera);
   }
 
   function destroy() {
     renderer.dispose();
-    controls.removeEventListener('change', render);
+    controls.removeEventListener('change', renderImmediate);
   }
 
   renderer.setAnimationLoop(render);
-  controls.addEventListener('change', render);
+  controls.addEventListener('change', renderImmediate);
 
   setBackgroundTheme('light');
   setLightingType('directional');
@@ -169,6 +239,11 @@ export function createApplication() {
     setSize,
     setBackgroundTheme,
     setLightingType,
+    playAnimation,
+    pauseAnimation,
+    resumeAnimation,
+    seekAnimation,
+    setOnTimeUpdate,
     destroy,
   };
 }

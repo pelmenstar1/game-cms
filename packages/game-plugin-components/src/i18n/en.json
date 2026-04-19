@@ -47,6 +47,10 @@
     "ThreeDModelController": {
       "switchTheme": "Switch theme",
       "failedToLoadModel": "Failed to load the model",
+      "play": "Play",
+      "pause": "Pause",
+      "selectAnimation": "Select animation",
+      "animationIndex": "Animation {{index}}",
       "lighting": {
         "ambient": "Ambient lighting",
         "directional": "Directional lighting",

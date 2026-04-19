@@ -8,3 +8,8 @@ export type ModelStatus =
       type: 'loading';
       progress: number;
     };
+
+export type AnimationInfo = {
+  name: string;
+  duration: number;
+};

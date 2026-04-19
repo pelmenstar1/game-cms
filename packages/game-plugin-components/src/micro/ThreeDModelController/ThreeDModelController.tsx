@@ -4,12 +4,14 @@ import { ComponentProps, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
+  AnimationInfo,
   BackgroundTheme,
   LIGHTING_TYPES,
   LightingType,
   ModelStatus,
   ThreeDModelRenderer,
 } from '../ThreeDModelRenderer';
+import { AnimationControls } from './AnimationControls';
 import { Header } from './Header';
 import styles from './ThreeDModelController.module.scss';
 
@@ -32,12 +34,44 @@ export function ThreeDModelController({
 
   const [lightingType, setLightingType] = useState<LightingType>('directional');
 
+  const [animations, setAnimations] = useState<AnimationInfo[]>([]);
+  const [activeClipIndex, setActiveClipIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [seekTarget, setSeekTarget] = useState<{ value: number } | undefined>();
+
   const switchBackgroundTheme = useCallback(() => {
     setBackgroundTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
   const cycleLightingType = useCallback(() => {
     setLightingType((prev) => cycleArray(LIGHTING_TYPES, prev));
+  }, []);
+
+  const handleAnimationsLoaded = useCallback((loaded: AnimationInfo[]) => {
+    setAnimations(loaded);
+    setActiveClipIndex(0);
+    setIsPlaying(false);
+    setCurrentTime(0);
+  }, []);
+
+  const handleAnimationTimeUpdate = useCallback((time: number) => {
+    setCurrentTime(time);
+  }, []);
+
+  const handlePlayPause = useCallback(() => {
+    setIsPlaying((prev) => !prev);
+  }, []);
+
+  const handleClipSelected = useCallback((index: number) => {
+    setActiveClipIndex(index);
+    setCurrentTime(0);
+  }, []);
+
+  const handleSeek = useCallback((time: number) => {
+    setCurrentTime(time);
+    setIsPlaying(false);
+    setSeekTarget({ value: time });
   }, []);
 
   const { t } = useTranslation('game', {
@@ -64,8 +98,26 @@ export function ThreeDModelController({
         source={source}
         backgroundTheme={backgroundTheme}
         lightingType={lightingType}
+        activeClipIndex={activeClipIndex}
+        isPlaying={isPlaying}
+        seekTarget={seekTarget}
         onModelStatusChanged={setModelStatus}
+        onAnimationsLoaded={handleAnimationsLoaded}
+        onAnimationTimeUpdate={handleAnimationTimeUpdate}
       />
+
+      {modelStatus.type === 'loaded' && animations.length > 0 && (
+        <AnimationControls
+          className={styles['animation-controls']}
+          animations={animations}
+          activeClipIndex={activeClipIndex}
+          isPlaying={isPlaying}
+          currentTime={currentTime}
+          onClipSelected={handleClipSelected}
+          onPlayPause={handlePlayPause}
+          onSeek={handleSeek}
+        />
+      )}
 
       {modelStatus.type === 'loading' || modelStatus.type === 'error' ? (
         <div className={styles['overlay']}>
