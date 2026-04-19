@@ -5,20 +5,15 @@ import {
   IconButton,
   IconSwitchButton,
   LoopIcon,
-  OptionSwitch,
   Slider,
   Typography,
 } from '@game-cms/ui';
 import { useTranslation } from 'react-i18next';
 
 import { PlayButton } from '../../PlayButton/index.js';
+import { SpeedSwitch } from '../SpeedSwitch/index.js';
+import { SpeedValue } from '../types.js';
 import styles from './Header.module.scss';
-import { SpeedInput } from './SpeedInput.js';
-
-const PRESET_SPEEDS = [0.5, 1, 2];
-const CUSTOM_SPEED = -1;
-const PRESET_SPEEDS_SET = new Set(PRESET_SPEEDS);
-const SPEED_OPTIONS = [...PRESET_SPEEDS, CUSTOM_SPEED];
 
 function formatSeconds(seconds: number) {
   const m = Math.floor(seconds / 60);
@@ -33,12 +28,12 @@ export interface HeaderProps {
   loop: boolean;
   animationTime: number;
   animationDuration: number;
-  speed: number;
+  speed: SpeedValue;
 
   onRunningChanged?: (value: boolean) => void;
   onLoopChanged?: (value: boolean) => void;
   onAnimationTimeChanged?: (value: number) => void;
-  onSpeedChanged?: (value: number) => void;
+  onSpeedChanged?: (value: SpeedValue) => void;
   onExportFrame?: () => void;
   onFit?: () => void;
 }
@@ -62,30 +57,16 @@ export function Header({
   });
 
   const currentSeconds = animationTime * animationDuration;
-  const isCustomSpeed = !PRESET_SPEEDS_SET.has(speed);
 
   return (
     <div className={classNames(styles.root, className)}>
       <div className={styles['buttons']}>
         <PlayButton isRunning={isRunning} onRunningChanged={onRunningChanged} />
 
-        <OptionSwitch
+        <SpeedSwitch
           className={styles['speed-switch']}
-          itemClassName={styles['speed-switch-item']}
-          options={SPEED_OPTIONS}
-          selected={isCustomSpeed ? CUSTOM_SPEED : speed}
-          onOptionSelected={(value) => {
-            if (value !== CUSTOM_SPEED) {
-              onSpeedChanged?.(value);
-            }
-          }}
-          renderOption={(option) =>
-            option === CUSTOM_SPEED ? (
-              <SpeedInput speed={speed} onSpeedChanged={onSpeedChanged} />
-            ) : (
-              <Typography weight="bold">{option}x</Typography>
-            )
-          }
+          speed={speed}
+          onSpeedChanged={onSpeedChanged}
         />
 
         <Typography className={styles['time']} weight="bold">

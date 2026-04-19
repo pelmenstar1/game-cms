@@ -18,6 +18,7 @@ import { AnimationList } from './AnimationList/index.js';
 import { Header } from './Header/index.js';
 import { SkinSelector } from './SkinSelector/index.js';
 import styles from './SpineController.module.scss';
+import { SpeedValue } from './types.js';
 
 const SpineRenderer = namedLazy(
   () => import('../SpineRenderer/index.js'),
@@ -43,7 +44,7 @@ export function SpineController({
   const [loop, setLoop] = useState(true);
   const [animationTime, setAnimationTime] = useState(0);
   const [animationDuration, setAnimationDuration] = useState(0);
-  const [speed, setSpeed] = useState(1);
+  const [speed, setSpeed] = useState<SpeedValue>({ isCustom: false, value: 1 });
 
   const onAnimationsLoaded = useCallback((names: string[]) => {
     setAnimations(names);
@@ -141,7 +142,7 @@ export function SpineController({
           skin={selectedSkin}
           loop={loop}
           isRunning={isRunning}
-          speed={speed}
+          speed={speed.value}
           onAnimationsLoaded={onAnimationsLoaded}
           onSkinsLoaded={onSkinsLoaded}
           onAnimationTimeChanged={onAnimationTimeChanged}

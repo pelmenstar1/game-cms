@@ -1,4 +1,4 @@
-import { Typography } from '@game-cms/ui';
+import { AutoSizeInput, Typography } from '@game-cms/ui';
 import { type KeyboardEvent, useState } from 'react';
 
 import styles from './SpeedInput.module.scss';
@@ -8,6 +8,8 @@ interface SpeedInputProps {
   onSpeedChanged?: (speed: number) => void;
 }
 
+const MIN_SPEED = 0.1;
+
 export function SpeedInput({ speed, onSpeedChanged }: SpeedInputProps) {
   const [editValue, setEditValue] = useState<string | null>(null);
 
@@ -15,7 +17,7 @@ export function SpeedInput({ speed, onSpeedChanged }: SpeedInputProps) {
     setEditValue(null);
 
     const parsed = Number.parseFloat(raw);
-    if (parsed > 0) {
+    if (Number.isFinite(parsed) && parsed >= MIN_SPEED && parsed !== speed) {
       onSpeedChanged?.(parsed);
     }
   };
@@ -28,26 +30,24 @@ export function SpeedInput({ speed, onSpeedChanged }: SpeedInputProps) {
   };
 
   return (
-    <>
-      <input
-        className={styles.input}
+    <Typography className={styles.root} weight="bold" as="div">
+      <AutoSizeInput
+        inputClassName={styles.input}
         type="number"
-        min={0.1}
+        min={MIN_SPEED}
         step="any"
         aria-label="Speed"
         value={editValue ?? speed}
         onFocus={() => {
           setEditValue(String(speed));
         }}
-        onChange={(e) => {
-          setEditValue(e.target.value);
-        }}
         onBlur={(e) => {
           commit(e.target.value);
         }}
+        onTextChanged={setEditValue}
         onKeyDown={onKeyDown}
       />
-      <Typography weight="bold">x</Typography>
-    </>
+      x
+    </Typography>
   );
 }

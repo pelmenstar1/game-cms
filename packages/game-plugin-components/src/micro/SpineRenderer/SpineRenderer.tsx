@@ -33,10 +33,10 @@ export interface SpineRendererProps extends Omit<
   speed?: number;
   spine: SpineData;
   animation?: string;
-  isRunning?: boolean;
-
   skin?: string;
   loop?: boolean;
+  isRunning?: boolean;
+
   onAnimationsLoaded?: (names: string[]) => void;
   onSkinsLoaded?: (names: string[]) => void;
   onAnimationTimeChanged?: OnAnimationTimeChanged;
