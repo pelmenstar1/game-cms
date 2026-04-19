@@ -2,8 +2,10 @@ import {
   classNames,
   DarkModeIcon,
   IconButton,
+  IconSwitchButton,
   LightbulbIcon,
   LightModeIcon,
+  LoopIcon,
 } from '@game-cms/ui';
 import { useTranslation } from 'react-i18next';
 
@@ -14,17 +16,21 @@ export interface HeaderProps {
   className?: string;
   backgroundTheme: BackgroundTheme;
   lightingType: LightingType;
+  isAutoRotating: boolean;
 
   onSwitchTheme: () => void;
   onCycleLightingType: () => void;
+  onToggleAutoRotate: () => void;
 }
 
 export function Header({
   className,
   backgroundTheme,
   lightingType,
+  isAutoRotating,
   onSwitchTheme,
   onCycleLightingType,
+  onToggleAutoRotate,
 }: HeaderProps) {
   const { t } = useTranslation('game', {
     keyPrefix: 'micro.ThreeDModelController',
@@ -49,6 +55,16 @@ export function Header({
       >
         <LightbulbIcon />
       </IconButton>
+
+      <IconSwitchButton
+        className={styles.button}
+        title={t('autoRotate')}
+        hover="fill"
+        checked={isAutoRotating}
+        onCheckedChanged={onToggleAutoRotate}
+      >
+        <LoopIcon />
+      </IconSwitchButton>
     </div>
   );
 }

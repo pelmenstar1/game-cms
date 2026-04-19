@@ -33,6 +33,7 @@ export function ThreeDModelController({
     useState<BackgroundTheme>('light');
 
   const [lightingType, setLightingType] = useState<LightingType>('directional');
+  const [isAutoRotating, setIsAutoRotating] = useState(false);
 
   const [animations, setAnimations] = useState<AnimationInfo[]>([]);
   const [activeClipIndex, setActiveClipIndex] = useState(0);
@@ -46,6 +47,10 @@ export function ThreeDModelController({
 
   const cycleLightingType = useCallback(() => {
     setLightingType((prev) => cycleArray(LIGHTING_TYPES, prev));
+  }, []);
+
+  const toggleAutoRotate = useCallback(() => {
+    setIsAutoRotating((prev) => !prev);
   }, []);
 
   const handleAnimationsLoaded = useCallback((loaded: AnimationInfo[]) => {
@@ -85,8 +90,10 @@ export function ThreeDModelController({
           className={styles.toolbar}
           backgroundTheme={backgroundTheme}
           lightingType={lightingType}
+          isAutoRotating={isAutoRotating}
           onSwitchTheme={switchBackgroundTheme}
           onCycleLightingType={cycleLightingType}
+          onToggleAutoRotate={toggleAutoRotate}
         />
       )}
 
@@ -98,6 +105,7 @@ export function ThreeDModelController({
         source={source}
         backgroundTheme={backgroundTheme}
         lightingType={lightingType}
+        autoRotate={isAutoRotating}
         activeClipIndex={activeClipIndex}
         isPlaying={isPlaying}
         seekTarget={seekTarget}

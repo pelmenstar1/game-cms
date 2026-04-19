@@ -46,6 +46,7 @@
     },
     "ThreeDModelController": {
       "switchTheme": "Switch theme",
+      "autoRotate": "Auto-rotate",
       "failedToLoadModel": "Failed to load the model",
       "play": "Play",
       "pause": "Pause",

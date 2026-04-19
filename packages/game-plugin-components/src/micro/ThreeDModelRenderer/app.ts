@@ -65,6 +65,7 @@ export function createApplication() {
       }
     }
 
+    controls.update();
     prevTimestamp = timestamp;
     renderer.render(scene, camera);
   }
@@ -203,6 +204,10 @@ export function createApplication() {
     }
   }
 
+  function setAutoRotate(enabled: boolean) {
+    controls.autoRotate = enabled;
+  }
+
   function setOnTimeUpdate(callback: ((time: number) => void) | undefined) {
     onTimeUpdate = callback;
   }
@@ -243,6 +248,7 @@ export function createApplication() {
     pauseAnimation,
     resumeAnimation,
     seekAnimation,
+    setAutoRotate,
     setOnTimeUpdate,
     destroy,
   };

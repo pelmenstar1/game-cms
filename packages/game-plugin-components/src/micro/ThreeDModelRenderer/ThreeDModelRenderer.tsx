@@ -14,6 +14,7 @@ export interface ThreeDModelRendererProps {
   lightingType?: LightingType;
   activeClipIndex?: number;
   isPlaying?: boolean;
+  autoRotate?: boolean;
   seekTarget?: { value: number };
 
   onModelStatusChanged?: (status: ModelStatus) => void;
@@ -28,6 +29,7 @@ export function ThreeDModelRenderer({
   lightingType = 'directional',
   activeClipIndex,
   isPlaying = false,
+  autoRotate = false,
   seekTarget,
   onModelStatusChanged,
   onAnimationsLoaded,
@@ -98,6 +100,10 @@ export function ThreeDModelRenderer({
       appRef.current?.pauseAnimation();
     }
   }, [isPlaying]);
+
+  useEffect(() => {
+    appRef.current?.setAutoRotate(autoRotate);
+  }, [autoRotate]);
 
   useEffect(() => {
     if (seekTarget !== undefined) {
