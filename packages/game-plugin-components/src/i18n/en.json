@@ -23,6 +23,9 @@
         "search": "Search"
       }
     },
+    "SpineModal": {
+      "title": "Spine preview"
+    },
     "PlayButton": {
       "play": "Play",
       "pause": "Pause"

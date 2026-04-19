@@ -8,8 +8,6 @@ import { handleResponseError, lerp } from '@game-cms/shared';
 import {
   Application,
   Assets,
-  Graphics,
-  type PointData,
   type RectangleLike,
   type Size,
   Texture,
@@ -38,28 +36,6 @@ type InitialBoundsMap = Partial<
 export type SpineApplication = Awaited<
   ReturnType<typeof createSpineApplication>
 >;
-
-function createRectGraphics() {
-  const component = new Graphics();
-
-  const currentWidth = 0;
-  const currentHeight = 0;
-
-  return {
-    component,
-    setSize: (size: Size) => {
-      if (currentWidth !== size.width || currentHeight !== size.height) {
-        component.clear();
-        component
-          .rect(0, 0, size.width, size.height)
-          .stroke({ width: 1, color: '#ff0000' });
-      }
-    },
-    setPosition: (position: PointData) => {
-      component.position.copyFrom(position);
-    },
-  };
-}
 
 function getSpineBounds(spine: Spine, animation: string | null) {
   return new SkinsAndAnimationBoundsProvider(animation).calculateBounds(spine);
@@ -111,7 +87,6 @@ export async function createSpineApplication() {
   let isTickerRunning: boolean;
 
   let resolvedSpine: ResolvedSpineContext | undefined;
-  const boundsRect = createRectGraphics();
 
   function getSpineComponent() {
     const spine = resolvedSpine?.component;
@@ -175,8 +150,6 @@ export async function createSpineApplication() {
       spine.skeleton.x = cx - x;
       spine.skeleton.y = cy - y;
       spine.scale = scale;
-
-      updateBoundsRect();
     }
   }
 
@@ -220,20 +193,9 @@ export async function createSpineApplication() {
       }
     }
   }
-
-  function updateBoundsRect() {
-    if (resolvedSpine) {
-      const bounds = resolvedSpine.component.getBounds();
-
-      boundsRect.setPosition({ x: bounds.x, y: bounds.y });
-      boundsRect.setSize({ width: bounds.width, height: bounds.height });
-    }
-  }
-
   function onTick(ticker: Ticker) {
     resolvedSpine?.component.update(ticker.deltaMS / 1000);
 
-    updateBoundsRect();
     invokeAnimationTimeCallback();
   }
 
@@ -272,7 +234,6 @@ export async function createSpineApplication() {
     resolvedSpine = await createSpine(data);
 
     stage.addChild(resolvedSpine.component);
-    stage.addChild(boundsRect.component);
 
     if (!isTickerRunning) {
       isTickerRunning = true;
@@ -364,7 +325,6 @@ export async function createSpineApplication() {
 
         getSpineComponent().update(0);
 
-        updateBoundsRect();
         onAnimationTimeChanged?.(relativeTime, duration);
       }
     }
