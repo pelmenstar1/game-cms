@@ -19,7 +19,7 @@ export function useEntityChecksAllowed(
   >({ draft: true, published: true });
 
   useEffect(() => {
-    if (!checks || !documentId) {
+    if (!checks) {
       setChecksAllowed({ draft: true, published: true });
       return;
     }

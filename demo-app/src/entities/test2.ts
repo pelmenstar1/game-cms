@@ -1,9 +1,9 @@
+import { spritesheet } from '@game-cms/game-plugin/components';
 import { entity } from 'game-cms';
-import { text } from 'game-cms/components';
 
 export default entity({
   title: 'Test2',
   components: {
-    abc: text(),
+    abc: spritesheet(),
   },
 });

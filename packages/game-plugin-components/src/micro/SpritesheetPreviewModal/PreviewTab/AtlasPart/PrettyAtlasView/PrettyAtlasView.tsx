@@ -1,42 +1,40 @@
-import { classNames, List, Prefixed, Typography } from '@game-cms/ui';
+import { List } from '@game-cms/ui';
 
 import { SpritesheetDataWithSize } from '../../../../../utils/spritesheet/types';
 import { usePreviewTabContext } from '../../context';
-import styles from './PrettyAtlasView.module.scss';
+import { AtlasItem } from '../AtlasItem';
 
 export interface PrettyAtlasViewProps {
   className?: string;
   spritesheet: SpritesheetDataWithSize;
+  imageUrl: string;
 }
 
 export function PrettyAtlasView({
   className,
   spritesheet,
+  imageUrl,
 }: PrettyAtlasViewProps) {
-  const { selectedFrame, setSelectedFrame } = usePreviewTabContext();
+  const { selectedFrame, setSelectedFrame, setPinnedFrame } =
+    usePreviewTabContext();
+
+  const { size } = spritesheet.meta;
 
   return (
-    <List className={classNames(styles.root, className)}>
+    <List className={className}>
       {Object.entries(spritesheet.frames).map(([name, { frame }]) => (
-        <li
+        <AtlasItem
           key={name}
-          className={classNames(
-            styles.item,
-            selectedFrame === name && styles['item-selected']
-          )}
+          name={name}
+          frame={frame}
+          sheetSize={size}
+          imageUrl={imageUrl}
+          selected={selectedFrame === name}
           onClick={() => {
             setSelectedFrame(name);
+            setPinnedFrame(name);
           }}
-        >
-          <Typography weight="bold">{name}</Typography>
-
-          <div className={styles['item-bounds']}>
-            <Prefixed value="X">{frame.x}</Prefixed>
-            <Prefixed value="Y">{frame.y}</Prefixed>
-            <Prefixed value="Width">{frame.w}</Prefixed>
-            <Prefixed value="Height">{frame.h}</Prefixed>
-          </div>
-        </li>
+        />
       ))}
     </List>
   );

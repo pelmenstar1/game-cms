@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  border-bottom: 1px solid var(--color-background-dark-variant);
+  padding: 0.5em 0;
+
+  &-selected {
+    background: var(--color-background-dark);
+  }
+}
+
+.thumb {
+  flex-shrink: 0;
+  width: var(--size);
+  height: var(--size);
+  overflow: hidden;
+  position: relative;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.bounds {
+  margin-left: auto;
+}

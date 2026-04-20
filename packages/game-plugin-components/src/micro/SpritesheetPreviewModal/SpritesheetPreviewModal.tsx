@@ -1,5 +1,6 @@
 import { ModalDialog, type ModalProps, Tab, Tabs } from '@game-cms/ui';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PreviewTab } from './PreviewTab';
 import styles from './SpritesheetPreviewModal.module.scss';
@@ -22,11 +23,19 @@ export function SpritesheetPreviewModal({
   onClose,
   entryMap,
 }: SpritesheetPreviewModalProps) {
+  const { t } = useTranslation('game', {
+    keyPrefix: 'micro.SpritesheetPreviewModal',
+  });
+
   const entries = Object.entries(entryMap);
   const [tab, setTab] = useState(entries[0][0]);
 
   return (
-    <ModalDialog onClose={onClose} contentClassName={styles['content']}>
+    <ModalDialog
+      onClose={onClose}
+      contentClassName={styles['content']}
+      title={t('title')}
+    >
       <Tabs
         selectedTab={tab}
         onSelectedTabChanged={setTab}

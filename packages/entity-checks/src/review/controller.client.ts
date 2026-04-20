@@ -7,6 +7,6 @@ export default defineEntityCheckClientController({
       return true;
     }
 
-    return data.reviewers.every((item) => item.approved);
+    return data?.reviewers.every((item) => item.approved) ?? false;
   },
 });
