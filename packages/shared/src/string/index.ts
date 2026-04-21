@@ -1,4 +1,5 @@
 export * from './capitalizeFirstLetter.js';
+export * from './commonPrefixLength.js';
 export * from './fileSizeFormatter.js';
 export * from './findClosingQuoteIndex.js';
 export * from './formatter.js';

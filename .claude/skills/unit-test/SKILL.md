@@ -8,6 +8,8 @@ argument-hint: <file-path> [<file-path2> ...]
 
 Parse `$ARGUMENTS` to extract one or more file paths (or module names) to create unit tests for.
 
+If `$ARGUMENTS` is empty, use the currently active file from the IDE context (the file the user has open or most recently viewed). In this case, only write tests for the **primary exported function** (the one most likely to be the module's main export — e.g., the only export, the default export, or the function that matches the file name).
+
 ### Overview
 
 Unit tests verify individual functions and modules in isolation. They use **Vitest** as the test framework and run via `pnpm test` (which executes `vitest run --project unit`).
@@ -177,7 +179,9 @@ Use Vitest's built-in assertions (no external libraries):
 
 ### Steps
 
-For each file path in `$ARGUMENTS`:
+If `$ARGUMENTS` is empty, identify the active IDE file from the conversation context (look for `ide_opened_file` or `ide_selection` tags). Use that file path as the sole target, and scope the tests to the primary exported function only.
+
+For each file path in `$ARGUMENTS` (or the single active file when no arguments are given):
 
 1. **Read** the source file to understand:
    - All exported functions/classes and their signatures

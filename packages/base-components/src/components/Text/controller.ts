@@ -1,6 +1,7 @@
 import { defineComponentController } from '@game-cms/core';
 
 import core from './core.js';
+import { computeHybridScore, createTextIndex } from './search.js';
 import { validator } from './validator.js';
 
 export default defineComponentController({
@@ -12,8 +13,7 @@ export default defineComponentController({
     }
   },
   search: {
-    getScore: (query, target) => {
-      return target.storage.startsWith(query) ? 1 : 0;
-    },
+    createIndex: (data) => createTextIndex(data),
+    getScore: (query, target) => computeHybridScore(query, target.searchIndex),
   },
 });
