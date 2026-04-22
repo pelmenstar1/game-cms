@@ -29,7 +29,7 @@ export const getApiTokenJwt = (
 
 export const getApiTokenInfo = (context: RequestContext, id: string) =>
   request(context, {
-    url: `/auth/token/byId/${id}`,
+    url: `/auth/token/${id}`,
     response: json<ToClientType<OpaqueApiToken>>(),
   });
 
@@ -58,6 +58,6 @@ export const createApiToken = (
 
 export const deleteApiToken = (context: RequestContext, id: string) =>
   request(context, {
-    url: `/auth/token/byId/${id}`,
+    url: `/auth/token/${id}`,
     method: 'DELETE',
   });

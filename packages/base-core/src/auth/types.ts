@@ -1,12 +1,9 @@
+import { ApiRouteId } from '@game-cms/core/api';
 import type z from 'zod';
 
 import type {
   apiToken,
   createApiTokenPayload,
-  createApiTokenResponse,
-  getAllPermissionsResponse,
-  getApiTokenJwtResponse,
-  getSessionInfoResponse,
   opaqueApiToken,
   opaqueApiTokenWithId,
   permissions,
@@ -26,11 +23,23 @@ export type SignInPayload = z.infer<typeof signInPayload>;
 export type SessionJwtPayload = z.infer<typeof sessionJwtPayloadSchema>;
 export type RefreshJwtPayload = z.infer<typeof refreshJwtPayloadSchema>;
 
-export type GetApiTokenJwtResponse = z.infer<typeof getApiTokenJwtResponse>;
+export type GetApiTokenJwtResponse = {
+  jwt: string;
+};
+
 export type CreateApiTokenPayload = z.infer<typeof createApiTokenPayload>;
-export type CreateApiTokenResponse = z.infer<typeof createApiTokenResponse>;
+
+export type CreateApiTokenResponse = {
+  token: string;
+};
+
 export type SignTokenInPayload = z.infer<typeof signTokenInPayload>;
-export type GetAllPermissionsResponse = z.infer<
-  typeof getAllPermissionsResponse
->;
-export type GetSessionInfoResponse = z.infer<typeof getSessionInfoResponse>;
+
+export type GetAllPermissionsResponse = {
+  permissions: ApiRouteId[];
+};
+
+export type GetSessionInfoResponse = {
+  actorId: string;
+  permissions: ApiRouteId[];
+};

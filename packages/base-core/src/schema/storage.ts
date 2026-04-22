@@ -14,19 +14,10 @@ export const createFolderPayload = z.object({
   parent: objectId.optional(),
 });
 
-export const createFolderResponse = z.object({
-  id: objectId,
-});
-
 export const uploadFileMeta = z.strictObject({
   parent: stringObjectId.optional(),
   hidden: z.boolean().optional(),
   originFile: stringObjectId.optional(),
-});
-
-export const uploadFileResponse = z.object({
-  id: objectId,
-  url: z.string(),
 });
 
 export const listStorageItemsOptions = z.object({

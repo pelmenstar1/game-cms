@@ -1,7 +1,5 @@
-import {
-  getApiTokenJwtResponse,
-  signTokenInPayload,
-} from '@game-cms/base-core/schema';
+import { GetApiTokenJwtResponse } from '@game-cms/base-core';
+import { signTokenInPayload } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
@@ -10,11 +8,8 @@ export default apiRoute({
   method: 'POST',
   schema: {
     body: signTokenInPayload,
-    response: {
-      200: getApiTokenJwtResponse,
-    },
   },
-  handler: async (req) => {
+  handler: async (req): Promise<GetApiTokenJwtResponse> => {
     const { token } = req.body;
 
     const result = await cms()

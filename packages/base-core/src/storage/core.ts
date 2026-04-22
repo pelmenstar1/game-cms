@@ -6,12 +6,10 @@ import type z from 'zod';
 import { EntityId, EntityInternalOutDataById } from '../entity/core.js';
 import type {
   createFolderPayload,
-  createFolderResponse,
   deleteStorageItemOptions,
   listStorageItemsOptions,
   traceFileOptions,
   uploadFileMeta,
-  uploadFileResponse,
 } from '../schema/storage.js';
 import {
   StorageAddonHydratedDataMap,
@@ -84,9 +82,15 @@ export type StorageItemWithId<Extra = unknown> = StorageItem<Extra> & {
 
 export type UploadFileMeta = z.infer<typeof uploadFileMeta>;
 
-export type UploadFileResponse = z.infer<typeof uploadFileResponse>;
+export type UploadFileResponse = {
+  id: ObjectId;
+  url: string;
+};
+
 export type CreateFolderPayload = z.infer<typeof createFolderPayload>;
-export type CreateFolderResponse = z.infer<typeof createFolderResponse>;
+export type CreateFolderResponse = {
+  id: ObjectId;
+};
 
 export type ListStorageItemsOptions = z.infer<typeof listStorageItemsOptions>;
 export type ListStorageItemsResponse = PageData<StorageItemWithId>;

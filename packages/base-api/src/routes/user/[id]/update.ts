@@ -5,7 +5,7 @@ import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/user/byId/:id',
+  url: '/user/:id',
   method: 'PUT',
   config: {
     id: 'user$update',

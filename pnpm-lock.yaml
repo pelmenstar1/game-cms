@@ -465,6 +465,12 @@ importers:
       fastify:
         specifier: 'catalog:'
         version: 5.8.4
+      glob:
+        specifier: ^13.0.6
+        version: 13.0.6
+      jiti:
+        specifier: ^2.6.1
+        version: 2.6.1
       tsx:
         specifier: 'catalog:'
         version: 4.21.0

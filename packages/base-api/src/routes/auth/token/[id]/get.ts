@@ -1,11 +1,11 @@
-import { opaqueApiToken } from '@game-cms/base-core/schema';
+import { OpaqueApiToken } from '@game-cms/base-core';
 import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/auth/token/byId/:id',
+  url: '/auth/token/:id',
   method: 'GET',
   config: {
     id: 'auth/token$get',
@@ -14,9 +14,8 @@ export default apiRoute({
     params: z.object({
       id: stringObjectId,
     }),
-    response: { 200: opaqueApiToken },
   },
-  handler: async (req) => {
+  handler: async (req): Promise<OpaqueApiToken> => {
     const { id } = req.params;
 
     const result = await cms()

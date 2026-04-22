@@ -16,6 +16,6 @@ export const getEntitySchema = <T extends EntityId>(
   entityId: T
 ) =>
   request(context, {
-    url: `/entitySchema/byId/${entityId}`,
+    url: `/entitySchema/${entityId}`,
     response: json<EntityClientSchemaById<T>>(),
   });

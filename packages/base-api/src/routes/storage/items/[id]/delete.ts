@@ -5,7 +5,7 @@ import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/storage/byId/:id',
+  url: '/storage/items/:id',
   method: 'DELETE',
   config: {
     id: 'storage$delete',

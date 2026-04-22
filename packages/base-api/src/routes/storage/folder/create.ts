@@ -1,7 +1,5 @@
-import {
-  createFolderPayload,
-  createFolderResponse,
-} from '@game-cms/base-core/schema';
+import { CreateFolderResponse } from '@game-cms/base-core';
+import { createFolderPayload } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
@@ -13,11 +11,8 @@ export default apiRoute({
   },
   schema: {
     body: createFolderPayload,
-    response: {
-      200: createFolderResponse,
-    },
   },
-  handler: async (req) => {
+  handler: async (req): Promise<CreateFolderResponse> => {
     const id = await cms().service('base::storage').createFolder(req.body);
 
     return { id };

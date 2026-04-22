@@ -4,10 +4,10 @@ import { stringObjectId } from '@game-cms/shared/mongo';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/storage/byId/:id',
-  method: 'GET',
+  url: '/user/:id',
+  method: 'DELETE',
   config: {
-    id: 'storage$get',
+    id: 'user$delete',
   },
   schema: {
     params: z.object({
@@ -17,11 +17,9 @@ export default apiRoute({
   handler: async (req) => {
     const { id } = req.params;
 
-    const result = await cms().service('base::storage').getInfo(id);
-    if (result === null) {
-      throw new ApiError('Unknown item', { code: 'base::entity/notFound' });
+    const result = await cms().service('base::user').delete(id);
+    if (!result) {
+      throw new ApiError('User not found', { code: 'base::entity/notFound' });
     }
-
-    return result;
   },
 });

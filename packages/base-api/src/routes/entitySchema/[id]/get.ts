@@ -3,7 +3,7 @@ import { cms } from '@game-cms/global';
 import z from 'zod';
 
 export default apiRoute({
-  url: '/entitySchema/byId/:id',
+  url: '/entitySchema/:id',
   method: 'GET',
   config: {
     id: 'entitySchema$get',

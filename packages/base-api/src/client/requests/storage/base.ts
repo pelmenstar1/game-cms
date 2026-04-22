@@ -28,7 +28,7 @@ export const getStorageItemInfo = (
   id: string
 ): Promise<ToClientType<StorageItem>> =>
   request(context, {
-    url: `/storage/byId/${id}`,
+    url: `/storage/items/${id}`,
     method: 'GET',
     response: json(),
   });
@@ -40,7 +40,7 @@ export const deleteStorageItemById = (
 ) =>
   request(context, {
     url: url({
-      path: `/storage/byId/${fileId}`,
+      path: `/storage/items/${fileId}`,
       search: options,
     }),
     method: 'DELETE',
@@ -52,7 +52,7 @@ export const listStorageItems = (
 ) =>
   request(context, {
     url: url({
-      path: '/storage/list',
+      path: '/storage/items/list',
       search: options,
     }),
     response: json<ToClientType<ListStorageItemsResponse>>(),

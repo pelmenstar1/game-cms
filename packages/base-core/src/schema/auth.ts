@@ -41,23 +41,6 @@ export const createApiTokenPayload = z.object({
   permissions: z.array(apiRouteId),
 });
 
-export const getApiTokenJwtResponse = z.object({
-  jwt: z.string(),
-});
-
-export const createApiTokenResponse = z.object({
-  token: z.string(),
-});
-
 export const signTokenInPayload = z.object({
   token: z.string(),
-});
-
-export const getAllPermissionsResponse = z.object({
-  permissions: z.array(apiRouteId),
-});
-
-export const getSessionInfoResponse = z.object({
-  actorId: z.string(),
-  permissions: z.array(apiRouteId),
 });

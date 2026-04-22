@@ -1,4 +1,5 @@
-import { uploadFileMeta, uploadFileResponse } from '@game-cms/base-core/schema';
+import { UploadFileResponse } from '@game-cms/base-core';
+import { uploadFileMeta } from '@game-cms/base-core/schema';
 import { ApiError, apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 import { parseJsonOptional } from '@game-cms/shared/json';
@@ -12,12 +13,7 @@ export default apiRoute({
   config: {
     id: 'storage/file$upload',
   },
-  schema: {
-    response: {
-      200: uploadFileResponse,
-    },
-  },
-  handler: async (req) => {
+  handler: async (req): Promise<UploadFileResponse> => {
     let file:
       | { buffer: FileSource; filename: string; mimetype: string }
       | undefined;

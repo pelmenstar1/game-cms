@@ -1,7 +1,5 @@
-import {
-  createApiTokenPayload,
-  createApiTokenResponse,
-} from '@game-cms/base-core/schema';
+import { CreateApiTokenResponse } from '@game-cms/base-core';
+import { createApiTokenPayload } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
@@ -13,13 +11,10 @@ export default apiRoute({
   },
   schema: {
     body: createApiTokenPayload,
-    response: { 200: createApiTokenResponse },
   },
-  handler: async (req) => {
+  handler: async (req): Promise<CreateApiTokenResponse> => {
     const payload = req.body;
 
-    const result = await cms().service('base::auth::apiToken').create(payload);
-
-    return result;
+    return cms().service('base::auth::apiToken').create(payload);
   },
 });

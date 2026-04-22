@@ -22,13 +22,15 @@
   },
   "devDependencies": {
     "@game-cms/codegen": "workspace:*",
-    "@game-cms/testing-lib": "workspace:*",
     "@game-cms/e2e": "workspace:*",
+    "@game-cms/testing-lib": "workspace:*",
     "@types/node": "catalog:",
     "@types/qs": "catalog:",
+    "fastify": "catalog:",
+    "glob": "^13.0.6",
+    "jiti": "^2.6.1",
     "tsx": "catalog:",
-    "typescript": "catalog:",
-    "fastify": "catalog:"
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "fastify": "catalog:"

@@ -3,7 +3,7 @@ import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
 
 export default apiRoute({
-  url: '/storage/list',
+  url: '/storage/items/list',
   method: 'GET',
   config: {
     id: 'storage$list',

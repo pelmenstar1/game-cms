@@ -30,7 +30,7 @@ export const listUsers = (context: RequestContext, options: PagingOptions) =>
 
 export const getUserById = (context: RequestContext, id: string) =>
   request(context, {
-    url: `/user/byId/${id}`,
+    url: `/user/${id}`,
     response: json<NoPasswordUser>(),
   });
 
@@ -40,13 +40,13 @@ export const updateUserById = (
   payload: UpdateUserPayload
 ) =>
   request(context, {
-    url: `/user/byId/${id}`,
+    url: `/user/${id}`,
     method: 'PUT',
     body: jsonInit(payload),
   });
 
 export const deleteUserById = (context: RequestContext, id: string) =>
   request(context, {
-    url: `/user/byId/${id}`,
+    url: `/user/${id}`,
     method: 'DELETE',
   });
