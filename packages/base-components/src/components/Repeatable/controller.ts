@@ -66,8 +66,10 @@ export default defineComponentController({
     createIndex: (data, options, context) => {
       const { componentId, baseOptions } = options;
 
-      return data.map((item) =>
-        context.createSearchIndex(componentId, item, baseOptions)
+      return Promise.all(
+        data.map((item) =>
+          context.createSearchIndex(componentId, item, baseOptions)
+        )
       );
     },
   },

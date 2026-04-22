@@ -5,8 +5,8 @@ import type {
   ListStorageItemsOptions,
   StorageFilePersistentItem,
   StorageFolderItem,
-  StorageItemWithId,
   StoragePersistentItem,
+  StorageProvider,
   UploadFilePayload,
 } from '@game-cms/base-core';
 import { StorageItemType } from '@game-cms/base-core';
@@ -19,6 +19,8 @@ import {
   baseDeleteById,
   baseGetContent,
   baseGetInfo,
+  baseGetInfoMap,
+  baseGetNameMap,
   baseGetUrl,
   baseListItems,
   basePatchContent,
@@ -38,7 +40,8 @@ declare module '@game-cms/base-core' {
   }
 }
 
-function storageProvider() {
+function storageProvider<Extra>(): StorageProvider<Extra> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return env().config.storage.provider;
 }
 
@@ -93,18 +96,19 @@ export default service({
 
     return insertedId;
   },
-  getInfo: <Extra>(
-    id: ObjectId,
-    options?: AbortOptions
-  ): Promise<StorageItemWithId<Extra> | null> => {
-    return baseGetInfo(storageProvider(), id, options);
+  getInfo: <Extra>(id: ObjectId, options?: AbortOptions) => {
+    return baseGetInfo<Extra>(storageProvider(), id, options);
   },
+  getInfoMap: <Extra>(ids: ObjectId[], options?: AbortOptions) => {
+    return baseGetInfoMap<Extra>(storageProvider(), ids, options);
+  },
+  getNameMap: baseGetNameMap,
   getContent,
   getUrl: (id: ObjectId, options?: AbortOptions) => {
     return baseGetUrl(storageProvider(), id, options);
   },
-  list: (options: ListStorageItemsOptions & AbortOptions) => {
-    return baseListItems(storageProvider(), options);
+  list: <Extra>(options: ListStorageItemsOptions & AbortOptions) => {
+    return baseListItems<Extra>(storageProvider(), options);
   },
   deleteById: (id: ObjectId, options?: DeleteStorageItemOptions) => {
     return baseDeleteById(storageProvider(), id, options);

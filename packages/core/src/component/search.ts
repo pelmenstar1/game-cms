@@ -1,4 +1,4 @@
-import { GetPropertyOr } from '@game-cms/shared';
+import { GetPropertyOr, MaybePromise } from '@game-cms/shared';
 
 import { ComponentStorageDataById } from './storage.js';
 import {
@@ -37,7 +37,7 @@ export interface ForeignComponentDataSearchContext {
     id: Id,
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>
-  ) => ComponentSearchIndexDataById<Id, Args>;
+  ) => Promise<ComponentSearchIndexDataById<Id, Args>>;
 }
 
 export type ComponentDataSearchScoreFn<Id extends ComponentId> = <Args>(
@@ -51,7 +51,7 @@ export type ComponentDataSearchIndexFn<Id extends ComponentId> = <Args>(
   data: ComponentStorageDataById<Id, Args>,
   options: ComponentOptionsById<Id, Args>,
   context: ForeignComponentDataSearchContext
-) => ComponentSearchIndexDataById<Id, Args>;
+) => MaybePromise<ComponentSearchIndexDataById<Id, Args>>;
 
 export type ComponentSearchController<Id extends ComponentId = ComponentId> = {
   getScore: ComponentDataSearchScoreFn<Id>;

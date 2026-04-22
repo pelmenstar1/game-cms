@@ -1,5 +1,6 @@
 import { StorageFileItemWithId } from '@game-cms/base-core';
 import { ComponentEntry, ToClientType } from '@game-cms/core';
+import { TextSearchIndex } from '@game-cms/shared/search';
 import { ObjectId } from 'mongodb';
 
 export const id = 'base::file';
@@ -21,6 +22,7 @@ declare module '@game-cms/core' {
       error: 'INVALID_TYPE' | 'TOO_FEW_ITEMS' | 'TOO_MANY_ITEMS';
       clientData: FileClientDataItem[];
       storageData: ObjectId[];
+      searchIndexData: TextSearchIndex;
     }>;
   }
 }

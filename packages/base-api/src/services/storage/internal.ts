@@ -319,6 +319,40 @@ export async function baseGetInfo<Extra>(
   return result && hydrateItem(provider, result);
 }
 
+export async function baseGetInfoMap<Extra>(
+  provider: StorageProvider<Extra>,
+  ids: ObjectId[],
+  options?: AbortOptions
+): Promise<Record<string, StorageItemWithId<Extra> | undefined>> {
+  const result = await collection<Extra>()
+    .find({ _id: { $in: ids } }, { signal: options?.signal })
+    .toArray();
+
+  const hydratedItems = await Promise.all(
+    result.map((item) => hydrateItem(provider, item))
+  );
+
+  return Object.fromEntries(
+    hydratedItems.map((item) => [item.id.toString(), item])
+  );
+}
+
+export async function baseGetNameMap(
+  ids: ObjectId[],
+  options?: AbortOptions
+): Promise<Record<string, string | undefined>> {
+  const result = await collection()
+    .find<{ _id: ObjectId; name: string }>(
+      { _id: { $in: ids } },
+      { projection: { name: 1 }, signal: options?.signal }
+    )
+    .toArray();
+
+  return Object.fromEntries(
+    result.map((item) => [item._id.toString(), item.name])
+  );
+}
+
 export async function baseGetUrl<Extra>(
   provider: StorageProvider<Extra>,
   id: ObjectId,

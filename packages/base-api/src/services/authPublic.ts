@@ -24,6 +24,7 @@ export default service({
   lifecycle: {},
   getPermissions,
   isPublicRoute: async (id: ApiRouteId) => {
+    // TODO: Update this to use a more efficient way of checking permissions, e.g. by caching them in memory or using a bloom filter
     const permissions = await getPermissions();
 
     return permissions.includes(id);

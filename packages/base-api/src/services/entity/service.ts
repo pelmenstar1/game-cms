@@ -214,10 +214,10 @@ async function getRawSingleton<Id extends EntityId>(
 function createSearchIndex<Id extends EntityId>(
   storageData: BaseEntityStorageDataById<Id>,
   schema: EntitySchemaById<Id>
-): EntitySearchIndexDataById<Id> {
+): Promise<EntitySearchIndexDataById<Id>> {
   const { foreignDataSearchContext } = cms().service('base::component');
 
-  return mapObject(schema.components, (component, key) => {
+  return asyncMapObject(schema.components, (component, key) => {
     const { componentId, options } = component;
 
     return foreignDataSearchContext.createSearchIndex(
@@ -231,7 +231,7 @@ function createSearchIndex<Id extends EntityId>(
 async function transformInDataToStorage<Id extends EntityId>(
   entityId: Id,
   inData: EntityInDataById<Id>
-) {
+): Promise<EntityStorageDataById<Id>> {
   const schema = getEntitySchema(entityId);
   const { foreignStorageResolverContext } = cms().service('base::component');
 
@@ -241,13 +241,13 @@ async function transformInDataToStorage<Id extends EntityId>(
     return foreignStorageResolverContext.toStorage(componentId, item, options);
   });
 
+  const search = await createSearchIndex(components, schema);
+
   return {
     variantId: Long.ZERO,
     components,
-    meta: {
-      lastUpdatedTime: Date.now(),
-    },
-    search: createSearchIndex(components, schema),
+    meta: { lastUpdatedTime: Date.now() },
+    search,
     checks: {},
   };
 }
@@ -283,7 +283,7 @@ async function transformPartialInDataToStorage<Id extends EntityId>(
     sourceMergedEntries.filter(Boolean) as [string, unknown][]
   );
 
-  const result: EntityStorageDataById<Id> = {
+  return {
     ...target,
     variantId: maybeLongAdd(target.variantId, 1),
     components: {
@@ -292,8 +292,6 @@ async function transformPartialInDataToStorage<Id extends EntityId>(
     },
     meta: { lastUpdatedTime: Date.now() },
   };
-
-  return result;
 }
 
 function createEntityVariants<Id extends EntityId>(
@@ -308,10 +306,10 @@ function createEntityVariants<Id extends EntityId>(
     : { draft: value };
 }
 
-function migrateEntity<Id extends EntityId>(
+async function migrateEntity<Id extends EntityId>(
   schema: EntitySchemaById<Id>,
   oldValue: EntityVariantData
-): EntityStorageDataById<Id> {
+): Promise<EntityStorageDataById<Id>> {
   const { foreignDataMigrationContext } = cms().service('base::component');
 
   const newComponents = mapObject(schema.components, (prop, key) => {
@@ -322,12 +320,14 @@ function migrateEntity<Id extends EntityId>(
     );
   });
 
+  const search = await createSearchIndex(newComponents, schema);
+
   return {
     variantId: maybeLongAdd(oldValue.variantId, 1),
     meta: oldValue.meta,
     checks: oldValue.checks,
     components: newComponents,
-    search: createSearchIndex(newComponents, schema),
+    search,
   };
 }
 
@@ -371,10 +371,10 @@ async function migrateEntityCollection<Id extends EntityId>(
   for await (const oldValue of col.find()) {
     // Only migrate if old value is no longer valid.
     if (validate(oldValue, schema) !== undefined) {
-      const newDraft = migrateEntity(schema, oldValue.draft);
-      const newPublished = oldValue.published
-        ? migrateEntity(schema, oldValue.published)
-        : undefined;
+      const [newDraft, newPublished] = await Promise.all([
+        migrateEntity(schema, oldValue.draft),
+        oldValue.published && migrateEntity(schema, oldValue.published),
+      ]);
 
       await col.updateOne(
         { _id: oldValue._id },
