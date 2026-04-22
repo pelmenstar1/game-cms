@@ -24,10 +24,11 @@ export default service({
   lifecycle: {},
   getPermissions,
   isPublicRoute: async (id: ApiRouteId) => {
-    // TODO: Update this to use a more efficient way of checking permissions, e.g. by caching them in memory or using a bloom filter
-    const permissions = await getPermissions();
+    const result = await collection().countDocuments({
+      permissions: { $elemMatch: { $eq: id } },
+    });
 
-    return permissions.includes(id);
+    return result > 0;
   },
   updatePermissions: async (permissions: ApiRouteId[]) => {
     await collection().updateOne(
