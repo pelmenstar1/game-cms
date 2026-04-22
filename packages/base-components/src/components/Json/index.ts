@@ -14,7 +14,7 @@ export function json<
     componentId: id,
     options: {
       allowEmpty: options?.allowEmpty,
-      type: options?.type as never,
+      type: options?.type,
     },
   };
 }

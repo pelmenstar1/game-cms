@@ -84,18 +84,19 @@ export default defineComponentController({
 
       return composer.result();
     },
-    createIndex: (data, options, context) => {
+    createIndex: async (data, options, context) => {
       const { componentId, baseOptions } = options;
 
-      return {
-        default: context.createSearchIndex(
-          componentId,
-          data.default,
-          baseOptions
-        ),
-        alternative: data.alternative.map((choice) =>
+      const [defaultIndex, ...alternativeIndexes] = await Promise.all([
+        context.createSearchIndex(componentId, data.default, baseOptions),
+        ...data.alternative.map((choice) =>
           context.createSearchIndex(componentId, choice.value, baseOptions)
         ),
+      ]);
+
+      return {
+        default: defaultIndex,
+        alternative: alternativeIndexes,
       };
     },
   },
@@ -117,43 +118,41 @@ export default defineComponentController({
     fromStorage: async (data, options, context) => {
       const { baseOptions, componentId } = options;
 
+      const [defaultValue, ...alternativeValues] = await Promise.all([
+        context.fromStorage(componentId, data.default, baseOptions),
+        ...data.alternative.map(async (choice) => ({
+          condition: choice.condition,
+          value: await context.fromStorage(
+            componentId,
+            choice.value,
+            baseOptions
+          ),
+        })),
+      ]);
+
       return {
-        default: await context.fromStorage(
-          componentId,
-          data.default,
-          baseOptions
-        ),
-        alternative: await Promise.all(
-          data.alternative.map(async (item) => ({
-            condition: item.condition,
-            value: await context.fromStorage(
-              componentId,
-              item.value,
-              baseOptions
-            ),
-          }))
-        ),
+        default: defaultValue,
+        alternative: alternativeValues,
       };
     },
     toStorage: async (data, options, context) => {
       const { baseOptions, componentId } = options;
 
+      const [defaultValue, ...alternativeValues] = await Promise.all([
+        context.toStorage(componentId, data.default, baseOptions),
+        ...data.alternative.map(async (choice) => ({
+          condition: choice.condition,
+          value: await context.toStorage(
+            componentId,
+            choice.value,
+            baseOptions
+          ),
+        })),
+      ]);
+
       return {
-        default: await context.toStorage(
-          componentId,
-          data.default,
-          baseOptions
-        ),
-        alternative: await Promise.all(
-          data.alternative.map(async (item) => ({
-            condition: item.condition,
-            value: await context.toStorage(
-              componentId,
-              item.value,
-              baseOptions
-            ),
-          }))
-        ),
+        default: defaultValue,
+        alternative: alternativeValues,
       };
     },
     disposeData: async (data, options, context) => {

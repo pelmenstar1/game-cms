@@ -93,7 +93,7 @@ export default defineComponentController({
       return composer.result();
     },
     createIndex: (data, options, context) => {
-      return mapObject(options, (schema, key) => {
+      return asyncMapObject(options, (schema, key) => {
         const { componentId, options: baseOptions } = schema;
 
         return context.createSearchIndex(

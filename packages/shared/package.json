@@ -72,6 +72,14 @@
     "./browser": {
       "import": "./dist/browser/index.js",
       "types": "./dist/browser/index.d.ts"
+    },
+    "./bitmap": {
+      "import": "./dist/bitmap/index.js",
+      "types": "./dist/bitmap/index.d.ts"
+    },
+    "./search": {
+      "import": "./dist/search/index.js",
+      "types": "./dist/search/index.d.ts"
     }
   }
 }

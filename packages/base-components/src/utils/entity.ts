@@ -30,11 +30,7 @@ export function transformDataToClientData<Id extends EntityId>(
 ) {
   const result =
     data !== undefined
-      ? clientTransformerContext.toClient(
-          'base::compose',
-          data as never,
-          options
-        )
+      ? clientTransformerContext.toClient('base::compose', data, options)
       : clientTransformerContext.getDefaultData('base::compose', options);
 
   return result as EntityComposeData<Id>;

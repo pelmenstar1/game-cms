@@ -1,5 +1,5 @@
 import { defineComponentController, searchScoreComposer } from '@game-cms/core';
-import { mapObject } from '@game-cms/shared/object';
+import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 
 import core from './core.js';
 import { dataShape } from './internal/schema.js';
@@ -81,7 +81,7 @@ export default defineComponentController({
     createIndex: (data, options, context) => {
       const { componentId, baseOptions } = options;
 
-      return mapObject(data.nodes, ({ value }) =>
+      return asyncMapObject(data.nodes, ({ value }) =>
         context.createSearchIndex(componentId, value, baseOptions)
       );
     },

@@ -1,16 +1,15 @@
 import { defineComponentController } from '@game-cms/core';
-import { uniqueArray } from '@game-cms/shared/collections';
 
 import core from './core.js';
 import { validator } from './validator.js';
 
-function baseSplitObjectToKeywords(value: unknown, output: string[]) {
+function baseSplitObjectToKeywords(value: unknown, output: Set<string>) {
   switch (typeof value) {
     case 'bigint':
     case 'boolean':
     case 'number':
     case 'string': {
-      output.push(value.toString());
+      output.add(value.toString());
       break;
     }
     case 'object': {
@@ -26,7 +25,7 @@ function baseSplitObjectToKeywords(value: unknown, output: string[]) {
         type K = keyof typeof value;
 
         for (const key in value) {
-          output.push(key);
+          output.add(key);
           baseSplitObjectToKeywords(value[key as K], output);
         }
       }
@@ -35,10 +34,10 @@ function baseSplitObjectToKeywords(value: unknown, output: string[]) {
 }
 
 function splitObjectToKeywords(value: unknown) {
-  const output: string[] = [];
+  const output: Set<string> = new Set();
   baseSplitObjectToKeywords(value, output);
 
-  return uniqueArray(output);
+  return [...output];
 }
 
 export default defineComponentController({

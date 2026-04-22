@@ -35,7 +35,10 @@ type FontEntry = {
   error: ComponentErrorById<'base::repeatable', RepeatableArgs>;
   clientData: ComponentClientDataById<'base::repeatable', RepeatableArgs>;
   storageData: FontData<ComponentStorageDataById<FileId>>;
-  searchIndexData: ComponentSearchIndexDataById<FileId>;
+  searchIndexData: ComponentSearchIndexDataById<
+    'base::repeatable',
+    RepeatableArgs
+  >;
 };
 
 declare module '@game-cms/core' {

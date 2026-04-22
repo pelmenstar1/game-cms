@@ -212,7 +212,8 @@ const foreignDataSearchContext: ForeignComponentDataSearchContext = {
       ? search.getScore(query, target, options, foreignDataSearchContext)
       : 0;
   },
-  createSearchIndex: <Id extends ComponentId, Args>(
+  // eslint-disable-next-line @typescript-eslint/require-await
+  createSearchIndex: async <Id extends ComponentId, Args>(
     id: Id,
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>

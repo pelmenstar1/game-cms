@@ -1,6 +1,12 @@
 import { StorageItemType } from '@game-cms/base-core';
 import { defineComponentController } from '@game-cms/core';
 import { cms } from '@game-cms/global';
+import { filterOutNullable } from '@game-cms/shared/collections';
+import {
+  combineTextIndexes,
+  computeHybridScore,
+  createTextIndex,
+} from '@game-cms/shared/search';
 import { ObjectId } from 'mongodb';
 
 import core from './core.js';
@@ -18,23 +24,41 @@ export default defineComponentController({
       return data;
     }
   },
+  search: {
+    createIndex: async (data) => {
+      const nameMap = await cms().service('base::storage').getNameMap(data);
+
+      const indices = data.map((id) => {
+        const name = nameMap[id.toString()];
+
+        if (name) {
+          return createTextIndex(name);
+        }
+      });
+
+      return combineTextIndexes(filterOutNullable(indices));
+    },
+    getScore: (query, target) => {
+      return computeHybridScore(query, target.searchIndex);
+    },
+  },
   storageTransformer: {
     getDefaultData: () => [],
     toStorage: (data) => data.map((item) => new ObjectId(item)),
     fromStorage: async (data) => {
       const storageService = cms().service('base::storage');
 
-      return Promise.all(
-        data.map(async (id) => {
-          const item = await storageService.getInfo(id);
+      const infoMap = await storageService.getInfoMap(data);
 
-          if (item?.type !== StorageItemType.FILE) {
-            throw new Error('Expected file');
-          }
+      return data.map((id) => {
+        const item = infoMap[id.toString()];
 
-          return item;
-        })
-      );
+        if (item?.type !== StorageItemType.FILE) {
+          throw new Error('Expected file');
+        }
+
+        return item;
+      });
     },
   },
 });

@@ -10,11 +10,12 @@ declare module '@game-cms/core' {
       outData: string;
       error: 'INVALID_TYPE' | 'TOO_EARLY' | 'TOO_LATE';
       options: {
-        minDate?: string | Date;
-        maxDate?: string | Date;
+        minDate?: Date;
+        maxDate?: Date;
       };
       clientData: Date;
       storageData: Date;
+      searchIndexData: string[];
     }>;
   }
 }

@@ -77,8 +77,16 @@ async function clientResolverContext() {
     validation: foreignValidationContext,
     sharedContext: {},
     getDefaultData: (id, options) => {
-      return (clientComponents[id]?.getDefaultData?.(options, clientContext) ??
-        foreignDefaultContext.getDefaultData(id, options)) as never;
+      const defaultData = clientComponents[id]?.getDefaultData?.(
+        options,
+        clientContext
+      );
+
+      if (defaultData !== undefined) {
+        return defaultData;
+      }
+
+      return foreignDefaultContext.getDefaultData(id, options) as never;
     },
     fromClient: <Id extends ComponentId, Args>(
       id: Id,
