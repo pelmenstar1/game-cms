@@ -13,10 +13,10 @@ export function buildTrigrams(str: string): Set<string> {
 }
 
 export function trigramJaccard(
-  queryTrigrams: readonly string[],
+  queryTrigrams: ReadonlySet<string>,
   indexTrigrams: ReadonlySet<string>
 ): number {
-  if (queryTrigrams.length === 0 || indexTrigrams.size === 0) return 0;
+  if (queryTrigrams.size === 0 || indexTrigrams.size === 0) return 0;
 
   let intersection = 0;
   for (const trigram of queryTrigrams) {
@@ -25,7 +25,7 @@ export function trigramJaccard(
     }
   }
 
-  const union = queryTrigrams.length + indexTrigrams.size - intersection;
+  const union = queryTrigrams.size + indexTrigrams.size - intersection;
 
   return union > 0 ? intersection / union : 0;
 }

@@ -7,13 +7,13 @@ import {
 
 import { Id, id } from './types.js';
 
-function assetValidDate(date: Date | undefined, type: string) {
+function assertValidDate(date: Date | undefined, type: string) {
   if (date !== undefined && !isValidDate(date)) {
     throw new Error(`Invalid ${type} date (${date})`);
   }
 }
 
-function assetValidDateRange(
+function assertValidDateRange(
   minDate: Date | undefined,
   maxDate: Date | undefined
 ) {
@@ -31,9 +31,9 @@ export function date(options?: {
   const minDate = resolveDateLike(options?.minDate);
   const maxDate = resolveDateLike(options?.maxDate);
 
-  assetValidDate(minDate, 'min');
-  assetValidDate(maxDate, 'max');
-  assetValidDateRange(minDate, maxDate);
+  assertValidDate(minDate, 'min');
+  assertValidDate(maxDate, 'max');
+  assertValidDateRange(minDate, maxDate);
 
   return {
     componentId: id,

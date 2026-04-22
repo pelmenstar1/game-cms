@@ -120,9 +120,13 @@ export default defineComponentController({
 
       const [defaultValue, ...alternativeValues] = await Promise.all([
         context.fromStorage(componentId, data.default, baseOptions),
-        ...data.alternative.map((choice) => ({
+        ...data.alternative.map(async (choice) => ({
           condition: choice.condition,
-          value: context.fromStorage(componentId, choice.value, baseOptions),
+          value: await context.fromStorage(
+            componentId,
+            choice.value,
+            baseOptions
+          ),
         })),
       ]);
 

@@ -31,7 +31,7 @@ export function computeHybridScore(
   }
 
   // 3. Trigram Jaccard (scaled toward the pipeline threshold).
-  const queryTrigrams = [...buildTrigrams(lowerQuery)];
+  const queryTrigrams = buildTrigrams(lowerQuery);
   const indexTrigramSet = new Set(index.trigrams);
 
   const trigramScore = Math.min(
