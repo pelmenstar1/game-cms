@@ -3,6 +3,7 @@ import { isValidDate } from '@game-cms/shared/chrono';
 
 import core from './core.js';
 import { getDefaultData } from './internal/defaultData.js';
+import { computeDateScore, createDateIndex } from './search.js';
 import { validator } from './validator.js';
 
 export default defineComponentController({
@@ -10,15 +11,19 @@ export default defineComponentController({
   migrate: (data) => {
     if (data instanceof Date) {
       return data;
+    } else if (typeof data === 'string') {
+      const parsedDate = new Date(data);
+
+      if (isValidDate(parsedDate)) {
+        return parsedDate;
+      }
     }
   },
   validator: (data, options) => {
     if (typeof data === 'string') {
       const date = new Date(data);
 
-      if (isValidDate(date)) {
-        return validator(date, options);
-      }
+      return validator(date, options);
     }
 
     return 'INVALID_TYPE';
@@ -26,8 +31,11 @@ export default defineComponentController({
   storageTransformer: {
     getDefaultData,
     fromStorage: (data) => data.toISOString(),
-    toStorage: (data) => {
-      return new Date(data);
-    },
+    toStorage: (data) => new Date(data),
+  },
+  search: {
+    createIndex: (data) => createDateIndex(data),
+    getScore: (query, target) =>
+      computeDateScore(query, target.storage, target.searchIndex),
   },
 });

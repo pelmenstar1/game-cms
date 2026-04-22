@@ -65,7 +65,7 @@ export default defineComponentController({
       return context.getScore<RepeatableId, RepeatableArgs>(
         query,
         'base::repeatable',
-        target as never,
+        target,
         getRepeatableOptions(options)
       );
     },

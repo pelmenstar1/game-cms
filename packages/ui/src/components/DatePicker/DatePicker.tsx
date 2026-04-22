@@ -1,4 +1,4 @@
-import { resolveDateLike } from '@game-cms/shared/chrono';
+import { type DateLike, resolveDateLike } from '@game-cms/shared/chrono';
 import { formatTwoDigit } from '@game-cms/shared/string';
 import type { ChangeEvent } from 'react';
 
@@ -8,16 +8,24 @@ import styles from './DatePicker.module.scss';
 
 export interface DatePickerProps {
   className?: string;
-  min?: string | Date;
-  max?: string | Date;
-  value: Date;
+  min?: DateLike;
+  max?: DateLike;
+  value: DateLike;
   onValueChanged?: (value: Date) => void;
 }
 
-function formatDateLocal(value: string | Date) {
+function formatDateLocal(value: DateLike | undefined) {
+  if (value === undefined) {
+    return;
+  }
+
   value = resolveDateLike(value);
 
-  return `${value.getFullYear()}-${formatTwoDigit(value.getMonth() + 1)}-${formatTwoDigit(value.getDate())}`;
+  const year = value.getFullYear();
+  const month = formatTwoDigit(value.getMonth() + 1);
+  const day = formatTwoDigit(value.getDate());
+
+  return `${year}-${month}-${day}`;
 }
 
 export function DatePicker({
@@ -37,8 +45,8 @@ export function DatePicker({
       type="date"
       variant="caption"
       className={classNames(styles.root, className)}
-      min={min ? formatDateLocal(min) : undefined}
-      max={max ? formatDateLocal(max) : undefined}
+      min={formatDateLocal(min)}
+      max={formatDateLocal(max)}
       value={formatDateLocal(value)}
       onChange={onChange}
     />
