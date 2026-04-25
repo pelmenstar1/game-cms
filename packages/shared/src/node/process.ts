@@ -37,3 +37,8 @@ export function redirectProcess(
     p.stderr.pipe(process.stderr);
   });
 }
+
+export function onShutdown(callback: () => void) {
+  process.once('SIGTERM', callback);
+  process.once('SIGINT', callback);
+}

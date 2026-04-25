@@ -1,18 +1,30 @@
 import path from 'node:path';
 
 import { importTests, runTests } from '@game-cms/e2e/ignition';
+import { destroyServices } from '@game-cms/ignition';
+import minimist from 'minimist';
 
 import { setupCms } from './setup.js';
 
+const rootDir = path.join(import.meta.dirname, '../../');
+
 export async function run() {
-  await setupCms();
+  const argv = minimist<{ filter?: string; t?: string }>(
+    process.argv.slice(2),
+    {
+      string: ['filter', 't'],
+    }
+  );
 
-  const rootDir = path.join(import.meta.dirname, '../../');
+  const filterPattern = argv.filter ?? argv.t;
 
-  await importTests(rootDir);
-  await runTests();
-
-  process.exit(0);
+  try {
+    await setupCms();
+    await importTests(rootDir);
+    await runTests({ filterPattern });
+  } finally {
+    await destroyServices();
+  }
 }
 
 void run();

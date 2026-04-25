@@ -8,14 +8,38 @@ interface TestFailure {
   error: unknown;
 }
 
+function suiteHasMatchingTests(
+  suite: Suite,
+  prefix: string,
+  filter: RegExp
+): boolean {
+  const label = prefix ? `${prefix} > ${suite.name}` : suite.name;
+
+  for (const t of suite.tests) {
+    const testLabel = label ? `${label} > ${t.name}` : t.name;
+    if (filter.test(testLabel)) return true;
+  }
+
+  for (const child of suite.children) {
+    if (suiteHasMatchingTests(child, label, filter)) return true;
+  }
+
+  return false;
+}
+
 async function runSuite(
   suite: Suite,
   prefix: string,
-  failures: TestFailure[]
+  failures: TestFailure[],
+  filter?: RegExp
 ): Promise<{ passed: number; failed: number }> {
   let passed = 0;
   let failed = 0;
   const label = prefix ? `${prefix} > ${suite.name}` : suite.name;
+
+  if (filter && !suiteHasMatchingTests(suite, prefix, filter)) {
+    return { passed, failed };
+  }
 
   if (!prefix && suite.file) {
     console.log(chalk.cyan(`\n${suite.file}`));
@@ -27,6 +51,11 @@ async function runSuite(
 
   for (const t of suite.tests) {
     const testLabel = label ? `${label} > ${t.name}` : t.name;
+
+    if (filter && !filter.test(testLabel)) {
+      continue;
+    }
+
     try {
       await t.fn();
       passed++;
@@ -41,7 +70,7 @@ async function runSuite(
   }
 
   for (const child of suite.children) {
-    const r = await runSuite(child, label, failures);
+    const r = await runSuite(child, label, failures, filter);
 
     passed += r.passed;
     failed += r.failed;
@@ -70,10 +99,28 @@ function printFailure(f: TestFailure): void {
   console.log();
 }
 
-export async function runTests(): Promise<void> {
+export interface RunTestsOptions {
+  filterPattern?: string;
+}
+
+export async function runTests(options: RunTestsOptions = {}): Promise<void> {
+  const { filterPattern } = options;
+  const filter = filterPattern ? new RegExp(filterPattern, 'i') : undefined;
+
   console.log(chalk.bold('\nRunning e2e tests...\n'));
+
+  if (filter) {
+    console.log(chalk.dim(`  Filter: ${filterPattern}\n`));
+  }
+
   const failures: TestFailure[] = [];
-  const { passed, failed } = await runSuite(getCurrentSuite(), '', failures);
+  const { passed, failed } = await runSuite(
+    getCurrentSuite(),
+    '',
+    failures,
+    filter
+  );
+
   console.log(
     `\n${chalk.green(`${passed} passed`)}, ${chalk.red(`${failed} failed`)}\n`
   );

@@ -2,17 +2,20 @@ import type { GetPropertyOr, MaybePromise } from '@game-cms/shared';
 import { MaybeArray } from '@game-cms/shared/collections';
 
 type BaseServiceLifecycleHook = () => MaybePromise<void>;
-type ServiceLifecycleHook =
+export type ServiceLifecycleHook =
   | BaseServiceLifecycleHook
   | {
       dependsOn: MaybeArray<ServiceId>;
       action: BaseServiceLifecycleHook;
     };
 
+export type ServiceLifecycle = {
+  onInit?: ServiceLifecycleHook;
+  onDestroy?: ServiceLifecycleHook;
+};
+
 export interface Service {
-  lifecycle?: {
-    onInit?: ServiceLifecycleHook;
-  };
+  lifecycle?: ServiceLifecycle;
 }
 
 export interface ServiceTypeMeta {

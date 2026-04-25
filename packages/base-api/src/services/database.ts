@@ -65,6 +65,13 @@ export default service({
         appEvents.emit('base::database::commandFailed', event);
       });
     },
+    onDestroy: async () => {
+      if (_client) {
+        log().info('Closing database connection');
+
+        await _client.close();
+      }
+    },
   },
   client,
   rawCollection,
