@@ -8,25 +8,64 @@ interface TestFailure {
   error: unknown;
 }
 
-async function runSuite(
+function suiteHasMatchingTests(
   suite: Suite,
   prefix: string,
-  failures: TestFailure[]
+  filter: string
+): boolean {
+  const label = prefix ? `${prefix} > ${suite.name}` : suite.name;
+
+  for (const t of suite.tests) {
+    const testLabel = label ? `${label} > ${t.name}` : t.name;
+
+    if (testLabel.toLowerCase().includes(filter.toLowerCase())) {
+      return true;
+    }
+  }
+
+  for (const child of suite.children) {
+    if (suiteHasMatchingTests(child, label, filter)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+interface RunSuiteOptions {
+  suite: Suite;
+  prefix: string;
+  failures: TestFailure[];
+  filter?: string;
+}
+
+async function runSuite(
+  options: RunSuiteOptions
 ): Promise<{ passed: number; failed: number }> {
+  const { suite, prefix, failures, filter } = options;
   let passed = 0;
   let failed = 0;
   const label = prefix ? `${prefix} > ${suite.name}` : suite.name;
+
+  if (filter && !suiteHasMatchingTests(suite, prefix, filter)) {
+    return { passed, failed };
+  }
 
   if (!prefix && suite.file) {
     console.log(chalk.cyan(`\n${suite.file}`));
   }
 
-  for (const hook of suite.beforeAlls) {
+  for (const hook of suite.hooks.beforeAll) {
     await hook();
   }
 
   for (const t of suite.tests) {
     const testLabel = label ? `${label} > ${t.name}` : t.name;
+
+    if (filter && !testLabel.toLowerCase().includes(filter.toLowerCase())) {
+      continue;
+    }
+
     try {
       await t.fn();
       passed++;
@@ -41,10 +80,14 @@ async function runSuite(
   }
 
   for (const child of suite.children) {
-    const r = await runSuite(child, label, failures);
+    const r = await runSuite({ suite: child, prefix: label, failures, filter });
 
     passed += r.passed;
     failed += r.failed;
+  }
+
+  for (const hook of suite.hooks.afterAll) {
+    await hook();
   }
 
   return { passed, failed };
@@ -66,10 +109,27 @@ function printFailure(f: TestFailure): void {
   console.log();
 }
 
-export async function runTests(): Promise<void> {
+export interface RunTestsOptions {
+  filterPattern?: string;
+}
+
+export async function runTests(options: RunTestsOptions = {}): Promise<void> {
+  const { filterPattern } = options;
+
   console.log(chalk.bold('\nRunning e2e tests...\n'));
+
+  if (filterPattern) {
+    console.log(chalk.dim(`  Filter: ${filterPattern}\n`));
+  }
+
   const failures: TestFailure[] = [];
-  const { passed, failed } = await runSuite(getCurrentSuite(), '', failures);
+  const { passed, failed } = await runSuite({
+    suite: getCurrentSuite(),
+    prefix: '',
+    failures,
+    filter: filterPattern,
+  });
+
   console.log(
     `\n${chalk.green(`${passed} passed`)}, ${chalk.red(`${failed} failed`)}\n`
   );

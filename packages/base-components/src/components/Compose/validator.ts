@@ -16,16 +16,23 @@ export function validator<Args>(
     return { ownError: 'INVALID_TYPE' };
   }
 
-  const entries = keys.map((key) => {
+  const properties: Record<string, unknown> = {};
+  let anyError = false;
+
+  for (const key of keys) {
     const propValue = data[key];
     if (propValue === undefined && params?.partial) {
-      return [key, undefined] as const;
+      continue;
     }
 
-    return [key, validate(key, propValue)] as const;
-  });
+    const validationResult = validate(key, propValue);
+    if (validationResult !== undefined) {
+      anyError = true;
+      properties[key] = validationResult;
+    }
+  }
 
-  if (entries.some(([, value]) => value !== undefined)) {
-    return { properties: Object.fromEntries(entries) as never };
+  if (anyError) {
+    return { properties } as ComponentErrorById<Id, Args>;
   }
 }

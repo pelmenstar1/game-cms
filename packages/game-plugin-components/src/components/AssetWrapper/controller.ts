@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { defineComponentController } from '@game-cms/core';
+import { isNonNullObject } from '@game-cms/shared';
 import { fromEntriesNullable } from '@game-cms/shared/object';
 
 import core from './core.js';
@@ -22,12 +23,18 @@ export default defineComponentController({
     context.walk(options.componentId, data.base, options.baseOptions, apply);
   },
   migrate: (data, options, context) => {
-    const { componentId, baseOptions } = options;
+    if (isNonNullObject(data)) {
+      const { base } = data;
 
-    return {
-      base: context.migrate(componentId, data, baseOptions),
-      derived: {},
-    };
+      if (base !== undefined) {
+        const { componentId, baseOptions } = options;
+
+        return {
+          base: context.migrate(componentId, base, baseOptions),
+          derived: {},
+        };
+      }
+    }
   },
   resolver: (data, options, context, args) => {
     const { componentId, baseOptions } = options;

@@ -4,7 +4,7 @@ import { dropdown } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     {
       data: 'option1',
       component: dropdown([

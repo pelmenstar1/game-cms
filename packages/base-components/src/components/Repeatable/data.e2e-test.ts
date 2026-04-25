@@ -7,7 +7,7 @@ import { repeatable } from './index.js';
 import { id } from './internal/types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     {
       data: ['123', '321'],
       component: repeatable({ component: text() }),

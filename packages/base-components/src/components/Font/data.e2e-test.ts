@@ -30,7 +30,7 @@ describe('Font', () => {
     const style: FontStyle = 'normal';
 
     return {
-      outs: [
+      out: [
         { data: [], component: font() },
         {
           data: [{ file: [realFile], weight: 400, style }],

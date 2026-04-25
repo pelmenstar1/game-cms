@@ -5,15 +5,25 @@ export interface Test {
   fn: () => MaybePromise<void>;
 }
 
+export type LifecycleHook = () => MaybePromise<void>;
+
 export interface Suite {
   name: string;
   file?: string;
   tests: Test[];
-  beforeAlls: (() => MaybePromise<void>)[];
   children: Suite[];
+  hooks: {
+    beforeAll: LifecycleHook[];
+    afterAll: LifecycleHook[];
+  };
 }
 
-const root: Suite = { name: '', tests: [], beforeAlls: [], children: [] };
+const root: Suite = {
+  name: '',
+  tests: [],
+  hooks: { beforeAll: [], afterAll: [] },
+  children: [],
+};
 
 let current = root;
 let currentFile: string | undefined;

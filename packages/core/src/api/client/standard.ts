@@ -53,6 +53,7 @@ export function createStandardClient({
   }
 
   return {
+    baseUrl,
     makeRequest,
     setAuthorizationHeader,
   };

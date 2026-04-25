@@ -2,7 +2,8 @@ import '@game-cms/core';
 
 import { ApiRoute } from '@game-cms/core/api';
 import { env, setLogger } from '@game-cms/global';
-import { initServices } from '@game-cms/ignition';
+import { destroyServices, initServices } from '@game-cms/ignition';
+import { onShutdown } from '@game-cms/shared/node';
 import fastify, { FastifyPluginAsync, RawServerDefault } from 'fastify';
 import {
   serializerCompiler,
@@ -44,14 +45,24 @@ export async function startServer(options: StartServerOptions = {}) {
     api: { routes },
   } = env();
 
-  const app = fastify({ loggerInstance: createLogger() });
+  const log = createLogger();
+  const app = fastify({ loggerInstance: log });
 
-  setLogger(app.log);
+  setLogger(log);
 
   await app.register(apiPlugin, { routes, prefix: '/api' });
   await app.register(dashboardPlugin, options);
 
   await initServices();
+
+  app.addHook('onClose', async () => {
+    log.info('Gracefully shutting down server');
+    await destroyServices();
+  });
+
+  onShutdown(() => {
+    void app.close();
+  });
 
   await app.listen({ port: options.port ?? server.port });
 }

@@ -4,7 +4,7 @@ import { checkbox } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     {
       data: ['choice1', 'choice3'],
       component: checkbox({

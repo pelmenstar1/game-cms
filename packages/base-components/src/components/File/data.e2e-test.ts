@@ -27,7 +27,7 @@ describe('File', () => {
 
   componentDataFlowTests(id, () => {
     return {
-      outs: [
+      out: [
         { data: [], component: file() },
         { data: [realFile], component: file() },
       ],

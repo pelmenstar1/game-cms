@@ -6,12 +6,14 @@
     "start": "tsx ./src/main.ts"
   },
   "dependencies": {
-    "game-cms": "workspace:*",
-    "@game-cms/ignition": "workspace:*",
-    "@game-cms/game-plugin": "workspace:*",
-    "@game-cms/storage-provider-local": "workspace:*",
-    "@game-cms/global": "workspace:*",
     "@game-cms/e2e": "workspace:*",
+    "@game-cms/game-plugin": "workspace:*",
+    "@game-cms/global": "workspace:*",
+    "@game-cms/ignition": "workspace:*",
+    "@game-cms/storage-provider-local": "workspace:*",
+    "@types/minimist": "^1.2.5",
+    "game-cms": "workspace:*",
+    "minimist": "^1.2.8",
     "pino": "catalog:"
   },
   "devDependencies": {

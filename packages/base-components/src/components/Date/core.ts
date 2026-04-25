@@ -5,5 +5,5 @@ import { id } from './types.js';
 
 export default defineComponentCore({
   id,
-  defaultOutData: (options) => getDefaultData(options).toString(),
+  defaultOutData: (options) => getDefaultData(options).toISOString(),
 });

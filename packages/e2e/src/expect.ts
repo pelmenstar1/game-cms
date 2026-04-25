@@ -23,8 +23,10 @@ interface Matchers {
   toBe(expected: unknown): void;
   toBeNull(): void;
   toBeDefined(): void;
+  toBeUndefined(): void;
   toBeGreaterThan(n: number): void;
   toBeGreaterThanOrEqual(n: number): void;
+  toBeLessThanOrEqual(n: number): void;
   toEqual(expected: unknown): void;
   toMatchObject(expected: object): void;
   toBeInstanceOf(cls: abstract new (...args: never) => unknown): void;
@@ -37,7 +39,10 @@ interface Expectation extends Matchers {
     toBeDefined(): Promise<void>;
     toThrow(ErrorClass?: abstract new (...args: never) => Error): Promise<void>;
   };
-  resolves: { not: { toThrow(): Promise<void> } };
+  resolves: {
+    toBeUndefined(): Promise<void>;
+    not: { toThrow(): Promise<void> };
+  };
 }
 
 function matchers(actual: unknown, negated: boolean): Matchers {
@@ -57,11 +62,21 @@ function matchers(actual: unknown, negated: boolean): Matchers {
         chaiExpect(actual).to.not.equal(undefined);
       }
     },
+    toBeUndefined() {
+      if (negated) {
+        chaiExpect(actual).to.not.equal(undefined);
+      } else {
+        chaiExpect(actual).to.equal(undefined);
+      }
+    },
     toBeGreaterThan(n) {
       a().greaterThan(n);
     },
     toBeGreaterThanOrEqual(n) {
       a().greaterThanOrEqual(n);
+    },
+    toBeLessThanOrEqual(n) {
+      a().lessThanOrEqual(n);
     },
     toEqual(expected) {
       a().deep.equal(expected);
@@ -114,6 +129,10 @@ export function expect(actual: unknown): Expectation {
       },
     },
     resolves: {
+      async toBeUndefined() {
+        const result = await (actual as Promise<unknown>);
+        chaiExpect(result).to.equal(undefined);
+      },
       not: {
         async toThrow() {
           try {

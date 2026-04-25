@@ -1,10 +1,14 @@
 import type { Logger } from 'pino';
 
-const store = globalThis as unknown as Record<string, unknown>;
+declare global {
+  var __game_cms_logger__: Logger | undefined;
+}
+
+const store = globalThis;
 const KEY = '__game_cms_logger__';
 
 export function log() {
-  const value = store[KEY] as Logger | undefined;
+  const value = globalThis[KEY];
   if (value === undefined) {
     throw new Error('Logger is undefined');
   }

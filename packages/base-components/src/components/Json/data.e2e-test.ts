@@ -4,7 +4,7 @@ import { json } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     { data: { abc: 1 }, component: json() },
     { data: {}, component: json() },
   ],

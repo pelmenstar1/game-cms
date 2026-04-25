@@ -2,6 +2,7 @@ import type {
   GetAllPermissionsResponse,
   GetSessionInfoResponse,
   SignInPayload,
+  SignInResponse,
 } from '@game-cms/base-core';
 import {
   json,
@@ -15,6 +16,7 @@ export const signUserIn = (context: RequestContext, payload: SignInPayload) =>
     url: '/auth/user/signin',
     method: 'POST',
     body: jsonInit(payload),
+    response: json<SignInResponse>(),
   });
 
 export const refreshUserSession = (context: RequestContext) =>

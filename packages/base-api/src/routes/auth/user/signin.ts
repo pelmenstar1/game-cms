@@ -1,3 +1,4 @@
+import { SignInResponse } from '@game-cms/base-core';
 import { signInPayload } from '@game-cms/base-core/schema';
 import { apiRoute } from '@game-cms/core/api';
 import { cms } from '@game-cms/global';
@@ -13,7 +14,7 @@ export default apiRoute({
   schema: {
     body: signInPayload,
   },
-  handler: async (req, res) => {
+  handler: async (req, res): Promise<SignInResponse> => {
     const payload = req.body;
 
     const { session, refresh } = await cms()
@@ -26,5 +27,7 @@ export default apiRoute({
         createRefreshAuthCookie(refresh),
       ],
     });
+
+    return { refresh: refresh.token, session: session.token };
   },
 });

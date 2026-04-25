@@ -5,7 +5,7 @@ import { entityReference } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     { data: null, component: entityReference({ entityId: 'test' }) },
     {
       data: new ObjectId().toString(),
