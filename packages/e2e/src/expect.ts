@@ -26,6 +26,7 @@ interface Matchers {
   toBeUndefined(): void;
   toBeGreaterThan(n: number): void;
   toBeGreaterThanOrEqual(n: number): void;
+  toBeLessThanOrEqual(n: number): void;
   toEqual(expected: unknown): void;
   toMatchObject(expected: object): void;
   toBeInstanceOf(cls: abstract new (...args: never) => unknown): void;
@@ -73,6 +74,9 @@ function matchers(actual: unknown, negated: boolean): Matchers {
     },
     toBeGreaterThanOrEqual(n) {
       a().greaterThanOrEqual(n);
+    },
+    toBeLessThanOrEqual(n) {
+      a().lessThanOrEqual(n);
     },
     toEqual(expected) {
       a().deep.equal(expected);

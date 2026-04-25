@@ -7,6 +7,7 @@ export default defineComponentCore({
   defaultOutData: (options, context) => {
     return {
       base: context.getDefaultData(options.componentId, options.baseOptions),
+      derived: {},
     };
   },
   pathWalker: (data, options, path, apply, context) => {

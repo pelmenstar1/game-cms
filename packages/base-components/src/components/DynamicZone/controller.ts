@@ -68,7 +68,7 @@ export default defineComponentController({
           context.getScore(
             query,
             componentId,
-            { storage: itemData, searchIndex: searchIndex[i] as never },
+            { storage: itemData, searchIndex: searchIndex[i] },
             baseOptions
           )
         );
@@ -79,12 +79,14 @@ export default defineComponentController({
     createIndex: (data, options, context) => {
       const { options: optionsMap } = options;
 
-      return data.map((item) => {
-        const { key, data: itemData } = item;
-        const { componentId, options: baseOptions } = optionsMap[key];
+      return Promise.all(
+        data.map((item) => {
+          const { key, data: itemData } = item;
+          const { componentId, options: baseOptions } = optionsMap[key];
 
-        return context.createSearchIndex(componentId, itemData, baseOptions);
-      });
+          return context.createSearchIndex(componentId, itemData, baseOptions);
+        })
+      );
     },
   },
   migrate: (data, options, context) => {

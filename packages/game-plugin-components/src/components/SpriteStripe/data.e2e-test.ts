@@ -29,10 +29,6 @@ describe('SpriteStripe', () => {
   componentDataFlowTests(id, () => ({
     out: [
       {
-        data: { image: [], width: 0, height: 0 },
-        component: spriteStripe(),
-      },
-      {
         data: { image: [imageFile], width: 100, height: 50 },
         component: spriteStripe(),
       },

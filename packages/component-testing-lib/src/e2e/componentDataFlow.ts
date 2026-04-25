@@ -10,9 +10,10 @@ import type {
   ComponentOptionsById,
   ComponentOutDataById,
   ComponentSchema,
+  ComponentStorageDataById,
   ForeignComponentClientDataTransformerContext,
 } from '@game-cms/core';
-import { describe, expect, test } from '@game-cms/e2e';
+import { beforeAll, describe, expect, test } from '@game-cms/e2e';
 import { cms, env } from '@game-cms/global';
 import {
   incrementingIdSource,
@@ -70,13 +71,20 @@ async function gatherComponents() {
 
 async function clientResolverContext() {
   const clientComponents = await gatherComponents();
-  const { foreignValidationContext, foreignDefaultContext } =
-    cms().service('base::component');
+  const { foreignDefaultContext } = cms().service('base::component');
 
   const clientContext: ForeignComponentClientDataTransformerContext = {
     idSource: incrementingIdSource,
-    validation: foreignValidationContext,
     sharedContext: {},
+    validation: {
+      validate: (id, data, options, params) => {
+        const validator = clientComponents[id]?.validator;
+
+        if (validator) {
+          return validator(data, options, clientContext.validation, params);
+        }
+      },
+    },
     getDefaultData: (id, options) => {
       const defaultData = clientComponents[id]?.getDefaultData?.(
         options,
@@ -118,62 +126,107 @@ async function clientResolverContext() {
   return clientContext;
 }
 
-async function outDataToStorage<Id extends ComponentId, Args>(
-  id: Id,
-  outData: ComponentOutDataById<Id, Args>,
-  options: ComponentOptionsById<Id, Args>,
-  clientContext: ForeignComponentClientDataTransformerContext
-) {
-  const {
-    foreignStorageResolverContext,
-    foreignClientOptionsTransformerContext,
-  } = cms().service('base::component');
-
-  const clientOptions = foreignClientOptionsTransformerContext.toClient(
-    id,
-    options
-  );
-
-  const client = clientContext.toClient(id, outData, clientOptions);
-  const outIn = clientContext.fromClient(id, client, clientOptions);
-
-  return foreignStorageResolverContext.toStorage(id, outIn, options);
-}
-
 export function componentDataFlowTests<Id extends ComponentId>(
   id: Id,
   input: MaybeFactory<TestInput<Id>>
 ) {
-  describe(`${id} data flow`, () => {
-    test('out -> client -> out in -> storage -> out', async () => {
-      const clientContext = await clientResolverContext();
-      const { foreignStorageResolverContext } =
-        cms().service('base::component');
+  async function outDataToStorage<Args>(
+    outData: ComponentOutDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    clientContext: ForeignComponentClientDataTransformerContext
+  ) {
+    const {
+      foreignStorageResolverContext,
+      foreignClientOptionsTransformerContext,
+    } = cms().service('base::component');
 
-      for (const { data: out, component } of resolveMaybeFactory(input).out) {
+    const clientOptions = foreignClientOptionsTransformerContext.toClient(
+      id,
+      options
+    );
+
+    const client = clientContext.toClient(id, outData, clientOptions);
+    const outIn = clientContext.fromClient(id, client, clientOptions);
+
+    return foreignStorageResolverContext.toStorage(id, outIn, options);
+  }
+
+  // out -> client -> out in -> storage -> out
+  async function outToOutFlow<Args>(
+    out: ComponentOutDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    clientContext: ForeignComponentClientDataTransformerContext
+  ) {
+    const {
+      foreignStorageResolverContext,
+      foreignClientOptionsTransformerContext,
+    } = cms().service('base::component');
+
+    const clientOptions = foreignClientOptionsTransformerContext.toClient(
+      id,
+      options
+    );
+
+    const client = clientContext.toClient(id, out, clientOptions);
+    const inData = clientContext.fromClient(id, client, clientOptions);
+
+    const storage = await foreignStorageResolverContext.toStorage(
+      id,
+      inData,
+      options
+    );
+
+    const actualOut = await foreignStorageResolverContext.fromStorage(
+      id,
+      storage,
+      options
+    );
+
+    expect(actualOut).toEqual(out);
+  }
+
+  async function storageToStorageFlow<Args>(
+    storage: ComponentStorageDataById<Id, Args>,
+    options: ComponentOptionsById<Id, Args>,
+    clientContext: ForeignComponentClientDataTransformerContext
+  ) {
+    const { foreignStorageResolverContext } = cms().service('base::component');
+
+    const out = await foreignStorageResolverContext.fromStorage(
+      id,
+      storage,
+      options
+    );
+
+    return outToOutFlow(out, options, clientContext);
+  }
+
+  describe(`${id} data flow`, () => {
+    let clientContext: ForeignComponentClientDataTransformerContext;
+
+    beforeAll(async () => {
+      clientContext = await clientResolverContext();
+    });
+
+    test('out to out', async () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      for (const { data: out, component } of outArray) {
         const { options } = component;
 
-        const storage = await outDataToStorage(id, out, options, clientContext);
-        const actualOut = await foreignStorageResolverContext.fromStorage(
-          id,
-          storage,
-          options
-        );
-
-        expect(actualOut).toEqual(out);
+        await outToOutFlow(out, options, clientContext);
       }
     });
 
     test('self migration', async () => {
       const outArray = resolveMaybeFactory(input).out;
-      const clientContext = await clientResolverContext();
 
       const { foreignDataMigrationContext } = cms().service('base::component');
 
       for (const { data: out, component } of outArray) {
         const { options } = component;
 
-        const storage = await outDataToStorage(id, out, options, clientContext);
+        const storage = await outDataToStorage(out, options, clientContext);
         const migratedResult = foreignDataMigrationContext.migrate(
           id,
           storage,
@@ -181,6 +234,173 @@ export function componentDataFlowTests<Id extends ComponentId>(
         );
 
         expect(migratedResult).toEqual(storage);
+      }
+    });
+
+    test('default out data', async () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const { foreignDefaultContext } = cms().service('base::component');
+
+      for (const { component } of outArray) {
+        const { options } = component;
+        const data = foreignDefaultContext.getDefaultData(id, options);
+
+        await outToOutFlow(data, options, clientContext);
+      }
+    });
+
+    test('default storage data', async () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const { foreignStorageResolverContext } =
+        cms().service('base::component');
+
+      for (const { component } of outArray) {
+        const { options } = component;
+
+        const storage = await foreignStorageResolverContext.getDefaultData(
+          id,
+          options
+        );
+
+        await storageToStorageFlow(storage, options, clientContext);
+      }
+    });
+
+    test('search', async () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const { foreignDataSearchContext } = cms().service('base::component');
+
+      for (const { data: out, component } of outArray) {
+        const { options } = component;
+
+        const storage = await outDataToStorage(out, options, clientContext);
+        const searchIndex = await foreignDataSearchContext.createSearchIndex(
+          id,
+          storage,
+          options
+        );
+
+        const score = foreignDataSearchContext.getScore(
+          '123',
+          id,
+          { storage, searchIndex },
+          options
+        );
+
+        expect(score).toBeGreaterThanOrEqual(0);
+        expect(score).toBeLessThanOrEqual(1);
+      }
+    });
+
+    test('atomWalker', async () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const { foreignAtomWalkerContext } = cms().service('base::component');
+
+      for (const { data: out, component } of outArray) {
+        const { options } = component;
+
+        const storage = await outDataToStorage(out, options, clientContext);
+
+        foreignAtomWalkerContext.walk(
+          id,
+          storage,
+          options,
+          (atomData, atomOptions) => {
+            expect(atomData).toBeDefined();
+            expect(atomOptions).toBeDefined();
+          }
+        );
+      }
+    });
+
+    test('structure', () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const { foreignDataStructureContext } = cms().service('base::component');
+
+      for (const { component } of outArray) {
+        const { options } = component;
+
+        const structure = foreignDataStructureContext.getStructure(id, options);
+
+        expect(structure).toBeDefined();
+      }
+    });
+
+    test('innerDependencies', () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const { foreignDependencySourceContext } =
+        cms().service('base::component');
+
+      for (const { component } of outArray) {
+        const { options } = component;
+
+        const result = foreignDependencySourceContext.getDependencies(
+          id,
+          options
+        );
+
+        expect(result).toBeDefined();
+      }
+    });
+
+    test('validator', async () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const {
+        foreignValidationContext,
+        foreignClientOptionsTransformerContext,
+      } = cms().service('base::component');
+
+      for (const { data: out, component } of outArray) {
+        const { options } = component;
+
+        const clientOptions = foreignClientOptionsTransformerContext.toClient(
+          id,
+          options
+        );
+
+        const client = clientContext.toClient(id, out, clientOptions);
+        const inData = clientContext.fromClient(id, client, clientOptions);
+
+        const validationResult = await foreignValidationContext.validate(
+          id,
+          inData,
+          options
+        );
+
+        expect(validationResult).toBeUndefined();
+      }
+    });
+
+    test('client validator', () => {
+      const outArray = resolveMaybeFactory(input).out;
+
+      const { foreignClientOptionsTransformerContext } =
+        cms().service('base::component');
+
+      for (const { data: out, component } of outArray) {
+        const { options } = component;
+
+        const clientOptions = foreignClientOptionsTransformerContext.toClient(
+          id,
+          options
+        );
+
+        const client = clientContext.toClient(id, out, clientOptions);
+
+        const validationResult = clientContext.validation.validate(
+          id,
+          client,
+          clientOptions
+        );
+
+        expect(validationResult).toBeUndefined();
       }
     });
   });

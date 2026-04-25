@@ -10,14 +10,18 @@ import {
 } from '@game-cms/ignition';
 import pino from 'pino';
 
-async function ensureDatabaseIsEmpty() {
+export type SetupCmsOptions = {
+  noCheck?: boolean;
+};
+
+async function ensureDatabaseIsEmpty(options?: SetupCmsOptions) {
   const databaseService = cms().service('base::database');
 
   const isEmpty = await databaseService.isDatabaseEmpty();
   if (!isEmpty) {
     console.warn('Database is not empty');
 
-    if (process.stdout.isTTY) {
+    if (process.stdout.isTTY && !options?.noCheck) {
       const rl = createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -39,11 +43,11 @@ async function ensureDatabaseIsEmpty() {
   }
 }
 
-export async function setupCms() {
+export async function setupCms(options?: SetupCmsOptions) {
   await initEnvFromConfigs(path.join(import.meta.dirname, '../'));
   setLogger(pino());
 
-  await ensureDatabaseIsEmpty();
+  await ensureDatabaseIsEmpty(options);
   await initServices();
 }
 

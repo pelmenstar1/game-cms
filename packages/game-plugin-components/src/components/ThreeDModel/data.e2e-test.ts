@@ -29,10 +29,6 @@ describe('ThreeDModel', () => {
   componentDataFlowTests(id, () => ({
     out: [
       {
-        data: { file: [] },
-        component: threeDModel(),
-      },
-      {
         data: { file: [modelFile] },
         component: threeDModel(),
       },

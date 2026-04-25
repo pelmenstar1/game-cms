@@ -8,18 +8,22 @@ import { setupCms } from './setup.js';
 
 const rootDir = path.join(import.meta.dirname, '../../');
 
+type Argv = {
+  filter?: string;
+  t?: string;
+  noCheck?: boolean;
+};
+
 export async function run() {
-  const argv = minimist<{ filter?: string; t?: string }>(
-    process.argv.slice(2),
-    {
-      string: ['filter', 't'],
-    }
-  );
+  const argv = minimist<Argv>(process.argv.slice(2), {
+    string: ['filter', 't'],
+    boolean: ['noCheck'],
+  });
 
   const filterPattern = argv.filter ?? argv.t;
 
   try {
-    await setupCms();
+    await setupCms({ noCheck: argv.noCheck });
     await importTests(rootDir);
     await runTests({ filterPattern });
   } finally {
