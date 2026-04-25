@@ -1,6 +1,9 @@
 import type { GameCmsController } from '@game-cms/core';
 
-const store = globalThis as unknown as Record<string, unknown>;
+declare global {
+  var __game_cms_controller__: GameCmsController | undefined;
+}
+
 const KEY = '__game_cms_controller__';
 
 const _default: GameCmsController = {
@@ -10,9 +13,9 @@ const _default: GameCmsController = {
 };
 
 export function cms(): GameCmsController {
-  return (store[KEY] as GameCmsController | undefined) ?? _default;
+  return globalThis[KEY] ?? _default;
 }
 
 export function setCmsController(value: GameCmsController) {
-  store[KEY] = value;
+  globalThis[KEY] = value;
 }

@@ -1,8 +1,10 @@
 import type {
   CreateUserPayload,
+  CreateUserResponse,
   NoPasswordUser,
   UpdateUserPayload,
 } from '@game-cms/base-core';
+import { ToClientType } from '@game-cms/core';
 import {
   json,
   jsonInit,
@@ -20,6 +22,7 @@ export const createUser = (
     url: '/user',
     body: jsonInit(payload),
     method: 'POST',
+    response: json<ToClientType<CreateUserResponse>>(),
   });
 
 export const listUsers = (context: RequestContext, options: PagingOptions) =>

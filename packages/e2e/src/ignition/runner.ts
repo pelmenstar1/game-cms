@@ -21,7 +21,7 @@ async function runSuite(
     console.log(chalk.cyan(`\n${suite.file}`));
   }
 
-  for (const hook of suite.beforeAlls) {
+  for (const hook of suite.hooks.beforeAll) {
     await hook();
   }
 
@@ -45,6 +45,10 @@ async function runSuite(
 
     passed += r.passed;
     failed += r.failed;
+  }
+
+  for (const hook of suite.hooks.afterAll) {
+    await hook();
   }
 
   return { passed, failed };

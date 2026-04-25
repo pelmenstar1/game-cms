@@ -1,5 +1,6 @@
 import type {
   CreateFolderPayload,
+  CreateFolderResponse,
   DeleteStorageItemOptions,
   ListStorageItemsOptions,
   ListStorageItemsResponse,
@@ -90,5 +91,5 @@ export const createFolder = (
     url: '/storage/folder',
     method: 'POST',
     body: jsonInit(payload),
-    response: json(),
+    response: json<ToClientType<CreateFolderResponse>>(),
   });

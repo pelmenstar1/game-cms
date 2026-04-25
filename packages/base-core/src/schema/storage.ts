@@ -1,5 +1,6 @@
 import { pagingOptionsSchema } from '@game-cms/core/schema';
 import { objectId, stringObjectId } from '@game-cms/shared/mongo';
+import { stringBoolean } from '@game-cms/shared/zod';
 import z from 'zod';
 
 const name = z
@@ -16,22 +17,22 @@ export const createFolderPayload = z.object({
 
 export const uploadFileMeta = z.strictObject({
   parent: stringObjectId.optional(),
-  hidden: z.boolean().optional(),
+  hidden: stringBoolean.optional(),
   originFile: stringObjectId.optional(),
 });
 
 export const listStorageItemsOptions = z.object({
   ...pagingOptionsSchema.shape,
-  includeHidden: z.boolean().optional(),
+  includeHidden: stringBoolean.optional(),
   parent: z.union([stringObjectId, z.literal('no-parent')]).optional(),
   search: z.string().optional(),
 });
 
 export const deleteStorageItemOptions = z.object({
-  force: z.boolean().optional(),
+  force: stringBoolean.optional(),
 });
 
 export const traceFileOptions = z.object({
   ...pagingOptionsSchema.shape,
-  concise: z.boolean().optional(),
+  concise: stringBoolean.optional(),
 });

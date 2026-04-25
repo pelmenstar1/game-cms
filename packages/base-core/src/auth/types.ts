@@ -1,4 +1,5 @@
 import { ApiRouteId } from '@game-cms/core/api';
+import { ObjectId } from 'mongodb';
 import type z from 'zod';
 
 import type {
@@ -20,6 +21,11 @@ export type ApiToken = z.infer<typeof apiToken>;
 export type Permissions = z.infer<typeof permissions>;
 
 export type SignInPayload = z.infer<typeof signInPayload>;
+export type SignInResponse = {
+  refresh: string;
+  session: string;
+};
+
 export type SessionJwtPayload = z.infer<typeof sessionJwtPayloadSchema>;
 export type RefreshJwtPayload = z.infer<typeof refreshJwtPayloadSchema>;
 
@@ -30,6 +36,7 @@ export type GetApiTokenJwtResponse = {
 export type CreateApiTokenPayload = z.infer<typeof createApiTokenPayload>;
 
 export type CreateApiTokenResponse = {
+  id: ObjectId;
   token: string;
 };
 

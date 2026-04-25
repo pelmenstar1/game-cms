@@ -53,7 +53,7 @@ export const createApiToken = (
     url: '/auth/token',
     method: 'POST',
     body: jsonInit(payload),
-    response: json<CreateApiTokenResponse>(),
+    response: json<ToClientType<CreateApiTokenResponse>>(),
   });
 
 export const deleteApiToken = (context: RequestContext, id: string) =>
