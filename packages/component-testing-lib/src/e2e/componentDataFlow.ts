@@ -7,6 +7,7 @@ import type {
   ComponentClientOptionsById,
   ComponentId,
   ComponentInDataById,
+  ComponentOptionsById,
   ComponentOutDataById,
   ComponentSchema,
   ForeignComponentClientDataTransformerContext,
@@ -18,39 +19,39 @@ import {
   type MaybeFactory,
   resolveMaybeFactory,
 } from '@game-cms/shared';
-import { filterOutNullable } from '@game-cms/shared/collections';
-import { maybeImportFile } from '@game-cms/shared/node';
+import { importFile } from '@game-cms/shared/node';
+
+type DataWithSchema<Id extends ComponentId, T> = {
+  data: T;
+  component: ComponentSchema<Id>;
+};
 
 type TestInput<Id extends ComponentId> = {
-  outs: { data: ComponentOutDataById<Id>; component: ComponentSchema<Id> }[];
+  out: DataWithSchema<Id, ComponentOutDataById<Id>>[];
 };
 
 async function gatherComponentClientChunk(dirPath: string) {
   const clientPath = path.join(dirPath, 'client.js');
 
-  const clientModule = await maybeImportFile<{
+  const clientModule = await importFile<{
     default: ComponentClientController;
   }>(clientPath);
 
-  if (clientModule !== undefined) {
-    const controller = clientModule.default;
+  const controller = clientModule.default;
 
-    return [controller.core.id, controller] as const;
-  }
+  return [controller.core.id, controller] as const;
 }
 
 async function gatherComponentsForDistribution(distPath: string) {
   const entries = await fsp.readdir(distPath, { withFileTypes: true });
 
-  const result = await Promise.all(
+  return Promise.all(
     entries
       .filter((entry) => entry.isDirectory())
       .map((entry) =>
         gatherComponentClientChunk(path.join(distPath, entry.name))
       )
   );
-
-  return filterOutNullable(result);
 }
 
 async function gatherComponents() {
@@ -117,6 +118,28 @@ async function clientResolverContext() {
   return clientContext;
 }
 
+async function outDataToStorage<Id extends ComponentId, Args>(
+  id: Id,
+  outData: ComponentOutDataById<Id, Args>,
+  options: ComponentOptionsById<Id, Args>,
+  clientContext: ForeignComponentClientDataTransformerContext
+) {
+  const {
+    foreignStorageResolverContext,
+    foreignClientOptionsTransformerContext,
+  } = cms().service('base::component');
+
+  const clientOptions = foreignClientOptionsTransformerContext.toClient(
+    id,
+    options
+  );
+
+  const client = clientContext.toClient(id, outData, clientOptions);
+  const outIn = clientContext.fromClient(id, client, clientOptions);
+
+  return foreignStorageResolverContext.toStorage(id, outIn, options);
+}
+
 export function componentDataFlowTests<Id extends ComponentId>(
   id: Id,
   input: MaybeFactory<TestInput<Id>>
@@ -124,28 +147,13 @@ export function componentDataFlowTests<Id extends ComponentId>(
   describe(`${id} data flow`, () => {
     test('out -> client -> out in -> storage -> out', async () => {
       const clientContext = await clientResolverContext();
-      const {
-        foreignStorageResolverContext,
-        foreignClientOptionsTransformerContext,
-      } = cms().service('base::component');
+      const { foreignStorageResolverContext } =
+        cms().service('base::component');
 
-      for (const { data: out, component } of resolveMaybeFactory(input).outs) {
+      for (const { data: out, component } of resolveMaybeFactory(input).out) {
         const { options } = component;
 
-        const clientOptions = foreignClientOptionsTransformerContext.toClient(
-          id,
-          options
-        );
-
-        const client = clientContext.toClient(id, out, clientOptions);
-        const outIn = clientContext.fromClient(id, client, clientOptions);
-
-        const storage = await foreignStorageResolverContext.toStorage(
-          id,
-          outIn,
-          options
-        );
-
+        const storage = await outDataToStorage(id, out, options, clientContext);
         const actualOut = await foreignStorageResolverContext.fromStorage(
           id,
           storage,
@@ -153,6 +161,26 @@ export function componentDataFlowTests<Id extends ComponentId>(
         );
 
         expect(actualOut).toEqual(out);
+      }
+    });
+
+    test('self migration', async () => {
+      const outArray = resolveMaybeFactory(input).out;
+      const clientContext = await clientResolverContext();
+
+      const { foreignDataMigrationContext } = cms().service('base::component');
+
+      for (const { data: out, component } of outArray) {
+        const { options } = component;
+
+        const storage = await outDataToStorage(id, out, options, clientContext);
+        const migratedResult = foreignDataMigrationContext.migrate(
+          id,
+          storage,
+          options
+        );
+
+        expect(migratedResult).toEqual(storage);
       }
     });
   });

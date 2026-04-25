@@ -6,7 +6,7 @@ import { compose } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     {
       data: { name: 'Test', age: 25 },
       component: compose({

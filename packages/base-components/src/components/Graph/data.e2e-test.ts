@@ -6,7 +6,7 @@ import { graph } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     {
       data: { nodes: {}, edges: [] },
       component: graph({ component: text() }),

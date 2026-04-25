@@ -4,5 +4,5 @@ import { text } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [{ data: '123', component: text() }],
+  out: [{ data: '123', component: text() }],
 });

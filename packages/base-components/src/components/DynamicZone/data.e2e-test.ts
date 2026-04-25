@@ -7,7 +7,7 @@ import { dynamicZone, dynamicZoneEntry } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     {
       data: [
         { key: 'item1', data: { abc: '123' } },

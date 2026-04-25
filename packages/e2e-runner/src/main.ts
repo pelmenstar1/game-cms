@@ -23,7 +23,11 @@ export async function run() {
     await importTests(rootDir);
     await runTests({ filterPattern });
   } finally {
-    await destroyServices();
+    try {
+      await destroyServices();
+    } catch (error) {
+      console.error('Error during shutdown:', error);
+    }
   }
 }
 

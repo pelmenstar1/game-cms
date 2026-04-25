@@ -1114,6 +1114,9 @@ importers:
       '@game-cms/core':
         specifier: workspace:*
         version: link:../core
+      '@game-cms/e2e':
+        specifier: workspace:*
+        version: link:../e2e
       '@game-cms/storybook-config':
         specifier: workspace:*
         version: link:../storybook-config

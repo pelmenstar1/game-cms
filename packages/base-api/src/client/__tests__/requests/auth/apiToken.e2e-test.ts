@@ -46,7 +46,7 @@ describeApiFlow('api token flow', (contextRef) => {
     const { token } = await createApiToken(context, {
       name,
       permissions,
-      expirationTime: 1, // 1 second
+      expirationTime: 1000, // 1 second
     });
 
     const { jwt } = await getApiTokenJwt(context, { token });

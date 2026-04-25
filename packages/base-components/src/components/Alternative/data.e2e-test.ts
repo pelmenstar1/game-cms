@@ -5,7 +5,7 @@ import { alternative } from './index.js';
 import { id } from './types.js';
 
 componentDataFlowTests(id, {
-  outs: [
+  out: [
     {
       data: {
         default: '123',
