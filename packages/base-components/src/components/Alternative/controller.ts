@@ -21,6 +21,21 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
+  migrate: (data, options, context) => {
+    const result = unknownConditionalData.safeParse(data);
+
+    if (result.success) {
+      const { componentId, baseOptions } = options;
+
+      return {
+        default: context.migrate(componentId, result.data.default, baseOptions),
+        alternative: result.data.alternative.map((choice) => ({
+          condition: choice.condition,
+          value: context.migrate(componentId, choice.value, baseOptions),
+        })),
+      };
+    }
+  },
   atomWalker: {
     applyEach: (data, options, apply, context) => {
       const { componentId, baseOptions } = options;
@@ -53,20 +68,34 @@ export default defineComponentController({
       };
     },
   },
-  migrate: (data, options, context) => {
-    const result = unknownConditionalData.safeParse(data);
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      const { componentId, baseOptions } = options;
 
-    if (result.success) {
+      if (context.contains(outerLink, componentId, data.default, baseOptions)) {
+        return true;
+      }
+
+      return data.alternative.some(({ value }) =>
+        context.contains(outerLink, componentId, value, baseOptions)
+      );
+    },
+    delete: (outerLink, data, options, context) => {
       const { componentId, baseOptions } = options;
 
       return {
-        default: context.migrate(componentId, result.data.default, baseOptions),
-        alternative: result.data.alternative.map((choice) => ({
-          condition: choice.condition,
-          value: context.migrate(componentId, choice.value, baseOptions),
+        default: context.delete(
+          outerLink,
+          componentId,
+          data.default,
+          baseOptions
+        ),
+        alternative: data.alternative.map(({ condition, value }) => ({
+          condition,
+          value: context.delete(outerLink, componentId, value, baseOptions),
         })),
       };
-    }
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

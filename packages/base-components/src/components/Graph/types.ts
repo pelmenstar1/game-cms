@@ -52,6 +52,7 @@ type BaseGraphEntry<Types extends GetComponentSchemaTypes> = {
     ownError?: 'INVALID_TYPE';
     base?: Record<string, Types['error']>;
   };
+  isContainer: true;
 };
 
 type GraphEntry<T extends GraphArgs> = BaseGraphEntry<

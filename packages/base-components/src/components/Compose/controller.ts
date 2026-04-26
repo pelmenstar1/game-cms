@@ -48,6 +48,20 @@ export default defineComponentController({
       context.getDependencies(prop.componentId, prop.options)
     );
   },
+  migrate: (data, options, context) => {
+    if (isNonNullObject(data)) {
+      return mapObject(options, ({ componentId, options }, key) =>
+        context.migrate(componentId, data[key], options)
+      );
+    }
+  },
+  resolver: (raw, options, context, args) => {
+    return mapObject(raw, (value, key) => {
+      const { componentId, options: baseOptions } = options[key];
+
+      return context.resolveOutData(componentId, value, baseOptions, args);
+    });
+  },
   atomWalker: {
     applyEach: (data, options, apply, context) => {
       for (const entry of Object.entries<ComposeOptionsEntry>(options)) {
@@ -73,19 +87,33 @@ export default defineComponentController({
       });
     },
   },
-  migrate: (data, options, context) => {
-    if (isNonNullObject(data)) {
-      return mapObject(options, ({ componentId, options }, key) =>
-        context.migrate(componentId, data[key], options)
-      );
-    }
-  },
-  resolver: (raw, options, context, args) => {
-    return mapObject(raw, (value, key) => {
-      const { componentId, options: baseOptions } = options[key];
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      return Object.entries<ComposeOptionsEntry>(options).some(
+        ([key, prop]) => {
+          const { componentId, options: baseOptions } = prop;
 
-      return context.resolveOutData(componentId, value, baseOptions, args);
-    });
+          return context.contains(
+            outerLink,
+            componentId,
+            data[key],
+            baseOptions
+          );
+        }
+      );
+    },
+    delete: (outerLink, data, options, context) => {
+      return mapObject(options, (prop, key) => {
+        const { componentId, options: baseOptions } = prop;
+
+        return context.delete(
+          outerLink,
+          componentId,
+          data[key] as never,
+          baseOptions
+        );
+      });
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

@@ -161,7 +161,9 @@ async function migrate() {
     }
   }
 
-  await col.bulkWrite(ops);
+  if (ops.length > 0) {
+    await col.bulkWrite(ops);
+  }
 }
 
 export default service({

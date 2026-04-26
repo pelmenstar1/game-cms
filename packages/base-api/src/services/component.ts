@@ -18,6 +18,7 @@ import {
   type ForeignComponentDataStructureContext,
   type ForeignComponentDefaultDataContext,
   type ForeignComponentDependencySourceContext,
+  ForeignComponentOuterLinkControllerContext,
   type ForeignComponentStorageDataTransformerContext,
   type ForeignComponentValidationContext,
   service,
@@ -278,6 +279,37 @@ const foreignDependencySourceContext: ForeignComponentDependencySourceContext =
     },
   };
 
+const foreignOuterLinkContext: ForeignComponentOuterLinkControllerContext = {
+  contains: (outerLink, id, data, options) => {
+    const { outerLinkController } = getController(id);
+
+    if (!outerLinkController) {
+      return false;
+    }
+
+    return outerLinkController.contains(
+      outerLink,
+      data,
+      options,
+      foreignOuterLinkContext
+    );
+  },
+  delete: (outerLink, id, data, options) => {
+    const { outerLinkController } = getController(id);
+
+    if (!outerLinkController) {
+      return data;
+    }
+
+    return outerLinkController.delete(
+      outerLink,
+      data,
+      options,
+      foreignOuterLinkContext
+    );
+  },
+};
+
 export default service({
   lifecycle: {},
   foreignDefaultContext,
@@ -291,5 +323,6 @@ export default service({
   foreignAtomWalkerContext,
   foreignClientOptionsTransformerContext,
   foreignDependencySourceContext,
+  foreignOuterLinkContext,
   getController,
 });

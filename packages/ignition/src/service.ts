@@ -15,14 +15,6 @@ type HookInfo = {
   action: () => MaybePromise<void>;
 };
 
-function getServiceHookAction(hook: ServiceLifecycleHook | undefined) {
-  if (typeof hook === 'function') {
-    return hook;
-  }
-
-  return hook?.action;
-}
-
 function getServiceHook(
   hook: ServiceLifecycleHook | undefined
 ): HookInfo | undefined {
@@ -69,9 +61,7 @@ async function runPostInit(services: ServiceMap) {
   const serviceValues = Object.values(services) as Service[];
 
   await Promise.all(
-    serviceValues.map((service) =>
-      getServiceHookAction(service.lifecycle?.onPostInit)
-    )
+    serviceValues.map((service) => service.lifecycle?.onPostInit?.())
   );
 }
 

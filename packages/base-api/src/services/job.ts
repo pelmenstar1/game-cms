@@ -76,6 +76,7 @@ async function executeJob<Id extends JobId>(instance: PostedJob<Id>) {
 
     jobLogger.info('Job execution completed successfully');
   } catch (error) {
+    console.error(error);
     jobLogger.error('Failed to execute the job: %s', error);
 
     try {
@@ -98,7 +99,9 @@ function setupEvents() {
 }
 
 async function runBacklog() {
-  const pendingJobs = collection().find({ status: 'pending' });
+  const pendingJobs = collection().find({
+    $or: [{ status: 'pending' }, { status: 'in-progress' }],
+  });
 
   for await (const job of pendingJobs) {
     await executeJob(job);

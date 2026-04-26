@@ -120,6 +120,7 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
   clientData: DynamicZoneArray<Input, 'clientData'>;
   storageData: DynamicZoneArray<Input, 'storageData'>;
   searchIndexData: DynamicZoneArray<Input, 'searchIndexData'>;
+  isContainer: true;
 };
 
 type NestedPathZone<T, Name extends string, Schema extends ComponentSchema> =

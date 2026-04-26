@@ -44,18 +44,15 @@ export default defineComponentController({
     context.getStructure<ComposeId, ComposeArgs>(composeId, composeOptions),
   innerDependencies: (_, context) =>
     context.getDependencies<ComposeId, ComposeArgs>(composeId, composeOptions),
-  atomWalker: {
-    applyEach: (data, _, apply, context) => {
-      context.applyEach(composeId, data, composeOptions, apply);
-    },
-    filter: (data, _, predicate, context) =>
-      context.filter<ComposeId, ComposeArgs>(
-        composeId,
-        data,
-        composeOptions,
-        predicate
-      ),
-  },
+  migrate: (data, _, context) =>
+    context.migrate<ComposeId, ComposeArgs>(composeId, data, composeOptions),
+  resolver: (data, _, context, args) =>
+    context.resolveOutData<ComposeId, ComposeArgs>(
+      composeId,
+      data,
+      composeOptions,
+      args
+    ) as never,
   mergeData: async (target, source, _, context) => {
     const result = await context.merge<ComposeId, ComposeArgs>(
       composeId,
@@ -86,6 +83,45 @@ export default defineComponentController({
       ...result,
       shadowAtlas: resultShadowAtlas,
     };
+  },
+  atomWalker: {
+    applyEach: (data, _, apply, context) => {
+      context.applyEach(composeId, data, composeOptions, apply);
+    },
+    filter: (data, _, predicate, context) =>
+      context.filter<ComposeId, ComposeArgs>(
+        composeId,
+        data,
+        composeOptions,
+        predicate
+      ),
+  },
+  search: {
+    getScore: (query, target, _, context) =>
+      context.getScore<ComposeId, ComposeArgs>(
+        query,
+        composeId,
+        target,
+        composeOptions
+      ),
+    createIndex: (storage, _, context) => {
+      return context.createSearchIndex<ComposeId, ComposeArgs>(
+        composeId,
+        storage,
+        composeOptions
+      );
+    },
+  },
+  outerLinkController: {
+    contains: (outerLink, data, _, context) =>
+      context.contains(outerLink, composeId, data, composeOptions),
+    delete: (outerLink, data, _, context) =>
+      context.delete<ComposeId, ComposeArgs>(
+        outerLink,
+        composeId,
+        data,
+        composeOptions
+      ),
   },
   storageTransformer: {
     getDefaultData: () => ({

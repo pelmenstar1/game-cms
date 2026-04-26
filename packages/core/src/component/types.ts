@@ -1,4 +1,4 @@
-import { GetPropertyOr, IfExtends } from '@game-cms/shared';
+import { GetPropertyOr } from '@game-cms/shared';
 
 export type ComponentDataAtom = unknown;
 export type ComponentData =
@@ -55,8 +55,14 @@ type GetComponentClientOptionsTypes<Types extends ComponentTypes> = {
   clientOptions: GetPropertyOr<Types, 'clientOptions', Types['options']>;
 };
 
+type IsContainer<Types extends ComponentTypes> = Types extends {
+  isContainer: boolean;
+}
+  ? Types['isContainer']
+  : false;
+
 type GetComponentMetaTypes<Types extends ComponentTypes> = {
-  isContainer: IfExtends<GetPropertyOr<Types, 'isContainer', false>, boolean>;
+  isContainer: IsContainer<Types>;
 };
 
 type GetComponentTypes<Types extends ComponentTypes> =

@@ -19,6 +19,25 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
+  migrate: (data, options, context) => {
+    if (isNonNullObject(data)) {
+      const { base } = data;
+
+      if (base !== undefined) {
+        const { componentId, baseOptions } = options;
+
+        return {
+          base: context.migrate(componentId, base, baseOptions),
+          derived: {},
+        };
+      }
+    }
+  },
+  resolver: (data, options, context, args) => {
+    const { componentId, baseOptions } = options;
+
+    return context.resolveOutData(componentId, data, baseOptions, args);
+  },
   atomWalker: {
     applyEach: (data, options, apply, context) => {
       context.applyEach(
@@ -39,24 +58,25 @@ export default defineComponentController({
       return { base, derived: data.derived };
     },
   },
-  migrate: (data, options, context) => {
-    if (isNonNullObject(data)) {
-      const { base } = data;
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      return context.contains(
+        outerLink,
+        options.componentId,
+        data.base,
+        options.baseOptions
+      );
+    },
+    delete: (outerLink, data, options, context) => {
+      const base = context.delete(
+        outerLink,
+        options.componentId,
+        data.base,
+        options.baseOptions
+      );
 
-      if (base !== undefined) {
-        const { componentId, baseOptions } = options;
-
-        return {
-          base: context.migrate(componentId, base, baseOptions),
-          derived: {},
-        };
-      }
-    }
-  },
-  resolver: (data, options, context, args) => {
-    const { componentId, baseOptions } = options;
-
-    return context.resolveOutData(componentId, data, baseOptions, args);
+      return { base, derived: data.derived };
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

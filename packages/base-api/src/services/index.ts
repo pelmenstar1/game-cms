@@ -6,5 +6,6 @@ export { default as 'base::component' } from './component.js';
 export { default as 'base::database' } from './database.js';
 export * from './entity/index.js';
 export { default as 'base::job' } from './job.js';
+export { default as 'base::referenceableOrchestrator' } from './referenceableOrchestrator.js';
 export * from './storage/index.js';
 export { default as 'base::user' } from './user.js';

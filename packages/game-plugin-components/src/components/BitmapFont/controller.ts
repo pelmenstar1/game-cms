@@ -42,17 +42,20 @@ export default defineComponentController({
       composeId,
       getComposeOptions()
     ),
-  atomWalker: {
-    applyEach: (data, _, apply, context) => {
-      context.applyEach(composeId, data, getComposeOptions(), apply);
-    },
-    filter: (data, _, predicate, context) =>
-      context.filter<ComposeId, ComposeArgs>(
-        composeId,
-        data,
-        getComposeOptions(),
-        predicate
-      ),
+  resolver: (data, _, context, args) => {
+    return context.resolveOutData<ComposeId, ComposeArgs>(
+      composeId,
+      data,
+      getComposeOptions(),
+      args
+    ) as never;
+  },
+  migrate: (data, _, context) => {
+    return context.migrate<ComposeId, ComposeArgs>(
+      composeId,
+      data,
+      getComposeOptions()
+    );
   },
   mergeData: async (target, source, _, context) => {
     const result = await context.merge<ComposeId, ComposeArgs>(
@@ -85,6 +88,29 @@ export default defineComponentController({
       ...result,
       shadowAtlas: resultShadowAtlas,
     };
+  },
+  atomWalker: {
+    applyEach: (data, _, apply, context) => {
+      context.applyEach(composeId, data, getComposeOptions(), apply);
+    },
+    filter: (data, _, predicate, context) =>
+      context.filter<ComposeId, ComposeArgs>(
+        composeId,
+        data,
+        getComposeOptions(),
+        predicate
+      ),
+  },
+  outerLinkController: {
+    contains: (outerLink, data, _, context) =>
+      context.contains(outerLink, composeId, data, getComposeOptions()),
+    delete: (outerLink, data, _, context) =>
+      context.delete<ComposeId, ComposeArgs>(
+        outerLink,
+        composeId,
+        data,
+        getComposeOptions()
+      ),
   },
   search: {
     createIndex: (data, _, context) =>

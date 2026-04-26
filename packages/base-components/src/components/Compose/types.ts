@@ -55,6 +55,7 @@ type BaseComposeEntry<Input extends ComposeInput> = {
   clientData: ComposeMap<Input, 'clientData'>;
   storageData: ComposeMap<Input, 'storageData'>;
   searchIndexData: ComposeMap<Input, 'searchIndexData'>;
+  isContainer: true;
 };
 
 type NestedPathKey<T, Input> = keyof T & keyof Input & string;

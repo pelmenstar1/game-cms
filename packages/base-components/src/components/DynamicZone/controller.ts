@@ -77,6 +77,29 @@ export default defineComponentController({
         });
     },
   },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return data.some((item) => {
+        const { componentId, options: baseOptions } = optionsMap[item.key];
+
+        return context.contains(outerLink, componentId, item.data, baseOptions);
+      });
+    },
+    delete: (outerLink, data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return data.map((item) => {
+        const { componentId, options: baseOptions } = optionsMap[item.key];
+
+        return {
+          key: item.key,
+          data: context.delete(outerLink, componentId, item.data, baseOptions),
+        };
+      });
+    },
+  },
   search: {
     getScore: (query, target, options, context) => {
       const { storage, searchIndex } = target;

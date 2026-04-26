@@ -407,6 +407,8 @@ export async function baseDeleteById<Extra>(
   options?: DeleteStorageItemOptions
 ) {
   const appEvents = cms().service('base::appEvents');
+  const refOrch = cms().service('base::referenceableOrchestrator');
+
   const storageCollection = collection<Extra>();
 
   const items = await storageCollection
@@ -455,6 +457,14 @@ export async function baseDeleteById<Extra>(
     appEvents.emit('base::storage::itemDeleted', {
       id: _id,
       type: StorageItemType.FILE,
+    });
+
+    refOrch.emitDeleted({
+      id: 'base::storageItem',
+      data: {
+        id: _id,
+        type: StorageItemType.FILE,
+      },
     });
   }
 

@@ -24,7 +24,7 @@ export default apiRoute({
     req
   ): Promise<TraceFileResponse | TraceFileConciseResponse> => {
     const result = await cms()
-      .service('base::storage::trace')
+      .service('base::entity::traceFile')
       .traceFile(req.params.id);
 
     const { offset = 0, size, concise = false } = req.query;

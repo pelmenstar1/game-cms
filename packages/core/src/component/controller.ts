@@ -3,11 +3,13 @@ import { RequiredIf } from '@game-cms/shared';
 import { ComponentAtomWalker } from './atomWalker.js';
 import { ComponentClientOptionsTransformer } from './client/controller.js';
 import { ComponentCore } from './core.js';
+import { ComponentDependencySource } from './dependency.js';
 import { ComponentDataMergeHandler } from './merge.js';
 import {
   ComponentDataMigration,
   ComponentDataStructureSource,
 } from './migration.js';
+import { ComponentOuterLinkController } from './outerLink.js';
 import { ComponentDataResolver } from './resolve.js';
 import { ComponentSearchController } from './search.js';
 import { ComponentStorageDataTransformer } from './storage.js';
@@ -16,7 +18,7 @@ import {
   ComponentIsContainerById,
   ComponentOptionsById,
 } from './types.js';
-import { RequiredIfExists } from './typeutil.js';
+import { RequiredIfExists, RequiredIfExistsOrContainer } from './typeutil.js';
 import {
   ComponentDataValidatorParams,
   ComponentDataValidatorResult,
@@ -38,20 +40,6 @@ export type ComponentDataValidator<Id extends ComponentId> = <Args = unknown>(
   params?: ComponentDataValidatorParams
 ) => ComponentDataValidatorResult<Id, Args>;
 
-export interface ForeignComponentDependencySourceContext {
-  getDependencies: <Id extends ComponentId, Args>(
-    id: Id,
-    options: ComponentOptionsById<Id, Args>
-  ) => ComponentId[];
-}
-
-export type ComponentDependencySource<Id extends ComponentId = ComponentId> =
-  | ComponentId[]
-  | (<Args>(
-      options: ComponentOptionsById<Id, Args>,
-      context: ForeignComponentDependencySourceContext
-    ) => ComponentId[]);
-
 interface BaseComponentController<Id extends ComponentId = ComponentId> {
   core: ComponentCore<Id>;
   validator: ComponentDataValidator<Id>;
@@ -65,15 +53,16 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
         atomWalker?: ComponentAtomWalker<Id>;
         innerDependencies?: ComponentDependencySource<Id>;
         structure?: ComponentDataStructureSource<Id>;
+        outerLinkController?: ComponentOuterLinkController<Id>;
       },
       ComponentIsContainerById<Id>
     > &
-    RequiredIfExists<
+    RequiredIfExistsOrContainer<
       { resolver?: ComponentDataResolver<Id> },
       Id,
       'resolvedData'
     > &
-    RequiredIfExists<
+    RequiredIfExistsOrContainer<
       { storageTransformer?: ComponentStorageDataTransformer<Id> },
       Id,
       'storageData' | 'inData'
@@ -83,7 +72,7 @@ export type ComponentController<Id extends ComponentId = ComponentId> =
       Id,
       'partialInData'
     > &
-    RequiredIfExists<
+    RequiredIfExistsOrContainer<
       { search?: ComponentSearchController<Id> },
       Id,
       'searchIndexData'
