@@ -25,7 +25,7 @@ export default apiRoute({
   ): Promise<TraceFileResponse | TraceFileConciseResponse> => {
     const result = await cms()
       .service('base::entity::traceFile')
-      .traceFile(req.params.id);
+      .traceFile(req.params.id, { signal: req.signal });
 
     const { offset = 0, size, concise = false } = req.query;
     const items = result.slice(offset, offset + size);

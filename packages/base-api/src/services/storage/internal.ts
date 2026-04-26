@@ -19,6 +19,7 @@ import {
   StorageProviderUploadResult,
   UploadFilePayload,
 } from '@game-cms/base-core';
+import { ApiError } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { FileSource } from '@game-cms/shared/node';
@@ -100,16 +101,32 @@ export async function hydrateItem<Extra>(
 export function ensureFileItem<Extra>(
   item: StoragePersistentItem<Extra> | null,
   id: ObjectId
-): asserts item is StoragePersistentItem<Extra> & {
+): asserts item is StorageFilePersistentItem<Extra> & {
   type: StorageItemType.FILE;
 } {
   if (item === null) {
-    throw new Error(`Storage item not found: ${id}`);
+    throw new ApiError(`Storage item does not exist (id=${id})`, {
+      code: 'base::entity/notFound',
+    });
   }
 
   if (item.type !== StorageItemType.FILE) {
-    throw new Error(`Expected file item: ${id}`);
+    throw new ApiError(`Storage item expected to be a file (id=${id})`, {
+      code: 'base::schema/validation',
+    });
   }
+}
+
+export async function ensureFileItemById(
+  fileId: ObjectId,
+  options?: AbortOptions
+) {
+  const item = await collection().findOne(
+    { _id: fileId },
+    { projection: { type: 1 }, signal: options?.signal }
+  );
+
+  ensureFileItem(item, fileId);
 }
 
 export async function getFileExtraById<Extra>(

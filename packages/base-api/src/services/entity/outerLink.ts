@@ -1,9 +1,14 @@
 import {
   EntityId,
+  EntityPersistentDocumentById,
   EntitySchemaById,
   EntityStorageDataById,
 } from '@game-cms/base-core';
-import { ReferenceableHandleDescriptor, service } from '@game-cms/core';
+import {
+  ComponentSchema,
+  ReferenceableHandleDescriptor,
+  service,
+} from '@game-cms/core';
 import { cms } from '@game-cms/global';
 import { mapObject } from '@game-cms/shared/object';
 import { Document } from 'mongodb';
@@ -18,7 +23,40 @@ declare module '@game-cms/base-core' {
   }
 }
 
-function removeFileFromEntityData<Id extends EntityId>(
+function isOuterLinkUsedInEntityVariant<Id extends EntityId>(
+  schema: EntitySchemaById<Id>,
+  data: EntityStorageDataById<Id>,
+  descriptor: ReferenceableHandleDescriptor
+) {
+  const { foreignOuterLinkContext } = cms().service('base::component');
+
+  return Object.entries<ComponentSchema>(schema.components).some(
+    ([key, componentSchema]) => {
+      const { componentId, options } = componentSchema;
+
+      return foreignOuterLinkContext.contains(
+        descriptor,
+        componentId,
+        data.components[key],
+        options
+      );
+    }
+  );
+}
+
+function isOuterLinkUsedInEntity<Id extends EntityId>(
+  schema: EntitySchemaById<Id>,
+  data: EntityPersistentDocumentById<Id>,
+  descriptor: ReferenceableHandleDescriptor
+) {
+  return (
+    isOuterLinkUsedInEntityVariant(schema, data.draft, descriptor) ||
+    (data.published &&
+      isOuterLinkUsedInEntityVariant(schema, data.published, descriptor))
+  );
+}
+
+function removeOuterLinkFromEntityData<Id extends EntityId>(
   descriptor: ReferenceableHandleDescriptor,
   schema: EntitySchemaById<Id>,
   data: EntityStorageDataById<Id>
@@ -38,7 +76,7 @@ function removeFileFromEntityData<Id extends EntityId>(
   });
 }
 
-async function removeFileFromEntityCollection<Id extends EntityId>(
+async function removeOuterLinkFromEntityCollection<Id extends EntityId>(
   descriptor: ReferenceableHandleDescriptor,
   entityId: Id,
   schema: EntitySchemaById<Id>
@@ -48,19 +86,33 @@ async function removeFileFromEntityCollection<Id extends EntityId>(
   for await (const doc of col.find()) {
     const { _id, draft, published } = doc;
 
-    const set: Document = {
-      'draft.components': removeFileFromEntityData(descriptor, schema, draft),
-    };
+    let needsToBeUpdated = false;
+    const set: Document = {};
 
-    if (published) {
-      set['published.components'] = removeFileFromEntityData(
+    if (isOuterLinkUsedInEntityVariant(schema, draft, descriptor)) {
+      needsToBeUpdated = true;
+      set['draft.components'] = removeOuterLinkFromEntityData(
+        descriptor,
+        schema,
+        draft
+      );
+    }
+
+    if (
+      published &&
+      isOuterLinkUsedInEntityVariant(schema, published, descriptor)
+    ) {
+      needsToBeUpdated = true;
+      set['published.components'] = removeOuterLinkFromEntityData(
         descriptor,
         schema,
         published
       );
     }
 
-    await col.updateOne({ _id }, { $set: set });
+    if (needsToBeUpdated) {
+      await col.updateOne({ _id }, { $set: set });
+    }
   }
 }
 
@@ -73,7 +125,7 @@ async function removeOuterLinkFromEntities(
 
   await Promise.all(
     Object.entries(schemas).map(async ([id, { schema }]) =>
-      removeFileFromEntityCollection(descriptor, id, schema)
+      removeOuterLinkFromEntityCollection(descriptor, id, schema)
     )
   );
 }
@@ -81,7 +133,11 @@ async function removeOuterLinkFromEntities(
 export default service({
   lifecycle: {
     onInit: {
-      dependsOn: ['base::appEvents', 'base::job'],
+      dependsOn: [
+        'base::appEvents',
+        'base::job',
+        'base::referenceableOrchestrator',
+      ],
       action: () => {
         const jobService = cms().service('base::job');
 
@@ -106,4 +162,5 @@ export default service({
       },
     },
   },
+  isOuterLinkUsedInEntity,
 });

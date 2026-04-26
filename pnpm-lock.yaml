@@ -440,9 +440,6 @@ importers:
       mongodb:
         specifier: 'catalog:'
         version: 7.0.0
-      pino:
-        specifier: 'catalog:'
-        version: 10.3.1
       qs:
         specifier: 'catalog:'
         version: 6.15.0

@@ -26,6 +26,7 @@ import {
   basePatchContent,
   baseUploadFile,
   collection,
+  ensureFileItemById,
 } from './internal.js';
 
 declare module '@game-cms/base-core' {
@@ -113,4 +114,5 @@ export default service({
   deleteById: (id: ObjectId, options?: DeleteStorageItemOptions) => {
     return baseDeleteById(storageProvider(), id, options);
   },
+  ensureFileItemById,
 });
