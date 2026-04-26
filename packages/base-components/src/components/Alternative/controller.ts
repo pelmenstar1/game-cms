@@ -21,14 +21,37 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
-  atomWalker: (data, options, apply, context) => {
-    const { componentId, baseOptions } = options;
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      const { componentId, baseOptions } = options;
 
-    context.walk(componentId, data.default, baseOptions, apply);
+      context.applyEach(componentId, data.default, baseOptions, apply);
 
-    for (const choice of data.alternative) {
-      context.walk(componentId, choice.value, baseOptions, apply);
-    }
+      for (const choice of data.alternative) {
+        context.applyEach(componentId, choice.value, baseOptions, apply);
+      }
+    },
+    filter: (data, options, predicate, context) => {
+      const { componentId, baseOptions } = options;
+      const defaultValueExists = context.filter(
+        componentId,
+        data.default,
+        baseOptions,
+        predicate
+      );
+
+      return {
+        default: defaultValueExists
+          ? data.default
+          : context.getDefaultData(componentId, baseOptions),
+        alternative: data.alternative
+          .filter(({ value }) => predicate(componentId, value, baseOptions))
+          .map(({ condition, value }) => ({
+            condition,
+            value: context.filter(componentId, value, baseOptions, predicate),
+          })),
+      };
+    },
   },
   migrate: (data, options, context) => {
     const result = unknownConditionalData.safeParse(data);

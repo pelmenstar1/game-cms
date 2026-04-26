@@ -18,7 +18,7 @@ import {
   type ForeignComponentDataStructureContext,
   type ForeignComponentDefaultDataContext,
   type ForeignComponentDependencySourceContext,
-  type ForeignComponentStorageDataResolverContext,
+  type ForeignComponentStorageDataTransformerContext,
   type ForeignComponentValidationContext,
   service,
 } from '@game-cms/core';
@@ -64,7 +64,7 @@ const foreignResolverContext: ForeignComponentDataResolverContext = {
   },
 };
 
-const foreignStorageResolverContext: ForeignComponentStorageDataResolverContext =
+const foreignStorageResolverContext: ForeignComponentStorageDataTransformerContext =
   {
     getDefaultData: <Id extends ComponentId, Args>(
       id: Id,
@@ -160,14 +160,29 @@ const foreignDataStructureContext: ForeignComponentDataStructureContext = {
 };
 
 const foreignAtomWalkerContext: ForeignComponentAtomWalkerContext = {
-  walk: (id, data, options, apply) => {
+  getDefaultData: foreignStorageResolverContext.getDefaultData,
+  applyEach: (id, data, options, apply) => {
     const { atomWalker } = getController(id);
 
     if (atomWalker) {
-      atomWalker(data, options, apply, foreignAtomWalkerContext);
+      atomWalker.applyEach(data, options, apply, foreignAtomWalkerContext);
     } else {
       apply(id, data, options);
     }
+  },
+  filter: (id, data, options, predicate) => {
+    const { atomWalker } = getController(id);
+
+    if (atomWalker) {
+      return atomWalker.filter(
+        data,
+        options,
+        predicate,
+        foreignAtomWalkerContext
+      );
+    }
+
+    return data;
   },
 };
 

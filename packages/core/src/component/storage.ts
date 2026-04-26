@@ -23,12 +23,17 @@ export type ComponentStorageDisposeDataParams = {
   afterUpdate: boolean;
 };
 
-export interface ForeignComponentStorageDataResolverContext extends ForeignComponentPathWalkerContext {
+export interface ForeignComponentStorageDefaultDataContext {
   getDefaultData: <Id extends ComponentId, Args>(
     id: Id,
     options: ComponentOptionsById<Id, Args>
   ) => ComponentStorageDataById<Id, Args>;
+}
 
+export interface ForeignComponentStorageDataTransformerContext
+  extends
+    ForeignComponentPathWalkerContext,
+    ForeignComponentStorageDefaultDataContext {
   toStorage: <Id extends ComponentId, Args>(
     id: Id,
     data: ComponentInDataById<Id, Args>,
@@ -52,25 +57,25 @@ export interface ForeignComponentStorageDataResolverContext extends ForeignCompo
 export type ComponentStorageDataTransformer<Id extends ComponentId> = {
   getDefaultData: <Args>(
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentStorageDataResolverContext
+    context: ForeignComponentStorageDataTransformerContext
   ) => ComponentStorageDataById<Id, Args>;
 
   toStorage: <Args>(
     data: ComponentInDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentStorageDataResolverContext
+    context: ForeignComponentStorageDataTransformerContext
   ) => MaybePromise<ComponentStorageDataById<Id, Args>>;
 
   fromStorage: <Args>(
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentStorageDataResolverContext
+    context: ForeignComponentStorageDataTransformerContext
   ) => MaybePromise<ComponentOutDataById<Id, Args>>;
 
   disposeData?: <Args>(
     data: ComponentStorageDataById<Id, Args>,
     options: ComponentOptionsById<Id, Args>,
-    context: ForeignComponentStorageDataResolverContext,
+    context: ForeignComponentStorageDataTransformerContext,
     params: ComponentStorageDisposeDataParams
   ) => MaybePromise<void>;
 };

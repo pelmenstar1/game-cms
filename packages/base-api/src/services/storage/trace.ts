@@ -55,7 +55,7 @@ function isFileUsedInEntity<Id extends EntityId>(
   )) {
     const { componentId, options } = componentSchema;
 
-    foreignAtomWalkerContext.walk(
+    foreignAtomWalkerContext.applyEach(
       componentId,
       data.draft.components[key],
       options,
@@ -63,7 +63,7 @@ function isFileUsedInEntity<Id extends EntityId>(
     );
 
     if (data.published) {
-      foreignAtomWalkerContext.walk(
+      foreignAtomWalkerContext.applyEach(
         componentId,
         data.published.components[key],
         options,

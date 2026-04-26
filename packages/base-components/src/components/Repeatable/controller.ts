@@ -17,12 +17,23 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
-  atomWalker: (data, options, apply, context) => {
-    const { componentId, baseOptions } = options;
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      const { componentId, baseOptions } = options;
 
-    for (const item of data) {
-      context.walk(componentId, item, baseOptions, apply);
-    }
+      for (const item of data) {
+        context.applyEach(componentId, item, baseOptions, apply);
+      }
+    },
+    filter: (data, options, predicate, context) => {
+      const { componentId, baseOptions } = options;
+
+      return data
+        .filter((item) => predicate(componentId, item, baseOptions))
+        .map((item) =>
+          context.filter(componentId, item, baseOptions, predicate)
+        );
+    },
   },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {

@@ -406,6 +406,7 @@ export async function baseDeleteById<Extra>(
   id: ObjectId,
   options?: DeleteStorageItemOptions
 ) {
+  const appEvents = cms().service('base::appEvents');
   const storageCollection = collection<Extra>();
 
   const items = await storageCollection
@@ -421,32 +422,49 @@ export async function baseDeleteById<Extra>(
     await moveItemsToRoot(id);
 
     await storageCollection.deleteOne({ _id: id });
-  } else {
-    const files = items.filter((item) => item.type === StorageItemType.FILE);
 
-    const deletionResult = await deleteManyFilesViaProvider(
-      provider,
-      files.map(({ extra }) => extra)
-    );
+    appEvents.emit('base::storage::itemDeleted', {
+      id,
+      type: StorageItemType.FOLDER,
+    });
 
-    if (options?.force) {
-      await deleteManyFilesInCollection(files);
-    } else {
-      const effectivelyDeletedFiles = files.filter(
-        (_, index) => deletionResult.deletedStatuses[index].value
-      );
-
-      await deleteManyFilesInCollection(effectivelyDeletedFiles);
-
-      const failedDeletions = deletionResult.deletedStatuses
-        .filter((status) => !status.value)
-        .map((status) => status.reason);
-
-      if (failedDeletions.length > 0) {
-        throw new FailedDeletionError(failedDeletions);
-      }
-    }
+    return;
   }
 
-  cms().service('base::appEvents').emit('base::storage::itemDeleted', { id });
+  const files = items.filter((item) => item.type === StorageItemType.FILE);
+
+  const deletionResult = await deleteManyFilesViaProvider(
+    provider,
+    files.map(({ extra }) => extra)
+  );
+
+  let effectivelyDeletedFiles: { _id: ObjectId }[] = [];
+
+  // eslint-disable-next-line unicorn/prefer-ternary
+  if (options?.force) {
+    effectivelyDeletedFiles = files;
+  } else {
+    effectivelyDeletedFiles = files.filter(
+      (_, index) => deletionResult.deletedStatuses[index].value
+    );
+  }
+
+  await deleteManyFilesInCollection(effectivelyDeletedFiles);
+
+  for (const { _id } of effectivelyDeletedFiles) {
+    appEvents.emit('base::storage::itemDeleted', {
+      id: _id,
+      type: StorageItemType.FILE,
+    });
+  }
+
+  if (!options?.force) {
+    const failedDeletions = deletionResult.deletedStatuses
+      .filter((status) => !status.value)
+      .map((status) => status.reason);
+
+    if (failedDeletions.length > 0) {
+      throw new FailedDeletionError(failedDeletions);
+    }
+  }
 }

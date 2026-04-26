@@ -305,7 +305,7 @@ export function componentDataFlowTests<Id extends ComponentId>(
 
         const storage = await outDataToStorage(out, options, clientContext);
 
-        foreignAtomWalkerContext.walk(
+        foreignAtomWalkerContext.applyEach(
           id,
           storage,
           options,

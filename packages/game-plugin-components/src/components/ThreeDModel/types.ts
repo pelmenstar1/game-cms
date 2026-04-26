@@ -22,6 +22,7 @@ type ThreeDModelEntry = {
   clientData: ComponentClientDataById<ComposeId, ComposeArgs>;
   storageData: ComponentStorageDataById<ComposeId, ComposeArgs>;
   searchIndexData: ComponentSearchIndexDataById<ComposeId, ComposeArgs>;
+  isContainer: true;
 };
 
 declare module '@game-cms/core' {

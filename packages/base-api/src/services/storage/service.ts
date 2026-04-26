@@ -32,7 +32,7 @@ declare module '@game-cms/base-core' {
   interface AppEventsRegistry {
     'base::storage::fileUploaded': StorageFilePersistentItem & { id: ObjectId };
     'base::storage::folderCreated': CreateFolderPayload & { id: ObjectId };
-    'base::storage::itemDeleted': { id: ObjectId };
+    'base::storage::itemDeleted': { id: ObjectId; type: StorageItemType };
   }
 
   interface DatabaseCollectionTypeMap {

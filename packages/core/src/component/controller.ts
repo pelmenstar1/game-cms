@@ -1,3 +1,5 @@
+import { RequiredIf } from '@game-cms/shared';
+
 import { ComponentAtomWalker } from './atomWalker.js';
 import { ComponentClientOptionsTransformer } from './client/controller.js';
 import { ComponentCore } from './core.js';
@@ -9,7 +11,11 @@ import {
 import { ComponentDataResolver } from './resolve.js';
 import { ComponentSearchController } from './search.js';
 import { ComponentStorageDataTransformer } from './storage.js';
-import { ComponentId, ComponentOptionsById } from './types.js';
+import {
+  ComponentId,
+  ComponentIsContainerById,
+  ComponentOptionsById,
+} from './types.js';
 import { RequiredIfExists } from './typeutil.js';
 import {
   ComponentDataValidatorParams,
@@ -49,14 +55,19 @@ export type ComponentDependencySource<Id extends ComponentId = ComponentId> =
 interface BaseComponentController<Id extends ComponentId = ComponentId> {
   core: ComponentCore<Id>;
   validator: ComponentDataValidator<Id>;
-  structure?: ComponentDataStructureSource<Id>;
   migrate?: ComponentDataMigration<Id>;
-  atomWalker?: ComponentAtomWalker<Id>;
-  innerDependencies?: ComponentDependencySource<Id>;
 }
 
 export type ComponentController<Id extends ComponentId = ComponentId> =
   BaseComponentController<Id> &
+    RequiredIf<
+      {
+        atomWalker?: ComponentAtomWalker<Id>;
+        innerDependencies?: ComponentDependencySource<Id>;
+        structure?: ComponentDataStructureSource<Id>;
+      },
+      ComponentIsContainerById<Id>
+    > &
     RequiredIfExists<
       { resolver?: ComponentDataResolver<Id> },
       Id,

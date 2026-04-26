@@ -1,8 +1,11 @@
 import {
+  ComponentAtomWalkerPredicateFn,
   ComponentClientOptionsById,
   ComponentDataValidatorParams,
   ComponentOptionsById,
+  ComponentStorageDataById,
   defineComponentController,
+  ForeignComponentAtomWalkerContext,
   ForeignComponentClientOptionsTransformerContext,
   ForeignComponentValidationContext,
   searchScoreComposer,
@@ -45,14 +48,30 @@ export default defineComponentController({
       context.getDependencies(prop.componentId, prop.options)
     );
   },
-  atomWalker: (data, options, apply, context) => {
-    for (const entry of Object.entries(options)) {
-      const key = entry[0];
-      const { componentId, options: baseOptions } =
-        entry[1] as ComposeOptionsEntry;
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      for (const entry of Object.entries<ComposeOptionsEntry>(options)) {
+        const key = entry[0];
+        const { componentId, options: baseOptions } = entry[1];
 
-      context.walk(componentId, data[key], baseOptions, apply);
-    }
+        context.applyEach(componentId, data[key], baseOptions, apply);
+      }
+    },
+    filter: <Args>(
+      data: ComponentStorageDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>,
+      predicate: ComponentAtomWalkerPredicateFn,
+      context: ForeignComponentAtomWalkerContext
+    ) => {
+      return mapObject(options, (prop, key) => {
+        const { componentId, options: baseOptions } = prop;
+        const propValue = data[key] as never;
+
+        return predicate(componentId, propValue, baseOptions)
+          ? context.filter(componentId, propValue, baseOptions, predicate)
+          : context.getDefaultData(componentId, baseOptions);
+      });
+    },
   },
   migrate: (data, options, context) => {
     if (isNonNullObject(data)) {

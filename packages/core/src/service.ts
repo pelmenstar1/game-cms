@@ -1,7 +1,7 @@
 import type { GetPropertyOr, MaybePromise } from '@game-cms/shared';
 import { MaybeArray } from '@game-cms/shared/collections';
 
-type BaseServiceLifecycleHook = () => MaybePromise<void>;
+export type BaseServiceLifecycleHook = () => MaybePromise<void>;
 export type ServiceLifecycleHook =
   | BaseServiceLifecycleHook
   | {
@@ -11,6 +11,7 @@ export type ServiceLifecycleHook =
 
 export type ServiceLifecycle = {
   onInit?: ServiceLifecycleHook;
+  onPostInit?: BaseServiceLifecycleHook;
   onDestroy?: ServiceLifecycleHook;
 };
 

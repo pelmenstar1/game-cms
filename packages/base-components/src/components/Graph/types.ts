@@ -8,6 +8,8 @@ import {
 } from '@game-cms/core';
 import { IfExtends } from '@game-cms/shared';
 
+import { NodeWithMeta, PositionMeta } from './internal/types.js';
+
 export const id = 'base::graph' as const;
 export type Id = typeof id;
 
@@ -18,13 +20,6 @@ export type GraphArgs<
 
 export type ResolveGraphArgs<T> = IfExtends<T, GraphArgs>;
 
-type PositionMeta = {
-  position: {
-    x: number;
-    y: number;
-  };
-};
-
 type Size = { width?: number; height?: number };
 
 interface ClientMeta extends PositionMeta {
@@ -34,13 +29,7 @@ interface ClientMeta extends PositionMeta {
 }
 
 type Data<T, Meta = PositionMeta> = {
-  nodes: Record<
-    string,
-    {
-      value: T;
-      meta: Meta;
-    }
-  >;
+  nodes: Record<string, NodeWithMeta<T, Meta>>;
   edges: { source: string; target: string }[];
 };
 

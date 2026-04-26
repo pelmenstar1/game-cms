@@ -36,8 +36,17 @@ export default defineComponentController({
       composeId,
       getComposeOptions(options)
     ),
-  atomWalker: (data, options, apply, context) => {
-    context.walk(composeId, data, getComposeOptions(options), apply);
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      context.applyEach(composeId, data, getComposeOptions(options), apply);
+    },
+    filter: (data, options, predicate, context) =>
+      context.filter<ComposeId, ComposeArgs>(
+        composeId,
+        data,
+        getComposeOptions(options),
+        predicate
+      ),
   },
   mergeData: async (target, source, options, context) => {
     const result = await context.merge<ComposeId, ComposeArgs>(

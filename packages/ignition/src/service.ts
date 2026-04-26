@@ -3,6 +3,7 @@ import type {
   ServiceId,
   ServiceLifecycle,
   ServiceLifecycleHook,
+  ServiceMap,
 } from '@game-cms/core';
 import { env } from '@game-cms/global';
 import { MaybePromise } from '@game-cms/shared';
@@ -13,6 +14,14 @@ type HookInfo = {
   deps: ServiceId[];
   action: () => MaybePromise<void>;
 };
+
+function getServiceHookAction(hook: ServiceLifecycleHook | undefined) {
+  if (typeof hook === 'function') {
+    return hook;
+  }
+
+  return hook?.action;
+}
 
 function getServiceHook(
   hook: ServiceLifecycleHook | undefined
@@ -29,9 +38,7 @@ function getServiceHook(
   }
 }
 
-function buildServiceWaves(hook: keyof ServiceLifecycle) {
-  const { services } = env();
-
+function buildServiceWaves(services: ServiceMap, hook: keyof ServiceLifecycle) {
   const serviceIds = Object.keys(services) as ServiceId[];
   const depsOf = new Map<ServiceId, HookInfo>();
 
@@ -58,14 +65,29 @@ function buildServiceWaves(hook: keyof ServiceLifecycle) {
   return { waves, run };
 }
 
+async function runPostInit(services: ServiceMap) {
+  const serviceValues = Object.values(services) as Service[];
+
+  await Promise.all(
+    serviceValues.map((service) =>
+      getServiceHookAction(service.lifecycle?.onPostInit)
+    )
+  );
+}
+
 export async function initServices() {
-  const { waves, run } = buildServiceWaves('onInit');
+  const { services } = env();
+
+  const { waves, run } = buildServiceWaves(services, 'onInit');
 
   await run(waves);
+  await runPostInit(services);
 }
 
 export async function destroyServices() {
-  const { waves, run } = buildServiceWaves('onDestroy');
+  const { services } = env();
+
+  const { waves, run } = buildServiceWaves(services, 'onDestroy');
 
   await run(waves.toReversed());
 }
