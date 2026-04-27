@@ -3,6 +3,7 @@ import {
   EntityPersistentDocumentById,
   EntitySchemaById,
   EntityStorageDataById,
+  EntityVariant,
 } from '@game-cms/base-core';
 import {
   ComponentSchema,
@@ -76,6 +77,39 @@ function removeOuterLinkFromEntityData<Id extends EntityId>(
   });
 }
 
+function documentVariantToSetter<Id extends EntityId>(
+  doc: EntityPersistentDocumentById<Id>,
+  schema: EntitySchemaById<Id>,
+  descriptor: ReferenceableHandleDescriptor,
+  variant: EntityVariant,
+  setter: Document
+): boolean {
+  const variantData = doc[variant];
+
+  if (!variantData) {
+    return false;
+  }
+
+  if (!isOuterLinkUsedInEntityVariant(schema, variantData, descriptor)) {
+    return false;
+  }
+
+  const newData = removeOuterLinkFromEntityData(
+    descriptor,
+    schema,
+    variantData
+  );
+
+  const searchIndex = cms()
+    .service('base::entity::search')
+    .createIndex(newData, schema);
+
+  setter[`${variant}.components`] = newData;
+  setter[`${variant}.search`] = searchIndex;
+
+  return true;
+}
+
 async function removeOuterLinkFromEntityCollection<Id extends EntityId>(
   descriptor: ReferenceableHandleDescriptor,
   entityId: Id,
@@ -84,31 +118,26 @@ async function removeOuterLinkFromEntityCollection<Id extends EntityId>(
   const col = cms().service('base::database').entityCollection(entityId);
 
   for await (const doc of col.find()) {
-    const { _id, draft, published } = doc;
+    const { _id } = doc;
 
     let needsToBeUpdated = false;
     const set: Document = {};
 
-    if (isOuterLinkUsedInEntityVariant(schema, draft, descriptor)) {
-      needsToBeUpdated = true;
-      set['draft.components'] = removeOuterLinkFromEntityData(
-        descriptor,
-        schema,
-        draft
-      );
-    }
+    needsToBeUpdated = documentVariantToSetter(
+      doc,
+      schema,
+      descriptor,
+      'draft',
+      set
+    );
 
-    if (
-      published &&
-      isOuterLinkUsedInEntityVariant(schema, published, descriptor)
-    ) {
-      needsToBeUpdated = true;
-      set['published.components'] = removeOuterLinkFromEntityData(
-        descriptor,
-        schema,
-        published
-      );
-    }
+    needsToBeUpdated ||= documentVariantToSetter(
+      doc,
+      schema,
+      descriptor,
+      'published',
+      set
+    );
 
     if (needsToBeUpdated) {
       await col.updateOne({ _id }, { $set: set });

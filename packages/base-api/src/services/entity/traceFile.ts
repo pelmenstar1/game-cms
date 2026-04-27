@@ -19,7 +19,7 @@ async function traceFileInEntityCollection<Id extends EntityId>(
   const cursor = cms()
     .service('base::database')
     .entityCollection(entityId)
-    .find();
+    .find({}, { signal });
 
   const outerLinkService = cms().service('base::entity::outerLink');
   const entityService = cms().service('base::entity');

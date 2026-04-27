@@ -59,15 +59,21 @@ export default defineComponentController({
     filter: (data, options, predicate, context) => {
       const { componentId, baseOptions } = options;
 
+      const nodes = objectAggregation(data.nodes)
+        .filter(({ value }) => predicate(componentId, value, baseOptions))
+        .map(({ value, meta }: (typeof data.nodes)[string]) => ({
+          meta,
+          value: context.filter(componentId, value, baseOptions, predicate),
+        }))
+        .result();
+
+      const nodeKeys = new Set(Object.keys(nodes));
+
       return {
-        edges: data.edges,
-        nodes: objectAggregation(data.nodes)
-          .filter(({ value }) => predicate(componentId, value, baseOptions))
-          .map(({ value, meta }: (typeof data.nodes)[string]) => ({
-            meta,
-            value: context.filter(componentId, value, baseOptions, predicate),
-          }))
-          .result(),
+        nodes,
+        edges: data.edges.filter(
+          ({ source, target }) => nodeKeys.has(source) && nodeKeys.has(target)
+        ),
       };
     },
   },

@@ -22,7 +22,9 @@ export async function asyncRetryOnError<R>(
     } catch (error) {
       lastError = error;
 
-      await delay(options.delay);
+      if (i < options.count - 1) {
+        await delay(options.delay);
+      }
     }
   }
 

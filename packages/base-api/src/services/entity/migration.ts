@@ -144,7 +144,7 @@ async function migrate() {
         insertOne: { document: { entityId: id, structure: newStructure } },
       });
 
-      return;
+      continue;
     }
 
     if (!deepEquals(oldStructure.structure, newStructure)) {

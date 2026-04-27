@@ -65,7 +65,18 @@ async function executeJob<Id extends JobId>(instance: PostedJob<Id>) {
   const idFilter = { _id: jobInstanceId };
 
   try {
-    await col.updateOne(idFilter, { $set: { status: 'in-progress' } });
+    const { modifiedCount } = await col.updateOne(
+      { _id: jobInstanceId, status: 'pending' },
+      { $set: { status: 'in-progress' } }
+    );
+
+    if (modifiedCount === 0) {
+      jobLogger.warn(
+        'The job is already being processed by another worker or has been completed/failed'
+      );
+
+      return;
+    }
 
     const descriptor = getDescriptor(type);
 

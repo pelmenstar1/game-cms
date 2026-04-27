@@ -48,16 +48,10 @@ export default defineComponentController({
     },
     filter: (data, options, predicate, context) => {
       const { componentId, baseOptions } = options;
-      const defaultValueExists = context.filter(
-        componentId,
-        data.default,
-        baseOptions,
-        predicate
-      );
 
       return {
-        default: defaultValueExists
-          ? data.default
+        default: predicate(componentId, data.default, baseOptions)
+          ? context.filter(componentId, data.default, baseOptions, predicate)
           : context.getDefaultData(componentId, baseOptions),
         alternative: data.alternative
           .filter(({ value }) => predicate(componentId, value, baseOptions))
