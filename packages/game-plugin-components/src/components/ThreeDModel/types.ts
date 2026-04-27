@@ -4,6 +4,7 @@ import {
   ComponentErrorById,
   ComponentInDataById,
   ComponentOutDataById,
+  ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
@@ -22,6 +23,8 @@ type ThreeDModelEntry = {
   clientData: ComponentClientDataById<ComposeId, ComposeArgs>;
   storageData: ComponentStorageDataById<ComposeId, ComposeArgs>;
   searchIndexData: ComponentSearchIndexDataById<ComposeId, ComposeArgs>;
+  resolvedData: ComponentResolvedDataById<ComposeId, ComposeArgs>;
+  isContainer: true;
 };
 
 declare module '@game-cms/core' {

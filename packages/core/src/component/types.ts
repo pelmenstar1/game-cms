@@ -29,6 +29,11 @@ type GetOrRawData<Types extends ComponentTypes, K extends string> = {
 
 type GetPartialName<T extends string> = `partial${Capitalize<T>}`;
 
+type GetComponentCoreTypes<Types extends ComponentTypes> = Pick<
+  Types,
+  keyof ComponentTypes
+>;
+
 type GetComponentExtendedTypes<Types extends ComponentTypes = ComponentTypes> =
   GetOrRawData<Types, 'inData' | 'resolvedData' | 'clientData' | 'storageData'>;
 
@@ -50,14 +55,23 @@ type GetComponentClientOptionsTypes<Types extends ComponentTypes> = {
   clientOptions: GetPropertyOr<Types, 'clientOptions', Types['options']>;
 };
 
-type GetComponentTypes<Types extends ComponentTypes = ComponentTypes> = Pick<
-  Types,
-  keyof ComponentTypes
-> &
-  GetComponentExtendedTypes<Types> &
-  GetComponentPartialTypes<Types> &
-  GetComponentSearchTypes<Types> &
-  GetComponentClientOptionsTypes<Types>;
+type IsContainer<Types extends ComponentTypes> = Types extends {
+  isContainer: boolean;
+}
+  ? Types['isContainer']
+  : false;
+
+type GetComponentMetaTypes<Types extends ComponentTypes> = {
+  isContainer: IsContainer<Types>;
+};
+
+type GetComponentTypes<Types extends ComponentTypes> =
+  GetComponentCoreTypes<Types> &
+    GetComponentExtendedTypes<Types> &
+    GetComponentPartialTypes<Types> &
+    GetComponentSearchTypes<Types> &
+    GetComponentClientOptionsTypes<Types> &
+    GetComponentMetaTypes<Types>;
 
 export type GetComponentTypesById<
   Id extends ComponentId,
@@ -93,3 +107,8 @@ export type ComponentErrorById<
   T extends ComponentId,
   Args = unknown,
 > = GetComponentTypesById<T, Args>['error'];
+
+export type ComponentIsContainerById<
+  T extends ComponentId,
+  Args = unknown,
+> = GetComponentTypesById<T, Args>['isContainer'];

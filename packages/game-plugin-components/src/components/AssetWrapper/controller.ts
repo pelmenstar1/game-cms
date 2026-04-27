@@ -19,9 +19,6 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
-  atomWalker: (data, options, apply, context) => {
-    context.walk(options.componentId, data.base, options.baseOptions, apply);
-  },
   migrate: (data, options, context) => {
     if (isNonNullObject(data)) {
       const { base } = data;
@@ -40,6 +37,46 @@ export default defineComponentController({
     const { componentId, baseOptions } = options;
 
     return context.resolveOutData(componentId, data, baseOptions, args);
+  },
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      context.applyEach(
+        options.componentId,
+        data.base,
+        options.baseOptions,
+        apply
+      );
+    },
+    filter: (data, options, predicate, context) => {
+      const base = context.filter(
+        options.componentId,
+        data.base,
+        options.baseOptions,
+        predicate
+      );
+
+      return { base, derived: data.derived };
+    },
+  },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      return context.contains(
+        outerLink,
+        options.componentId,
+        data.base,
+        options.baseOptions
+      );
+    },
+    delete: (outerLink, data, options, context) => {
+      const base = context.delete(
+        outerLink,
+        options.componentId,
+        data.base,
+        options.baseOptions
+      );
+
+      return { base, derived: data.derived };
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

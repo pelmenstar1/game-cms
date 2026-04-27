@@ -1,3 +1,4 @@
+export * from './aggregation.js';
 export * from './equals.js';
 export * from './filter.js';
 export * from './fromEntries.js';

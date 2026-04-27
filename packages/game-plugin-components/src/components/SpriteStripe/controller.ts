@@ -22,9 +22,6 @@ export default defineComponentController({
       composeId,
       getComposeOptions(options)
     ),
-  atomWalker: (data, options, apply, context) => {
-    context.walk(composeId, data, getComposeOptions(options), apply);
-  },
   mergeData: (target, source, options, context) =>
     context.merge<ComposeId, ComposeArgs>(
       composeId,
@@ -38,6 +35,36 @@ export default defineComponentController({
       data,
       getComposeOptions(options)
     ),
+  resolver: (data, options, context, args) =>
+    context.resolveOutData<ComposeId, ComposeArgs>(
+      composeId,
+      data,
+      getComposeOptions(options),
+      args
+    ) as never,
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      context.applyEach(composeId, data, getComposeOptions(options), apply);
+    },
+    filter: (data, options, predicate, context) =>
+      context.filter<ComposeId, ComposeArgs>(
+        composeId,
+        data,
+        getComposeOptions(options),
+        predicate
+      ),
+  },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) =>
+      context.contains(outerLink, composeId, data, getComposeOptions(options)),
+    delete: (outerLink, data, options, context) =>
+      context.delete<ComposeId, ComposeArgs>(
+        outerLink,
+        composeId,
+        data,
+        getComposeOptions(options)
+      ),
+  },
   search: {
     createIndex: (data, options, context) =>
       context.createSearchIndex<ComposeId, ComposeArgs>(

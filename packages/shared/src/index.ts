@@ -15,6 +15,7 @@ export * from './paging.js';
 export * from './promise.js';
 export * from './query.js';
 export * from './random.js';
+export * from './retry.js';
 export * from './searchParams.js';
 export * from './string/isFloat.js';
 export * from './typecheck.js';

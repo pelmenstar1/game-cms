@@ -1,42 +1,31 @@
 import {
   AbortOptions,
-  BaseEntityStorageDataById,
-  EntityErrorById,
   EntityId,
   EntityInDataById,
   EntityInternalOutDataById,
   EntityPartialInDataById,
   EntityPersistentDocumentById,
   EntityResolvedDataById,
-  EntitySchema,
   EntitySchemaById,
-  EntitySearchIndexDataById,
   EntityStorageDataById,
   EntityVariant,
   EntityVariantData,
 } from '@game-cms/base-core';
 import {
   ComponentDataResolverArgs,
-  ComponentDataStructure,
   ComponentSchema,
   ComponentStorageDisposeDataParams,
   searchScoreComposer,
   service,
 } from '@game-cms/core';
 import { ApiError } from '@game-cms/core/api';
-import { cms, log } from '@game-cms/global';
-import { isNonNullObject, PagingOptions } from '@game-cms/shared';
+import { cms } from '@game-cms/global';
+import { PagingOptions } from '@game-cms/shared';
 import { maybeLongAdd } from '@game-cms/shared/mongo';
-import {
-  asyncMapObject,
-  deepEquals,
-  mapObject,
-  UnknownObject,
-} from '@game-cms/shared/object';
+import { asyncMapObject, mapObject } from '@game-cms/shared/object';
 import { Long, ObjectId } from 'mongodb';
 
 import { getPage } from '../../utils/paging.js';
-
 declare module '@game-cms/base-core' {
   interface AppEventsRegistry {
     'base::entity::created': {
@@ -58,13 +47,6 @@ declare module '@game-cms/base-core' {
     'base::entity::unpublished': {
       entityId: EntityId;
       id: ObjectId;
-    };
-  }
-
-  interface DatabaseCollectionTypeMap {
-    'base::entityStructure': {
-      entityId: EntityId;
-      structure: Record<string, ComponentDataStructure>;
     };
   }
 }
@@ -211,23 +193,6 @@ async function getRawSingleton<Id extends EntityId>(
   });
 }
 
-function createSearchIndex<Id extends EntityId>(
-  storageData: BaseEntityStorageDataById<Id>,
-  schema: EntitySchemaById<Id>
-): Promise<EntitySearchIndexDataById<Id>> {
-  const { foreignDataSearchContext } = cms().service('base::component');
-
-  return asyncMapObject(schema.components, (component, key) => {
-    const { componentId, options } = component;
-
-    return foreignDataSearchContext.createSearchIndex(
-      componentId,
-      storageData[key],
-      options
-    );
-  });
-}
-
 async function transformInDataToStorage<Id extends EntityId>(
   entityId: Id,
   inData: EntityInDataById<Id>
@@ -241,7 +206,9 @@ async function transformInDataToStorage<Id extends EntityId>(
     return foreignStorageResolverContext.toStorage(componentId, item, options);
   });
 
-  const search = await createSearchIndex(components, schema);
+  const search = await cms()
+    .service('base::entity::search')
+    .createIndex(components, schema);
 
   return {
     variantId: Long.ZERO,
@@ -304,97 +271,6 @@ function createEntityVariants<Id extends EntityId>(
         draft: value,
       }
     : { draft: value };
-}
-
-async function migrateEntity<Id extends EntityId>(
-  schema: EntitySchemaById<Id>,
-  oldValue: EntityVariantData
-): Promise<EntityStorageDataById<Id>> {
-  const { foreignDataMigrationContext } = cms().service('base::component');
-
-  const newComponents = mapObject(schema.components, (prop, key) => {
-    return foreignDataMigrationContext.migrate(
-      prop.componentId,
-      (oldValue.components as UnknownObject)[key],
-      prop.options
-    );
-  });
-
-  const search = await createSearchIndex(newComponents, schema);
-
-  return {
-    variantId: maybeLongAdd(oldValue.variantId, 1),
-    meta: oldValue.meta,
-    checks: oldValue.checks,
-    components: newComponents,
-    search,
-  };
-}
-
-function validate<Id extends EntityId>(
-  value: unknown,
-  schema: EntitySchemaById<Id>
-): EntityErrorById<Id> | undefined {
-  if (!isNonNullObject(value)) {
-    return { ownError: 'INVALID_TYPE' };
-  }
-
-  const { foreignValidationContext } = cms().service('base::component');
-
-  const entries = Object.entries<ComponentSchema>(schema.components).map(
-    ([key, prop]) => {
-      const error = foreignValidationContext.validate(
-        prop.componentId,
-        value[key],
-        prop.options
-      );
-
-      return [key, error] as const;
-    }
-  );
-
-  if (entries.some(([, value]) => value !== undefined)) {
-    return {
-      properties: Object.fromEntries(
-        entries
-      ) as EntityErrorById<Id>['properties'],
-    };
-  }
-}
-
-async function migrateEntityCollection<Id extends EntityId>(
-  id: Id,
-  schema: EntitySchemaById<Id>
-) {
-  const col = collection(id);
-
-  for await (const oldValue of col.find()) {
-    // Only migrate if old value is no longer valid.
-    if (validate(oldValue, schema) !== undefined) {
-      const [newDraft, newPublished] = await Promise.all([
-        migrateEntity(schema, oldValue.draft),
-        oldValue.published && migrateEntity(schema, oldValue.published),
-      ]);
-
-      await col.updateOne(
-        { _id: oldValue._id },
-        {
-          $set: {
-            draft: newDraft,
-            published: newPublished,
-          },
-        }
-      );
-    }
-  }
-}
-
-function getEntityDataStructure(schema: EntitySchema) {
-  const { foreignDataStructureContext } = cms().service('base::component');
-
-  return mapObject(schema.components, (prop) =>
-    foreignDataStructureContext.getStructure(prop.componentId, prop.options)
-  );
 }
 
 async function disposeEntity<Id extends EntityId>(
@@ -464,41 +340,7 @@ function getEntitySearchScore<Id extends EntityId>(
 
 export default service({
   id: 'base::entity',
-  lifecycle: {
-    onInit: {
-      dependsOn: ['base::entitySchema', 'base::database'],
-      action: async () => {
-        const schemas = cms().service('base::entitySchema').getAll();
-
-        const col = cms()
-          .service('base::database')
-          .collection('base::entityStructure');
-
-        const oldStructures = await col.find().toArray();
-
-        for (const [id, descriptor] of Object.entries(schemas)) {
-          const oldStructure = oldStructures.find(
-            ({ entityId }) => entityId === id
-          );
-
-          const newStructure = getEntityDataStructure(descriptor.schema);
-
-          if (oldStructure === undefined) {
-            await col.insertOne({ entityId: id, structure: newStructure });
-          } else if (!deepEquals(oldStructure.structure, newStructure)) {
-            log().child({ service: 'base::entity' }).info('Migrating %s', id);
-
-            await migrateEntityCollection(id, descriptor.schema);
-
-            await col.updateOne(
-              { entityId: id },
-              { $set: { structure: newStructure } }
-            );
-          }
-        }
-      },
-    },
-  },
+  lifecycle: {},
   storageDataToOut,
   create: async <Id extends EntityId>(
     id: Id,

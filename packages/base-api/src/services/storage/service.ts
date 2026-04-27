@@ -26,13 +26,14 @@ import {
   basePatchContent,
   baseUploadFile,
   collection,
+  ensureFileItemById,
 } from './internal.js';
 
 declare module '@game-cms/base-core' {
   interface AppEventsRegistry {
     'base::storage::fileUploaded': StorageFilePersistentItem & { id: ObjectId };
     'base::storage::folderCreated': CreateFolderPayload & { id: ObjectId };
-    'base::storage::itemDeleted': { id: ObjectId };
+    'base::storage::itemDeleted': { id: ObjectId; type: StorageItemType };
   }
 
   interface DatabaseCollectionTypeMap {
@@ -113,4 +114,5 @@ export default service({
   deleteById: (id: ObjectId, options?: DeleteStorageItemOptions) => {
     return baseDeleteById(storageProvider(), id, options);
   },
+  ensureFileItemById,
 });

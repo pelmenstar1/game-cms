@@ -21,15 +21,6 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
-  atomWalker: (data, options, apply, context) => {
-    const { componentId, baseOptions } = options;
-
-    context.walk(componentId, data.default, baseOptions, apply);
-
-    for (const choice of data.alternative) {
-      context.walk(componentId, choice.value, baseOptions, apply);
-    }
-  },
   migrate: (data, options, context) => {
     const result = unknownConditionalData.safeParse(data);
 
@@ -44,6 +35,61 @@ export default defineComponentController({
         })),
       };
     }
+  },
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      const { componentId, baseOptions } = options;
+
+      context.applyEach(componentId, data.default, baseOptions, apply);
+
+      for (const choice of data.alternative) {
+        context.applyEach(componentId, choice.value, baseOptions, apply);
+      }
+    },
+    filter: (data, options, predicate, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        default: predicate(componentId, data.default, baseOptions)
+          ? context.filter(componentId, data.default, baseOptions, predicate)
+          : context.getDefaultData(componentId, baseOptions),
+        alternative: data.alternative
+          .filter(({ value }) => predicate(componentId, value, baseOptions))
+          .map(({ condition, value }) => ({
+            condition,
+            value: context.filter(componentId, value, baseOptions, predicate),
+          })),
+      };
+    },
+  },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      if (context.contains(outerLink, componentId, data.default, baseOptions)) {
+        return true;
+      }
+
+      return data.alternative.some(({ value }) =>
+        context.contains(outerLink, componentId, value, baseOptions)
+      );
+    },
+    delete: (outerLink, data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        default: context.delete(
+          outerLink,
+          componentId,
+          data.default,
+          baseOptions
+        ),
+        alternative: data.alternative.map(({ condition, value }) => ({
+          condition,
+          value: context.delete(outerLink, componentId, value, baseOptions),
+        })),
+      };
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

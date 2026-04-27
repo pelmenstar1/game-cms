@@ -19,6 +19,7 @@ import {
   StorageProviderUploadResult,
   UploadFilePayload,
 } from '@game-cms/base-core';
+import { ApiError } from '@game-cms/core/api';
 import { cms, env } from '@game-cms/global';
 import { filterOutNullable } from '@game-cms/shared/collections';
 import { FileSource } from '@game-cms/shared/node';
@@ -100,16 +101,32 @@ export async function hydrateItem<Extra>(
 export function ensureFileItem<Extra>(
   item: StoragePersistentItem<Extra> | null,
   id: ObjectId
-): asserts item is StoragePersistentItem<Extra> & {
+): asserts item is StorageFilePersistentItem<Extra> & {
   type: StorageItemType.FILE;
 } {
   if (item === null) {
-    throw new Error(`Storage item not found: ${id}`);
+    throw new ApiError(`Storage item does not exist (id=${id})`, {
+      code: 'base::entity/notFound',
+    });
   }
 
   if (item.type !== StorageItemType.FILE) {
-    throw new Error(`Expected file item: ${id}`);
+    throw new ApiError(`Storage item expected to be a file (id=${id})`, {
+      code: 'base::schema/validation',
+    });
   }
+}
+
+export async function ensureFileItemById(
+  fileId: ObjectId,
+  options?: AbortOptions
+) {
+  const item = await collection().findOne(
+    { _id: fileId },
+    { projection: { type: 1 }, signal: options?.signal }
+  );
+
+  ensureFileItem(item, fileId);
 }
 
 export async function getFileExtraById<Extra>(
@@ -406,6 +423,9 @@ export async function baseDeleteById<Extra>(
   id: ObjectId,
   options?: DeleteStorageItemOptions
 ) {
+  const appEvents = cms().service('base::appEvents');
+  const refOrch = cms().service('base::referenceableOrchestrator');
+
   const storageCollection = collection<Extra>();
 
   const items = await storageCollection
@@ -421,32 +441,57 @@ export async function baseDeleteById<Extra>(
     await moveItemsToRoot(id);
 
     await storageCollection.deleteOne({ _id: id });
-  } else {
-    const files = items.filter((item) => item.type === StorageItemType.FILE);
 
-    const deletionResult = await deleteManyFilesViaProvider(
-      provider,
-      files.map(({ extra }) => extra)
-    );
+    appEvents.emit('base::storage::itemDeleted', {
+      id,
+      type: StorageItemType.FOLDER,
+    });
 
-    if (options?.force) {
-      await deleteManyFilesInCollection(files);
-    } else {
-      const effectivelyDeletedFiles = files.filter(
-        (_, index) => deletionResult.deletedStatuses[index].value
-      );
-
-      await deleteManyFilesInCollection(effectivelyDeletedFiles);
-
-      const failedDeletions = deletionResult.deletedStatuses
-        .filter((status) => !status.value)
-        .map((status) => status.reason);
-
-      if (failedDeletions.length > 0) {
-        throw new FailedDeletionError(failedDeletions);
-      }
-    }
+    return;
   }
 
-  cms().service('base::appEvents').emit('base::storage::itemDeleted', { id });
+  const files = items.filter((item) => item.type === StorageItemType.FILE);
+
+  const deletionResult = await deleteManyFilesViaProvider(
+    provider,
+    files.map(({ extra }) => extra)
+  );
+
+  let effectivelyDeletedFiles: { _id: ObjectId }[] = [];
+
+  // eslint-disable-next-line unicorn/prefer-ternary
+  if (options?.force) {
+    effectivelyDeletedFiles = files;
+  } else {
+    effectivelyDeletedFiles = files.filter(
+      (_, index) => deletionResult.deletedStatuses[index].value
+    );
+  }
+
+  await deleteManyFilesInCollection(effectivelyDeletedFiles);
+
+  for (const { _id } of effectivelyDeletedFiles) {
+    appEvents.emit('base::storage::itemDeleted', {
+      id: _id,
+      type: StorageItemType.FILE,
+    });
+
+    refOrch.emitDeleted({
+      id: 'base::storageItem',
+      data: {
+        id: _id,
+        type: StorageItemType.FILE,
+      },
+    });
+  }
+
+  if (!options?.force) {
+    const failedDeletions = deletionResult.deletedStatuses
+      .filter((status) => !status.value)
+      .map((status) => status.reason);
+
+    if (failedDeletions.length > 0) {
+      throw new FailedDeletionError(failedDeletions);
+    }
+  }
 }

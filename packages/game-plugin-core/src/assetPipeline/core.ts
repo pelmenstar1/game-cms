@@ -2,7 +2,7 @@ import {
   ComponentId,
   ComponentInDataById,
   ComponentOptionsById,
-  ForeignComponentStorageDataResolverContext,
+  ForeignComponentStorageDataTransformerContext,
 } from '@game-cms/core';
 import { GetPropertyOr, MaybePromise } from '@game-cms/shared';
 
@@ -51,13 +51,13 @@ export type GameAssetPipelineStep<Id extends string = string> = {
 
   fromStorage: (
     storageData: GameAssetPipelineStepStorageData<Id>,
-    context: ForeignComponentStorageDataResolverContext
+    context: ForeignComponentStorageDataTransformerContext
   ) => Promise<GameAssetPipelineStepOutData<Id>>;
 
   apply: <CId extends ComponentId, Args>(
     inData: ComponentInDataById<CId, Args>,
     options: GameAssetPipelineStepDataOptions<CId, Args>,
-    context: ForeignComponentStorageDataResolverContext
+    context: ForeignComponentStorageDataTransformerContext
   ) => Promise<GameAssetPipelineStepStorageData<Id>>;
 
   disposeStorage?: (

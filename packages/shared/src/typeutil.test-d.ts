@@ -2,6 +2,7 @@ import { expectTypeOf, test } from 'vitest';
 
 import type {
   AnyKeyInObject,
+  BooleanOr,
   ConditionalPartial,
   FromEntries,
   IsAllOptional,
@@ -63,4 +64,11 @@ test('UnionToIntersection', () => {
   expectTypeOf<
     UnionToIntersection<{ a: string } | { b: number }>
   >().toEqualTypeOf<{ a: string } & { b: number }>();
+});
+
+test('BooleanOr', () => {
+  expectTypeOf<BooleanOr<true, true>>().toEqualTypeOf<true>();
+  expectTypeOf<BooleanOr<true, false>>().toEqualTypeOf<true>();
+  expectTypeOf<BooleanOr<false, true>>().toEqualTypeOf<true>();
+  expectTypeOf<BooleanOr<false, false>>().toEqualTypeOf<false>();
 });

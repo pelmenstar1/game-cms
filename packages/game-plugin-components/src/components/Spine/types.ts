@@ -4,6 +4,8 @@ import type {
   ComponentErrorById,
   ComponentInDataById,
   ComponentOutDataById,
+  ComponentResolvedDataById,
+  ComponentSearchIndexDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
 
@@ -17,6 +19,8 @@ type FileData = ComponentOutDataById<FileId>;
 type FileDataIn = ComponentInDataById<FileId>;
 type FileStorageData = ComponentStorageDataById<FileId>;
 type FileClientData = ComponentClientDataById<FileId>;
+type FileSearchIndexData = ComponentSearchIndexDataById<FileId>;
+type FileResolvedData = ComponentResolvedDataById<FileId>;
 
 type BaseData<T> = {
   skeleton: T;
@@ -41,9 +45,12 @@ declare module '@game-cms/core' {
       inData: BaseData<FileDataIn>;
       partialInData: Partial<BaseData<FileDataIn>>;
       clientData: BaseData<FileClientData>;
+      searchIndexData: BaseData<FileSearchIndexData>;
+      resolvedData: BaseData<FileResolvedData>;
       storageData: BaseData<FileStorageData> & {
         shadowAtlas?: FileStorageData[number];
       };
+      isContainer: true;
     }>;
   }
 }

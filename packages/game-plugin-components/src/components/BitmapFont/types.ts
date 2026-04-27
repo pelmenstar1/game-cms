@@ -4,6 +4,7 @@ import {
   ComponentErrorById,
   ComponentInDataById,
   ComponentOutDataById,
+  ComponentResolvedDataById,
   ComponentSearchIndexDataById,
   ComponentStorageDataById,
 } from '@game-cms/core';
@@ -22,12 +23,14 @@ type BitmapFontEntry = {
   options: Record<never, never>;
   error: ComponentErrorById<ComposeId, ComposeArgs>;
   clientData: ComponentClientDataById<ComposeId, ComposeArgs>;
+  resolvedData: ComponentResolvedDataById<ComposeId, ComposeArgs>;
   storageData: {
     pages: ComponentStorageDataById<'base::file'>;
     atlas: ComponentStorageDataById<'base::file'>;
     shadowAtlas?: ComponentStorageDataById<'base::file'>[number];
   };
   searchIndexData: ComponentSearchIndexDataById<ComposeId, ComposeArgs>;
+  isContainer: true;
 };
 
 declare module '@game-cms/core' {

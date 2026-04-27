@@ -17,13 +17,6 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
-  atomWalker: (data, options, apply, context) => {
-    const { componentId, baseOptions } = options;
-
-    for (const item of data) {
-      context.walk(componentId, item, baseOptions, apply);
-    }
-  },
   migrate: (data, options, context) => {
     if (Array.isArray(data)) {
       const { componentId, baseOptions } = options;
@@ -39,6 +32,40 @@ export default defineComponentController({
     return raw.map((item) =>
       context.resolveOutData(componentId, item, baseOptions, args)
     );
+  },
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      const { componentId, baseOptions } = options;
+
+      for (const item of data) {
+        context.applyEach(componentId, item, baseOptions, apply);
+      }
+    },
+    filter: (data, options, predicate, context) => {
+      const { componentId, baseOptions } = options;
+
+      return data
+        .filter((item) => predicate(componentId, item, baseOptions))
+        .map((item) =>
+          context.filter(componentId, item, baseOptions, predicate)
+        );
+    },
+  },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return data.some((item) =>
+        context.contains(outerLink, componentId, item, baseOptions)
+      );
+    },
+    delete: (outerLink, data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return data.map((item) =>
+        context.delete(outerLink, componentId, item, baseOptions)
+      );
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

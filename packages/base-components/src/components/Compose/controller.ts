@@ -1,8 +1,11 @@
 import {
+  ComponentAtomWalkerPredicateFn,
   ComponentClientOptionsById,
   ComponentDataValidatorParams,
   ComponentOptionsById,
+  ComponentStorageDataById,
   defineComponentController,
+  ForeignComponentAtomWalkerContext,
   ForeignComponentClientOptionsTransformerContext,
   ForeignComponentValidationContext,
   searchScoreComposer,
@@ -45,15 +48,6 @@ export default defineComponentController({
       context.getDependencies(prop.componentId, prop.options)
     );
   },
-  atomWalker: (data, options, apply, context) => {
-    for (const entry of Object.entries(options)) {
-      const key = entry[0];
-      const { componentId, options: baseOptions } =
-        entry[1] as ComposeOptionsEntry;
-
-      context.walk(componentId, data[key], baseOptions, apply);
-    }
-  },
   migrate: (data, options, context) => {
     if (isNonNullObject(data)) {
       return mapObject(options, ({ componentId, options }, key) =>
@@ -67,6 +61,59 @@ export default defineComponentController({
 
       return context.resolveOutData(componentId, value, baseOptions, args);
     });
+  },
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      for (const entry of Object.entries<ComposeOptionsEntry>(options)) {
+        const key = entry[0];
+        const { componentId, options: baseOptions } = entry[1];
+
+        context.applyEach(componentId, data[key], baseOptions, apply);
+      }
+    },
+    filter: <Args>(
+      data: ComponentStorageDataById<Id, Args>,
+      options: ComponentOptionsById<Id, Args>,
+      predicate: ComponentAtomWalkerPredicateFn,
+      context: ForeignComponentAtomWalkerContext
+    ) => {
+      return mapObject(options, (prop, key) => {
+        const { componentId, options: baseOptions } = prop;
+        const propValue = data[key] as never;
+
+        return predicate(componentId, propValue, baseOptions)
+          ? context.filter(componentId, propValue, baseOptions, predicate)
+          : context.getDefaultData(componentId, baseOptions);
+      });
+    },
+  },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      return Object.entries<ComposeOptionsEntry>(options).some(
+        ([key, prop]) => {
+          const { componentId, options: baseOptions } = prop;
+
+          return context.contains(
+            outerLink,
+            componentId,
+            data[key],
+            baseOptions
+          );
+        }
+      );
+    },
+    delete: (outerLink, data, options, context) => {
+      return mapObject(options, (prop, key) => {
+        const { componentId, options: baseOptions } = prop;
+
+        return context.delete(
+          outerLink,
+          componentId,
+          data[key] as never,
+          baseOptions
+        );
+      });
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

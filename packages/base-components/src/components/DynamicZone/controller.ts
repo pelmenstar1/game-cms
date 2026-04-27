@@ -1,7 +1,6 @@
 import {
   ComponentClientOptionsById,
   ComponentDataResolverArgs,
-  ComponentDataStructure,
   ComponentOptionsById,
   ComponentOutDataById,
   ComponentResolvedDataById,
@@ -36,7 +35,7 @@ export default defineComponentController({
   structure: ({ options }, context) => {
     return mapObject(options, (prop) =>
       context.getStructure(prop.componentId, prop.options)
-    ) as ComponentDataStructure;
+    );
   },
   innerDependencies: (options, context) => {
     return Object.values(options.options).flatMap(
@@ -44,14 +43,62 @@ export default defineComponentController({
         context.getDependencies(componentId, baseOptions)
     );
   },
-  atomWalker: (data, options, apply, context) => {
-    const { options: optionsMap } = options;
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      const { options: optionsMap } = options;
 
-    for (const item of data) {
-      const { componentId, options: baseOptions } = optionsMap[item.key];
+      for (const item of data) {
+        const { componentId, options: baseOptions } = optionsMap[item.key];
 
-      context.walk(componentId, item.data, baseOptions, apply);
-    }
+        context.applyEach(componentId, item.data, baseOptions, apply);
+      }
+    },
+    filter: (data, options, predicate, context) => {
+      const { options: optionsMap } = options;
+
+      return data
+        .filter((item) => {
+          const { componentId, options: baseOptions } = optionsMap[item.key];
+
+          return predicate(componentId, item.data, baseOptions);
+        })
+        .map((item) => {
+          const { componentId, options: baseOptions } = optionsMap[item.key];
+
+          return {
+            key: item.key,
+            data: context.filter(
+              componentId,
+              item.data,
+              baseOptions,
+              predicate
+            ),
+          };
+        });
+    },
+  },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return data.some((item) => {
+        const { componentId, options: baseOptions } = optionsMap[item.key];
+
+        return context.contains(outerLink, componentId, item.data, baseOptions);
+      });
+    },
+    delete: (outerLink, data, options, context) => {
+      const { options: optionsMap } = options;
+
+      return data.map((item) => {
+        const { componentId, options: baseOptions } = optionsMap[item.key];
+
+        return {
+          key: item.key,
+          data: context.delete(outerLink, componentId, item.data, baseOptions),
+        };
+      });
+    },
   },
   search: {
     getScore: (query, target, options, context) => {

@@ -24,6 +24,32 @@ export default defineComponentController({
       return data;
     }
   },
+  outerLinkController: {
+    contains: (outerLink, data) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (outerLink.id === 'base::storageItem') {
+        const { id, type } = outerLink.data;
+
+        if (type === StorageItemType.FILE) {
+          return data.some((item) => item.equals(id));
+        }
+      }
+
+      return false;
+    },
+    delete: (outerLink, data) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (outerLink.id === 'base::storageItem') {
+        const { id, type } = outerLink.data;
+
+        if (type === StorageItemType.FILE) {
+          return data.filter((item) => !item.equals(id));
+        }
+      }
+
+      return data;
+    },
+  },
   search: {
     createIndex: async (data) => {
       const nameMap = await cms().service('base::storage').getNameMap(data);

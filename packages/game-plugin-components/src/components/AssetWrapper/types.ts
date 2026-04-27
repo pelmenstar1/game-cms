@@ -62,6 +62,7 @@ type AssetWrapperEntry<Args extends AssetWrapperArgs> = {
     derived: GameAssetPipelineStepStorageDataMap;
   };
   searchIndexData: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>;
+  isContainer: true;
 };
 
 type BaseNestedPath<

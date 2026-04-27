@@ -88,3 +88,7 @@ export type JsonValue =
   | {
       [K in string]?: JsonValue;
     };
+
+export type BooleanOr<A extends boolean, B extends boolean> = A extends true
+  ? true
+  : B;

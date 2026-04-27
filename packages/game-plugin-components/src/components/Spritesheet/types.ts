@@ -28,6 +28,7 @@ type SpritesheetEntry = {
     shadowAtlas?: ComponentStorageDataById<'base::file'>[number];
   };
   searchIndexData: ComponentSearchIndexDataById<ComposeId, ComposeArgs>;
+  isContainer: true;
 };
 
 declare module '@game-cms/core' {

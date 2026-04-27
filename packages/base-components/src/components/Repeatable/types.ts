@@ -44,6 +44,7 @@ type BaseRepeatableEntry<Types extends GetComponentSchemaTypes> = {
   }[];
   storageData: Types['storageData'][];
   searchIndexData: Types['searchIndexData'][];
+  isContainer: true;
 };
 
 type RepeatableEntry<Args extends RepeatableArgs> = BaseRepeatableEntry<

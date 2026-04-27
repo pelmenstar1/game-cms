@@ -1,7 +1,7 @@
 import {
   ComponentId,
   ComponentInDataById,
-  ForeignComponentStorageDataResolverContext,
+  ForeignComponentStorageDataTransformerContext,
 } from '@game-cms/core';
 import { MaybePromise } from '@game-cms/shared';
 
@@ -15,7 +15,7 @@ export type SpritesheetStepSourceResult = Record<
 export type SpritesheetStepSource = <CId extends ComponentId, Args>(
   inData: ComponentInDataById<CId, Args>,
   options: GameAssetPipelineStepDataOptions<CId, Args>,
-  context: ForeignComponentStorageDataResolverContext
+  context: ForeignComponentStorageDataTransformerContext
 ) => MaybePromise<SpritesheetStepSourceResult>;
 
 export type SpritesheetPathSourceOptions = {

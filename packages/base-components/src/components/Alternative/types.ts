@@ -62,6 +62,7 @@ type AlternativeEntry<Args extends AlternativeArgs> = {
     default: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>;
     alternative: ComponentSearchIndexDataById<Args['id'], Args['baseArgs']>[];
   };
+  isContainer: true;
 };
 
 type UnpackShape<T> = T extends BaseNestedPathShape ? T['default'] : never;

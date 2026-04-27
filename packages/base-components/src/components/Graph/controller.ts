@@ -1,5 +1,9 @@
 import { defineComponentController, searchScoreComposer } from '@game-cms/core';
-import { asyncMapObject, mapObject } from '@game-cms/shared/object';
+import {
+  asyncMapObject,
+  mapObject,
+  objectAggregation,
+} from '@game-cms/shared/object';
 
 import core from './core.js';
 import { dataShape } from './internal/schema.js';
@@ -18,13 +22,6 @@ export default defineComponentController({
     context.getStructure(options.componentId, options.baseOptions),
   innerDependencies: (options, context) =>
     context.getDependencies(options.componentId, options.baseOptions),
-  atomWalker: (data, options, apply, context) => {
-    const { componentId, baseOptions } = options;
-
-    for (const { value } of Object.values(data.nodes)) {
-      context.walk(componentId, value, baseOptions, apply);
-    }
-  },
   migrate: (data, options, context) => {
     const result = dataShape.safeParse(data);
 
@@ -50,6 +47,55 @@ export default defineComponentController({
       })),
       edges: input.edges,
     };
+  },
+  atomWalker: {
+    applyEach: (data, options, apply, context) => {
+      const { componentId, baseOptions } = options;
+
+      for (const { value } of Object.values(data.nodes)) {
+        context.applyEach(componentId, value, baseOptions, apply);
+      }
+    },
+    filter: (data, options, predicate, context) => {
+      const { componentId, baseOptions } = options;
+
+      const nodes = objectAggregation(data.nodes)
+        .filter(({ value }) => predicate(componentId, value, baseOptions))
+        .map(({ value, meta }: (typeof data.nodes)[string]) => ({
+          meta,
+          value: context.filter(componentId, value, baseOptions, predicate),
+        }))
+        .result();
+
+      const nodeKeys = new Set(Object.keys(nodes));
+
+      return {
+        nodes,
+        edges: data.edges.filter(
+          ({ source, target }) => nodeKeys.has(source) && nodeKeys.has(target)
+        ),
+      };
+    },
+  },
+  outerLinkController: {
+    contains: (outerLink, data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return Object.values(data.nodes).some(({ value }) =>
+        context.contains(outerLink, componentId, value, baseOptions)
+      );
+    },
+    delete: (outerLink, data, options, context) => {
+      const { componentId, baseOptions } = options;
+
+      return {
+        edges: data.edges,
+        nodes: mapObject(data.nodes, ({ value, meta }) => ({
+          meta,
+          value: context.delete(outerLink, componentId, value, baseOptions),
+        })),
+      };
+    },
   },
   search: {
     getScore: (query, target, options, context) => {
