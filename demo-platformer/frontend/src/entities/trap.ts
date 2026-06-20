@@ -81,7 +81,7 @@ export class Trap {
       }
 
       case 'triggered': {
-        // Triggered traps activate when hero is near — handled externally
+        // Triggered traps activate when hero is near - handled externally
         break;
       }
     }

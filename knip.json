@@ -51,7 +51,8 @@
         "src/i18n/types.ts"
       ],
       "project": "src/**/*.{ts,tsx}",
-      "ignoreDependencies": ["@game-cms/vite-plugins", "react-router"]
+      "ignoreDependencies": ["@game-cms/vite-plugins", "react-router"],
+      "ignoreFiles": ["src/types/cssProperties.ts"]
     },
     "packages/dashboard": {
       "entry": [

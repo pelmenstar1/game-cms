@@ -14,12 +14,12 @@ export function computeHybridScore(
 
   const queryTokens = tokenize(query);
 
-  // 1. Word-boundary prefix — fast path, highest confidence.
+  // 1. Word-boundary prefix - fast path, highest confidence.
   if (index.tokens.some((token) => token.startsWith(lowerQuery))) {
     return 1;
   }
 
-  // 2. Jaro-Winkler — best token-pair score.
+  // 2. Jaro-Winkler - best token-pair score.
   let jwScore = 0;
 
   for (const queryToken of queryTokens) {

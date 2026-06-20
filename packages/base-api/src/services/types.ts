@@ -10,7 +10,7 @@ type BaseServicesMap = FromEntries<
 
 declare module '@game-cms/core' {
   interface ServiceTypeMeta {
-    id: keyof ServiceExport;
+    base: keyof ServiceExport;
   }
 
   interface ServiceTypeMap extends BaseServicesMap {}

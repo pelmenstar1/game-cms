@@ -48,6 +48,12 @@ declare module '@game-cms/base-core' {
       entityId: EntityId;
       id: ObjectId;
     };
+    'base::entity::read': {
+      entityId: EntityId;
+      id: ObjectId;
+      variant: EntityVariant;
+      resolvedAt: Date;
+    };
   }
 }
 
@@ -486,7 +492,16 @@ export default service({
       return null;
     }
 
-    return resolveRawEntity(entityId, result, args);
+    const resolved = resolveRawEntity(entityId, result, args);
+
+    cms().service('base::appEvents').emit('base::entity::read', {
+      entityId,
+      id,
+      variant,
+      resolvedAt: new Date(),
+    });
+
+    return resolved;
   },
   unpublish: async (entityId: EntityId, id: ObjectId) => {
     const { matchedCount } = await collection(entityId).updateOne(

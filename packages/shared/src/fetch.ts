@@ -12,6 +12,10 @@ export function safeGetText(response: Response) {
   return response.text().catch(() => null);
 }
 
+export function safeGetJson(response: Response): Promise<unknown> {
+  return response.json().catch(() => null);
+}
+
 export function fetchWithJsonBody(
   url: string | URL,
   { body, headers, ...init }: RequestInitWithBody

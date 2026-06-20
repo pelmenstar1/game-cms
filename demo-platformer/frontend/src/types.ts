@@ -34,7 +34,7 @@ export type HeroState =
 
 export interface HeroDef {
   name: string;
-  /** Animation strips keyed by state (e.g. "idle", "run", "jump") — URLs from CMS */
+  /** Animation strips keyed by state (e.g. "idle", "run", "jump") - URLs from CMS */
   animations: Record<string, SpriteStripDef>;
   hp: number;
   speed: number;

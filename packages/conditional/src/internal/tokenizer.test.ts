@@ -5,7 +5,7 @@ import { tokenizeText } from './tokenizer.js';
 
 describe('tokenizeText', () => {
   test.each<[string, Token[]]>([
-    // Single tokens — every distinct token the tokenizer can emit.
+    // Single tokens - every distinct token the tokenizer can emit.
     ['(', [TokenType.OPEN_BRACKET]],
     [')', [TokenType.CLOSE_BRACKET]],
     ['$', [TokenType.VAR_START]],
@@ -21,7 +21,7 @@ describe('tokenizeText', () => {
     ['123', [{ type: StringTokenType.LITERAL, value: '123' }]],
     ["'hello'", [{ type: StringTokenType.STRING, value: 'hello' }]],
 
-    // String literals — single-quoted strings may contain whitespace and operator chars.
+    // String literals - single-quoted strings may contain whitespace and operator chars.
     ["'hello world'", [{ type: StringTokenType.STRING, value: 'hello world' }]],
     ["'a && b'", [{ type: StringTokenType.STRING, value: 'a && b' }]],
     ["'a || b == c'", [{ type: StringTokenType.STRING, value: 'a || b == c' }]],

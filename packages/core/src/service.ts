@@ -28,7 +28,8 @@ export interface ServiceTypeMeta {
 
 export interface ServiceTypeMap {}
 
-export type ServiceId = GetPropertyOr<ServiceTypeMeta, 'id', string>;
+type BaseServiceId = Extract<ServiceTypeMeta[keyof ServiceTypeMeta], string>;
+export type ServiceId = BaseServiceId extends never ? string : BaseServiceId;
 
 export type ServiceById<K extends ServiceId> = GetPropertyOr<
   ServiceTypeMap,

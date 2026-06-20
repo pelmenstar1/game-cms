@@ -24,3 +24,9 @@ export function isSameUTCWeek(a: Date, b: Date): boolean {
 
   return isSameUTCDay(mondayA, mondayB);
 }
+
+export function daysAgo(days: number): Date {
+  const ticks = Date.now();
+
+  return new Date(ticks - days * DAY_MS);
+}

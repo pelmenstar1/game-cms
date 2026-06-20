@@ -23,7 +23,7 @@ function skylinePipeline<Tag>(limits: Size) {
     let remaining = width;
 
     for (let i = segIndex; i < skyline.length && remaining > 0; i++) {
-      if (skyline[i].x !== x) return undefined; // gap — shouldn't happen
+      if (skyline[i].x !== x) return undefined; // gap - shouldn't happen
       maxY = Math.max(maxY, skyline[i].y);
       if (maxY + height > limits.height) return undefined;
       remaining -= skyline[i].width;
@@ -74,7 +74,7 @@ function skylinePipeline<Tag>(limits: Size) {
       const segRight = seg.x + seg.width;
 
       if (segRight <= x || seg.x >= rectRight) {
-        // Segment is entirely outside — keep as-is.
+        // Segment is entirely outside - keep as-is.
         newSkyline.push(seg);
       } else {
         // Insert the new segment before the first overlapping one.

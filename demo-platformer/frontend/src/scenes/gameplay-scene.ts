@@ -113,7 +113,7 @@ export class GameplayScene implements Scene {
       this.state.hp = this.hero.hp;
     }
 
-    // Room complete — advance to next
+    // Room complete - advance to next
     if (result.reachedEnd) {
       this.state.currentRoomIndex++;
       this.state.checkpointPosition = null;

@@ -125,7 +125,7 @@ export function ThreeDModelRenderer({
     if (activeClipIndex !== undefined && activeClipIndex >= 0) {
       appRef.current?.playAnimation(activeClipIndex, isPlayingRef.current);
     }
-    // isPlayingRef intentionally excluded — it's a ref, not reactive state
+    // isPlayingRef intentionally excluded - it's a ref, not reactive state
   }, [activeClipIndex]);
 
   useEffect(() => {

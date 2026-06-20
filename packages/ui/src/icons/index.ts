@@ -58,6 +58,7 @@ export * from './SaveIcon';
 export * from './SearchIcon';
 export * from './SeePasswordIcon';
 export * from './SettingsIcon';
+export * from './StatsIcon';
 export * from './StrikeIcon';
 export * from './SubscriptIcon';
 export * from './SuperscriptIcon';
