@@ -1,4 +1,9 @@
-import { createAbortController, handleResponseError } from '@game-cms/shared';
+import {
+  createAbortController,
+  datePrefixSource,
+  handleResponseError,
+  prefixedIdSource,
+} from '@game-cms/shared';
 import { DataLoader, Tab, Tabs, useAbstractQueryResult } from '@game-cms/ui';
 import {
   Assets,
@@ -9,7 +14,6 @@ import {
   TextureSourceOptions,
 } from 'pixi.js';
 import { useState } from 'react';
-import { v4 } from 'uuid';
 
 import { BitmapFontPreviewGrid } from '../BitmapFontPreviewGrid';
 import { BitmapFontPreviewInput } from '../BitmapFontPreviewInput';
@@ -21,6 +25,10 @@ export interface BitmapFontPreviewControllerProps {
 }
 
 type TabName = 'grid' | 'input';
+
+const idSource = prefixedIdSource(
+  datePrefixSource('BitmapFontPreviewController')
+);
 
 export function BitmapFontPreviewController({
   className,
@@ -45,7 +53,7 @@ export function BitmapFontPreviewController({
 
       const atlasText = await atlasResponse.text();
       const fontData = bitmapFontXMLStringParser.parse(atlasText);
-      fontData.fontFamily = `${v4()}-bitmap`;
+      fontData.fontFamily = idSource();
 
       const textureOptions: TextureSourceOptions = fontData.distanceField
         ? {

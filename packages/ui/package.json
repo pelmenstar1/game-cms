@@ -27,8 +27,7 @@
     "lowlight": "^3.3.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-zoom-pan-pinch": "catalog:",
-    "uuid": "catalog:"
+    "react-zoom-pan-pinch": "catalog:"
   },
   "devDependencies": {
     "@game-cms/codegen": "workspace:*",

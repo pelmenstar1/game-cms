@@ -54,7 +54,6 @@ catalog:
   vite: 8.0.16
   vitest: ^4.1.9
   zod: ^4.4.3
-  uuid: ^14.0.1
   react-zoom-pan-pinch: ^4.0.3
 
 allowBuilds:

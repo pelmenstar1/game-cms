@@ -1,7 +1,13 @@
-import { pendingQueryResult, type QueryResult } from '@game-cms/shared';
+import {
+  datePrefixSource,
+  pendingQueryResult,
+  prefixedIdSource,
+  type QueryResult,
+} from '@game-cms/shared';
 import { setAddMany, setDeleteMany } from '@game-cms/shared/collections';
 import { useEffect, useState } from 'react';
-import { v4 } from 'uuid';
+
+const idSource = prefixedIdSource(datePrefixSource('useTemporaryFonts'));
 
 export type FontDescriptor = {
   source: string;
@@ -9,13 +15,13 @@ export type FontDescriptor = {
   style: 'normal' | 'italic';
 };
 
-export function useTemporaryFonts(fonts: FontDescriptor[]) {
+export function useTemporaryFonts(fonts: readonly FontDescriptor[]) {
   const [result, setResult] =
     useState<QueryResult<string[]>>(pendingQueryResult());
 
   useEffect(() => {
     const fontFaces = fonts.map((font) => {
-      const id = v4();
+      const id = idSource();
 
       return new FontFace(id, `url(${font.source})`, {
         weight: font.weight.toString(),
