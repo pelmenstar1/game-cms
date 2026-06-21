@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/e2e",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "type": "module",
   "dependencies": {
     "@game-cms/shared": "workspace:*",

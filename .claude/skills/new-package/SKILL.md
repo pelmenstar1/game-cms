@@ -27,7 +27,7 @@ Create the package following these steps:
    ```json
    {
      "name": "@game-cms/<name>",
-     "packageManager": "pnpm@10.28.1",
+     "packageManager": "pnpm@11.8.0",
      "type": "module",
      "dependencies": {},
      "devDependencies": {

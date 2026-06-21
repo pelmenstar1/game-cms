@@ -1,6 +1,6 @@
 {
   "name": "game-cms",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "version": "0.1.0",
   "type": "module",
   "bin": "./dist/bin.js",

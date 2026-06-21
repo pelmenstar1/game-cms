@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/game-plugin-core",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "type": "module",
   "scripts": {
     "build": "tsc"

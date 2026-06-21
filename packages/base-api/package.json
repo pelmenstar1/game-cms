@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/base-api",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "type": "module",
   "scripts": {
     "gen:type": "tsx ./scripts/generateTypes.ts"
@@ -27,8 +27,8 @@
     "@types/node": "catalog:",
     "@types/qs": "catalog:",
     "fastify": "catalog:",
-    "glob": "^13.0.6",
-    "jiti": "^2.6.1",
+    "glob": "catalog:",
+    "jiti": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   },

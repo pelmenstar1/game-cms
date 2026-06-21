@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/storage-provider-s3",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -8,16 +8,16 @@
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-core": "workspace:*",
     "@game-cms/testing-lib": "workspace:*",
-    "@smithy/types": "^4.13.1",
+    "@smithy/types": "^4.15.0",
     "@types/node": "catalog:",
     "fastify": "catalog:",
     "fastify-type-provider-zod": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1014.0",
-    "@aws-sdk/lib-storage": "^3.1014.0",
-    "@aws-sdk/s3-request-presigner": "^3.1014.0",
+    "@aws-sdk/client-s3": "^3.1073.0",
+    "@aws-sdk/lib-storage": "^3.1073.0",
+    "@aws-sdk/s3-request-presigner": "^3.1073.0",
     "@game-cms/core": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "zod": "catalog:"

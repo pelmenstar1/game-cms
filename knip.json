@@ -46,6 +46,10 @@
     },
     "packages/{base,game-plugin}-components": {
       "entry": [
+        "src/index.ts",
+        "src/dashboard/index.ts",
+        "src/routes/index.ts",
+        "src/filePreviews/*.{ts,tsx}",
         "src/components/*/{client,controller,core,renderer,types,renderer.listPreview}.{ts,tsx}",
         "src/**/route.tsx",
         "src/i18n/types.ts"
@@ -93,7 +97,8 @@
         "src/cms.config.ts",
         "src/entities/**/*.ts",
         "src/routes/**/*.ts"
-      ]
+      ],
+      "ignore": ["build/**"]
     },
     "packages/e2e": {
       "entry": ["src/cms.config.ts", "src/globalSetup.ts"]

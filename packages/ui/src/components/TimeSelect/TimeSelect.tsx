@@ -32,8 +32,8 @@ export function TimeSelect({
       })
     );
 
-    const isCustomItem = !suggestionItems.some(
-      ({ key }) => key === selectedItem
+    const isCustomItem = suggestionItems.every(
+      ({ key }) => key !== selectedItem
     );
 
     return [

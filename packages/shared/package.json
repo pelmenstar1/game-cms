@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/shared",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "type": "module",
   "dependencies": {
     "@types/mime-types": "catalog:",
@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "jiti": "catalog:",
-    "vite": "8.x"
+    "vite": "catalog:"
   },
   "exports": {
     ".": {

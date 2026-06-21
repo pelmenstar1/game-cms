@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/entity-previews",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "type": "module",
   "scripts": {
     "prebuild": "pnpm tsx ./scripts/copyStyles.ts"

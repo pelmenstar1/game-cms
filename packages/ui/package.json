@@ -1,6 +1,6 @@
 {
   "name": "@game-cms/ui",
-  "packageManager": "pnpm@10.28.1",
+  "packageManager": "pnpm@11.8.0",
   "type": "module",
   "scripts": {
     "prebuild": "pnpm copy-styles",
@@ -13,16 +13,16 @@
     "test:build": "storybook build"
   },
   "dependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "1.8.0",
-    "@atlaskit/pragmatic-drag-and-drop-hitbox": "1.1.0",
+    "@atlaskit/pragmatic-drag-and-drop": "2.0.1",
+    "@atlaskit/pragmatic-drag-and-drop-hitbox": "2.0.0",
     "@game-cms/shared": "workspace:*",
-    "@tiptap/core": "^3.22.4",
-    "@tiptap/extension-code-block-lowlight": "^3.22.4",
-    "@tiptap/extension-document": "^3.22.4",
-    "@tiptap/extension-paragraph": "^3.22.4",
-    "@tiptap/extension-text": "^3.22.4",
-    "@tiptap/pm": "^3.22.4",
-    "@tiptap/react": "^3.22.4",
+    "@tiptap/core": "^3.27.1",
+    "@tiptap/extension-code-block-lowlight": "^3.27.1",
+    "@tiptap/extension-document": "^3.27.1",
+    "@tiptap/extension-paragraph": "^3.27.1",
+    "@tiptap/extension-text": "^3.27.1",
+    "@tiptap/pm": "^3.27.1",
+    "@tiptap/react": "^3.27.1",
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
     "react": "catalog:",
