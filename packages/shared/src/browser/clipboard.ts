@@ -4,7 +4,9 @@
 export function copyToClipboard(value: string): Promise<void> {
   if ('clipboard' in navigator) {
     return navigator.clipboard.writeText(value);
-  } else if (
+  }
+
+  if (
     document.queryCommandSupported &&
     document.queryCommandSupported('copy')
   ) {

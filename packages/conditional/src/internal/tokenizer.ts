@@ -75,9 +75,9 @@ export function tokenizeText(text: string): Token[] {
         reader.move(reader.position() - 1);
 
         continue;
-      } else {
-        literalToken += prevToken;
       }
+
+      literalToken += prevToken;
     }
 
     if (borrowedToken.length === 0) {

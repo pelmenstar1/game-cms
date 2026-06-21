@@ -134,7 +134,7 @@ async function getRawById<Id extends EntityId>(
     return null;
   }
 
-  const { [documentVariant]: storageData } = result;
+  const storageData = result[documentVariant];
 
   if (storageData === undefined) {
     return null;
@@ -185,7 +185,8 @@ async function getRawSingleton<Id extends EntityId>(
     return null;
   }
 
-  const { _id, [documentVariant]: storageData } = result;
+  const { _id } = result;
+  const storageData = result[documentVariant];
 
   if (storageData === undefined) {
     return null;

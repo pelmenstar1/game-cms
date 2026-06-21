@@ -36,6 +36,7 @@ export async function createBitmapFontInputApp() {
   function setText(value: string) {
     text = value;
 
+    // eslint-disable-next-line unicorn/better-dom-traversing -- app.stage is a PIXI Container, not a DOM node
     const bitmapText = app.stage.children[0] as BitmapText | undefined;
 
     if (bitmapText) {

@@ -9,7 +9,7 @@ export function getTestConfig(): S3StorageProviderConfig {
   return {
     bucket: process.env.TEST_S3_BUCKET as string,
     client: {
-      endpoint: process.env.TEST_S3_API_URL as string,
+      endpoint: process.env.TEST_S3_API_URL,
       region: 'auto',
       credentials: {
         accessKeyId: process.env.TEST_S3_ACCESS_KEY_ID as string,

@@ -10,11 +10,11 @@ const STYLE = new TextStyle({
 });
 
 export class HUD {
-  readonly container = new Container();
-
   private scoreText: Text;
   private hpText: Text;
   private livesText: Text;
+
+  readonly container = new Container();
 
   constructor() {
     this.scoreText = new Text({ text: 'Score: 0', style: STYLE });

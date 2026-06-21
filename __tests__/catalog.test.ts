@@ -43,8 +43,10 @@ test('dependency versions should use catalog or workspace protocol', async () =>
 
   for (const [dep, versions] of depVersions) {
     if (versions.size > 1) {
-      const details = [...versions.entries()]
+      const details = versions
+        .entries()
         .map(([version, packages]) => `  ${version} in ${packages.join(', ')}`)
+        .toArray()
         .join('\n');
 
       mismatches.push(`${dep}:\n${details}`);

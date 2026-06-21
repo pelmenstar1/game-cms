@@ -131,7 +131,7 @@ export function AccessEntityView<Id extends EntityId>({
     const rawData = inData?.data;
 
     if (rawData !== undefined) {
-      onSave?.(rawData as EntityInDataById<Id>, 'draft');
+      onSave?.(rawData, 'draft');
     }
   }, [inData, onSave]);
 

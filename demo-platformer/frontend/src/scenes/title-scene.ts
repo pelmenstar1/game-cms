@@ -13,9 +13,9 @@ import { justPressed } from '../input';
 import type { Scene } from '../types';
 
 export class TitleScene implements Scene {
-  readonly container = new Container();
-
   private onStart: () => void;
+
+  readonly container = new Container();
 
   constructor(
     private screenWidth: number,

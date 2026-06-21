@@ -32,8 +32,6 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
     const token = tokens[i];
     const prevToken = tokens[i - 1] as Token | undefined;
 
-    let currentExpression: ConditionalAstExpression | undefined;
-
     const isPrevVarStart = prevToken === TokenType.VAR_START;
     const isStringToken = typeof token === 'object';
 
@@ -45,6 +43,8 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
     if (token === TokenType.VAR_START) {
       continue;
     }
+
+    let currentExpression: ConditionalAstExpression | undefined;
 
     if (isStringToken) {
       currentExpression = isPrevVarStart
@@ -109,8 +109,6 @@ function parseTokens(tokens: Token[]): ConditionalAstExpression {
     const binaryOperator = getBinaryOperatorFromToken(token);
     if (binaryOperator !== undefined) {
       lastBinaryOperator = binaryOperator;
-
-      continue;
     }
   }
 

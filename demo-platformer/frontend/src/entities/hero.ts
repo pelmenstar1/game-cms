@@ -23,17 +23,6 @@ import type {
 } from '../types';
 
 export class Hero {
-  readonly container = new Container();
-  readonly position: PointData;
-  readonly velocity: PointData = { x: 0, y: 0 };
-
-  /** Hitbox relative to position (smaller than the full 32x32 frame) */
-  readonly hitbox: RectangleLike = { x: 6, y: 4, width: 20, height: 28 };
-
-  hp: number;
-  maxHp: number;
-  alive = true;
-
   private state: HeroState = 'idle';
   private facingRight = true;
   private onGround = false;
@@ -47,6 +36,17 @@ export class Hero {
   private speed: number;
   private jumpForce: number;
   private gravity: number;
+
+  readonly container = new Container();
+  readonly position: PointData;
+  readonly velocity: PointData = { x: 0, y: 0 };
+
+  /** Hitbox relative to position (smaller than the full 32x32 frame) */
+  readonly hitbox: RectangleLike = { x: 6, y: 4, width: 20, height: 28 };
+
+  hp: number;
+  maxHp: number;
+  alive = true;
 
   constructor(def: HeroDef, spawnX: number, spawnY: number, gravity: number) {
     this.position = { x: spawnX, y: spawnY };
@@ -67,77 +67,6 @@ export class Hero {
     this.sprite.anchor.set(0.5, 0.5);
     this.sprite.play();
     this.container.addChild(this.sprite);
-  }
-
-  /** Get world-space hitbox for collision checks. */
-  getWorldHitbox(): RectangleLike {
-    return {
-      x: this.position.x + this.hitbox.x,
-      y: this.position.y + this.hitbox.y,
-      width: this.hitbox.width,
-      height: this.hitbox.height,
-    };
-  }
-
-  update(dt: number, layout: number[][]): void {
-    if (!this.alive) return;
-
-    // Invincibility countdown
-    if (this.invincibilityTimer > 0) {
-      this.invincibilityTimer -= dt;
-      // Blink effect
-      this.sprite.alpha = Math.sin(this.invincibilityTimer * 10) > 0 ? 1 : 0.3;
-    } else {
-      this.sprite.alpha = 1;
-    }
-
-    // If in hit state, wait for animation to finish
-    if (this.state === 'hit') {
-      this.velocity.x = 0;
-      applyGravity(this.velocity, this.gravity, dt);
-      moveAndCollide(this.position, this.velocity, this.hitbox, layout, dt);
-      this.syncSprite();
-      return;
-    }
-
-    this.handleInput(dt);
-    this.applyPhysics(dt, layout);
-    this.updateAnimationState();
-    this.syncSprite();
-  }
-
-  takeDamage(amount: number): void {
-    if (this.invincibilityTimer > 0 || !this.alive) return;
-
-    this.hp -= amount;
-    this.invincibilityTimer = INVINCIBILITY_DURATION;
-
-    if (this.hp <= 0) {
-      this.hp = 0;
-      this.alive = false;
-      this.setState('hit');
-      this.sprite.loop = false;
-    } else {
-      this.setState('hit');
-      this.sprite.loop = false;
-      this.sprite.onComplete = () => {
-        this.sprite.onComplete = undefined;
-        this.setState('idle');
-        this.sprite.loop = true;
-      };
-    }
-  }
-
-  respawn(x: number, y: number, fullHp: boolean): void {
-    this.position.x = x;
-    this.position.y = y;
-    this.velocity.x = 0;
-    this.velocity.y = 0;
-    this.alive = true;
-    if (fullHp) this.hp = this.maxHp;
-    this.invincibilityTimer = INVINCIBILITY_DURATION;
-    this.setState('idle');
-    this.sprite.loop = true;
   }
 
   private handleInput(_dt: number): void {
@@ -221,5 +150,76 @@ export class Hero {
     this.sprite.x = this.position.x + 16;
     this.sprite.y = this.position.y + 16;
     this.sprite.scale.x = this.facingRight ? 1 : -1;
+  }
+
+  /** Get world-space hitbox for collision checks. */
+  getWorldHitbox(): RectangleLike {
+    return {
+      x: this.position.x + this.hitbox.x,
+      y: this.position.y + this.hitbox.y,
+      width: this.hitbox.width,
+      height: this.hitbox.height,
+    };
+  }
+
+  update(dt: number, layout: number[][]): void {
+    if (!this.alive) return;
+
+    // Invincibility countdown
+    if (this.invincibilityTimer > 0) {
+      this.invincibilityTimer -= dt;
+      // Blink effect
+      this.sprite.alpha = Math.sin(this.invincibilityTimer * 10) > 0 ? 1 : 0.3;
+    } else {
+      this.sprite.alpha = 1;
+    }
+
+    // If in hit state, wait for animation to finish
+    if (this.state === 'hit') {
+      this.velocity.x = 0;
+      applyGravity(this.velocity, this.gravity, dt);
+      moveAndCollide(this.position, this.velocity, this.hitbox, layout, dt);
+      this.syncSprite();
+      return;
+    }
+
+    this.handleInput(dt);
+    this.applyPhysics(dt, layout);
+    this.updateAnimationState();
+    this.syncSprite();
+  }
+
+  takeDamage(amount: number): void {
+    if (this.invincibilityTimer > 0 || !this.alive) return;
+
+    this.hp -= amount;
+    this.invincibilityTimer = INVINCIBILITY_DURATION;
+
+    if (this.hp <= 0) {
+      this.hp = 0;
+      this.alive = false;
+      this.setState('hit');
+      this.sprite.loop = false;
+    } else {
+      this.setState('hit');
+      this.sprite.loop = false;
+      this.sprite.onComplete = () => {
+        this.sprite.onComplete = undefined;
+        this.setState('idle');
+        this.sprite.loop = true;
+      };
+    }
+  }
+
+  respawn(x: number, y: number, fullHp: boolean): void {
+    this.position.x = x;
+    this.position.y = y;
+    this.velocity.x = 0;
+    this.velocity.y = 0;
+    this.alive = true;
+    if (fullHp) this.hp = this.maxHp;
+    this.invincibilityTimer = INVINCIBILITY_DURATION;
+    this.setState('idle');
+    this.sprite.loop = true;
   }
 }

@@ -36,7 +36,9 @@ function binarySearch(
 
     if (compareVal === match) {
       return guess;
-    } else if (compareVal < match) {
+    }
+
+    if (compareVal < match) {
       min = guess + 1;
     } else {
       max = guess - 1;

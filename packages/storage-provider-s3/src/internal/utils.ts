@@ -29,7 +29,7 @@ export function getFileUrl(client: S3ClientWithConfig, key: string) {
   }
 
   if (publicUrl !== undefined) {
-    return new URL(key, publicUrl).toString();
+    return new URL(key, publicUrl).href;
   }
 
   return `/api${GET_ROUTE}/${key}`;

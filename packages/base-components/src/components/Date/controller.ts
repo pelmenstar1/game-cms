@@ -11,7 +11,9 @@ export default defineComponentController({
   migrate: (data) => {
     if (data instanceof Date) {
       return data;
-    } else if (typeof data === 'string') {
+    }
+
+    if (typeof data === 'string') {
       const parsedDate = new Date(data);
 
       if (isValidDate(parsedDate)) {

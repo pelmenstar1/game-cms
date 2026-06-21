@@ -7,7 +7,9 @@ import { describe, expect, test } from 'vitest';
 import { resolveImport } from '../package.js';
 
 function convertToDistPath(filePath: string) {
-  return filePath.replace(path.join('src', 'node'), path.join('dist', 'node'));
+  return filePath.replace(path.join('src', 'node'), () =>
+    path.join('dist', 'node')
+  );
 }
 
 function fixture(name: string) {

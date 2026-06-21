@@ -109,7 +109,8 @@ async function parseJwtWithSchema<T>(token: string, schema: ZodType<T>) {
 function hydratePermission(routeId: ApiRouteId, entities: EntityId[]) {
   if (routeId.includes('[entityId]')) {
     return entities.map(
-      (entityName) => routeId.replaceAll('[entityId]', entityName) as ApiRouteId
+      (entityName) =>
+        routeId.replaceAll('[entityId]', () => entityName) as ApiRouteId
     );
   }
 

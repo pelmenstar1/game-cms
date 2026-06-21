@@ -14,17 +14,21 @@ function renderNodeContentArray(nodes: RootContent[]) {
 }
 
 function renderNodeContent(node: RootContent, key?: Key): ReactNode {
-  if (node.type === 'text') {
-    return node.value;
-  } else if (node.type === 'element') {
-    return React.createElement(
-      node.tagName,
-      { ...node.properties, key },
-      ...renderNodeContentArray(node.children)
-    );
+  switch (node.type) {
+    case 'text': {
+      return node.value;
+    }
+    case 'element': {
+      return React.createElement(
+        node.tagName,
+        { ...node.properties, key },
+        ...renderNodeContentArray(node.children)
+      );
+    }
+    default: {
+      return null;
+    }
   }
-
-  return null;
 }
 
 export function LowlightText({ lowlight, language, text }: LowlightTextProps) {

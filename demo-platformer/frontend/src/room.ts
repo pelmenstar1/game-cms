@@ -10,6 +10,10 @@ import { checkOverlap } from './physics';
 import type { ItemDef, RoomDef, TrapDef } from './types';
 
 export class Room {
+  private background: TilingSprite;
+  private terrainContainer = new Container();
+  private entityContainer = new Container();
+
   readonly container = new Container();
   readonly layout: number[][];
   readonly widthPx: number;
@@ -19,10 +23,6 @@ export class Room {
   readonly traps: Trap[] = [];
   readonly items: Item[] = [];
   readonly checkpoints: Checkpoint[] = [];
-
-  private background: TilingSprite;
-  private terrainContainer = new Container();
-  private entityContainer = new Container();
 
   constructor(
     def: RoomDef,
@@ -152,8 +152,7 @@ export class Room {
         cp.activate();
         if (cp.type === 'mid' || cp.type === 'start') {
           checkpointPosition = { x: cp.position.x, y: cp.position.y - 32 };
-        }
-        if (cp.type === 'end') {
+        } else {
           reachedEnd = true;
         }
       }

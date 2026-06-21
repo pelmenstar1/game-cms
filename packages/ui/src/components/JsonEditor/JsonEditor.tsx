@@ -56,11 +56,7 @@ export function JsonEditor({
       return false;
     }
 
-    if (customError) {
-      return false;
-    }
-
-    return true;
+    return !customError;
   }, [allowEmpty, customError, text]);
 
   const onUpdate = useCallback(

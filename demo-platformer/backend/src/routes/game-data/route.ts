@@ -11,7 +11,7 @@ type FileItem = GameData['hero']['animations'][number]['sprite'][number];
 
 function resolveFileUrl(file: FileItem, baseUrl: string) {
   if (file.url.startsWith('/')) {
-    file.url = new URL(file.url, baseUrl).toString();
+    file.url = new URL(file.url, baseUrl).href;
   }
 }
 

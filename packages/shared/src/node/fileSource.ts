@@ -43,11 +43,11 @@ export async function writeFileSourceToFile(
     await pipeline(stream, meter, writeStream);
 
     return size;
-  } else {
-    await fsp.writeFile(filePath, stream, options);
-
-    return stream.length;
   }
+
+  await fsp.writeFile(filePath, stream, options);
+
+  return stream.length;
 }
 
 export async function writeFileSourceToNewFile(

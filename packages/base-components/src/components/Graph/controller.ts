@@ -116,7 +116,7 @@ export default defineComponentController({
             {
               storage: nodes[key].value,
               searchIndex: searchIndex[key],
-            } as never,
+            },
             baseOptions
           )
         );

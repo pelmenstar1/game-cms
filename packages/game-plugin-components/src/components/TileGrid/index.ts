@@ -11,7 +11,7 @@ function validateDimension(value: number, name: string) {
     throwError('Value must be positive');
   }
 
-  if (!Number.isInteger(value)) {
+  if (!Number.isSafeInteger(value)) {
     throwError('Value must be an integer');
   }
 }

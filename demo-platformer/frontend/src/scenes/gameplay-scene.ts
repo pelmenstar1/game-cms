@@ -16,8 +16,6 @@ import type {
 } from '../types';
 
 export class GameplayScene implements Scene {
-  readonly container = new Container();
-
   private worldContainer = new Container();
   private hudOverlay: HUD;
 
@@ -34,6 +32,8 @@ export class GameplayScene implements Scene {
   private screenWidth: number;
   private screenHeight: number;
   private onGameOver: (state: GameState) => void;
+
+  readonly container = new Container();
 
   constructor(
     screenWidth: number,
@@ -67,6 +67,50 @@ export class GameplayScene implements Scene {
     this.hudOverlay = new HUD();
     this.container.addChild(this.worldContainer);
     this.container.addChild(this.hudOverlay.container);
+  }
+
+  private buildRoom(): void {
+    this.worldContainer.removeChildren();
+
+    const roomDef = this.level.getCurrentRoom();
+    const startPos = this.findStartPositionFromDef(roomDef);
+
+    this.hero = new Hero(this.heroDef, startPos.x, startPos.y, this.gravity);
+    this.room = new Room(roomDef, this.hero, this.trapDefs, this.itemDefs);
+    this.worldContainer.addChild(this.room.container);
+  }
+
+  private findStartPosition(): { x: number; y: number } {
+    return this.findStartPositionFromDef(this.level.getCurrentRoom());
+  }
+
+  private findStartPositionFromDef(roomDef: (typeof this.level.rooms)[0]): {
+    x: number;
+    y: number;
+  } {
+    const startCp = roomDef.checkpoints.find((cp) => cp.type === 'start');
+    if (startCp) {
+      return { x: startCp.x, y: startCp.y - 32 };
+    }
+    // Default: top-left area, on ground
+    return { x: 2 * TILE_SIZE, y: 2 * TILE_SIZE };
+  }
+
+  private updateCamera(): void {
+    if (!this.hero || !this.room) return;
+
+    const halfW = this.screenWidth / 2;
+    const halfH = this.screenHeight / 2;
+
+    let camX = this.hero.position.x - halfW;
+    let camY = this.hero.position.y - halfH;
+
+    // Clamp to room bounds
+    camX = Math.max(0, Math.min(camX, this.room.widthPx - this.screenWidth));
+    camY = Math.max(0, Math.min(camY, this.room.heightPx - this.screenHeight));
+
+    this.worldContainer.x = -camX;
+    this.worldContainer.y = -camY;
   }
 
   enter(): void {
@@ -135,49 +179,5 @@ export class GameplayScene implements Scene {
 
   exit(): void {
     this.worldContainer.removeChildren();
-  }
-
-  private buildRoom(): void {
-    this.worldContainer.removeChildren();
-
-    const roomDef = this.level.getCurrentRoom();
-    const startPos = this.findStartPositionFromDef(roomDef);
-
-    this.hero = new Hero(this.heroDef, startPos.x, startPos.y, this.gravity);
-    this.room = new Room(roomDef, this.hero, this.trapDefs, this.itemDefs);
-    this.worldContainer.addChild(this.room.container);
-  }
-
-  private findStartPosition(): { x: number; y: number } {
-    return this.findStartPositionFromDef(this.level.getCurrentRoom());
-  }
-
-  private findStartPositionFromDef(roomDef: (typeof this.level.rooms)[0]): {
-    x: number;
-    y: number;
-  } {
-    const startCp = roomDef.checkpoints.find((cp) => cp.type === 'start');
-    if (startCp) {
-      return { x: startCp.x, y: startCp.y - 32 };
-    }
-    // Default: top-left area, on ground
-    return { x: 2 * TILE_SIZE, y: 2 * TILE_SIZE };
-  }
-
-  private updateCamera(): void {
-    if (!this.hero || !this.room) return;
-
-    const halfW = this.screenWidth / 2;
-    const halfH = this.screenHeight / 2;
-
-    let camX = this.hero.position.x - halfW;
-    let camY = this.hero.position.y - halfH;
-
-    // Clamp to room bounds
-    camX = Math.max(0, Math.min(camX, this.room.widthPx - this.screenWidth));
-    camY = Math.max(0, Math.min(camY, this.room.heightPx - this.screenHeight));
-
-    this.worldContainer.x = -camX;
-    this.worldContainer.y = -camY;
   }
 }

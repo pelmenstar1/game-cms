@@ -96,7 +96,7 @@ const foreignStorageResolverContext: ForeignComponentStorageDataTransformerConte
             options,
             foreignStorageResolverContext
           )
-        : (data as ComponentOutDataById<Id, Args>);
+        : data;
     },
     toStorage: <Id extends ComponentId, Args>(
       id: Id,

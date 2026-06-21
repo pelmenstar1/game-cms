@@ -6,6 +6,6 @@ export function useAsyncCallback<Args extends unknown[]>(
 ) {
   return useCallback((...args: Args) => {
     void callback(...args);
-    // eslint-disable-next-line react-hooks/use-memo, react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
   }, deps);
 }

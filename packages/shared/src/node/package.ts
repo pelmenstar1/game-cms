@@ -77,7 +77,9 @@ export async function resolvePackageBin(packagePath: string, target: string) {
 
   if (typeof bin === 'string') {
     return bin;
-  } else if (typeof bin === 'object') {
+  }
+
+  if (typeof bin === 'object') {
     return bin[target];
   }
 }

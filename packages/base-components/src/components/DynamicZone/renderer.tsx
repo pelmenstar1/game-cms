@@ -57,7 +57,7 @@ export const renderer = <Args,>({
           key: item.itemKey,
           clientKey: item.key,
           data: item.data,
-        })) as Data
+        }))
       );
     },
     [onDataChanged]
@@ -66,7 +66,7 @@ export const renderer = <Args,>({
   const paletteItems = useMemo(
     () =>
       Object.entries<Options[keyof Options]>(options).map(([key, item]) => ({
-        key: key as keyof Options,
+        key: key,
         title: item.option.title,
       })),
     [options]

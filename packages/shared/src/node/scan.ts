@@ -17,7 +17,9 @@ export async function scanDirectory<T>(
 
         if (entry.isDirectory()) {
           return scanDirectory(entryPath, handler);
-        } else if (entry.isFile()) {
+        }
+
+        if (entry.isFile()) {
           return handler(entryPath);
         }
       })

@@ -36,7 +36,8 @@ export function topologicalWaves<T extends string>(
 
     const nextWave: T[] = [];
     for (const node of wave) {
-      for (const dependent of dependents.get(node) ?? []) {
+      const nodeDependents = dependents.get(node) ?? [];
+      for (const dependent of nodeDependents) {
         const degree = (inDegree.get(dependent) ?? 1) - 1;
         inDegree.set(dependent, degree);
 

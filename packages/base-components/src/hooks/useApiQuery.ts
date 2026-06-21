@@ -70,7 +70,7 @@ export function useApiQuery<
       });
 
     return abort;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
   }, [...resolvedArgs, client, isEnabled]);
 
   useEffect(worker, [worker]);

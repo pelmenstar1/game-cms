@@ -24,11 +24,12 @@ export default defineComponentClientController({
     const { width, height, grid } = value;
 
     const widthInt = parseDimension(width);
-    const heightInt = parseDimension(height);
 
     if (!widthInt) {
       return 'INVALID_WIDTH';
     }
+
+    const heightInt = parseDimension(height);
 
     if (!heightInt) {
       return 'INVALID_HEIGHT';

@@ -10,7 +10,7 @@ import core from './core.js';
 import { Id } from './types.js';
 
 function isValidDimension(value: unknown): value is number {
-  return typeof value === 'number' && Number.isInteger(value) && value > 0;
+  return typeof value === 'number' && Number.isSafeInteger(value) && value > 0;
 }
 
 function validator(value: unknown): ComponentErrorById<Id> | undefined {

@@ -12,7 +12,9 @@ export const resizeArray = <T>(
     result.fill(placeholder, array.length);
 
     return result;
-  } else if (array.length > size) {
+  }
+
+  if (array.length > size) {
     return array.slice(0, size);
   }
 

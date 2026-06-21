@@ -82,7 +82,7 @@ export default defineComponentController({
             {
               storage: storage[i],
               searchIndex: searchIndex[i],
-            } as never,
+            },
             baseOptions
           )
         );

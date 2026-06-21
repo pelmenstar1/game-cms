@@ -4,7 +4,7 @@ import { buildTrigrams } from './trigrams.js';
 
 describe('buildTrigrams', () => {
   test.each<[string, string[]]>([
-    ['', ['   ']],
+    ['', [' '.repeat(3)]],
     ['a', ['  a', ' a ', 'a  ']],
     ['abc', ['  a', ' ab', 'abc', 'bc ', 'c  ']],
     ['ab', ['  a', ' ab', 'ab ', 'b  ']],

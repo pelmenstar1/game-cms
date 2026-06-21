@@ -13,7 +13,6 @@ export function getFrontendDistributionPath() {
 }
 
 export async function registerFrontend(app: FastifyInstance, devUrl?: string) {
-  // eslint-disable-next-line unicorn/prefer-ternary
   if (devUrl !== undefined) {
     await app.register(httpProxy, {
       upstream: devUrl,

@@ -31,7 +31,7 @@ async function resolvePluginValueSource<T>(
     })
   );
 
-  return result.flat().filter((value) => value !== undefined) as T[];
+  return result.flat().filter((value) => value !== undefined);
 }
 
 async function getApiRoutes(context: PluginValueSourceContext) {

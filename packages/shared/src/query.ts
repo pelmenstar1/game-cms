@@ -4,14 +4,14 @@ export type SuccessQueryResult<T = unknown> = {
 };
 
 export type QueryResult<T = unknown> =
+  | SuccessQueryResult<T>
   | {
       status: 'pending';
     }
   | {
       status: 'error';
       error: unknown;
-    }
-  | SuccessQueryResult<T>;
+    };
 
 export type QueryStatus = QueryResult['status'];
 

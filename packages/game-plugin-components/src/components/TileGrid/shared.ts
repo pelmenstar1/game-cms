@@ -10,7 +10,7 @@ export function isValidData(
   return (
     Array.isArray(value) &&
     value.length === width * height &&
-    value.every((item) => Number.isInteger(item) && item >= 0)
+    value.every((item) => Number.isSafeInteger(item) && item >= 0)
   );
 }
 

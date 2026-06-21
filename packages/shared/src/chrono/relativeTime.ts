@@ -49,7 +49,7 @@ export function parseTimeSpec(time: TimeSpec) {
       return Number.NaN;
     }
 
-    totalSeconds += baseParseRelativeTimeToTotalSeconds(part as RelativeTime);
+    totalSeconds += baseParseRelativeTimeToTotalSeconds(part);
 
     seenUnits.add(unit);
   }

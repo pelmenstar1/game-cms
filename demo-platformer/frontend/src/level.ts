@@ -1,10 +1,10 @@
 import type { LevelDef, RoomDef } from './types';
 
 export class Level {
+  private currentIndex = 0;
+
   readonly name: string;
   readonly rooms: RoomDef[];
-
-  private currentIndex = 0;
 
   constructor(def: LevelDef) {
     this.name = def.name;

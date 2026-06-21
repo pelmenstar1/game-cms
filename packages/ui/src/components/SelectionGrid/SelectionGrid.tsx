@@ -56,11 +56,9 @@ export function SelectionGrid({
           style.setProperty('--width', '0');
           style.setProperty('--height', '0');
 
-          const boundsList: DOMRect[] = [];
-
-          for (const child of childNodes) {
-            boundsList.push((child as HTMLElement).getBoundingClientRect());
-          }
+          const boundsList: DOMRect[] = Array.from(childNodes, (child) =>
+            (child as HTMLElement).getBoundingClientRect()
+          );
 
           childrenBounds.current = boundsList;
         }

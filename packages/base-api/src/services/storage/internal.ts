@@ -435,9 +435,7 @@ export async function baseDeleteById<Extra>(
     )
     .toArray();
 
-  const folderItem = items.find((item) => item.type === StorageItemType.FOLDER);
-
-  if (folderItem) {
+  if (items.some((item) => item.type === StorageItemType.FOLDER)) {
     await moveItemsToRoot(id);
 
     await storageCollection.deleteOne({ _id: id });

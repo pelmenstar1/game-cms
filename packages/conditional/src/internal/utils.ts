@@ -51,7 +51,9 @@ export function findClosingBracketIndex(
 
       if (level === 0) {
         return i + 1;
-      } else if (level < 0) {
+      }
+
+      if (level < 0) {
         break;
       }
     }

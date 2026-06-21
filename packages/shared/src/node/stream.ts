@@ -21,7 +21,7 @@ export function meteredStream(source: FileSource) {
         return size;
       },
     };
-  } else {
-    return { body: source, size: source.length };
   }
+
+  return { body: source, size: source.length };
 }

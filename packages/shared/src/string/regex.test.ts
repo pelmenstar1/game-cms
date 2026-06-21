@@ -4,8 +4,10 @@ import { emailRegex, urlRegex } from './regex.js';
 
 describe('url', () => {
   test.each<[string]>([
+    // eslint-disable-next-line unicorn/prefer-https -- intentional HTTP inputs to test urlRegex
     ['http://google.com/'],
     ['https://google.com/'],
+    // eslint-disable-next-line unicorn/prefer-https -- intentional HTTP inputs to test urlRegex
     ['http://google.com/a/b/c'],
   ])('match', (input) => {
     const actual = urlRegex.test(input);

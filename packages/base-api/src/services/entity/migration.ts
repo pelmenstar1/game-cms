@@ -76,6 +76,7 @@ async function migrateEntity<Id extends EntityId>(
   const newComponents = mapObject(schema.components, (prop, key) => {
     return foreignDataMigrationContext.migrate(
       prop.componentId,
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       (oldValue.components as UnknownObject)[key],
       prop.options
     );

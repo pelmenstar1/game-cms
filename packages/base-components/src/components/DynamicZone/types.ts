@@ -124,14 +124,14 @@ type DynamicZoneEntry<Input extends DynamicZoneInputComponents> = {
 };
 
 type NestedPathZone<T, Name extends string, Schema extends ComponentSchema> =
-  | {
-      path: `[${Name}]`;
-      value: GetDataFromEntryArray<T, Name>;
-    }
   | NestedPathDot<
       ComponentSchemaNestedPathDetails<GetDataFromEntryArray<T, Name>, Schema>,
       `[${Name}]`
-    >;
+    >
+  | {
+      path: `[${Name}]`;
+      value: GetDataFromEntryArray<T, Name>;
+    };
 
 type NestedPath<T, Input extends DynamicZoneInputComponents> = {
   [K in keyof Input & string]: NestedPathZone<T, K, Input[K]>;

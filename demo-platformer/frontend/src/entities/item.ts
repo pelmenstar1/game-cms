@@ -12,14 +12,14 @@ import { ANIMATION_SPEED } from '../constants';
 import type { ItemDef } from '../types';
 
 export class Item {
+  private sprite: AnimatedSprite;
+  private def: ItemDef;
+  private collectedFrames: Texture[];
+
   readonly container = new Container();
   readonly position: PointData;
 
   collected = false;
-
-  private sprite: AnimatedSprite;
-  private def: ItemDef;
-  private collectedFrames: Texture[];
 
   constructor(def: ItemDef, x: number, y: number) {
     this.def = def;
@@ -47,6 +47,11 @@ export class Item {
     this.container.addChild(this.sprite);
 
     this.syncSprite();
+  }
+
+  private syncSprite(): void {
+    this.sprite.x = this.position.x + this.def.sprite.frameWidth / 2;
+    this.sprite.y = this.position.y + this.def.sprite.frameHeight / 2;
   }
 
   /** Get world-space hitbox for collection detection. */
@@ -83,10 +88,5 @@ export class Item {
 
   update(_dt: number): void {
     // Items just animate in place
-  }
-
-  private syncSprite(): void {
-    this.sprite.x = this.position.x + this.def.sprite.frameWidth / 2;
-    this.sprite.y = this.position.y + this.def.sprite.frameHeight / 2;
   }
 }

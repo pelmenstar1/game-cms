@@ -46,8 +46,8 @@ export async function executeRemainingMigrations() {
 
   const allMigrations = await listMigrations();
 
-  const remainingMigrations = allMigrations.filter(
-    (name) => !executedMigrations.some((entry) => entry.name == name)
+  const remainingMigrations = allMigrations.filter((name) =>
+    executedMigrations.every((entry) => entry.name != name)
   );
 
   const jiti = createJiti(import.meta.url);

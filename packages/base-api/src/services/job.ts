@@ -39,7 +39,7 @@ function getDescriptor<Id extends JobId>(id: Id): JobDescriptor<Id> {
     throw new Error(`No job descriptor registered for id "${id}"`);
   }
 
-  return descriptor as unknown as JobDescriptor<Id>;
+  return descriptor;
 }
 
 async function executeJobFromDescriptor<Id extends JobId>(

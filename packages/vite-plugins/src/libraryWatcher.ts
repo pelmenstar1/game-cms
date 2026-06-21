@@ -20,15 +20,12 @@ export function libraryWatcherPlugin(packages: string[]): Plugin {
         }
 
         const dirname = path.dirname(filePath);
-        const modules = [...server.moduleGraph.idToModuleMap.entries()];
 
-        const modulesToReload = modules.filter(([key]) =>
-          key.startsWith(dirname)
-        );
-
-        for (const [, module] of modulesToReload) {
-          void server.reloadModule(module);
-        }
+        server.moduleGraph.idToModuleMap.forEach((module, key) => {
+          if (key.startsWith(dirname)) {
+            void server.reloadModule(module);
+          }
+        });
       });
 
       server.httpServer?.on('close', () => {

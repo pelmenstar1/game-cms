@@ -98,11 +98,7 @@ function isExpectedReference(
     return false;
   }
 
-  if (registry.hasNoEmit(dirPath)) {
-    return false;
-  }
-
-  return true;
+  return !registry.hasNoEmit(dirPath);
 }
 
 async function checkPackage(rootDir: string, registry: PackageRegistry) {

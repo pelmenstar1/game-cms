@@ -20,7 +20,8 @@ function createAppWithRoutes(storagePath: string) {
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
-  for (const route of provider.routes ?? []) {
+  const routes = provider.routes ?? [];
+  for (const route of routes) {
     app.route(route as unknown as RouteOptions);
   }
 

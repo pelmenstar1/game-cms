@@ -62,11 +62,11 @@ type NestedPathKey<T, Input> = keyof T & keyof Input & string;
 
 type BaseNestedPath<T, Input extends ComposeInput> = {
   [K in NestedPathKey<T, Input>]:
+    | NestedPathDot<ComponentSchemaNestedPathDetails<T[K], Input[K]>, K>
     | {
         path: K;
         value: T[K];
-      }
-    | NestedPathDot<ComponentSchemaNestedPathDetails<T[K], Input[K]>, K>;
+      };
 }[NestedPathKey<T, Input>];
 
 type NestedPath<T, Input extends ComposeInput> =

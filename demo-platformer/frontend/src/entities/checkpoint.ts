@@ -37,14 +37,14 @@ function loadCheckpointAssets(
 }
 
 export class Checkpoint {
+  private sprite: AnimatedSprite;
+  private assets: CheckpointAssets;
+
   readonly container = new Container();
   readonly position: PointData;
   readonly type: CheckpointType;
 
   activated = false;
-
-  private sprite: AnimatedSprite;
-  private assets: CheckpointAssets;
 
   constructor(
     type: CheckpointType,
@@ -64,6 +64,11 @@ export class Checkpoint {
     this.container.addChild(this.sprite);
 
     this.syncSprite();
+  }
+
+  private syncSprite(): void {
+    this.sprite.x = this.position.x;
+    this.sprite.y = this.position.y;
   }
 
   getWorldHitbox(): RectangleLike {
@@ -86,10 +91,5 @@ export class Checkpoint {
 
   update(_dt: number): void {
     // Checkpoints just animate in place
-  }
-
-  private syncSprite(): void {
-    this.sprite.x = this.position.x;
-    this.sprite.y = this.position.y;
   }
 }

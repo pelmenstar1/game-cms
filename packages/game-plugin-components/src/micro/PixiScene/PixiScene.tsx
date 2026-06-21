@@ -59,8 +59,7 @@ export function PixiScene<Scene extends AbstractScene>({
         });
 
       return () => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        container.childNodes[0]?.remove();
+        container.firstChild?.remove();
 
         currentScene?.pixiApp.destroy();
       };

@@ -12,7 +12,7 @@ export function useValidation<K extends string>(
   const deps = Object.values(value).flat();
 
   // Stabilize the result - change it only when condition or title are changed.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
   return useMemo(() => value, deps);
 }
 

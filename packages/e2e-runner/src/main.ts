@@ -14,7 +14,7 @@ type Argv = {
   noCheck?: boolean;
 };
 
-export async function run() {
+async function run() {
   const argv = minimist<Argv>(process.argv.slice(2), {
     string: ['filter', 't'],
     boolean: ['noCheck'],

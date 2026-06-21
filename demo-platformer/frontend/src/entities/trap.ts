@@ -11,9 +11,6 @@ import { ANIMATION_SPEED } from '../constants';
 import type { AnimationSet, TrapDef } from '../types';
 
 export class Trap {
-  readonly container = new Container();
-  readonly position: PointData;
-
   private sprite: AnimatedSprite;
   private animations: AnimationSet;
   private def: TrapDef;
@@ -22,6 +19,9 @@ export class Trap {
   private originX: number;
   private originY: number;
   private moveDirection = 1;
+
+  readonly container = new Container();
+  readonly position: PointData;
 
   constructor(def: TrapDef, x: number, y: number) {
     this.def = def;
@@ -47,6 +47,20 @@ export class Trap {
   }
 
   /** Get world-space hitbox for damage collision. */
+  private updateMoving(dt: number): void {
+    this.position.x += this.def.moveSpeed * this.moveDirection * dt;
+
+    if (Math.abs(this.position.x - this.originX) >= this.def.moveRange) {
+      this.moveDirection *= -1;
+      this.position.x = this.originX + this.def.moveRange * this.moveDirection;
+    }
+  }
+
+  private syncSprite(): void {
+    this.sprite.x = this.position.x + this.sprite.width / 2;
+    this.sprite.y = this.position.y + this.sprite.height / 2;
+  }
+
   getWorldHitbox(): RectangleLike {
     const frames = this.sprite.textures;
     const frame = frames[0];
@@ -87,19 +101,5 @@ export class Trap {
     }
 
     this.syncSprite();
-  }
-
-  private updateMoving(dt: number): void {
-    this.position.x += this.def.moveSpeed * this.moveDirection * dt;
-
-    if (Math.abs(this.position.x - this.originX) >= this.def.moveRange) {
-      this.moveDirection *= -1;
-      this.position.x = this.originX + this.def.moveRange * this.moveDirection;
-    }
-  }
-
-  private syncSprite(): void {
-    this.sprite.x = this.position.x + this.sprite.width / 2;
-    this.sprite.y = this.position.y + this.sprite.height / 2;
   }
 }

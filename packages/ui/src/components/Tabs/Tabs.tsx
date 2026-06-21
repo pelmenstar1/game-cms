@@ -36,9 +36,9 @@ export function Tabs<K extends string>({
   children,
 }: TabsProps<K>) {
   const globalId = useId();
-  const childrenArray = (Array.isArray(children) ? children : [children])
-    // eslint-disable-next-line unicorn/prefer-native-coercion-functions
-    .filter((value): value is TabComponent<K> => Boolean(value));
+  const childrenArray = (
+    Array.isArray(children) ? children : [children]
+  ).filter((value): value is TabComponent<K> => Boolean(value));
 
   const selectedChild =
     childrenArray.find(({ props }) => props.tabId === selectedTab) ??

@@ -32,7 +32,7 @@ function splitEntitySchemaComponentsToGroups<Args>(
     } else {
       groups.push({
         [key]: schema,
-      } as ComposeGroup<Args>);
+      });
     }
   }
 

@@ -22,7 +22,9 @@ export function deepEquals(a: PlainValue, b: PlainValue): boolean {
 
     if (a === null) {
       return b === null;
-    } else if (b === null) {
+    }
+
+    if (b === null) {
       return false;
     }
 

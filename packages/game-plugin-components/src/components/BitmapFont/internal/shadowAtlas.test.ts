@@ -1,7 +1,8 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 
-import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import XMLBuilder from 'fast-xml-builder';
+import { XMLParser } from 'fast-xml-parser';
 import { expect, test } from 'vitest';
 
 import { createShadowAtlasContent } from './shadowAtlas.js';

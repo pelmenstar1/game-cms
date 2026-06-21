@@ -27,7 +27,7 @@ function createEnvForType<T>(transform: Transformer<T>): EnvForType<T> {
     return transform(value, name);
   };
 
-  return result as EnvForType<T>;
+  return result;
 }
 
 function throwInvalidFormat(name: string): never {

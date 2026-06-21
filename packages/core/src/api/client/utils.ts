@@ -56,6 +56,7 @@ export function url<Path extends string>(info: ObjectRequestUrl<Path>) {
 
   let result: MaybeSearch<Path> = path;
   if (searchString) {
+    // eslint-disable-next-line unicorn/operator-assignment -- `+=` doesn't type-check against the branded MaybeSearch<Path> template-literal type
     result = result + `?${searchString}`;
   }
 

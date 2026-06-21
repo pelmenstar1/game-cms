@@ -49,10 +49,14 @@ async function getRequiredReviewersWithUserData() {
     ])
     .toArray();
 
-  return result.map(({ user: [{ _id, ...rest }] }) => ({
-    id: _id.toString(),
-    ...rest,
-  }));
+  return result.map(({ user }) => {
+    const { _id, ...rest } = user[0];
+
+    return {
+      id: _id.toString(),
+      ...rest,
+    };
+  });
 }
 
 function isApproved(

@@ -1,6 +1,7 @@
 import { MaybeArray } from '@game-cms/shared/collections';
 import { getUrlFileName } from '@game-cms/shared/string';
-import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import XMLBuilder from 'fast-xml-builder';
+import { XMLParser } from 'fast-xml-parser';
 
 type PageContent = { '@_file': string };
 

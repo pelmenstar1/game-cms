@@ -7,7 +7,7 @@ export function validator(value: unknown, options: ComponentOptionsById<Id>) {
     return 'INVALID_TYPE';
   }
 
-  if (options.integer && !Number.isInteger(value)) {
+  if (options.integer && !Number.isSafeInteger(value)) {
     return 'EXPECTED_INTEGER';
   }
 
