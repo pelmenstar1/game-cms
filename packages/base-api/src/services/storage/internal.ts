@@ -457,7 +457,6 @@ export async function baseDeleteById<Extra>(
 
   let effectivelyDeletedFiles: { _id: ObjectId }[];
 
-  // eslint-disable-next-line unicorn/prefer-ternary
   if (options?.force) {
     effectivelyDeletedFiles = files;
   } else {

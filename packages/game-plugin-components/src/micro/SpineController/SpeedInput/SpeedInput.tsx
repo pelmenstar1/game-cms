@@ -27,7 +27,6 @@ export function SpeedInput({ speed, onSpeedChanged }: SpeedInputProps) {
     }
   };
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.currentTarget.blur();

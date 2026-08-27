@@ -73,7 +73,6 @@ export function ThreeDModelRenderer({
 
   useImperativeHandle(ref, () => ({
     takeScreenshot() {
-      // eslint-disable-next-line unicorn/consistent-function-scoping
       const worker = async () => {
         const app = appRef.current;
         if (!app) {

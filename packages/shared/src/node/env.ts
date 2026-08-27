@@ -1,6 +1,5 @@
 import fsp from 'node:fs/promises';
 import path from 'node:path';
-// eslint-disable-next-line unicorn/import-style
 import util from 'node:util';
 
 import { isFileNotFoundError } from './error.js';
