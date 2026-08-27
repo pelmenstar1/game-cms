@@ -1,5 +1,3 @@
-import 'game-cms';
-
 import type { ResolveEntityRegistryData } from 'game-cms';
 
 type Registry = typeof import('./registry.js');
