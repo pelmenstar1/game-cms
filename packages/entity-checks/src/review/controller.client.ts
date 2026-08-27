@@ -3,7 +3,7 @@ import { defineEntityCheckClientController } from '@game-cms/base-core';
 export default defineEntityCheckClientController({
   renderer: () => import('./renderer'),
   isAllowed: ({ data, documentVariant, options }) => {
-    if (options.onlyForPublished && documentVariant !== 'published') {
+    if (documentVariant !== 'published' && options.onlyForPublished) {
       return true;
     }
 

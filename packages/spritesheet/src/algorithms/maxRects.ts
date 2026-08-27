@@ -84,7 +84,7 @@ function maxRectsPipeline<Tag>(limits: Size) {
   }
 
   function insertNewFreeRectangle(newFreeRect: Rect) {
-    for (let i = 0; i < newFreeRectanglesLastSize; ) {
+    for (let i = 0; i < newFreeRectanglesLastSize;) {
       // This new free rectangle is already accounted for?
       if (isContainedIn(newFreeRect, newFreeRectangles[i])) return;
 
@@ -172,7 +172,7 @@ function maxRectsPipeline<Tag>(limits: Size) {
     for (let i = 0; i < freeRectangles.length; i++) {
       const freeRect = freeRectangles[i];
 
-      for (let j = 0; j < newFreeRectangles.length; ) {
+      for (let j = 0; j < newFreeRectangles.length;) {
         if (isContainedIn(newFreeRectangles[j], freeRect)) {
           checkedPop(newFreeRectangles, j);
         } else {
@@ -190,7 +190,7 @@ function maxRectsPipeline<Tag>(limits: Size) {
   }
 
   function placeRect(node: Rect) {
-    for (let i = 0; i < freeRectangles.length; ) {
+    for (let i = 0; i < freeRectangles.length;) {
       if (splitFreeNode(freeRectangles[i], node)) {
         checkedPop(freeRectangles, i);
       } else {

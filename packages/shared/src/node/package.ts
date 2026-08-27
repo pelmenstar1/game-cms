@@ -30,9 +30,9 @@ export function resolveImport(meta: ImportMeta, id: string) {
     }
   } catch (error) {
     // To handle the case when we're are resolving an import inside the Vitest env
-    if (
-      !(error instanceof Error && error.message.includes('[module runner]'))
-    ) {
+    if (!(
+      error instanceof Error && error.message.includes('[module runner]')
+    )) {
       throw error;
     }
   }

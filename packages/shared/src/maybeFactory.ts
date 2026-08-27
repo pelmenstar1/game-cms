@@ -3,12 +3,10 @@
 import type { MaybePromise } from './maybePromise.js';
 
 export type MaybeFactory<T, Args extends unknown[] = []> =
-  | T
-  | ((...args: Args) => T);
+  T | ((...args: Args) => T);
 
 export type MaybeAsyncFactory<T, Args extends unknown[] = []> =
-  | T
-  | ((...args: Args) => MaybePromise<T>);
+  T | ((...args: Args) => MaybePromise<T>);
 
 export function resolveMaybeFactory<T, Args extends unknown[]>(
   factory: MaybeFactory<T, Args>,

@@ -64,7 +64,7 @@ export async function emitClientConfigConnector() {
 
   const partials = clientConfigResolverPortals
     .map(({ varName: resolverVar }, resolverIndex) => {
-      let value = '';
+      let value: string;
       if (clientConfigPortals.length === 0) {
         value = '{}';
       } else if (clientConfigPortals.length === 1) {

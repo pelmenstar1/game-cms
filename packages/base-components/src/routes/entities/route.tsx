@@ -39,7 +39,7 @@ export default function Page({
   const showModal = useModal();
 
   useEffect(() => {
-    if (entityIds.length > 0 && selectedEntity === undefined) {
+    if (selectedEntity === undefined && entityIds.length > 0) {
       const [id] = entityIds;
 
       void navigate(`/entities/${id}`);

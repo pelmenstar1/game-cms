@@ -24,13 +24,7 @@ export interface SpriteStripDef {
 // ---- Hero ----
 
 export type HeroState =
-  | 'idle'
-  | 'run'
-  | 'jump'
-  | 'fall'
-  | 'doubleJump'
-  | 'hit'
-  | 'wallJump';
+  'idle' | 'run' | 'jump' | 'fall' | 'doubleJump' | 'hit' | 'wallJump';
 
 export interface HeroDef {
   name: string;

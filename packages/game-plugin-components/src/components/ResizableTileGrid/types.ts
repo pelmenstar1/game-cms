@@ -9,10 +9,7 @@ declare module '@game-cms/core' {
     [id]: ComponentEntry<{
       outData: { width: number; height: number; grid: number[] };
       error:
-        | 'INVALID_TYPE'
-        | 'INVALID_GRID'
-        | 'INVALID_WIDTH'
-        | 'INVALID_HEIGHT';
+        'INVALID_TYPE' | 'INVALID_GRID' | 'INVALID_WIDTH' | 'INVALID_HEIGHT';
       options: null;
       clientData: {
         width: string;

@@ -120,10 +120,9 @@ async function removeOuterLinkFromEntityCollection<Id extends EntityId>(
   for await (const doc of col.find()) {
     const { _id } = doc;
 
-    let needsToBeUpdated = false;
     const set: Document = {};
 
-    needsToBeUpdated = documentVariantToSetter(
+    let needsToBeUpdated = documentVariantToSetter(
       doc,
       schema,
       descriptor,

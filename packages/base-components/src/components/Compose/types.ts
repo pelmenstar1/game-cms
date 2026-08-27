@@ -44,8 +44,7 @@ type BaseComposeEntry<Input extends ComposeInput> = {
     ownError?: 'INVALID_TYPE';
     properties?: {
       [K in keyof Input]:
-        | GetComponentSchemaTypes<Input[K]>['error']
-        | undefined;
+        GetComponentSchemaTypes<Input[K]>['error'] | undefined;
     };
   };
   outData: ComposeMap<Input, 'outData'>;

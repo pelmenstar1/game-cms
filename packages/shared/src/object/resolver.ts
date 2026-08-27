@@ -13,8 +13,7 @@ export type ObjectMapResolver<T, Args extends unknown[] = []> = {
 };
 
 export type ObjectResolver<T, Args extends unknown[] = []> =
-  | ObjectFunctionResolver<T, Args>
-  | ObjectMapResolver<T, Args>;
+  ObjectFunctionResolver<T, Args> | ObjectMapResolver<T, Args>;
 
 export async function resolveObject<T, Args extends unknown[]>(
   resolver: ObjectResolver<T, Args>,

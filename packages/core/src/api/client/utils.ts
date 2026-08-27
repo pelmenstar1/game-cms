@@ -33,8 +33,7 @@ export function request<
 >(
   context: RequestContext,
   options:
-    | RequestOptions<Method, Url>
-    | RequestOptionsWithResult<R, Method, Url>
+    RequestOptions<Method, Url> | RequestOptionsWithResult<R, Method, Url>
 ) {
   const signal = context.abortSignal;
   if (signal) {

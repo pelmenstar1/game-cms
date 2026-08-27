@@ -65,9 +65,10 @@ export function BitmapFontPreviewController({
         : {};
 
       const textures = await Assets.loader.load<Texture>(
-        texturesUrls.map(
-          (url): ResolvedAsset => ({ src: url, data: textureOptions })
-        )
+        texturesUrls.map((url): ResolvedAsset => ({
+          src: url,
+          data: textureOptions,
+        }))
       );
 
       const font = new BitmapFont(

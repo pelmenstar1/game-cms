@@ -22,7 +22,7 @@ export function SpeedInput({ speed, onSpeedChanged }: SpeedInputProps) {
     setEditValue(null);
 
     const parsed = Number.parseFloat(raw);
-    if (Number.isFinite(parsed) && parsed >= MIN_SPEED && parsed !== speed) {
+    if (parsed !== speed && Number.isFinite(parsed) && parsed >= MIN_SPEED) {
       onSpeedChanged?.(parsed);
     }
   };

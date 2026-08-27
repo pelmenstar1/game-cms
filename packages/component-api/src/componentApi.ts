@@ -12,8 +12,7 @@ import { IdSource } from '@game-cms/shared';
 import React, { type Key } from 'react';
 
 type BaseImportRendererModuleResult<T> =
-  | Promise<T>
-  | (T extends undefined ? undefined : never);
+  Promise<T> | (T extends undefined ? undefined : never);
 
 type ImportRendererModuleResult<
   Id extends ComponentId,

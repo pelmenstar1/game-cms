@@ -11,8 +11,7 @@ type AbstractQueryResultDescriptor<T> = {
 };
 
 type AbstractQueryResultFactory<T> = () =>
-  | Promise<T>
-  | AbstractQueryResultDescriptor<T>;
+  Promise<T> | AbstractQueryResultDescriptor<T>;
 
 export function useAbstractQueryResult<T>(
   factory: AbstractQueryResultFactory<T>,

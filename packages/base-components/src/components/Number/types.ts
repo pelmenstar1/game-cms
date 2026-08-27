@@ -15,11 +15,7 @@ declare module '@game-cms/core' {
         max?: number;
       };
       error:
-        | 'INVALID_TYPE'
-        | 'TOO_SMALL'
-        | 'TOO_LARGE'
-        | 'NAN'
-        | 'EXPECTED_INTEGER';
+        'INVALID_TYPE' | 'TOO_SMALL' | 'TOO_LARGE' | 'NAN' | 'EXPECTED_INTEGER';
     }>;
   }
 }

@@ -186,7 +186,7 @@ export function createApplication() {
           );
         },
         (event) => {
-          if (event.lengthComputable && onProgress) {
+          if (onProgress && event.lengthComputable) {
             onProgress(event.loaded / event.total);
           }
         },

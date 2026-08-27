@@ -15,8 +15,7 @@ export default apiRoute({
   },
   handler: async (req): Promise<UploadFileResponse> => {
     let file:
-      | { buffer: FileSource; filename: string; mimetype: string }
-      | undefined;
+      { buffer: FileSource; filename: string; mimetype: string } | undefined;
     let metaRaw: string | undefined;
 
     for await (const part of req.parts()) {

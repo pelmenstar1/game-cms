@@ -9,8 +9,7 @@ declare module 'virtual:dashboard/componentConnectorData' {
 
   type ComponentDataEntryRenderers<Id extends ComponentId> = {
     [K in ComponentRendererVariant]:
-      | (() => Promise<ComponentRendererByVariant<K, Id>>)
-      | undefined;
+      (() => Promise<ComponentRendererByVariant<K, Id>>) | undefined;
   };
 
   type ComponentDataEntry<Id extends ComponentId> = {

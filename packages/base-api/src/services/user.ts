@@ -141,9 +141,9 @@ async function addAdminUser() {
       isAdmin: true,
     });
   } catch (error) {
-    if (
-      !(error instanceof ApiError && error.code === 'base::entity/duplicate')
-    ) {
+    if (!(
+      error instanceof ApiError && error.code === 'base::entity/duplicate'
+    )) {
       throw error;
     }
   }

@@ -42,8 +42,7 @@ function getSingleValueAtPath<Id extends EntityId>(
   }
 
   let returnValue:
-    | { data: unknown; id: ComponentId; options: unknown }
-    | undefined;
+    { data: unknown; id: ComponentId; options: unknown } | undefined;
 
   api.applyAtPath(
     'base::compose',

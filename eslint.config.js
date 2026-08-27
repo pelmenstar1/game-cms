@@ -130,6 +130,7 @@ export default defineConfig(
       'unicorn/prefer-uint8array-base64': 'off',
       'unicorn/no-unsafe-property-key': 'off',
       'unicorn/no-non-function-verb-prefix': 'off',
+      'unicorn/single-line-block-comment-style': 'off',
     },
   },
   {

@@ -75,8 +75,7 @@ function getActionById<
 >(id: Id, actionId: Action) {
   const check = getById(id);
   const action = check.actions?.[actionId] as unknown as
-    | EntityCheckActionDescriptor<Id, Action>
-    | undefined;
+    EntityCheckActionDescriptor<Id, Action> | undefined;
 
   if (!action) {
     throw new ApiError('Unknown action', { code: 'base::entity/notFound' });
@@ -110,8 +109,7 @@ async function runEntityCheck<Id extends EntityCheckId, EId extends EntityId>(
   const { checks, meta, components } = documentData;
 
   const storageData = checks?.[check.id] as
-    | EntityCheckStorageData<Id>
-    | undefined;
+    EntityCheckStorageData<Id> | undefined;
 
   const whenParams = {
     entityId,
@@ -250,8 +248,7 @@ async function invokeAction<
     entityId: params.entityId,
     payload: params.actionPayload,
     storageData: entityVariantData.checks?.[params.actionId] as
-      | EntityCheckStorageData<Id>
-      | undefined,
+      EntityCheckStorageData<Id> | undefined,
     documentId: params.entityDocumentId,
     documentMeta: entityVariantData.meta,
     documentVariant,

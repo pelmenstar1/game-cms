@@ -43,9 +43,9 @@ export function TileGridEditor({
       }}
       onPointerUp={() => {
         if (
+          !readOnly &&
           !hasDragged.current &&
-          clickedTileIndex.current !== null &&
-          !readOnly
+          clickedTileIndex.current !== null
         ) {
           const index = clickedTileIndex.current;
           const result = resizeArray(grid, tileCount, 0);

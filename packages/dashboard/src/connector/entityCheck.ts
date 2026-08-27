@@ -9,8 +9,7 @@ export const entityCheckIds = Object.keys(entityCheckData);
 
 export function getEntityCheckOptions<Id extends EntityCheckId>(id: Id) {
   return entityCheckData[id]?.options as
-    | EntityCheckClientOptions<Id>
-    | undefined;
+    EntityCheckClientOptions<Id> | undefined;
 }
 
 export async function getEntityCheckClientController<Id extends EntityCheckId>(

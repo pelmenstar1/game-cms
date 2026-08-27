@@ -53,7 +53,7 @@ export function useAccessEntity<
         } catch (error) {
           let content: NotificationContent | undefined;
 
-          if (isApiError(error) && errorHandlers) {
+          if (errorHandlers && isApiError(error)) {
             for (const handler of errorHandlers) {
               const result = handler(error);
 

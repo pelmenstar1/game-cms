@@ -12,7 +12,7 @@ export default defineComponentClientController<Id>({
       return 'INVALID_FORMAT';
     }
 
-    if (options.allowEmpty && data === '') {
+    if (data === '' && options.allowEmpty) {
       return;
     }
 

@@ -13,8 +13,7 @@ import { mapObject } from '@game-cms/shared/object';
 
 function getEntry<Id extends EntityId>(id: Id) {
   return env().entity.schemaRegistry?.items[id] as unknown as
-    | EntityDescriptor<Id>
-    | undefined;
+    EntityDescriptor<Id> | undefined;
 }
 
 function getSchemaById<Id extends EntityId>(id: Id) {

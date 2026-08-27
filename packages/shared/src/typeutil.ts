@@ -20,8 +20,7 @@ export type AnyKeyInObject<T, K extends PropertyKey> = [true] extends {
   : false;
 
 export type ResultOrError<T, Error> =
-  | { result: T; error?: undefined }
-  | { result?: undefined; error: Error };
+  { result: T; error?: undefined } | { result?: undefined; error: Error };
 
 export type IfExtends<T, U> = T extends U ? T : U;
 
@@ -61,8 +60,7 @@ type AllUndefined<K extends PropertyKey> = {
 };
 
 export type Or<T, U> =
-  | (T & AllUndefined<keyof U>)
-  | (U & AllUndefined<keyof T>);
+  (T & AllUndefined<keyof U>) | (U & AllUndefined<keyof T>);
 
 export type UnpackArray<T> = T extends unknown[] ? T[number] : T;
 

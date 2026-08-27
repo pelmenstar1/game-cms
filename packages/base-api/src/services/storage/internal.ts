@@ -455,7 +455,7 @@ export async function baseDeleteById<Extra>(
     files.map(({ extra }) => extra)
   );
 
-  let effectivelyDeletedFiles: { _id: ObjectId }[] = [];
+  let effectivelyDeletedFiles: { _id: ObjectId }[];
 
   // eslint-disable-next-line unicorn/prefer-ternary
   if (options?.force) {

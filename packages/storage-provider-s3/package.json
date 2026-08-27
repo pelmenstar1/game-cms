@@ -8,16 +8,16 @@
     "@game-cms/base-api": "workspace:*",
     "@game-cms/base-core": "workspace:*",
     "@game-cms/testing-lib": "workspace:*",
-    "@smithy/types": "^4.15.0",
+    "@smithy/types": "^4.17.2",
     "@types/node": "catalog:",
     "fastify": "catalog:",
     "fastify-type-provider-zod": "catalog:",
     "typescript": "catalog:"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1073.0",
-    "@aws-sdk/lib-storage": "^3.1073.0",
-    "@aws-sdk/s3-request-presigner": "^3.1073.0",
+    "@aws-sdk/client-s3": "^3.1119.0",
+    "@aws-sdk/lib-storage": "^3.1119.0",
+    "@aws-sdk/s3-request-presigner": "^3.1119.0",
     "@game-cms/core": "workspace:*",
     "@game-cms/shared": "workspace:*",
     "zod": "catalog:"

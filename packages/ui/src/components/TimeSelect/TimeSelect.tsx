@@ -25,12 +25,10 @@ export function TimeSelect({
   const showModal = useModal();
 
   const [items, isCustomItem] = useMemo(() => {
-    const suggestionItems = suggestions.map(
-      (value): SelectItem => ({
-        key: value,
-        title: formatTimeSpec(value) ?? '',
-      })
-    );
+    const suggestionItems = suggestions.map((value): SelectItem => ({
+      key: value,
+      title: formatTimeSpec(value) ?? '',
+    }));
 
     const isCustomItem = suggestionItems.every(
       ({ key }) => key !== selectedItem

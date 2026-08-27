@@ -8,7 +8,9 @@ export async function createFileLock(filePath: string) {
     await fsp.writeFile(filePath, Buffer.alloc(0), { flag: 'wx' });
   } catch (error: unknown) {
     if (isEntityExistsError(error)) {
-      throw new Error(`Lock file already exists at path: ${filePath}`);
+      throw new Error(`Lock file already exists at path: ${filePath}`, {
+        cause: error,
+      });
     }
 
     throw error;

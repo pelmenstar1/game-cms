@@ -38,13 +38,9 @@ type GetComponentExtendedTypes<Types extends ComponentTypes = ComponentTypes> =
   GetOrRawData<Types, 'inData' | 'resolvedData' | 'clientData' | 'storageData'>;
 
 type GetComponentPartialTypes<Types extends ComponentTypes> = {
-  [K in
-    | 'outData'
-    | keyof GetComponentExtendedTypes as GetPartialName<K>]: GetPropertyOr<
-    Types,
-    GetPartialName<K>,
-    GetOrRawData<Types, K>[K]
-  >;
+  [
+    K in 'outData' | keyof GetComponentExtendedTypes as GetPartialName<K>
+  ]: GetPropertyOr<Types, GetPartialName<K>, GetOrRawData<Types, K>[K]>;
 };
 
 type GetComponentSearchTypes<Types extends ComponentTypes> = {

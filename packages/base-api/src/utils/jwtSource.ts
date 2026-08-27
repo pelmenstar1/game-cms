@@ -1,5 +1,5 @@
 import { ApiError } from '@game-cms/core/api';
-import cookie from 'cookie';
+import { parseCookie } from 'cookie';
 import type { FastifyRequest } from 'fastify';
 
 export type JwtSourceOptions = {
@@ -25,7 +25,7 @@ const cookieJwtSource: JwtSource = (req, options) => {
   const { cookie: rawCookie } = req.headers;
 
   if (rawCookie !== undefined) {
-    const items = cookie.parse(rawCookie);
+    const items = parseCookie(rawCookie);
 
     return items[options.cookieName];
   }

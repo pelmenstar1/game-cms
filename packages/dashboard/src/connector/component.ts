@@ -8,8 +8,7 @@ import type {
 import data from 'virtual:dashboard/componentConnectorData';
 
 type BaseImportRendererModuleResult<T> =
-  | Promise<T>
-  | (T extends undefined ? undefined : never);
+  Promise<T> | (T extends undefined ? undefined : never);
 
 type ImportRendererModuleResult<
   Id extends ComponentId,

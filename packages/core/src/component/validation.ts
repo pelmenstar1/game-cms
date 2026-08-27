@@ -14,8 +14,7 @@ export type ComponentDataCustomClientValidatorContext = {
 };
 
 export type ComponentDataValidatorResult<Id extends ComponentId, Args> =
-  | ComponentErrorById<Id, Args>
-  | undefined;
+  ComponentErrorById<Id, Args> | undefined;
 
 export interface ComponentDataCustomClientValidator<
   Id extends ComponentId = ComponentId,
